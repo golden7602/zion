@@ -7,9 +7,11 @@
 # WARNING! All changes made in this file will be lost!
 import os
 import sys
-sys.path.append(os.getcwd())
+
 from PyQt5 import QtCore, QtGui
+sys.path.append(os.getcwd())
 import lib.JPMvc.JPWidgets as QtWidgets
+
 
 
 
@@ -836,7 +838,9 @@ if __name__ == "__main__":
 
     MF = JPFormModelMainSub(Form, ui.tableView)
     MF.mainModel.setFieldsRowSource([
-        'fCustomerID', pb.getCustomerList(), 'fVendedorID', pb.user.getAllUserEnumList()
+        'fCustomerID',
+        pb.getCustomerList(), 'fVendedorID',
+        pb.user.getAllUserEnumList()
     ])
 
     MF.mainModel.setTabelInfo(m_sql)
