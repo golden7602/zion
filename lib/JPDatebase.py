@@ -13,6 +13,24 @@ from pymysql.constants import FIELD_TYPE
 from lib.JPFunction import Singleton, JPDateConver
 
 
+@Singleton
+class JPDb(object):
+    def __init__(self):
+        self.__currentConn = None
+
+    @property
+    def currentConn(self):
+        if self.__currentConn is None:
+            config = ConfigParser()
+            config.read("config.ini", encoding="utf-8")
+            kw = dict(config._sections["database"])
+            self.__currentConn = connect(host=kw["host"],
+                                         user=kw["user"],
+                                         password=kw["password"],
+                                         database=kw["database"],
+                                         port=int(kw['port']))
+        return self.__currentConn
+
 class JPFieldType(object):
     Int = 1
     Float = 2
@@ -136,9 +154,12 @@ class JPMySqlSingleTableQuery(object):
         self.data = [list(row) for row in cur._result.rows]
         self.TableName = cur._result.fields[0].org_table
         self.__db = str(cur._result.fields[0].db, 'utf-8')
-        self.PkName, self.__PK_index = [[fld.FieldName, i]
-                                        for i, fld in enumerate(self.Fields)
-                                        if fld.IsPrimarykey][0]
+        pklist = [[fld.FieldName, i]
+                  for i, fld in enumerate(self.Fields)
+                  if fld.IsPrimarykey]
+        if len(pklist)==0:
+            raise ValueError('查询语句:\n"{}"中未包含主键字段！'.format(sql))
+        self.PkName, self.__PK_index = pklist[0]
         sql = "SELECT COLUMN_NAME,COLUMN_DEFAULT,COLUMN_COMMENT "
         sql += "FROM information_schema.`COLUMNS` WHERE TABLE_SCHEMA='{}' AND TABLE_NAME='{}'"
         cur.execute(sql.format(self.__db, self.TableName))
@@ -262,94 +283,6 @@ class JPMySqlSingleTableQuery(object):
                 raise ValueError("参数类型错误，奇数参数为字段名，偶数参数为列表")
 
 
-@Singleton
-class JPDb(object):
-    def __init__(self):
-        self.__currentConn = None
 
-    @property
-    def currentConn(self):
-        if self.__currentConn is None:
-            config = ConfigParser()
-            config.read("config.ini", encoding="utf-8")
-            kw = dict(config._sections["database"])
-            self.__currentConn = connect(host=kw["host"],
-                                         user=kw["user"],
-                                         password=kw["password"],
-                                         database=kw["database"],
-                                         port=int(kw['port']))
-        return self.__currentConn
 
-    # def getRowsAndFieldsInfo(self):
-    #     pass
 
-    # def getRecordFields(self,
-    #                     tableName: str,
-    #                     view_name: str = None,
-    #                     pkvalue: str = None,
-    #                     fields_name=[]):
-    #     """按主表键值查询表中部分行,返回两个结果，一个是以字段信息为键值的字段信息对象字典，一个是表的主键名
-    #     字段信息对象中，如果包含主键字段，其isPK属性设置为True
-    #     """
-    #     sql = "SELECT column_name FROM INFORMATION_SCHEMA.`KEY_COLUMN_USAGE` \
-    #         WHERE table_name='{}' AND constraint_name='PRIMARY'"
-
-    #     cur = self.currentConn.cursor()
-    #     cur.execute(sql.format(tableName))
-    #     pkname = cur._rows[0][0]
-    #     cur = self.currentConn.cursor(cursors.DictCursor)
-    #     f_l = '*' if len(fields_name) == 0 else ",".join(fields_name)
-    #     if pkvalue is None:
-    #         sql = "select {} from {} limit 0".format(f_l, tableName)
-    #     else:
-    #         tn = view_name if view_name else tableName
-    #         sql = "select {} from {} where {}='{}'".format(
-    #             f_l, tn, pkname, pkvalue)
-    #     cur.execute(sql)
-    #     dic = cur.fetchall()
-    #     result = {
-    #         row[0]:
-    #         JPMySQLFieldInfo(*row[1:],
-    #                          None if len(cur._rows) == 0 else dic[0][row[0]])
-    #         for row in cur.description
-    #     }
-    #     if pkname in result:
-    #         result[pkname].IsPK = True
-    #     return result, pkname
-
-    # def getRecordsDict(self, sql: str):
-    #     """执行指定SQL,返回两个结果，一个是查询结果的字典列表，一个是以字段名为健、字段信息对象为值的字典"""
-
-    #     cur = self.currentConn.cursor(cursors.DictCursor)
-    #     cur.execute(sql)
-    #     return cur.fetchall(), {
-    #         row[0]: JPMySQLFieldInfo(*row)
-    #         for row in cur.description
-    #     }
-
-    # def getRecordsAndFieldInfoTuple(self, sql: str):
-    #     """执行指定SQL,返回两个结果，一个是查询结果的列表，一个是字段信息对象列表"""
-    #     cur = self.currentConn.cursor()
-    #     cur.execute(sql)
-    #     return list(
-    #         cur._rows), [JPMySQLFieldInfo(*row) for row in cur.description]
-
-    # def getRecordsTuple(self, sql: str):
-    #     """执行指定SQL,返回结果的列表"""
-    #     cur = self.currentConn.cursor()
-    #     cur.execute(sql)
-    #     return list(cur._rows)
-
-    def getEnumDict(self, sql: str) -> dict:
-        """ 输入参数为一个查询语句sql，返回一个字典。
-        sql格式：列1-枚举分类值，列2-提示文本；列3-为枚举值，其后依次为其他需返回值;
-
-        返回值为字典，格式如{K:L,...},键K为枚举分类值；
-        L格式如[(T,V...),...]：v枚举索引值,T为枚举提示文本，...依次为其他返回值
-        """
-        cur = self.currentConn.cursor()
-        cur.execute(sql)
-        return {
-            k: [row1[1:] for row1 in cur._rows if row1[0] == k]
-            for k in set(row[0] for row in cur._rows)
-        }

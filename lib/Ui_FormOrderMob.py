@@ -12,6 +12,7 @@ from PyQt5 import QtCore, QtGui
 import lib.JPMvc.JPWidgets as QtWidgets
 
 
+
 class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
@@ -806,7 +807,9 @@ if __name__ == "__main__":
     from PyQt5 import Qt
     from PyQt5.QtCore import QModelIndex
     from functools import reduce
+    from ZionPublc import JPPub
 
+    pb = JPPub()
     app = QtWidgets.QApplication(sys.argv)
     Form = QtWidgets.QWidget()
     ui = Ui_Form()
@@ -831,13 +834,9 @@ if __name__ == "__main__":
         return int(lt[4] * 100) == int(
             reduce(lambda x, y: x * y, lt[0:4]) * 100)
 
-    enm_user = JPQ('select fUsername,fUserID from sysusers where fUserID>1')()
     MF = JPFormModelMainSub(Form, ui.tableView)
-
     MF.mainModel.setFieldsRowSource([
-        'fCustomerID',
-        JPQ('select fCustomerName,fCustomerID,fNUIT,fCity,fContato from t_customer'
-            )(), 'fVendedorID', enm_user
+        'fCustomerID', pb.getCustomerList(), 'fVendedorID', pb.user.getAllUserEnumList()
     ])
 
     MF.mainModel.setTabelInfo(m_sql)
@@ -858,10 +857,9 @@ if __name__ == "__main__":
 
     def cusChange(r):
         obj = ui.fCustomerID
-        row=obj.RowSource[r]
+        row = obj.RowSource[r]
         ui.fNUIT.setText(row[2])
         ui.fCity.setText(row[3])
-
 
     ui.fCustomerID.currentIndexChanged.connect(cusChange)
 
@@ -878,7 +876,6 @@ if __name__ == "__main__":
     ui.butSave.clicked.connect(butSave)
     MF.dataChanged[QModelIndex].connect(Cacu)
     MF.dataChanged[QWidget_].connect(Cacu)
-
     MF.show(JPFormModelMainSub.Edit)
 
     sys.exit(app.exec_())
