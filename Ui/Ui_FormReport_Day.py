@@ -10,6 +10,7 @@ import os
 sys.path.append(os.getcwd())
 from PyQt5 import QtCore, QtGui, QtWidgets
 
+
 class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
@@ -31,11 +32,13 @@ class Ui_Form(object):
         self.cbo_year = QtWidgets.QComboBox(Form)
         self.cbo_year.setMinimumSize(QtCore.QSize(100, 0))
         self.cbo_year.setAutoFillBackground(False)
-        self.cbo_year.setLocale(QtCore.QLocale(QtCore.QLocale.Chinese, QtCore.QLocale.China))
+        self.cbo_year.setLocale(
+            QtCore.QLocale(QtCore.QLocale.Chinese, QtCore.QLocale.China))
         self.cbo_year.setModelColumn(0)
         self.cbo_year.setObjectName("cbo_year")
         self.horizontalLayout_3.addWidget(self.cbo_year)
-        spacerItem = QtWidgets.QSpacerItem(20, 20, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
+        spacerItem = QtWidgets.QSpacerItem(20, 20, QtWidgets.QSizePolicy.Fixed,
+                                           QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_3.addItem(spacerItem)
         self.label_3 = QtWidgets.QLabel(Form)
         self.label_3.setObjectName("label_3")
@@ -46,25 +49,30 @@ class Ui_Form(object):
         self.cbo_base.addItem("")
         self.cbo_base.addItem("")
         self.horizontalLayout_3.addWidget(self.cbo_base)
-        spacerItem1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        spacerItem1 = QtWidgets.QSpacerItem(40, 20,
+                                            QtWidgets.QSizePolicy.Expanding,
+                                            QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_3.addItem(spacerItem1)
         self.butPrint = QtWidgets.QPushButton(Form)
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("../res/ico/printer.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap("../res/ico/printer.png"),
+                       QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.butPrint.setIcon(icon)
         self.butPrint.setIconSize(QtCore.QSize(32, 32))
         self.butPrint.setObjectName("butPrint")
         self.horizontalLayout_3.addWidget(self.butPrint)
         self.butPDF = QtWidgets.QPushButton(Form)
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap("../res/ico/pdf.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap("../res/ico/pdf.png"),
+                        QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.butPDF.setIcon(icon1)
         self.butPDF.setIconSize(QtCore.QSize(32, 32))
         self.butPDF.setObjectName("butPDF")
         self.horizontalLayout_3.addWidget(self.butPDF)
         self.butSave = QtWidgets.QPushButton(Form)
         icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap("../res/ico/export.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon2.addPixmap(QtGui.QPixmap("../res/ico/export.png"),
+                        QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.butSave.setIcon(icon2)
         self.butSave.setIconSize(QtCore.QSize(32, 32))
         self.butSave.setObjectName("butSave")
@@ -94,37 +102,44 @@ class Ui_Form(object):
         self.butSave.setText(_translate("Form", "Excel"))
 
 
-
 if __name__ == "__main__":
 
-    from lib.JPDatebase import jpGetDataListAndFields 
+    from lib.JPDatebase import jpGetDataListAndFields
     from lib.JPMvc.JPModel import JPTableViewModelReadOnly
+    from PyQt5.QtWidgets import QAbstractItemView
+    from lib.JPPrintReport import JPReport
+    from PyQt5.QtPrintSupport import QPrinter
     app = QtWidgets.QApplication(sys.argv)
     Form = QtWidgets.QWidget()
     ui = Ui_Form()
-    ui.setupUi(Form)            
+    ui.setupUi(Form)
 
     class myMod(JPTableViewModelReadOnly):
-        def __init__(self,*args):
+        def __init__(self, *args):
             super().__init__(*args)
-            self.f=QtGui.QFont()
-            self.f.Black=True
+            self.f = QtGui.QFont()
+            self.f.Black = True
             self.f.setBold(True)
-        def data(self, Index,
-             role: int = QtCore.Qt.DisplayRole):
-            if Index.column()==0 and role == QtCore.Qt.TextAlignmentRole:
-                return QtCore.Qt.AlignCenter
-            if Index.column()==0 and role ==  QtCore.Qt.BackgroundColorRole:
-                return QtGui.QColor(QtCore.Qt.gray)
-            if Index.column()==0 and role ==  QtCore.Qt.FontRole:
-                return self.f
-            if Index.row()==(super().rowCount()-1) and role == QtCore.Qt.BackgroundColorRole:
-                 return QtGui.QColor(QtCore.Qt.gray)
-            if Index.row()==(super().rowCount()-1) and role == QtCore.Qt.FontRole:
-                return self.f
-            return super().data(Index,role)
 
-    sql_receivables="""
+        def data(self, Index, role: int = QtCore.Qt.DisplayRole):
+            if Index.column() == 0 and role == QtCore.Qt.TextAlignmentRole:
+                return QtCore.Qt.AlignCenter
+            if Index.column() == 0 and role == QtCore.Qt.BackgroundColorRole:
+                return QtGui.QColor(QtCore.Qt.gray)
+            if Index.column() == 0 and role == QtCore.Qt.FontRole:
+                return self.f
+            if Index.row() == (super().rowCount() -
+                               1) and role == QtCore.Qt.BackgroundColorRole:
+                return QtGui.QColor(QtCore.Qt.gray)
+            if Index.row() == (super().rowCount() -
+                               1) and role == QtCore.Qt.FontRole:
+                return self.f
+            return super().data(Index, role)
+
+    cbo_year, cbo_base = ui.cbo_year, ui.cbo_base
+    tw = ui.tableView
+    JPdf = jpGetDataListAndFields
+    sql_receivables = """
         SELECT IF(ISNULL(Q3.d), 'Sum', Q3.d) AS Day0
             , M1, M2, M3, M4, M5, M6, M7, M8, M9, M10
             , M11, M12
@@ -152,7 +167,7 @@ if __name__ == "__main__":
             GROUP BY Q1.d WITH ROLLUP
         ) Q3
         """
-    sql_payment="""
+    sql_payment = """
         SELECT if(isnull(Q3.d), 'Sum', Q3.d) AS Day0
             , M1, M2, M3, M4, M5, M6, M7, M8, M9, M10
             , M11, M12
@@ -183,26 +198,72 @@ if __name__ == "__main__":
             GROUP BY Q1.d WITH ROLLUP
         ) Q3
         """
-    cbo_year,cbo_base=ui.cbo_year,ui.cbo_base
-    JPdf=jpGetDataListAndFields
-    def _search():
-        if cbo_year.currentIndex()!=-1 and cbo_base.currentIndex()!=-1:
-            sql=cbo_base.currentData()
-            data,fields=JPdf(sql.format(cbo_year.currentText()))
-            mod=myMod(ui.tableView,data,fields)
-    year=JPdf('''select year(fOrderDate) as y  
+    year = JPdf('''select year(fOrderDate) as y  
                 from t_order union select year(fReceiptDate) 
                 as y from t_receivables''')[0]
+    ui.mod = None
+
+    def _search():
+        if cbo_year.currentIndex() != -1 and cbo_base.currentIndex() != -1:
+            sql = cbo_base.currentData()
+            data, fields = JPdf(sql.format(cbo_year.currentText()))
+            ui.mod = myMod(tw, data, fields)
+
+    def butPrint():
+        if ui.mod is None:
+            return
+        data = ui.mod.basedata
+        flds = ui.mod.fields
+        rpt = JPReport(QPrinter.A4, QPrinter.Orientation(1))
+        rpt.ReportHeader.AddItem(1,
+                                 0,
+                                 0,
+                                 100 * 13,
+                                 40,
+                                 '收款日报表',
+                                 Bolder=False,
+                                 AlignmentFlag=(QtCore.Qt.AlignCenter))
+        title = [fld.Title for fld in ui.mod.fields]
+        fns = [fld.FieldName for fld in ui.mod.fields]
+        cols = len(ui.mod.fields)
+        al_c = QtCore.Qt.AlignCenter
+        al_r = (QtCore.Qt.AlignVCenter | QtCore.Qt.AlignRight)
+        rpt.SetMargins(30, 60, 30, 30)
+        rpt.ReportHeader.AddPrintLables(0,
+                                        50,
+                                        50,
+                                        Texts=title,
+                                        Widths=[100] * cols,
+                                        Aligns=[al_c] * cols)
+        rpt.Detail.AddPrintFields(0,
+                                  0,
+                                  25,
+                                  FieldNames=[fns[0]],
+                                  Widths=[100],
+                                  Aligns=[al_c])
+        for i in range(1, cols):
+            rpt.Detail.AddItem(3,
+                               i * 100,
+                               0,
+                               100,
+                               25,
+                               fns[i],
+                               AlignmentFlag=al_r,
+                               FormatString='{:,.2f}')
+        rpt.DataSource = ui.mod.getDataDict(QtCore.Qt.EditRole)
+        rpt.BeginPrint()
+
     cbo_year.addItems([str(y[0]) for y in year if y[0]])
     cbo_year.setCurrentIndex(-1)
     cbo_base.clear()
-    cbo_base.addItem('Payment',sql_payment)
-    cbo_base.addItem('Receivables',sql_receivables)
+    cbo_base.addItem('Payment', sql_payment)
+    cbo_base.addItem('Receivables', sql_receivables)
     cbo_base.setCurrentIndex(-1)
+    tw.setSelectionMode(QAbstractItemView.SingleSelection)
+    tw.setSelectionBehavior(QAbstractItemView.SelectRows)
     cbo_base.currentTextChanged.connect(_search)
     cbo_year.currentTextChanged.connect(_search)
-
+    ui.butPrint.clicked.connect(butPrint)
 
     Form.show()
     sys.exit(app.exec_())
-

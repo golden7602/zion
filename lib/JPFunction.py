@@ -144,7 +144,9 @@ def JPGetDisplayText(value, *args) -> str:
     该列表第一列是返回的字符串，第一列为value对应值
     '''
     if value:
-        return value
+        return
+    else:
+        return ''
 
 
 @JPGetDisplayText.register(QDate)

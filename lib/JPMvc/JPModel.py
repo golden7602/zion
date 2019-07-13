@@ -51,6 +51,23 @@ class __JPTableViewModelBase(QAbstractTableModel):
         if fields:
             self.fields = fields
 
+    def getDataDict(self, role: int = Qt.DisplayRole):
+        ''''按行返回数据字典的列表'''
+        r = []
+        if role == Qt.EditRole:
+            for row in self.basedata:
+                r.append({
+                    fld.FieldName: row[i]
+                    for i, fld in enumerate(self.fields)
+                })
+        if role == Qt.DisplayRole:
+            for row in self.basedata:
+                r.append({
+                    fld.FieldName: JPGetDisplayText(row[i])
+                    for i, fld in enumerate(self.fields)
+                })
+        return r
+
     def setModelDataAndFields(self, data: list, fields: list):
         """设置模型数据源及字段信息
         data:列表，数据源。列表每一项为一行数据的列表，不能是元组
@@ -236,7 +253,7 @@ class JPTableViewModelReadOnly(__JPTableViewModelBase):
         '''
         super().__init__(data, fields)
         # 设置只读
-        self.tableView=tableView
+        self.tableView = tableView
         self.tableView.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.tableView.setModel(self)
 
@@ -392,8 +409,10 @@ class JPFormModelMain(JPEditFormDataMode):
         self.__fieldsRowSource = None
         self.ObjectDict = {
             obj.objectName(): obj
-            for obj in self.mainForm.findChildren((JPWidgets.QLineEdit, JPWidgets.QDateEdit,
-                                                   JPWidgets.QComboBox, JPWidgets.QTextEdit,
+            for obj in self.mainForm.findChildren((JPWidgets.QLineEdit,
+                                                   JPWidgets.QDateEdit,
+                                                   JPWidgets.QComboBox,
+                                                   JPWidgets.QTextEdit,
                                                    JPWidgets.QCheckBox))
         }
 
@@ -410,7 +429,7 @@ class JPFormModelMain(JPEditFormDataMode):
         self.__sql = sql
         self.autoPkRole = auto_pk_role
 
-    def setFieldsRowSource(self, lst:list):
+    def setFieldsRowSource(self, lst: list):
         self.__fieldsRowSource = lst
 
     def readData(self):

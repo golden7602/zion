@@ -117,7 +117,10 @@ class _jpPrintLable(_jpPrintItem):
         super().__init__(*args, **kwargs)
 
     def GetPrintText(self) -> str:
-        return self.FormatString.format(self.PrintObject)
+        if self.PrintObject:
+            return self.FormatString.format(self.PrintObject)
+        else:
+            return ''
 
 
 class _jpPrintPageField(_jpPrintItem):
@@ -126,12 +129,11 @@ class _jpPrintPageField(_jpPrintItem):
 
     def GetPrintText(self):
         try:
-            return  self.FormatString.format(
+            return self.FormatString.format(
                 Page=_jpPrintSection.Report.__dict__["_JPreport__CurrentPage"],
                 Pages=_jpPrintSection.Report.PageCount)
         except Exception:
             return 'ForamtString Error'
-
 
 
 class _jpPrintDateTime(_jpPrintItem):
@@ -143,7 +145,6 @@ class _jpPrintDateTime(_jpPrintItem):
             return datetime.datetime.now().strftime(self.FormatString)
         except Exception:
             return 'ForamtString Error'
-
 
 
 class _jpPrintField(_jpPrintItem):
@@ -166,9 +167,14 @@ class _jpPrintField(_jpPrintItem):
 
     def GetPrintText(self):
         try:
-            return self.FormatString.format(self.Section._GetCurrentPrintDataRow()[self.PrintObject]) 
-        except (KeyError,TypeError) :
+            v=self.Section._GetCurrentPrintDataRow()[self.PrintObject]
+            if v:
+                return self.FormatString.format(v)
+            else:
+                return ''
+        except (KeyError, TypeError):
             return ''
+
 
 class _jpPrintPixmap(_jpPrintItem):
     def __init__(self, rect, obj, **kwargs):
@@ -305,9 +311,8 @@ class _jpPrintSection(object):
         # 当前节为Detail时返回当前正在打印的数据行，否则返回报表数据源第一行
         if self.__dict__["SectionType"] is JPPrintSectionType.Detail:
             return self.__dict__["_CurrentPrintRowData"]
-        ds = _jpPrintSection.Report.__dict__['_JPReport' +'__DataSource']
+        ds = _jpPrintSection.Report.__dict__['_JPReport' + '__DataSource']
         return ds[0] if len(ds) > 0 else {}
-
 
     def _RaisePrintError(self):
         estr = "节【{}】的超出页面可打印范围".format(
@@ -400,7 +405,7 @@ class _jpSectionDetail(_jpPrintSection):
                     continue
                 # 判断页面剩余空间能否容纳一个节高度及页脚高度，不能则分页
                 if rpt.PageValidHeight < (rpt._SectionPrintBeginY + curSecH +
-                                        rpt.PageFooter.SectionHeight):
+                                          rpt.PageFooter.SectionHeight):
                     rpt.NewPage(painter)
                     rpt._SectionPrintBeginY = rpt.PageHeader.SectionHeight
                 for item in self.Items:
@@ -442,8 +447,9 @@ class _jpSectionPageFooter(_jpPrintSection):
                                   self.SectionHeight):
             self._RaisePrintError()
             # 处理打印页脚打印时的开始点
-        rpt._SectionPrintBeginY = (rpt.__dict__["_JPReport__PageHeight"] - self.SectionHeight -
-                                   rpt.Margins.bottom - rpt.Margins.top)
+        rpt._SectionPrintBeginY = (rpt.__dict__["_JPReport__PageHeight"] -
+                                   self.SectionHeight - rpt.Margins.bottom -
+                                   rpt.Margins.top)
         for item in self.Items:
             if item.Visible is False:
                 continue
@@ -918,4 +924,3 @@ class JPReport(object):
         dialog = QPrintPreviewDialog(self.Printer)
         dialog.paintRequested.connect(self.PrintPreview)
         dialog.exec_()
-
