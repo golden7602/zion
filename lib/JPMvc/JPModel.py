@@ -226,18 +226,19 @@ class __JPTableViewModelBase(QAbstractTableModel):
 
 
 class JPTableViewModelReadOnly(__JPTableViewModelBase):
-    def __init__(self, data: list = [], fields: list = []):
+    def __init__(self, tableView, data: list = [], fields: list = []):
         ''' 
         建立一个只读型模型，仅仅用于展示内容，不可编辑\n
-        JPTableModelReadOnly(tableView,data,fields)\n
+        JPTableModelReadOnly(tableView, data, fields)\n
         参数：\n
-        tableView 使用此列表的tableView对象\n
         data 一个数据列表或元组\n
         field字段信息列表
         '''
         super().__init__(data, fields)
         # 设置只读
+        self.tableView=tableView
         self.tableView.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self.tableView.setModel(self)
 
 
 class JPTableViewModelEditForm(__JPTableViewModelBase):

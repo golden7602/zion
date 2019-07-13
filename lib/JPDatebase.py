@@ -31,6 +31,7 @@ class JPDb(object):
                                          port=int(kw['port']))
         return self.__currentConn
 
+
 class JPFieldType(object):
     Int = 1
     Float = 2
@@ -141,6 +142,16 @@ class JPMySQLFieldInfo(JPFieldInfo):
         return self.sqlValueCreater[t](v)
 
 
+def jpGetDataListAndFields(sql: str) -> list:
+    '''根据查询语句返回一个列表'''
+    cur = JPDb().currentConn.cursor()
+    cur.execute(sql)
+    l=[list(row) for row in cur._result.rows]
+    f=[JPMySQLFieldInfo(item) for item in cur._result.fields]
+    return l,f
+    
+
+
 class JPMySqlSingleTableQuery(object):
     def __init__(self, sql: str, only_structure: bool = False):
         '''根据指定的SQl,返回一个对象。SQL中一般使用一个表。\n
@@ -153,15 +164,16 @@ class JPMySqlSingleTableQuery(object):
         self.Fields = [JPMySQLFieldInfo(item) for item in cur._result.fields]
         self.data = [list(row) for row in cur._result.rows]
         self.TableName = cur._result.fields[0].org_table
-        self.__db = str(cur._result.fields[0].db, 'utf-8')
-        pklist = [[fld.FieldName, i]
-                  for i, fld in enumerate(self.Fields)
+        self.__db = str(cur._result.fields[0].db, 'utf-8')  # 得到表名
+        pklist = [[fld.FieldName, i] for i, fld in enumerate(self.Fields)
                   if fld.IsPrimarykey]
-        if len(pklist)==0:
+        if len(pklist) == 0:
             raise ValueError('查询语句:\n"{}"中未包含主键字段！'.format(sql))
         self.PkName, self.__PK_index = pklist[0]
-        sql = "SELECT COLUMN_NAME,COLUMN_DEFAULT,COLUMN_COMMENT "
-        sql += "FROM information_schema.`COLUMNS` WHERE TABLE_SCHEMA='{}' AND TABLE_NAME='{}'"
+        sql = """
+            SELECT COLUMN_NAME,COLUMN_DEFAULT,COLUMN_COMMENT 
+            FROM information_schema.`COLUMNS` 
+            WHERE TABLE_SCHEMA='{}' AND TABLE_NAME='{}'"""
         cur.execute(sql.format(self.__db, self.TableName))
         for fld in self.Fields:
             fld.DefaultValue, fld.Comment = [
@@ -283,6 +295,5 @@ class JPMySqlSingleTableQuery(object):
                 raise ValueError("参数类型错误，奇数参数为字段名，偶数参数为列表")
 
 
-
-
-
+if __name__ == "__main__":
+    print(jpGetDataListAndFields("select * from t_order"))

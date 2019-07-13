@@ -14,7 +14,6 @@ import lib.JPMvc.JPWidgets as QtWidgets
 
 
 
-
 class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
