@@ -36,11 +36,14 @@
        <pointsize>10</pointsize>
       </font>
      </property>
+     <property name="editTriggers">
+      <set>QAbstractItemView::AllEditTriggers</set>
+     </property>
      <attribute name="horizontalHeaderDefaultSectionSize">
       <number>100</number>
      </attribute>
      <attribute name="verticalHeaderDefaultSectionSize">
-      <number>20</number>
+      <number>25</number>
      </attribute>
      <attribute name="verticalHeaderMinimumSectionSize">
       <number>23</number>

@@ -149,7 +149,10 @@ def jpGetDataListAndFields(sql: str) -> list:
     l=[list(row) for row in cur._result.rows]
     f=[JPMySQLFieldInfo(item) for item in cur._result.fields]
     return l,f
-    
+
+# class JPMySqlFeildsInfo():
+#     def __init__(self):
+
 
 
 class JPMySqlSingleTableQuery(object):

@@ -5,6 +5,7 @@ from datetime import date, datetime, time
 from pymysql import connect, cursors
 from pymysql.constants import FIELD_TYPE
 
+
 class pub(object):
     __DB = None  # 类属性
 
@@ -13,7 +14,7 @@ class pub(object):
         db = cls.__DB
         if db is None:
             #con = pymysql.converters.conversions.copy()
-            db = pymysql.connect(host="127.0.0.1",
+            db = connect(host="127.0.0.1",
                                  user="root",
                                  password="1234",
                                  database="myorder_python",
@@ -25,7 +26,7 @@ class pub(object):
 
     @classmethod
     def getDict(cls, sql) -> dict:
-        cursor = cls.GetDatabase().cursor(pymysql.cursors.DictCursor)
+        cursor = cls.GetDatabase().cursor(cursors.DictCursor)
         cursor.execute(sql)
         return cursor.fetchall()
 

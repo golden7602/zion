@@ -2,6 +2,12 @@
 """
 功能窗体各具体处理功能的汇总包
 """
+
+import sys
+import os
+sys.path.append(os.getcwd())
+
+
 import datetime
 
 from dateutil.relativedelta import relativedelta
@@ -10,16 +16,11 @@ from PyQt5.QtGui import QColor
 from PyQt5.QtWidgets import (QDialog, QMessageBox, QPushButton, QTableWidget,
                              QTableWidgetItem, QWidget)
 
-if __name__ == "__main__":
-    from lib import Ui_funcform
-    from lib.globalVar import pub
-    from lib.ExportToExcel import clsExportToExcelFromTableWidget
-    from lib.whereStringCreater import clsWhereStringCreater
-else:
-    from . import Ui_funcform
-    from .globalVar import pub
-    from .ExportToExcel import clsExportToExcelFromTableWidget
-    from .whereStringCreater import clsWhereStringCreater
+from lib import Ui_funcform
+from lib.globalVar import pub
+from lib.JPExcel.JPExportToExcel import clsExportToExcelFromTableWidget
+#from lib.whereStringCreater import clsWhereStringCreater
+
 
 
 class clsmyStackedWidget(object):
@@ -59,6 +60,7 @@ class clsmyStackedWidget(object):
                 raise AttributeError
             for i in range(0, len(items)):
                 nm = items[i]["fMenuText"]
+                # 添加按钮
                 btn = QPushButton(nm)
                 btn.setObjectName('btn' + nm)  # 使用setObjectName设置对象名称
                 btn.tableWidget = self.ui.tableWidget

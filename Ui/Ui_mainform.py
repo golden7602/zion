@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'c:\Users\Administrator\Desktop\newPYprj\Ui\mainform.ui'
+# Form implementation generated from reading ui file 'c:\Users\win10\Desktop\Zion\zion\Ui\mainform.ui'
 #
 # Created by: PyQt5 UI code generator 5.11.3
 #
@@ -12,8 +12,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1128, 648)
-        MainWindow.setStyleSheet("\n"
-"")
+        MainWindow.setStyleSheet("")
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayout_3 = QtWidgets.QVBoxLayout(self.centralwidget)
@@ -41,7 +40,7 @@ class Ui_MainWindow(object):
         self.label_logo.setMinimumSize(QtCore.QSize(0, 70))
         self.label_logo.setMaximumSize(QtCore.QSize(16777215, 70))
         self.label_logo.setText("")
-        self.label_logo.setPixmap(QtGui.QPixmap("C:\\Users\\Administrator\\Desktop\\newPYprj\\res\\Zions_100.png"))
+        self.label_logo.setPixmap(QtGui.QPixmap("../res/Zions_100.png"))
         self.label_logo.setScaledContents(True)
         self.label_logo.setObjectName("label_logo")
         self.horizontalLayout_3.addWidget(self.label_logo)
@@ -57,6 +56,7 @@ class Ui_MainWindow(object):
         self.label_Title.setMinimumSize(QtCore.QSize(221, 40))
         self.label_Title.setMaximumSize(QtCore.QSize(16777215, 40))
         font = QtGui.QFont()
+        font.setFamily("Arial")
         font.setPointSize(28)
         font.setBold(True)
         font.setWeight(75)
@@ -94,6 +94,7 @@ class Ui_MainWindow(object):
         self.treeWidget.setSizeIncrement(QtCore.QSize(300, 0))
         self.treeWidget.setBaseSize(QtCore.QSize(300, 0))
         font = QtGui.QFont()
+        font.setFamily("Arial")
         font.setPointSize(11)
         font.setBold(False)
         font.setWeight(50)
@@ -120,7 +121,6 @@ class Ui_MainWindow(object):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.label_Title.setText(_translate("MainWindow", "TextLabel"))
-        self.treeWidget.headerItem().setText(0, _translate("MainWindow", "Function"))
 
 
 if __name__ == "__main__":

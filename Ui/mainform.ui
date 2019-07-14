@@ -14,8 +14,7 @@
    <string>MainWindow</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">
-</string>
+   <string notr="true"/>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -130,6 +129,7 @@
              </property>
              <property name="font">
               <font>
+               <family>Arial</family>
                <pointsize>28</pointsize>
                <weight>75</weight>
                <bold>true</bold>
@@ -238,16 +238,12 @@
        </property>
        <property name="font">
         <font>
+         <family>Arial</family>
          <pointsize>11</pointsize>
          <weight>50</weight>
          <bold>false</bold>
         </font>
        </property>
-       <column>
-        <property name="text">
-         <string>Function</string>
-        </property>
-       </column>
       </widget>
       <widget class="QStackedWidget" name="stackedWidget">
        <widget class="QWidget" name="page"/>

@@ -1,15 +1,16 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
-
 import sys
+import os
+sys.path.append(os.getcwd())
 from datetime import datetime
 
 import pymysql
-from lib import Ui_mainform
+from Ui import Ui_mainform
 from lib.funcform_process import clsmyStackedWidget
 from lib.globalVar import pub
 from PyQt5.QtCore import QSettings, Qt, QThread, pyqtSignal
-from PyQt5.QtGui import QIcon
+from PyQt5.QtGui import QIcon,QPixmap
 from PyQt5.QtWidgets import (QApplication, QHBoxLayout, QLabel, QMainWindow,
                              QProgressBar, QSplitter, QStackedWidget,
                              QTreeWidgetItem)
@@ -28,11 +29,10 @@ class MyThreadReadTree(QThread):  # 加载功能树的线程类
                         items[i]["fIsCommandButton"]) == 0:
                     item = QTreeWidgetItem(parent)
                     item.setText(0, items[i]["fMenuText"])
+                    path=os.getcwd()+"\\res\\ico\\"+ items[i]["fIcon"]
                     item.setIcon(
                         0,
-                        QIcon(
-                            "C:\\Users\\Administrator\\Desktop\\newPYprj\\res\\ico\\"
-                            + items[i]["fIcon"]))
+                        QIcon(path))
                     item.jpData = items[i]
                     item.FullPath = parent.FullPath + \
                         '\\' + items[i]["fMenuText"]
@@ -47,6 +47,7 @@ if __name__ == "__main__":
     MainWindow = QMainWindow()
     ui = Ui_mainform.Ui_MainWindow()
     ui.setupUi(MainWindow)
+    ui.label_logo.setPixmap(QPixmap(os.getcwd()+"\\res\\Zions_100.png"))
     #MainWindow.setStyleSheet(pub.readQss(
     #    "C:\\Users\\Administrator\\Desktop\\newPYprj\\res\\blackwhite.css"))
     ui.stackedWidget.removeWidget(ui.page)
