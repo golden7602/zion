@@ -3,7 +3,7 @@
 import sys
 import os
 sys.path.append(os.getcwd())
-
+import re
 import configparser
 from configparser import ConfigParser
 
@@ -43,6 +43,7 @@ class JPFieldType(object):
 
 class JPFieldInfo(JPFieldType):
     def __init__(self):
+        self._index = None
         self.FieldName = None
         self.Title = None
         self._type_code = None
@@ -58,8 +59,102 @@ class JPFieldInfo(JPFieldType):
         self.Formula = None
         self.Value = None
 
+    def TypeCode(self):
+        pass
 
-class JPMySQLFieldInfo(JPFieldInfo):
+    def sqlValue(self, value=None):
+        pass
+
+
+class JPRowFieldInfo(object):
+    def __init__(self, fields: list):
+        """代表无数据的一组字段信息
+        fields 字段信息列表,类型
+        """
+        self._rowData = None
+        self.__fields = fields
+        self.__fieldsDict = {
+            f.FieldName: i
+            for i, f in enumerate(self.__fields)
+        }
+
+    def setRowData(self, values: list):
+        self.__rowData = values
+
+    def __getitem__(self, key) -> JPFieldInfo:
+        """key可为顺序号或字段名"""
+        index = None
+        if isinstance(key, int):
+            index = key
+        elif isinstance(key, str):
+            index = self.__fieldsDict[key]
+        fld = self.__fields[index]
+        if self._rowData:
+            fld.Vlaue = self._rowData[index]
+        else:
+            fld.Vlaue = None
+        return fld
+
+    def __iter__(self):
+        self.__curIndex = 0
+        return self
+
+    def __next__(self) -> JPFieldInfo:
+        if self.__curIndex < len(self.__fields):
+            fld = self.__fields[self.__curIndex]
+            fld.Value = self._rowData[self.__curIndex]
+            self.__curIndex += 1
+            return fld
+        else:
+            raise StopIteration
+
+    def __len__(self):
+        return len(self.__fields)
+
+
+class JPTabelFieldInfo(object):
+    def __init__(self, fields: list, data: list):
+        """代表中所有行数据及字段信息
+        JPTabelFieldInfo(fields,data)
+        """
+        self.TableName = None
+        self.PrimarykeyFieldName = None
+        self.PrimarykeyFieldIndex = None
+        self.__RowFieldsInfo = JPRowFieldInfo(fields)
+        self.__data = data
+
+    def __getitem__(self, key) -> JPRowFieldInfo:
+        r = self.__RowFieldsInfo
+        r._rowData = self.__data[key]
+        return r
+
+    def __iter__(self):
+        self.__curIndex = 0
+        # r = self.__RowFieldsInfo
+        # r._rowData = self.__data[0]
+        return self
+
+    def __next__(self) -> JPRowFieldInfo:
+        if self.__curIndex < len(self.__data):
+            self.__curIndex += 1
+            r = self.__RowFieldsInfo
+            r._rowData = self.__data[self.__curIndex-1]
+            return r
+        else:
+            raise StopIteration
+
+    def __len__(self):
+        return len(self.__data)
+
+    def addRowWithOutValue(self):
+        '''增加一行数据，全为None'''
+        self.__data.append([None] * (len(self.__RowFieldsInfo)))
+
+    def addRowWithProbablyValue(self):
+        '''增加一行数据，且以最可能的值赋值'''
+
+
+class _JPMySQLFieldInfo(JPFieldInfo):
     NOT_NULL_FLAG = 1
     PRI_KEY_FLAG = 2
     UNIQUE_KEY_FLAG = 4  #唯一约束
@@ -112,7 +207,7 @@ class JPMySQLFieldInfo(JPFieldInfo):
     def __init__(self, cursors_field):
         super().__init__()
         f = cursors_field
-        fl = JPMySQLFieldInfo
+        fl = _JPMySQLFieldInfo
         self.FieldName = f.org_name
         self.Title = f.name
         self._type_code = f.type_code
@@ -142,17 +237,57 @@ class JPMySQLFieldInfo(JPFieldInfo):
         return self.sqlValueCreater[t](v)
 
 
-def jpGetDataListAndFields(sql: str) -> list:
+def _getOnlyStrcFilter():
+    return " Limit 0"
+
+
+def _getClassFieldsInfo():
+    return _JPMySQLFieldInfo
+
+
+def getTabelFieldInfo(sql_or_tableName: str) -> JPTabelFieldInfo:
+    """根据一个Sql或表名返回一个JPTabelFieldInfo对象"""
+    sel_p = r"\s*SELECT\s*.*from\s*(\S+)\s*"
+    mt = re.match(sel_p, sql_or_tableName, flags=re.I)
+    tabel_name = mt.groups()[0] if mt else sql_or_tableName
+    hasWhere = re.match(r".*\s*WHERE\s*", sql_or_tableName, flags=re.I)
+    s_filter = _getOnlyStrcFilter()
+    if mt:
+        sql = sql_or_tableName if hasWhere else sql_or_tableName + s_filter
+    else:
+        sql = 'Select * from {} {}'.format(sql_or_tableName, s_filter)
+    cur = JPDb().currentConn.cursor()
+    cur.execute(sql)
+    flds = [_getClassFieldsInfo()(item) for item in cur._result.fields]
+    data = [list(row) for row in cur._result.rows]
+    # 检查查询中是否包含主键
+    pklist = [[fld.FieldName, i] for i, fld in enumerate(flds)
+              if fld.IsPrimarykey]
+    if len(pklist) == 0:
+        raise ValueError('查询语句:\n"{}"中未包含主键字段！'.format(sql))
+    result = JPTabelFieldInfo(flds, data)
+    result.TableName = tabel_name
+    result.PrimarykeyFieldName, result.PrimarykeyFieldIndex = pklist[0]
+    return result
+
+
+def JPGetDataListAndFields(sql: str) -> list:
     '''根据查询语句返回一个列表'''
     cur = JPDb().currentConn.cursor()
     cur.execute(sql)
-    l=[list(row) for row in cur._result.rows]
-    f=[JPMySQLFieldInfo(item) for item in cur._result.fields]
-    return l,f
+    l = [list(row) for row in cur._result.rows]
+    f = [_JPMySQLFieldInfo(item) for item in cur._result.fields]
+    return l, f
 
-# class JPMySqlFeildsInfo():
-#     def __init__(self):
 
+def JPGetFields(sql: str) -> list:
+    '''
+    根据查询语句返回一个列表，查询语句不包含条件，只包含字段信息
+    结果也史包含字段信息
+    '''
+    cur = JPDb().currentConn.cursor()
+    cur.execute(sql)
+    return [_JPMySQLFieldInfo(item) for item in cur._result.fields]
 
 
 class JPMySqlSingleTableQuery(object):
@@ -164,7 +299,7 @@ class JPMySqlSingleTableQuery(object):
         '''
         cur = JPDb().currentConn.cursor()
         cur.execute(sql)
-        self.Fields = [JPMySQLFieldInfo(item) for item in cur._result.fields]
+        self.Fields = [_JPMySQLFieldInfo(item) for item in cur._result.fields]
         self.data = [list(row) for row in cur._result.rows]
         self.TableName = cur._result.fields[0].org_table
         self.__db = str(cur._result.fields[0].db, 'utf-8')  # 得到表名
@@ -253,7 +388,7 @@ class JPMySqlSingleTableQuery(object):
             fld.Value = MainTablePkValue if all(
                 [bz, fld.FieldName == MainTablePkName]) else RowData[i]
 
-    def getRecordFieldInfo(self, row) -> JPMySQLFieldInfo:
+    def getRecordFieldInfo(self, row) -> JPFieldInfo:
         self.__checkRowNum(row)
         is_int = isinstance(row, int)
         for i, item in enumerate(self.Fields):
@@ -299,4 +434,5 @@ class JPMySqlSingleTableQuery(object):
 
 
 if __name__ == "__main__":
-    print(jpGetDataListAndFields("select * from t_order"))
+    a = getTabelFieldInfo("select * from t_order where 1>0")
+

@@ -223,9 +223,9 @@ if __name__ == "__main__":
                                  '收款日报表',
                                  Bolder=False,
                                  AlignmentFlag=(QtCore.Qt.AlignCenter))
-        title = [fld.Title for fld in ui.mod.fields]
-        fns = [fld.FieldName for fld in ui.mod.fields]
-        cols = len(ui.mod.fields)
+        title = [fld.Title for fld in flds]
+        fns = [fld.FieldName for fld in flds]
+        cols = len(flds)
         al_c = QtCore.Qt.AlignCenter
         al_r = (QtCore.Qt.AlignVCenter | QtCore.Qt.AlignRight)
         rpt.SetMargins(30, 60, 30, 30)

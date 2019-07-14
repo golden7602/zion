@@ -1,10 +1,5 @@
 # -*- coding: utf-8 -*-
-# @Time    : 19-12-1 下午3:26
-# @Author  : JPT
-# @Site    :
-# @File    : JPTableModel\__init__.py
-# @Software: VS Code
-#  测试提交
+
 import datetime
 import os
 import sys
@@ -27,7 +22,6 @@ from decimal import Decimal
 
 class __JPTableViewModelBase(QAbstractTableModel):
     dataChanged = pyqtSignal(QModelIndex)
-    # BooleanString = JPBooleanString().getBooleanString()
     result_DataAlignment = {
         JPFieldType.Int: (Qt.AlignRight | Qt.AlignVCenter),
         JPFieldType.Float: (Qt.AlignRight | Qt.AlignVCenter),
@@ -234,12 +228,7 @@ class __JPTableViewModelBase(QAbstractTableModel):
                     r += v
             return r
         raise TypeError("指定的列[{}]不能进行数值运算".format(col))
-        # if self.fields[col].TypeCode in [JPFieldType.Int, JPFieldType.Float]:
-        #     v = sum([row[col] if row[col] else 0 for row in self.basedata])
-        #     return float(v.to_eng_string()) if isinstance(v, Decimal) else v
-        # else:
 
-        # return None
 
 
 class JPTableViewModelReadOnly(__JPTableViewModelBase):
@@ -400,8 +389,6 @@ class JPFormModelMain(JPEditFormDataMode):
         super().__init__()
         self.mainForm = mainform
         self.__JPFormModelMainSub = None
-        # self.fieldsdict = {}
-        # self.PKName = None
         self.__sql = None
         self.autoPkRole = None
         self.__editMode = JPEditFormDataMode.ReadOnly
