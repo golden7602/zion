@@ -16,7 +16,7 @@ from PyQt5.QtGui import QColor
 from PyQt5.QtWidgets import (QDialog, QMessageBox, QPushButton, QTableWidget,
                              QTableWidgetItem, QWidget)
 
-from lib import Ui_funcform
+#from Ui.Ui_FuncFormMob import Ui_Form as Func_Ui_Form
 from lib.globalVar import pub
 from lib.JPExcel.JPExportToExcel import clsExportToExcelFromTableWidget
 #from lib.whereStringCreater import clsWhereStringCreater
@@ -49,7 +49,7 @@ class clsmyStackedWidget(object):
             items = pub.getDict(sql.format(info.jpData["fNMID"]))
             tempWidget = QWidget()
             # 新建立一个功能窗口对象
-            self.ui = Ui_funcform.Ui_Form()
+            self.ui = Func_Ui_Form()
             self.ui.setupUi(tempWidget)
             self.ui.label_FuncFullPath.setText(info.FullPath)
             objName = info.jpData["fObjectName"].upper()

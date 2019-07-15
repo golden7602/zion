@@ -2,8 +2,11 @@ import os
 import sys
 sys.path.append(os.getcwd())
 
-from lib.JPDatebase import JPMySqlSingleTableQuery as JPQ, JPDb
+from lib.JPDatebase import JPMySqlSingleTableQuery as JPQ, JPDb, getDict
 from lib.JPFunction import Singleton
+from PyQt5.QtWidgets import QTreeWidgetItem
+from PyQt5.QtCore import QThread
+from PyQt5.QtGui import QIcon
 
 
 @Singleton
@@ -66,8 +69,55 @@ class JPPub():
 
         self.__EnumDict = getEnumDict()
 
+        self.__sysNavigationMenusDict = getDict(
+            """
+            SELECT fNMID, fMenuText, fParentId, fCommand, fObjectName, fIcon,
+                    cast(fIsCommandButton AS SIGNED) AS fIsCommandButton
+            FROM sysnavigationmenus
+            WHERE fEnabled=1 AND fNMID>1
+            ORDER BY fDispIndex
+            """)
+
     def getEnumList(self, enum_type_id: int):
         return self.__EnumDict[enum_type_id]
 
     def getCustomerList(self):
         return self.__allCustomerList
+
+    def getSysNavigationMenusDict(self):
+        return self.__sysNavigationMenusDict
+
+
+def loadTreeview(treeWidget, items):
+    class MyThreadReadTree(QThread):  # 加载功能树的线程类
+        def __init__(self, treeWidget, items):
+            super().__init__()
+            root = QTreeWidgetItem(treeWidget)
+            root.setText(0, "Function")
+            root.FullPath = "Function"
+            self.root = root
+            self.items = items
+
+        def run(self):  # 线程执行函数
+            def additemtotree(parent, nmid, items, begin=0):
+                for i in range(begin, len(items) - 1):
+                    if items[i]["fParentId"] == nmid and int(
+                            items[i]["fIsCommandButton"]) == 0:
+                        item = QTreeWidgetItem(parent)
+                        item.setText(0, items[i]["fMenuText"])
+                        path = os.getcwd(
+                        ) + "\\res\\ico\\" + items[i]["fIcon"]
+                        item.setIcon(0, QIcon(path))
+                        item.jpData = items[i]
+                        item.FullPath = parent.FullPath + \
+                            '\\' + items[i]["fMenuText"]
+                        additemtotree(item, items[i]["fNMID"], items, i)
+                        item.setExpanded(1)
+
+            additemtotree(self.root, 1, self.items)
+            self.root.setExpanded(True)
+
+        def getRoot(self):
+            return
+    _readTree = MyThreadReadTree(treeWidget, items)
+    _readTree.run()

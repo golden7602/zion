@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'c:\Users\win10\Desktop\Zion\zion\Ui\mainform.ui'
+# Form implementation generated from reading ui file 'e:\Zion\Ui\mainform.ui'
 #
 # Created by: PyQt5 UI code generator 5.11.3
 #
@@ -11,13 +11,13 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1128, 648)
+        MainWindow.resize(1091, 648)
         MainWindow.setStyleSheet("")
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayout_3 = QtWidgets.QVBoxLayout(self.centralwidget)
         self.verticalLayout_3.setSizeConstraint(QtWidgets.QLayout.SetNoConstraint)
-        self.verticalLayout_3.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout_3.setContentsMargins(0, 0, 4, 0)
         self.verticalLayout_3.setSpacing(0)
         self.verticalLayout_3.setObjectName("verticalLayout_3")
         self.widget_title = QtWidgets.QWidget(self.centralwidget)
@@ -93,6 +93,7 @@ class Ui_MainWindow(object):
         self.treeWidget.setMaximumSize(QtCore.QSize(500, 16777215))
         self.treeWidget.setSizeIncrement(QtCore.QSize(300, 0))
         self.treeWidget.setBaseSize(QtCore.QSize(300, 0))
+        self.treeWidget.setHeaderLabel('')
         font = QtGui.QFont()
         font.setFamily("Arial")
         font.setPointSize(11)
@@ -100,7 +101,9 @@ class Ui_MainWindow(object):
         font.setWeight(50)
         self.treeWidget.setFont(font)
         self.treeWidget.setObjectName("treeWidget")
+        self.treeWidget.headerItem().setText(0, "1")
         self.stackedWidget = QtWidgets.QStackedWidget(self.splitter)
+        self.stackedWidget.setStyleSheet("")
         self.stackedWidget.setObjectName("stackedWidget")
         self.page = QtWidgets.QWidget()
         self.page.setObjectName("page")
@@ -131,4 +134,3 @@ if __name__ == "__main__":
     ui.setupUi(MainWindow)
     MainWindow.show()
     sys.exit(app.exec_())
-

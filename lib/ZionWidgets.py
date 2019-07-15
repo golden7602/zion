@@ -2,25 +2,184 @@
 
 import os
 import sys
-sys.path.append(os.getcwd())
 from functools import reduce
-
-from PyQt5.QtCore import (QModelIndex, Qt)
-from PyQt5.QtGui import (QColor, QFont)
+import datetime
+from dateutil.relativedelta import relativedelta
+sys.path.append(os.getcwd())
+from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtCore import QModelIndex, Qt, pyqtSignal
+from PyQt5.QtGui import QColor, QFont
 from PyQt5.QtPrintSupport import QPrinter
-from PyQt5.QtWidgets import (QAbstractItemView, QMessageBox, QWidget)
+from PyQt5.QtWidgets import QAbstractItemView, QMessageBox, QWidget
 
-from lib.JPDatebase import (JPMySqlSingleTableQuery as JPQ,
-                            JPGetDataListAndFields)
-from lib.JPFunction import (NV, JPRound)
-from lib.JPMvc.JPModel import (JPFormModelMainSub, JPTableViewModelReadOnly)
+from lib.JPDatebase import getDataListAndFields
+from lib.JPDatebase import JPMySqlSingleTableQuery as JPQ
+from lib.JPFunction import NV, JPRound
+from lib.JPMvc.JPModel import JPFormModelMainSub, JPTableViewModelReadOnly
 from lib.JPPrintReport import JPReport
-from ZionPublc import JPPub
+from lib.ZionPublc import JPPub
+from PyQt5.QtGui import QIcon, QPixmap
 
 
-def getFuncForm_Order():
-    from Ui import Ui_FuncFormMob
-    
+class FunctionForm(QWidget):
+    OneButtonClicked = pyqtSignal(str)
+
+    def __init__(self, parent=None, flags=Qt.WindowFlags()):
+        super().__init__(parent=parent, flags=flags)
+
+        self.setObjectName("Form")
+        self.resize(742, 300)
+        font = QtGui.QFont()
+        font.setFamily("Arial")
+        self.setFont(font)
+        self.verticalLayout = QtWidgets.QVBoxLayout(self)
+        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout.setSpacing(0)
+        self.verticalLayout.setObjectName("verticalLayout")
+        self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_2.setObjectName("horizontalLayout_2")
+        spacerItem = QtWidgets.QSpacerItem(10, 20, QtWidgets.QSizePolicy.Fixed,
+                                           QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_2.addItem(spacerItem)
+        self.label_FuncFullPath = QtWidgets.QLabel(self)
+        font = QtGui.QFont()
+        font.setFamily("Arial")
+        font.setPointSize(11)
+        font.setBold(True)
+        font.setWeight(75)
+        self.label_FuncFullPath.setFont(font)
+        self.label_FuncFullPath.setObjectName("label_FuncFullPath")
+        self.horizontalLayout_2.addWidget(self.label_FuncFullPath)
+        self.verticalLayout.addLayout(self.horizontalLayout_2)
+        self.horizontalLayout_3 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_3.setContentsMargins(-1, 5, -1, 5)
+        self.horizontalLayout_3.setObjectName("horizontalLayout_3")
+        self.widget_Button = QtWidgets.QWidget(self)
+        font = QtGui.QFont()
+        font.setPointSize(8)
+        self.widget_Button.setFont(font)
+        self.widget_Button.setObjectName("widget_Button")
+        self.horizontalLayout_Button = QtWidgets.QHBoxLayout(
+            self.widget_Button)
+        self.horizontalLayout_Button.setContentsMargins(0, 0, 0, 0)
+        self.horizontalLayout_Button.setSpacing(0)
+        self.horizontalLayout_Button.setObjectName("horizontalLayout_Button")
+        self.horizontalLayout_3.addWidget(self.widget_Button)
+        self.horizontalLayout = QtWidgets.QHBoxLayout()
+        self.horizontalLayout.setObjectName("horizontalLayout")
+        spacerItem1 = QtWidgets.QSpacerItem(20, 20,
+                                            QtWidgets.QSizePolicy.Fixed,
+                                            QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout.addItem(spacerItem1)
+        self.label_2 = QtWidgets.QLabel(self)
+        font = QtGui.QFont()
+        font.setFamily("Arial")
+        self.label_2.setFont(font)
+        self.label_2.setObjectName("label_2")
+        self.horizontalLayout.addWidget(self.label_2)
+        self.comboBox = QtWidgets.QComboBox(self)
+        self.comboBox.setMinimumSize(QtCore.QSize(100, 0))
+        self.comboBox.setObjectName("comboBox")
+        self.horizontalLayout.addWidget(self.comboBox)
+        spacerItem2 = QtWidgets.QSpacerItem(20, 20,
+                                            QtWidgets.QSizePolicy.Fixed,
+                                            QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout.addItem(spacerItem2)
+        self.checkBox_1 = QtWidgets.QCheckBox(self)
+        self.checkBox_1.setObjectName("checkBox_1")
+        self.horizontalLayout.addWidget(self.checkBox_1)
+        self.checkBox_2 = QtWidgets.QCheckBox(self)
+        self.checkBox_2.setObjectName("checkBox_2")
+        self.horizontalLayout.addWidget(self.checkBox_2)
+        spacerItem3 = QtWidgets.QSpacerItem(40, 20,
+                                            QtWidgets.QSizePolicy.Expanding,
+                                            QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout.addItem(spacerItem3)
+        self.horizontalLayout_3.addLayout(self.horizontalLayout)
+        self.verticalLayout.addLayout(self.horizontalLayout_3)
+        self.tableView = QtWidgets.QTableView(self)
+        self.tableView.setEditTriggers(
+            QtWidgets.QAbstractItemView.SelectedClicked)
+        self.tableView.setAlternatingRowColors(True)
+        self.tableView.setSelectionBehavior(
+            QtWidgets.QAbstractItemView.SelectRows)
+        self.tableView.setObjectName("tableView")
+        self.tableView.verticalHeader().setMinimumSectionSize(23)
+        self.verticalLayout.addWidget(self.tableView)
+
+        self.retranslateUi(self)
+        QtCore.QMetaObject.connectSlotsByName(self)
+
+        # 以下为初始化部分，不能删除
+        self.comboBox.addItems(['Today', 'Last Month', 'Last Year', 'All'])
+        self.checkBox_1.clicked.connect(self.btnRefreshClick)
+        self.checkBox_2.clicked.connect(self.btnRefreshClick)
+        self.comboBox.activated['int'].connect(self.btnRefreshClick)
+
+    def btnSearchClick(self):
+        # self.whereDlg = clsWhereStringCreater(self.tableWidget, self.MainForm)
+        # self.whereDlg.show()
+        pass
+
+    def btnRefreshClick(self):
+        if self.DefauleParaSQL:
+            self.tableWidget.clear()
+            # thr = MyThreadReadTable(self.tableWidget, self.MainForm)
+            ch1 = 1 if self.checkBox_1.isChecked() else 0
+            ch2 = 1 if self.checkBox_2.isChecked() else 0
+            cb = {
+                0:
+                '=CURRENT_DATE()',
+                1: (datetime.date.today() -
+                    relativedelta(months=1)).strftime(">='%Y-%m-%d'"),
+                2: (datetime.date.today() -
+                    relativedelta(years=1)).strftime(">='%Y-%m-%d'"),
+                3:
+                '=fOrderDate'
+            }
+            # thr.run(
+            #     self.DefauleParaSQL.format(
+            #         ch1, ch2, cb[self.ui.comboBox.currentIndex()]),
+            #     self.backgroundWhenValueIsTrueFieldName)
+            self.ui.tableWidget.resizeColumnsToContents()
+
+    def btnExportToExcel(self):
+        # exp = clsExportToExcelFromTableWidget(self.tableWidget, self.MainForm)
+        # exp.run()
+        pass
+
+    def addButtons(self, btnNames: list):
+        class _myButton(QtWidgets.QPushButton):
+            buttonClicked = pyqtSignal(str)
+
+            def __init__(self, *arg, **kwarg):
+                super().__init__(*arg, **kwarg)
+
+            def mousePressEvent(self, event):
+
+                self.buttonClicked[str].emit(self.text())
+
+        def _click(name):
+            print(name)
+            self.OneButtonClicked[str].emit(name)
+
+        for item in btnNames:
+            btn = _myButton(item[0])
+            icon = QIcon()
+            icon.addPixmap(QPixmap(os.getcwd() + "\\res\\ico\\" + item[1]),
+                           QIcon.Normal, QIcon.Off)
+            btn.setIcon(icon)
+            btn.buttonClicked.connect(_click)
+            self.horizontalLayout_Button.addWidget(btn)
+
+    def retranslateUi(self, Form):
+        _translate = QtCore.QCoreApplication.translate
+        self.setWindowTitle(_translate("Form", "Form"))
+        self.label_FuncFullPath.setText(_translate("Form", "Function Path"))
+        self.label_2.setText(_translate("Form", "Filter:"))
+        self.checkBox_1.setText(_translate("Form", "CheckBox"))
+        self.checkBox_2.setText(_translate("Form", "CheckBox"))
+
 
 def getFuncForm_FormReport_Day():
     from Ui.Ui_FormReport_Day import Ui_Form
@@ -51,7 +210,6 @@ def getFuncForm_FormReport_Day():
 
     cbo_year, cbo_base = ui.cbo_year, ui.cbo_base
     tw = ui.tableView
-    JPdf = jpGetDataListAndFields
     sql_receivables = """
         SELECT IF(ISNULL(Q3.d), 'Sum', Q3.d) AS Day0
             , M1, M2, M3, M4, M5, M6, M7, M8, M9, M10
@@ -111,7 +269,7 @@ def getFuncForm_FormReport_Day():
             GROUP BY Q1.d WITH ROLLUP
         ) Q3
         """
-    year = JPdf('''select year(fOrderDate) as y  
+    year = getDataListAndFields('''select year(fOrderDate) as y  
                 from t_order union select year(fReceiptDate) 
                 as y from t_receivables''')[0]
     ui.mod = None
@@ -119,7 +277,8 @@ def getFuncForm_FormReport_Day():
     def _search():
         if cbo_year.currentIndex() != -1 and cbo_base.currentIndex() != -1:
             sql = cbo_base.currentData()
-            data, fields = JPdf(sql.format(cbo_year.currentText()))
+            data, fields = getDataListAndFields(
+                sql.format(cbo_year.currentText()))
             ui.mod = myMod(tw, data, fields)
 
     def butPrint():
@@ -256,3 +415,17 @@ def showEditForm_Order(edit_mode, PKValue=None):
     MF.dataChanged[QModelIndex].connect(Cacu)
     MF.dataChanged[QWidget].connect(Cacu)
     MF.show(JPFormModelMainSub.Edit)
+
+
+def getStackedWidget(mainForm, sysnavigationmenus_data):
+    pub = JPPub()
+    menus = pub.getSysNavigationMenusDict()
+    menu_id = sysnavigationmenus_data['fNMID']
+    buts = [[m['fMenuText'], m['fIcon']] for m in menus
+            if m['fParentId'] == menu_id and m['fIsCommandButton']]
+    widget = None
+    if menu_id == 2:  # Order
+        widget = FunctionForm()
+        widget.addButtons(buts)
+    print(buts)
+    return widget

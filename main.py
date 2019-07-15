@@ -1,74 +1,125 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
-import sys
 import os
+import sys
 sys.path.append(os.getcwd())
-from datetime import datetime
 
-import pymysql
-from Ui import Ui_mainform
-from lib.funcform_process import clsmyStackedWidget
-from lib.globalVar import pub
-from PyQt5.QtCore import QSettings, Qt, QThread, pyqtSignal
-from PyQt5.QtGui import QIcon,QPixmap
 from PyQt5.QtWidgets import (QApplication, QHBoxLayout, QLabel, QMainWindow,
-                             QProgressBar, QSplitter, QStackedWidget,
-                             QTreeWidgetItem)
+                             QProgressBar, QTreeWidgetItem, QWidget)
+from PyQt5.QtGui import QIcon, QPixmap
+from lib.ZionPublc import JPPub, loadTreeview
+from lib.ZionWidgets import getStackedWidget
+from Ui import Ui_mainform
+
+# class clsmyStackedWidget(object):
+#     """功能窗口的堆叠布局类"""
+#     def __init__(self, StackedWidget, MainForm):
+#         self.StackedWidget = StackedWidget
+#         self.MainForm = MainForm
+#         self.ui = None
+#         self.objFuncform = None
+#     def TreeViewItemClicked(self, info):
+#         try:
+#             frm = self.StackedWidget
+#             if frm.count() == 1:
+#                 frm.removeWidget(frm.currentWidget)
+#             sql ="""
+#                 SELECT fNMID,  fMenuText, fParentId
+#                 FROM sysnavigationmenus
+#                 WHERE fParentId={}
+#                 ORDER BY  fDispIndex
+#             """
+#             items = pub.getDict(sql.format(info.jpData["fNMID"]))
+#             tempWidget = QWidget()
+#             # 新建立一个功能窗口对象
+#             self.ui = Func_Ui_Form()
+#             self.ui.setupUi(tempWidget)
+#             self.ui.label_FuncFullPath.setText(info.FullPath)
+#             objName = info.jpData["fObjectName"].upper()
+#             if objName in self.clsFuncFormDict:
+#                 self.objFuncform = self.clsFuncFormDict[objName](self.ui,
+#                                                                  self.MainForm)
+#             else:
+#                 raise AttributeError
+#             for i in range(0, len(items)):
+#                 nm = items[i]["fMenuText"]
+#                 # 添加按钮
+#                 btn = QPushButton(nm)
+#                 btn.setObjectName('btn' + nm)  # 使用setObjectName设置对象名称
+#                 btn.tableWidget = self.ui.tableWidget
+#                 btn.clicked.connect(self.objFuncform.AnybtnClick)
+#                 self.ui.horizontalLayout_Button.addWidget(btn)
+#             frm.addWidget(tempWidget)
+#             frm.currentWidget = tempWidget
+#             frm.setCurrentIndex(1)
+#             self.objFuncform.btnRefreshClick()
+#         except AttributeError as err:
+#             print(err)
+#             tempWidget = QWidget()
+#             # tempWidget.setStyleSheet("background-color:rgb(255, 255, 255);")
+#             self.StackedWidget.addWidget(tempWidget)
+#             self.StackedWidget.currentWidget = tempWidget
+#             self.StackedWidget.setCurrentIndex(1)
+#         else:
+#             return
 
 
-class MyThreadReadTree(QThread):  # 加载功能树的线程类
-    def __init__(self, root, items):
-        super(MyThreadReadTree, self).__init__()
-        self.root = root
-        self.items = items
+class mianFormProcess():
+    def __init__(self, MW):
 
-    def run(self):  # 线程执行函数
-        def additemtotree(parent, nmid, items, begin=0):
-            for i in range(begin, len(items) - 1):
-                if items[i]["fParentId"] == nmid and int(
-                        items[i]["fIsCommandButton"]) == 0:
-                    item = QTreeWidgetItem(parent)
-                    item.setText(0, items[i]["fMenuText"])
-                    path=os.getcwd()+"\\res\\ico\\"+ items[i]["fIcon"]
-                    item.setIcon(
-                        0,
-                        QIcon(path))
-                    item.jpData = items[i]
-                    item.FullPath = parent.FullPath + \
-                        '\\' + items[i]["fMenuText"]
-                    additemtotree(item, items[i]["fNMID"], items, i)
-                    item.setExpanded(1)
+        ui = Ui_mainform.Ui_MainWindow()
+        ui.setupUi(MW)
+        ui.label_logo.setPixmap(QPixmap(os.getcwd() + "\\res\\Zions_100.png"))
+        #MW.setStyleSheet(pub.readQss(
+        #    "C:\\Users\\Administrator\\Desktop\\newPYprj\\res\\blackwhite.css"))
+        # 堆叠布局调
+        ui.stackedWidget.removeWidget(ui.page)
+        ui.stackedWidget.removeWidget(ui.page_2)
+        EF = QWidget()
+        ui.empty = EF
+        EF.horizontalLayout = QHBoxLayout(EF)
+        EF.horizontalLayout.setContentsMargins(0, 0, 0, 0)
+        EF.horizontalLayout.setSpacing(0)
+        EF.horizontalLayout.setObjectName("horizontalLayout")
+        EF.label = QLabel(EF)
+        EF.label.setStyleSheet(
+            "background-color: rgb(255, 255, 255);border:0.5px solid rgb(127,127,127)"
+        )
+        EF.label.setText("")
+        EF.label.setObjectName("label")
+        EF.horizontalLayout.addWidget(EF.label)
+        ui.stackedWidget.addWidget(EF)
+        ui.stackedWidget.currentWidget = EF
+        # 隐藏树标题
+        ui.treeWidget.setHeaderHidden(True)
 
-        additemtotree(self.root, 1, self.items)
+        # funcFrm = clsmyStackedWidget(ui.stackedWidget, MW)
+        # funcFrm.TreeViewItemClicked(None)
+        # ui.treeWidget.itemClicked['QTreeWidgetItem*', 'int'].connect(
+        #     funcFrm.TreeViewItemClicked)
+        pub = JPPub()
+        self.sysNavigationMenus = pub.getSysNavigationMenusDict()
+        loadTreeview(ui.treeWidget, self.sysNavigationMenus)
+        MW.Label = QLabel("")
+        MW.ProgressBar = QProgressBar()
+        MW.statusBar().addPermanentWidget(MW.Label)
+        MW.statusBar().addPermanentWidget(MW.ProgressBar)
+        MW.ProgressBar.hide()
+
+        def reeViewItemClicked(item, i):
+            widget = getStackedWidget(self, item.jpData)
+            if widget:
+                ui.stackedWidget.addWidget(widget)
+                ui.stackedWidget.currentWidget = widget
+                ui.stackedWidget.setCurrentIndex(1)
+
+        ui.treeWidget.itemClicked[QTreeWidgetItem, int].connect(
+            reeViewItemClicked)
 
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     MainWindow = QMainWindow()
-    ui = Ui_mainform.Ui_MainWindow()
-    ui.setupUi(MainWindow)
-    ui.label_logo.setPixmap(QPixmap(os.getcwd()+"\\res\\Zions_100.png"))
-    #MainWindow.setStyleSheet(pub.readQss(
-    #    "C:\\Users\\Administrator\\Desktop\\newPYprj\\res\\blackwhite.css"))
-    ui.stackedWidget.removeWidget(ui.page)
-    ui.stackedWidget.removeWidget(ui.page_2)
+    mianFormProcess(MainWindow)
     MainWindow.showMaximized()
-    funcFrm = clsmyStackedWidget(ui.stackedWidget, MainWindow)
-    funcFrm.TreeViewItemClicked(None)
-    ui.treeWidget.itemClicked['QTreeWidgetItem*', 'int'].connect(
-        funcFrm.TreeViewItemClicked)
-    root = QTreeWidgetItem(ui.treeWidget)
-    root.setText(0, "Function")
-    root.FullPath = "Function"
-    items = pub.getDict(
-        "select fNMID,fMenuText,fParentId,fCommand,fObjectName,fIcon,fIsCommandButton+0 as fIsCommandButton  from sysnavigationmenus where fEnabled=1 and  fNMID>1 order by fDispIndex"
-    )
-    tr = MyThreadReadTree(root, items)
-    tr.run()
-    MainWindow.Label = QLabel("")
-    MainWindow.ProgressBar = QProgressBar()
-    MainWindow.statusBar().addPermanentWidget(MainWindow.Label)
-    MainWindow.statusBar().addPermanentWidget(MainWindow.ProgressBar)
-    MainWindow.ProgressBar.hide()
-    root.setExpanded(1)
     sys.exit(app.exec_())

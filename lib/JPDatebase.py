@@ -31,6 +31,16 @@ class JPDb(object):
                                          port=int(kw['port']))
         return self.__currentConn
 
+    def __call__(self) -> connect:
+        return self.currentConn
+
+
+def getDict(sql) -> dict:
+    db = JPDb()
+    cursor = db.currentConn.cursor(cursors.DictCursor)
+    cursor.execute(sql)
+    return cursor.fetchall()
+
 
 class JPFieldType(object):
     Int = 1
@@ -138,7 +148,7 @@ class JPTabelFieldInfo(object):
         if self.__curIndex < len(self.__data):
             self.__curIndex += 1
             r = self.__RowFieldsInfo
-            r._rowData = self.__data[self.__curIndex-1]
+            r._rowData = self.__data[self.__curIndex - 1]
             return r
         else:
             raise StopIteration
@@ -271,7 +281,7 @@ def getTabelFieldInfo(sql_or_tableName: str) -> JPTabelFieldInfo:
     return result
 
 
-def JPGetDataListAndFields(sql: str) -> list:
+def getDataListAndFields(sql: str) -> list:
     '''根据查询语句返回一个列表'''
     cur = JPDb().currentConn.cursor()
     cur.execute(sql)
@@ -435,4 +445,3 @@ class JPMySqlSingleTableQuery(object):
 
 if __name__ == "__main__":
     a = getTabelFieldInfo("select * from t_order where 1>0")
-

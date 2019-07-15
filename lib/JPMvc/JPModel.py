@@ -10,7 +10,7 @@ from PyQt5.QtGui import QColor
 from PyQt5.QtWidgets import QAbstractItemView, QTableView
 
 import lib.JPMvc.JPDelegate as myDe
-from lib.JPDatebase import JPDb, JPMySQLFieldInfo, JPMySqlSingleTableQuery
+from lib.JPDatebase import JPDb, JPMySqlSingleTableQuery
 from lib.JPDatebase import JPFieldType
 from lib.JPFunction import (JPBooleanString, JPDateConver, JPRound,
                             JPGetDisplayText)
