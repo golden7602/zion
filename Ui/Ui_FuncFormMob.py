@@ -77,6 +77,7 @@ class Ui_Form(object):
         self.tableView.setAlternatingRowColors(True)
         self.tableView.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
         self.tableView.setObjectName("tableView")
+        self.tableView.verticalHeader().setDefaultSectionSize(25)
         self.tableView.verticalHeader().setMinimumSectionSize(23)
         self.verticalLayout.addWidget(self.tableView)
 

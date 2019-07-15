@@ -13,7 +13,7 @@ from PyQt5.QtPrintSupport import QPrinter
 from PyQt5.QtWidgets import QAbstractItemView, QMessageBox, QWidget
 
 from lib.JPDatebase import getDataListAndFields
-from lib.JPDatebase import JPMySqlSingleTableQuery as JPQ
+from lib.JPDatebase import JPMySqlSingleTableQuery as JPQ, getDataListAndFields
 from lib.JPFunction import NV, JPRound
 from lib.JPMvc.JPModel import JPFormModelMainSub, JPTableViewModelReadOnly
 from lib.JPPrintReport import JPReport
@@ -24,8 +24,12 @@ from PyQt5.QtGui import QIcon, QPixmap
 class FunctionForm(QWidget):
     OneButtonClicked = pyqtSignal(str)
 
-    def __init__(self, parent=None, flags=Qt.WindowFlags()):
-        super().__init__(parent=parent, flags=flags)
+    def __init__(self, parent, flags=Qt.WindowFlags()):
+        super().__init__(parent, flags=flags)
+        self.MainForm = parent
+        self.DefauleParaSQL = ''
+        self.DefauleBaseSQL = ''
+        self.backgroundWhenValueIsTrueFieldName = []
 
         self.setObjectName("Form")
         self.resize(742, 300)
@@ -105,6 +109,7 @@ class FunctionForm(QWidget):
             QtWidgets.QAbstractItemView.SelectRows)
         self.tableView.setObjectName("tableView")
         self.tableView.verticalHeader().setMinimumSectionSize(23)
+        self.tableView.verticalHeader().setDefaultSectionSize(24)
         self.verticalLayout.addWidget(self.tableView)
 
         self.retranslateUi(self)
@@ -116,17 +121,29 @@ class FunctionForm(QWidget):
         self.checkBox_2.clicked.connect(self.btnRefreshClick)
         self.comboBox.activated['int'].connect(self.btnRefreshClick)
 
+    def setSQL(self, sql_with_where, sql_base):
+        '''setSQL(sql_without_para, where_string)\n
+        sql_without_para: 不带Where子句的sql
+        where_string： where子句，参数用{}表示
+        '''
+        self.DefauleParaSQL = sql_with_where
+        self.DefauleBaseSQL = sql_base
+        self.btnRefreshClick()
+
     def btnSearchClick(self):
-        # self.whereDlg = clsWhereStringCreater(self.tableWidget, self.MainForm)
+        # self.whereDlg = clsWhereStringCreater(self.tableView, self.MainForm)
         # self.whereDlg.show()
         pass
 
+    def getModelClass(self):
+        '''此类或以重写，改写Model的行为,必须返回一个模型类'''
+        return JPTableViewModelReadOnly
+
     def btnRefreshClick(self):
         if self.DefauleParaSQL:
-            self.tableWidget.clear()
-            # thr = MyThreadReadTable(self.tableWidget, self.MainForm)
+            #self.tableView.clear()
             ch1 = 1 if self.checkBox_1.isChecked() else 0
-            ch2 = 1 if self.checkBox_2.isChecked() else 0
+            ch2 = 0 if self.checkBox_2.isChecked() else 1
             cb = {
                 0:
                 '=CURRENT_DATE()',
@@ -137,31 +154,31 @@ class FunctionForm(QWidget):
                 3:
                 '=fOrderDate'
             }
-            # thr.run(
-            #     self.DefauleParaSQL.format(
-            #         ch1, ch2, cb[self.ui.comboBox.currentIndex()]),
-            #     self.backgroundWhenValueIsTrueFieldName)
-            self.ui.tableWidget.resizeColumnsToContents()
+            sql = self.DefauleParaSQL.format(ch1, ch2,
+                                             cb[self.comboBox.currentIndex()])
+            data, fields = getDataListAndFields(sql)
+            self.model = self.getModelClass()(self.tableView, data, fields)
+            self.tableView.resizeColumnsToContents()
 
     def btnExportToExcel(self):
-        # exp = clsExportToExcelFromTableWidget(self.tableWidget, self.MainForm)
+        # exp = clsExportToExcelFromTableWidget(self.tableView, self.MainForm)
         # exp.run()
         pass
 
     def addButtons(self, btnNames: list):
+        shili = self
         class _myButton(QtWidgets.QPushButton):
-            buttonClicked = pyqtSignal(str)
+            #buttonClicked = pyqtSignal(str)
 
             def __init__(self, *arg, **kwarg):
                 super().__init__(*arg, **kwarg)
 
             def mousePressEvent(self, event):
+                name = self.text()
+                shili.OneButtonClicked[str].emit(name)
 
-                self.buttonClicked[str].emit(self.text())
-
-        def _click(name):
-            print(name)
-            self.OneButtonClicked[str].emit(name)
+        # def _click(name):
+        #     self.OneButtonClicked[str].emit(name)
 
         for item in btnNames:
             btn = _myButton(item[0])
@@ -169,7 +186,7 @@ class FunctionForm(QWidget):
             icon.addPixmap(QPixmap(os.getcwd() + "\\res\\ico\\" + item[1]),
                            QIcon.Normal, QIcon.Off)
             btn.setIcon(icon)
-            btn.buttonClicked.connect(_click)
+            #btn.buttonClicked.connect(_click)
             self.horizontalLayout_Button.addWidget(btn)
 
     def retranslateUi(self, Form):
@@ -417,6 +434,70 @@ def showEditForm_Order(edit_mode, PKValue=None):
     MF.show(JPFormModelMainSub.Edit)
 
 
+class FuncForm_Order(FunctionForm):
+    def __init__(self, MainForm):
+        super().__init__(MainForm)
+        sql_1 = """
+                SELECT fOrderID as 订单号码OrderID,
+                        fOrderDate as 日期OrderDate,
+                        fCustomerName as 客户名Cliente,
+                        fCity as 城市City,
+                        fSubmited1 as 提交Submited,
+                        fSubmit_Name as 提交人Submitter,
+                        fAmount as 金额SubTotal,
+                        fRequiredDeliveryDate as 交货日期RDD,
+                        fDesconto as 折扣Desconto,
+                        fTax as 税金IVA,
+                        fPayable as `应付金额Valor a Pagar`,
+                        fContato as 联系人Contato,
+                        fCelular as 手机Celular,
+                        cast(fSubmited as SIGNED) AS fSubmited
+                FROM v_order AS o
+                WHERE fCanceled=0
+                        AND left(fOrderID,2)='CP'
+                        AND (fSubmited={}
+                        OR fSubmited={})
+                        AND fOrderDate{}
+                ORDER BY  forderID DESC"""
+        sql_2 = """
+                SELECT fOrderID as 订单号码OrderID,
+                        fOrderDate as 日期OrderDate,
+                        fCustomerName as 客户名Cliente,
+                        fCity as 城市City,
+                        fSubmited1 as 提交Submited,
+                        fSubmit_Name as 提交人Submitter,
+                        fAmount as 金额SubTotal,
+                        fRequiredDeliveryDate as 交货日期RDD,
+                        fDesconto as 折扣Desconto,
+                        fTax as 税金IVA,
+                        fPayable as `应付金额Valor a Pagar`,
+                        fContato as 联系人Contato,
+                        fCelular as 手机Celular,
+                        cast(fSubmited as SIGNED) AS fSubmited
+                FROM v_order AS o
+                WHERE fCanceled=0
+                        AND left(fOrderID,2)='CP'
+                ORDER BY  forderID DESC"""
+        self.backgroundWhenValueIsTrueFieldName = ['fSubmited']
+        self.checkBox_1.setText('UnSubmited')
+        self.checkBox_2.setText('Submited')
+        self.checkBox_1.setChecked(True)
+        self.checkBox_2.setChecked(False)
+        super().setSQL(sql_1, sql_2)
+        self.OneButtonClicked[str].connect(self.but_click)
+
+    def but_click(self, name):
+        for n, fun in FuncForm_Order.__dict__.items():
+            if n.upper() == 'BTN{}CLICKED'.format(name.upper()):
+                fun(self)
+
+    def btnNewClicked(self):
+        print("New被下")
+
+    def btnBrowseClicked(self):
+        print("btnBrowseClicked被下")
+
+
 def getStackedWidget(mainForm, sysnavigationmenus_data):
     pub = JPPub()
     menus = pub.getSysNavigationMenusDict()
@@ -425,7 +506,6 @@ def getStackedWidget(mainForm, sysnavigationmenus_data):
             if m['fParentId'] == menu_id and m['fIsCommandButton']]
     widget = None
     if menu_id == 2:  # Order
-        widget = FunctionForm()
+        widget = FuncForm_Order(mainForm)
         widget.addButtons(buts)
-    print(buts)
     return widget

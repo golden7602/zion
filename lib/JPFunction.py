@@ -156,7 +156,7 @@ def _(value, *args):
 
 @JPGetDisplayText.register(datetime.date)
 def _(value, *args):
-    return value.toString("yyyy-MM-dd")
+    return value.strftime('%Y-%m-%d')
 
 
 @JPGetDisplayText.register(int)
@@ -226,7 +226,9 @@ def _(value, vCls=str):
         return value
     raise TypeError("JPDateConver函数vCls参数类型错误！")
 
-
+def readQss(style):  # Use: win.setStyleSheet(readQss(qssStyle))
+    with open(style, 'r') as f:
+        return f.read()
 
 # print(JPGetDisplayText(5456123465))
 # print(JPGetDisplayText(float(875648266)))

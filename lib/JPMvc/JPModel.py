@@ -10,7 +10,7 @@ from PyQt5.QtGui import QColor
 from PyQt5.QtWidgets import QAbstractItemView, QTableView
 
 import lib.JPMvc.JPDelegate as myDe
-from lib.JPDatebase import JPDb, JPMySqlSingleTableQuery
+from lib.JPDatebase import JPDb, JPMySqlSingleTableQuery,JPTabelFieldInfo
 from lib.JPDatebase import JPFieldType
 from lib.JPFunction import (JPBooleanString, JPDateConver, JPRound,
                             JPGetDisplayText)
@@ -38,7 +38,7 @@ class __JPTableViewModelBase(QAbstractTableModel):
         self.del_data = []
         self.update_index = {}
         self.tableView = None
-
+        self.basedata=[]
         if data:
             self.basedata = ([list(row) for row in data] if isinstance(
                 data, tuple) else data)
@@ -228,7 +228,6 @@ class __JPTableViewModelBase(QAbstractTableModel):
                     r += v
             return r
         raise TypeError("指定的列[{}]不能进行数值运算".format(col))
-
 
 
 class JPTableViewModelReadOnly(__JPTableViewModelBase):

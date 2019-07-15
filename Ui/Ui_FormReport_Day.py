@@ -206,7 +206,8 @@ if __name__ == "__main__":
     def _search():
         if cbo_year.currentIndex() != -1 and cbo_base.currentIndex() != -1:
             sql = cbo_base.currentData()
-            data, fields = JPdf(sql.format(cbo_year.currentText()))
+            data, fields = jpGetDataListAndFields(
+                sql.format(cbo_year.currentText()))
             ui.mod = myMod(tw, data, fields)
 
     def butPrint():

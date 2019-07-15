@@ -40,9 +40,7 @@ class pub(object):
             ft[flds[i].name] = flds[i].type_code
         return ft
 
-    @staticmethod
-    def readQss(style):  # Use: win.setStyleSheet(readQss(qssStyle))
-        with open(style, 'r') as f:
-            return f.read()
+
+
 
 
