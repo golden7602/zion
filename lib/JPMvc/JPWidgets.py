@@ -214,7 +214,7 @@ class QComboBox(QComboBox_, __JPWidgetBase):
 
     def focusOutEvent(self, e):
         t = self.currentText()
-        if t not in [item[0] for item in self._FieldInfo.RowSource]:
+        if not t or (t not in [item[0] for item in self._FieldInfo.RowSource]):
             self.setCurrentIndex(-1)
             self.lineEdit().setText('')
         QComboBox_.focusOutEvent(self, e)
@@ -264,7 +264,8 @@ class QCheckBox(QCheckBox_, __JPWidgetBase):
 
     def setFieldInfo(self, fld: JPFieldType, raiseEvent=True):
         self._FieldInfo = fld
-        self.setChecked(self._FieldInfo.Value)
+        v= True if self._FieldInfo.Value else False
+        self.setChecked(v)
         if raiseEvent:
             self.stateChanged.connect(self._dataChange)
 

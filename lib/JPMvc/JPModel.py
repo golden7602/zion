@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
 import datetime
-import os
-import sys
-sys.path.append(os.getcwd())
+from os import getcwd
+from sys import path as jppath
+jppath.append(getcwd())
+
 from PyQt5.QtCore import (QAbstractTableModel, QDate, QModelIndex, Qt,
                           QVariant, pyqtSignal, QObject)
 from PyQt5.QtGui import QColor
@@ -36,19 +37,6 @@ class __JPTableViewModelBase(QAbstractTableModel):
         self.fields = self.TabelFieldInfo.Fields
         self.basedata = self.TabelFieldInfo.Data
 
-    # def __init__(self, data: list = [], fields: list = []):
-    #     super().__init__()
-    #     self.db = JPDb()
-    #     self.dirty = False
-    #     self.del_data = []
-    #     self.update_index = {}
-    #     self.tableView = None
-    #     self.basedata = []
-    #     if data:
-    #         self.basedata = ([list(row) for row in data] if isinstance(
-    #             data, tuple) else data)
-    #     if fields:
-    #         self.fields = fields
 
     def getDataDict(self, role: int = Qt.DisplayRole):
         ''''按行返回数据字典的列表,一般用于打印'''
@@ -188,9 +176,10 @@ class __JPTableViewModelBase(QAbstractTableModel):
         self.dataChanged[QModelIndex].emit(Index)
         return True
 
-    def AfterSetDataBeforeInsterRowEvent(row_data, Index: QModelIndex) -> True:
-        '''更新数据后，计算公式值,可重载，返回值必须为逻辑值
-       不重载时，默认不增加行
+    def AfterSetDataBeforeInsterRowEvent(self, row_data,
+                                         Index: QModelIndex) -> True:
+        '''子窗体更新数据后,执行此事件，可重载，返回值必须为逻辑值
+        不重载时，默认不增加行，返回True时增加行
        '''
         return False
 
@@ -260,28 +249,6 @@ class __JPTableViewModelBase(QAbstractTableModel):
         self.dirty = True
         return True
 
-
-class JPTableViewModelReadOnly(__JPTableViewModelBase):
-    def __init__(self, tableView, tabelFieldInfo: JPTabelFieldInfo):
-        ''' 
-        建立一个只读型模型，仅仅用于展示内容，不可编辑\n
-        JPTableModelReadOnly(tableView,tabelFieldInfo:TabelFieldInfo)
-        '''
-        super().__init__(tabelFieldInfo)
-        # 设置只读
-        self.tableView = tableView
-        self.tableView.setEditTriggers(QAbstractItemView.NoEditTriggers)
-
-
-class JPTableViewModelEditForm(__JPTableViewModelBase):
-    def __init__(self, tableView, tabelFieldInfo: JPTabelFieldInfo):
-        ''' 
-        建立一个可编辑模型\n
-        JPTableViewModelEditForm(tableView,tabelFieldInfo:TabelFieldInfo)\n
-        '''
-        super().__init__(tabelFieldInfo)
-        self.tableView = tableView
-
     def setColumnsDetegate(self):
         """setColumnsDetegate(TableView: QTableViewt)\n
         参数为需要设置代理的TableView控件"""
@@ -306,6 +273,28 @@ class JPTableViewModelEditForm(__JPTableViewModelBase):
                 de = myDe.JPDelegate_LineEdit(tw)
             if de:
                 tw.setItemDelegateForColumn(col, de)
+
+
+class JPTableViewModelReadOnly(__JPTableViewModelBase):
+    def __init__(self, tableView, tabelFieldInfo: JPTabelFieldInfo):
+        ''' 
+        建立一个只读型模型，仅仅用于展示内容，不可编辑\n
+        JPTableModelReadOnly(tableView,tabelFieldInfo:TabelFieldInfo)
+        '''
+        super().__init__(tabelFieldInfo)
+        # 设置只读
+        self.tableView = tableView
+        self.tableView.setEditTriggers(QAbstractItemView.NoEditTriggers)
+
+
+class JPTableViewModelEditForm(__JPTableViewModelBase):
+    def __init__(self, tableView, tabelFieldInfo: JPTabelFieldInfo):
+        ''' 
+        建立一个可编辑模型\n
+        JPTableViewModelEditForm(tableView,tabelFieldInfo:TabelFieldInfo)\n
+        '''
+        super().__init__(tabelFieldInfo)
+        self.tableView = tableView
 
     # def GetSQLS(self) -> dict:
     #     d = self.basedata
@@ -370,13 +359,16 @@ class JPFormModelMain(JPEditFormDataMode):
         self.__editMode = JPEditFormDataMode.ReadOnly
         self._queryResult = None
         self.__fieldsRowSource = None
+        self.ObjectDict = {}
+
+    def setUi(self, ui):
+        cls_tup = (JPWidgets.QLineEdit, JPWidgets.QDateEdit,
+                   JPWidgets.QComboBox, JPWidgets.QTextEdit,
+                   JPWidgets.QCheckBox)
+        d = ui.__dict__
         self.ObjectDict = {
-            obj.objectName(): obj
-            for obj in self.mainForm.findChildren((JPWidgets.QLineEdit,
-                                                   JPWidgets.QDateEdit,
-                                                   JPWidgets.QComboBox,
-                                                   JPWidgets.QTextEdit,
-                                                   JPWidgets.QCheckBox))
+            n: c
+            for n, c in d.items() if isinstance(c, cls_tup)
         }
 
     def setFormModelMainSub(self, mod):
@@ -454,6 +446,11 @@ class _JPFormModelSub(JPEditFormDataMode):
         self.__tableView = None
         self.__sql = None
         self._model = None
+        self.__hideColumns = []
+        self.__columnWidths = []
+        self.__readOnlyColumns = []
+        self.__fieldsRowSource = []
+        self.__formulas = []
 
     def setTabelInfo(self, sql: str):
         self.__sql = sql
@@ -461,10 +458,7 @@ class _JPFormModelSub(JPEditFormDataMode):
     def getModel(self):
         return self._model
 
-    def readData(
-            self,
-            subTableView: QTableView,
-    ):
+    def readData(self, subTableView: QTableView):
         self.__tableView = subTableView
         if self.EditMode is None:
             raise ValueError("没有指定子窗体的编辑模式！")
@@ -484,9 +478,17 @@ class _JPFormModelSub(JPEditFormDataMode):
             self.__tableView.setEditTriggers(QAbstractItemView.NoEditTriggers)
         if self.EditMode in [JPEditFormDataMode.Edit, JPEditFormDataMode.New]:
             self.__tableView.setEditTriggers(QAbstractItemView.AllEditTriggers)
-        # 设置子窗体的输入委托控件
-        self._model.setColumnsDetegate(self.__tableView)
-
+        # 设置子窗体的输入委托控件及格式等
+        tv = self.__tableView
+        self._model.setColumnsDetegate()
+        for col in self.__readOnlyColumns:
+            tv.setItemDelegateForColumn(col, myDe.JPDelegate_ReadOnly(tv))
+        for col in self.__hideColumns:
+            tv.setColumnHidden(col, True)
+        for i, w in enumerate(self.__columnWidths):
+            subTableView.setColumnWidth(i, w)
+        for field_key, data in self.__fieldsRowSource:
+            self._model.TabelFieldInfo.setFieldsRowSource(field_key, data)
         # self._queryResult = JPMySqlSingleTableQuery(
         #     self.__sql,
         #     True if self.EditMode == JPEditFormDataMode.New else None)
@@ -499,6 +501,32 @@ class _JPFormModelSub(JPEditFormDataMode):
         # all_ed = QAbstractItemView.AllEditTriggers
         # tv.setEditTriggers(no_ed if self.EditMode ==
         #                    JPEditFormDataMode.ReadOnly else all_ed)
+    def setFormula(self, key: [int, str], formula: str):
+        """
+        设置计算公式 {字段名}代表一个值
+        本公式也用于增加新行前的检查，也用于列间的运算
+        key为列号或字段名;formula格式示例如下：
+        {7}=(JPRound({1},2) + NV({2},float))/2
+        列2的值转换成浮点数与列3的值转换成浮点数和的一半
+        等号左边为目标字段值，右边为公式，遵照python语法
+        如果可以保证公式右边字段值不包含0，也可以不使用NV函数
+        NV函数为一个自定义函数，用于防止None值并转换成指定类型
+        JPRound函数为一个自定义函数,四舍五入
+        """
+        self.__formulas.append((key, formula))
+
+    def setFieldsRowSource(self, *args):
+        self.__fieldsRowSource = args
+
+    def setColumnsHidden(self, *args: int):
+        """设置隐藏列的列号，如有多个列，请设置一个列表"""
+        self.__hideColumns = args
+
+    def setColumnWidths(self, *args: int):
+        self.__columnWidths = args
+
+    def setColumnsReadOnly(self, *args: int):
+        self.__readOnlyColumns = args
 
     def GetSQLS(self):
         return self._model.GetSQLS()
@@ -513,6 +541,9 @@ class JPFormModelMainSub(JPEditFormDataMode):
         self.mainModel.setFormModelMainSub(self)
         self.tableView = subTableView
         self.subModel = _JPFormModelSub()
+
+    def setUi(self, ui):
+        self.mainModel.setUi(ui)
 
     def _emmitDataChange(self, arg):
         try:
@@ -529,8 +560,19 @@ class JPFormModelMainSub(JPEditFormDataMode):
 
     def show(self, edit_mode, pk_value: str = None):
         # 处理子窗体
-        self.subModel._model.dataChanged.connect(self._emmitDataChange)
+
         self.mainModel.EditMode = edit_mode
         self.subModel.EditMode = edit_mode
         self.subModel.readData(self.tableView)
         self.mainModel.readData()
+        self.subModel._model.dataChanged.connect(self._emmitDataChange)
+        # 设置更新数据后计算重载方法
+        t = self.subModel_AfterSetDataBeforeInsterRowEvent
+        self.subModel._model.AfterSetDataBeforeInsterRowEvent = t
+
+    def subModel_AfterSetDataBeforeInsterRowEvent(self, row_data,
+                                                  Index: QModelIndex) -> True:
+        '''子窗体更新数据后,执行此事件，可重载，返回值必须为逻辑值
+        不重载时，默认不增加行，返回True时增加行
+        '''
+        return False

@@ -1,6 +1,6 @@
-import os
-import sys
-sys.path.append(os.getcwd())
+from os import getcwd
+from sys import path as jppath
+jppath.append(getcwd())
 
 from lib.JPDatebase import JPMySqlSingleTableQuery as JPQ, JPDb, getDict
 from lib.JPFunction import Singleton
@@ -105,7 +105,7 @@ def loadTreeview(treeWidget, items):
                             items[i]["fIsCommandButton"]) == 0:
                         item = QTreeWidgetItem(parent)
                         item.setText(0, items[i]["fMenuText"])
-                        path = os.getcwd(
+                        path = getcwd(
                         ) + "\\res\\ico\\" + items[i]["fIcon"]
                         item.setIcon(0, QIcon(path))
                         item.jpData = items[i]

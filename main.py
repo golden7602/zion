@@ -12,6 +12,7 @@ from lib.ZionWidgets import getStackedWidget
 from Ui import Ui_mainform
 from lib.JPFunction import readQss
 
+
 class mianFormProcess():
     def __init__(self, MW):
 
@@ -48,6 +49,13 @@ class mianFormProcess():
         MW.statusBar().addPermanentWidget(MW.ProgressBar)
         MW.ProgressBar.hide()
 
+        def addForm(form):
+            st = ui.stackedWidget
+            if st.count() > 0:
+                st.removeWidget(st.widget(0))
+                st.addWidget(form)
+
+        MW.addForm = addForm
         def reeViewItemClicked(item, i):
             widget = getStackedWidget(MW, item.jpData)
             if widget:

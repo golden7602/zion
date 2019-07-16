@@ -1,16 +1,18 @@
 # -*- coding: utf-8 -*-
 
-import os
-import sys
+from os import getcwd
+from sys import path as jppath
+jppath.append(getcwd())
+
+
 from functools import reduce
 import datetime
 from dateutil.relativedelta import relativedelta
-sys.path.append(os.getcwd())
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QModelIndex, Qt, pyqtSignal
 from PyQt5.QtGui import QColor, QFont
 from PyQt5.QtPrintSupport import QPrinter
-from PyQt5.QtWidgets import QAbstractItemView, QMessageBox, QWidget
+from PyQt5.QtWidgets import QAbstractItemView, QMessageBox, QWidget, QDialog
 
 from lib.JPDatebase import getDataListAndFields
 from lib.JPDatebase import JPMySqlSingleTableQuery as JPQ, JPTabelFieldInfo
@@ -24,6 +26,8 @@ from PyQt5.QtGui import QIcon, QPixmap
 class FunctionForm(QWidget):
     def __init__(self, parent, flags=Qt.WindowFlags()):
         super().__init__(parent, flags=flags)
+        # 把本窗体加入主窗体
+        parent.addForm(self)
         self.MainForm = parent
         self.DefauleParaSQL = ''
         self.DefauleBaseSQL = ''
@@ -169,7 +173,7 @@ class FunctionForm(QWidget):
             btn = QtWidgets.QPushButton(item[0])
             btn.setObjectName(item[2].upper())
             icon = QIcon()
-            icon.addPixmap(QPixmap(os.getcwd() + "\\res\\ico\\" + item[1]),
+            icon.addPixmap(QPixmap(getcwd() + "\\res\\ico\\" + item[1]),
                            QIcon.Normal, QIcon.Off)
             btn.setIcon(icon)
             self.horizontalLayout_Button.addWidget(btn)
@@ -341,10 +345,11 @@ def getFuncForm_FormReport_Day():
     return Form
 
 
-def showEditForm_Order(edit_mode, PKValue=None):
+def showEditForm_Order(MainForm, edit_mode, PKValue=None):
     from Ui.Ui_FormOrderMob import Ui_Form
     pb = JPPub()
-    Form = QWidget()
+    Form = QDialog(MainForm)
+    Form.setWindowModality(Qt.WindowModal)
     ui = Ui_Form()
     ui.setupUi(Form)
     curPK = PKValue
@@ -356,36 +361,41 @@ def showEditForm_Order(edit_mode, PKValue=None):
             WHERE fOrderID = '{}'
             """.format(curPK)
     s_sql = """
-            SELECT fID, fOrderID, fQuant AS '数量Qtd', fProductName AS '名称Descrição'
-            , fLength AS '长Larg.', fWidth AS '宽Comp.', fPrice AS '单价P. Unitario'
-            , fAmount AS '金额Total'
+            SELECT fID, fOrderID, fQuant AS '数量Qtd', 
+                fProductName AS '名称Descrição', 
+                fLength AS '长Larg.', fWidth AS '宽Comp.', 
+                fPrice AS '单价P. Unitario', fAmount AS '金额Total'
             FROM t_order_detail
             WHERE fOrderID = '{}'    
             """.format(curPK)
 
-    def checkBeforeNewRow(data_all, r, c):
-        data = data_all[len(data_all) - 1]
-        if data[7] is None or data[7] == 0:
-            return False
-        lt = [data[2], data[4], data[5], data[6], data[7]]
-        lt = [float(str(i)) if i else 0 for i in lt]
-        return int(lt[4] * 100) == int(
-            reduce(lambda x, y: x * y, lt[0:4]) * 100)
+    # 继承模型，为了设置重载方法，必要要时也可以用动态绑定到函数
+    class myMainMode(JPFormModelMainSub):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
 
-    MF = JPFormModelMainSub(Form, ui.tableView)
+        def subModel_AfterSetDataBeforeInsterRowEvent(self, row_data, Index):
+            r, c = Index.row(), Index.column()
+            data = row_data[len(row_data) - 1]
+            if data[7] is None or data[7] == 0:
+                return False
+            lt = [data[2], data[4], data[5], data[6], data[7]]
+            lt = [float(str(i)) if i else 0 for i in lt]
+            return int(lt[4] * 100) == int(
+                reduce(lambda x, y: x * y, lt[0:4]) * 100)
+
+    tv = ui.tableView
+    MF = myMainMode(Form, tv)
+    MF.setUi(ui)
     MF_S = MF.subModel
     MF_M = MF.mainModel
-    MF_M.setFieldsRowSource([
-        'fCustomerID',
-        pb.getCustomerList(), 'fVendedorID',
-        pb.user.getAllUserEnumList()
-    ])
+    MF_M.setFieldsRowSource([('fCustomerID', pb.getCustomerList()),
+                             ('fVendedorID', pb.getEnumList(10))])
     MF_M.setTabelInfo(m_sql)
     MF_S.setColumnsHidden(0, 1)
     MF_S.setColumnWidths(0, 0, 60, 300, 100, 100, 100, 100)
     MF_S.setColumnsReadOnly(7)
     MF_S.setTabelInfo(s_sql)
-    MF_S.setAutoAddRow(checkBeforeNewRow, False)
     MF_S.setFormula(
         7,
         "JPRound(JPRound({2}) * JPRound({4}) * JPRound({5}) * JPRound({6}))")
@@ -405,7 +415,7 @@ def showEditForm_Order(edit_mode, PKValue=None):
 
     def Cacu(*args):
         M = MF.mainModel
-        v_sum = MF.subModel.getColumnSum(7)
+        v_sum = MF.subModel._model.getColumnSum(7)
         fDesconto = M.getObjectValue("fDesconto")
         fTax = (v_sum - fDesconto) * 0.17
         fPayable = v_sum - fDesconto + fTax
@@ -417,6 +427,7 @@ def showEditForm_Order(edit_mode, PKValue=None):
     ui.butSave.clicked.connect(butSave)
     MF.dataChanged[QModelIndex].connect(Cacu)
     MF.dataChanged[QWidget].connect(Cacu)
+
     MF.show(edit_mode)
 
 
@@ -489,14 +500,14 @@ class FuncForm_Order(FunctionForm):
     @QtCore.pyqtSlot()
     def on_CMDNEW_clicked(self):
         print("CMDNEW被下")
-        showEditForm_Order(JPFormModelMainSub.New)
+        showEditForm_Order(self.MainForm, JPFormModelMainSub.New)
 
     @QtCore.pyqtSlot()
     def on_CMDBROWSE_clicked(self):
         cu_id = self.getCurrentCustomerID()
         if not cu_id:
             return
-        showEditForm_Order(JPFormModelMainSub.ReadOnly, cu_id)
+        showEditForm_Order(self.MainForm, JPFormModelMainSub.ReadOnly, cu_id)
         print("CMDBROWSE被下")
 
 
@@ -510,4 +521,4 @@ def getStackedWidget(mainForm, sysnavigationmenus_data):
     if menu_id == 2:  # Order
         widget = FuncForm_Order(mainForm)
         widget.addButtons(buts)
-    return widget
+    return

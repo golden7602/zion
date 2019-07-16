@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-import sys
-import os
-sys.path.append(os.getcwd())
+from os import getcwd
+from sys import path as jppath
+jppath.append(getcwd())
 import re
 import configparser
 from configparser import ConfigParser

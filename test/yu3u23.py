@@ -51,4 +51,9 @@ if __name__ == "__main__":
     s = re.sub('^\s', '', re.sub('\s+',' ',re.sub('\n','',s)))
     print(s)
     m = re.search(p, s, (re.I))
-    print(m.groups()[0])
+
+
+
+    t=[(1,2),(3,4),(5,6)]
+    for a,b in t:
+        print(a,b)
