@@ -9,7 +9,6 @@ from decimal import Decimal
 
 def PrintFunctionRunTime(func):
     """计算函数运行时间的装饰器"""
-
     def run(*args, **kwargs):
         start = time.time()
         result = func(*args, **kwargs)
@@ -136,6 +135,7 @@ def JPRound(number, power=0):
         else:
             return num2 / digit
 
+
 ###################################################################
 @singledispatch
 def JPGetDisplayText(value, *args) -> str:
@@ -147,6 +147,11 @@ def JPGetDisplayText(value, *args) -> str:
         return
     else:
         return ''
+
+
+@JPGetDisplayText.register(str)
+def _(value, *args):
+    return value
 
 
 @JPGetDisplayText.register(QDate)
@@ -161,6 +166,8 @@ def _(value, *args):
 
 @JPGetDisplayText.register(int)
 def _(value, *args):
+    if value == 0:
+        return ''
     return '{:,}'.format(value)
 
 
@@ -171,15 +178,16 @@ def _(value, *args):
 
 @JPGetDisplayText.register(Decimal)
 def _(value, *args):
-    v=float(str(value))
+    if value == 0:
+        return ''
+    v = float(str(value))
     return '{:,.2f}'.format(v)
-
-
 
 
 @JPGetDisplayText.register(bytes)
 def _(value, *args):
     return JPBooleanString().getBooleanString()[ord(x)]
+
 
 ######################################################################
 @singledispatch
@@ -226,9 +234,11 @@ def _(value, vCls=str):
         return value
     raise TypeError("JPDateConver函数vCls参数类型错误！")
 
+
 def readQss(style):  # Use: win.setStyleSheet(readQss(qssStyle))
     with open(style, 'r') as f:
         return f.read()
+
 
 # print(JPGetDisplayText(5456123465))
 # print(JPGetDisplayText(float(875648266)))
