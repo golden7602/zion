@@ -11,7 +11,7 @@ from PyQt5.QtGui import QColor
 from PyQt5.QtWidgets import QAbstractItemView, QTableView
 
 import lib.JPMvc.JPDelegate as myDe
-from lib.JPDatebase import (JPTabelFieldInfo, JPFieldType)
+from lib.JPDatebase import (JPTabelFieldInfo, JPFieldType, JPTabelRowData)
 
 from lib.JPFunction import (JPBooleanString, JPDateConver, JPRound,
                             JPGetDisplayText)
@@ -26,17 +26,18 @@ class __JPTableViewModelBase(QAbstractTableModel):
 
     def __init__(self, tabelFieldInfo: JPTabelFieldInfo = None):
         super().__init__()
+        tabelFieldInfo.Data = [
+            JPTabelRowData(item) for item in tabelFieldInfo.Data
+        ]
         self.TabelFieldInfo = tabelFieldInfo
-        self.fields = self.TabelFieldInfo.Fields if tabelFieldInfo else []
-        self.basedata = self.TabelFieldInfo.Data if tabelFieldInfo else []
         self.del_data = []
         self.tableView = None
 
     def setTabelFieldInfo(self, tabelFieldInfo: JPTabelFieldInfo):
+        tabelFieldInfo.Data = [
+            JPTabelRowData(item) for item in tabelFieldInfo.Data
+        ]
         self.TabelFieldInfo = tabelFieldInfo
-        self.fields = self.TabelFieldInfo.Fields
-        self.basedata = self.TabelFieldInfo.Data
-
 
     def getDataDict(self, role: int = Qt.DisplayRole):
         ''''按行返回数据字典的列表,一般用于打印'''
@@ -53,34 +54,35 @@ class __JPTableViewModelBase(QAbstractTableModel):
     #     data:列表，数据源。列表每一项为一行数据的列表，不能是元组
     #     fields：存储列表字段信息的列表，每一项为一个JPFieldInfo对象
     #     """
-    #     self.basedata = ([list(row) for row in data] if isinstance(
+    #     self.TabelFieldInfo.Data= ([list(row) for row in data] if isinstance(
     #         data, tuple) else data)
-    #     self.fields = fields
+    #     self.TabelFieldInfo.Fields = fields
 
     def __getPara(self, Index):
         c = Index.column()
-        return (Index.row(), c, self.fields[c].FieldName,
-                self.fields[c].TypeCode, self.fields[c].RowSource)
+        return (Index.row(), c, self.TabelFieldInfo.Fields[c].FieldName,
+                self.TabelFieldInfo.Fields[c].TypeCode,
+                self.TabelFieldInfo.Fields[c].RowSource)
 
     def rowCount(self, parent: QModelIndex = QModelIndex()) -> int:
-        return len(self.basedata)
+        return len(self.TabelFieldInfo.Data)
 
     def columnCount(self, parent: QModelIndex = QModelIndex()) -> int:
-        return len(self.fields)
+        return len(self.TabelFieldInfo.Fields)
 
     def _GetHeaderAlignment(self, Index: QModelIndex) -> int:
         return Qt.AlignCenter
 
     # def _GetDataAlignment(self, Index: QModelIndex) -> int:
-    #     if self.fields[Index.column()].RowSource:
+    #     if self.TabelFieldInfo.Fields[Index.column()].RowSource:
     #         return (Qt.AlignLeft | Qt.AlignVCenter)
     #     else:
-    #         return self.result_DataAlignment[self.fields[
+    #         return self.result_DataAlignment[self.TabelFieldInfo.Fields[
     #             Index.column()].TypeCode]
 
     # def _GetDispText(self, Index: QModelIndex) -> int:
     #     r, c, fn, tp, rs = self.__getPara(Index)
-    #     data_i = self.basedata[r][c]
+    #     data_i = self.TabelFieldInfo.Data[r][c]
     #     if data_i is None:
     #         return
     #     if rs:
@@ -92,8 +94,8 @@ class __JPTableViewModelBase(QAbstractTableModel):
     #     return JPGetDisplayText(data_i)
     def _GetDispText(self, Index: QModelIndex) -> str:
         r, c, = Index.row(), Index.column()
-        rs = self.fields[c].RowSource
-        data_i = self.basedata[r][c]
+        rs = self.TabelFieldInfo.Fields[c].RowSource
+        data_i = self.TabelFieldInfo.Data[r][c]
         if data_i is None:
             return
         if rs:
@@ -114,9 +116,10 @@ class __JPTableViewModelBase(QAbstractTableModel):
         if not Index.isValid():
             raise Exception("行数或列数设置有误！")
         if role == Qt.TextAlignmentRole:
-            return (Qt.AlignLeft
-                    | Qt.AlignVCenter
-                    ) if self.fields[c].RowSource else self.fields[c].Alignment
+            return (
+                Qt.AlignLeft
+                | Qt.AlignVCenter) if self.TabelFieldInfo.Fields[
+                    c].RowSource else self.TabelFieldInfo.Fields[c].Alignment
             #return int(self._GetDataAlignment(Index))
         elif role == Qt.DisplayRole:
             return self._GetDispText(Index)
@@ -132,10 +135,12 @@ class __JPTableViewModelBase(QAbstractTableModel):
 
     def _formulaCacu(self, row_data: int):
         # 这个可能要重新写
-        for i, fld in enumerate(self.fields):
+        if isinstance(row_data, JPTabelRowData):
+            d = row_data.InteriorData
+        for i, fld in enumerate(self.TabelFieldInfo.Fields):
             if fld.Formula:
                 try:
-                    row_data[i] = eval(fld.Formula.format(*row_data))
+                    d[i] = eval(fld.Formula.format(*d))
                 except Exception:
                     pass
 
@@ -143,31 +148,34 @@ class __JPTableViewModelBase(QAbstractTableModel):
                 role: int = Qt.EditRole) -> bool:
         r, c = Index.row(), Index.column()
         cur_fld = self.TabelFieldInfo[r][c]
+
         tp = cur_fld.TypeCode
         if Any is None:
-            cur_fld.value = None
+            self.TabelFieldInfo.Data[r][c] = None
             return True
         if cur_fld.RowSource:
-            cur_fld.value = Any
+            self.TabelFieldInfo.Data[r][c] = Any
             return True
         elif tp == JPFieldType.Int:
             if Any == '':
                 return True
-            cur_fld.value = int(str(Any).replace(',', ''))
+            self.TabelFieldInfo.Data[r][c] = int(str(Any).replace(',', ''))
         elif tp == JPFieldType.Float:
             if Any == '':
                 return True
-            cur_fld.value = float(str(Any).replace(',', ''))
+            self.TabelFieldInfo.Data[r][c] = float(str(Any).replace(',', ''))
         elif tp == JPFieldType.Boolean:
-            cur_fld.value = (0 if Any == self.BooleanString[0] else 1)
+            self.TabelFieldInfo.Data[r][c] = (0 if Any == self.BooleanString[0]
+                                              else 1)
         elif tp == JPFieldType.Date:
-            cur_fld.value = Any
+            self.TabelFieldInfo.Data[r][c] = Any
         else:
-            cur_fld.value = Any
+            self.TabelFieldInfo.Data[r][c] = Any
         self.dirty = True
-        self._formulaCacu(self.basedata[r])
+        self._formulaCacu(self.TabelFieldInfo.Data[r])
         # 执行重载函数，判断行数据是否合法
-        tempv = self.AfterSetDataBeforeInsterRowEvent(self.basedata[r], Index)
+        tempv = self.AfterSetDataBeforeInsterRowEvent(
+            self.TabelFieldInfo.Data[r].InteriorData, Index)
         if isinstance(tempv, bool):
             if tempv:
                 self.insertRows(self.rowCount())
@@ -211,19 +219,20 @@ class __JPTableViewModelBase(QAbstractTableModel):
         if role != Qt.DisplayRole:
             return QVariant()
         if Orientation == Qt.Horizontal:
-            return QVariant(self.fields[section].Title if self.fields[section].
-                            Title else self.fields[section].FieldName)
+            return QVariant(self.TabelFieldInfo.Fields[section].Title if self.
+                            TabelFieldInfo.Fields[section].Title else self.
+                            TabelFieldInfo.Fields[section].FieldName)
         return QVariant(int(section + 1))
 
     def getColumnSum(self, col):
         """得到某一列的合计值"""
-        tp = self.fields[col].TypeCode
+        tp = self.TabelFieldInfo.Fields[col].TypeCode
         if tp in [tp == JPFieldType.Int, JPFieldType.Float]:
             if tp == JPFieldType.Int:
                 r, con = 0, lambda v: int(v.to_eng_string())
             if tp == JPFieldType.Float:
                 r, con = 0.0, lambda v: float(v.to_eng_string())
-            for row in self.basedata:
+            for row in self.TabelFieldInfo.Data:
                 v = row[col] if row[col] else 0
                 if isinstance(v, Decimal):
                     r += con(v)
@@ -234,17 +243,18 @@ class __JPTableViewModelBase(QAbstractTableModel):
 
     def insertRows(self, position, rows=1, index=QModelIndex()):
         self.beginInsertRows(QModelIndex(), position, position + rows - 1)
-        self.basedata = (self.basedata[:position] +
-                         [[None] * len(self.fields)] +
-                         self.basedata[position:])
+        self.TabelFieldInfo.Data = (
+            self.TabelFieldInfo.Data[:position] +
+            [[None] * len(self.TabelFieldInfo.Fields)] +
+            self.TabelFieldInfo.Data[position:])
         self.endInsertRows()
         self.dirty = True
         return True
 
     def removeRows(self, position, rows=1, index=QModelIndex()):
         self.beginRemoveRows(QModelIndex(), position, position + rows - 1)
-        self.del_data.append(self.basedata[position])
-        del self.basedata[position]
+        self.del_data.append(self.TabelFieldInfo.Data[position])
+        del self.TabelFieldInfo.Data[position]
         self.endRemoveRows()
         self.dirty = True
         return True
@@ -255,7 +265,7 @@ class __JPTableViewModelBase(QAbstractTableModel):
         tw = self.tableView
         if not isinstance(tw, QTableView):
             raise TypeError("setColumnsDetegate()方法有参数必须为QTableView")
-        for col, fld in enumerate(self.fields):
+        for col, fld in enumerate(self.TabelFieldInfo.Fields):
             tp = fld.TypeCode
             de = None
             if fld.RowSource:
@@ -297,8 +307,8 @@ class JPTableViewModelEditForm(__JPTableViewModelBase):
         self.tableView = tableView
 
     # def GetSQLS(self) -> dict:
-    #     d = self.basedata
-    #     fs = self.fields
+    #     d = self.TabelFieldInfo.Data
+    #     fs = self.TabelFieldInfo.Fields
     #     pk_col = [i for i, f in enumerate(fs) if f.IsPrimarykey]
     #     if len[pk_col] == 0:
     #         raise ValueError("数据表中未包含主键字段！")
@@ -388,16 +398,23 @@ class JPFormModelMain(JPEditFormDataMode):
         self.__fieldsRowSource = lst
 
     def readData(self):
-        nodata = True if self.EditMode in [
+        nodata = False if self.EditMode in [
             JPEditFormDataMode.Edit, JPEditFormDataMode.ReadOnly
-        ] else False
+        ] else True
         self.tableFieldsInfo = JPTabelFieldInfo(self.__sql, nodata)
-        fld_dict = self.tableFieldsInfo.FieldsDict
+        if (self.EditMode == JPEditFormDataMode.New
+                and len(self.tableFieldsInfo.Data)) == 0:
+            self.tableFieldsInfo.addRowWithOutValue()
+        # 设置字段行来源
+        for item in self.__fieldsRowSource:
+            self.tableFieldsInfo.setFieldsRowSource(*item)
+        fld_dict = self.tableFieldsInfo[0].getFieldsDict()
         if fld_dict:
             for k, v in self.ObjectDict.items():
                 if k in fld_dict:
                     v.setFieldInfo(fld_dict[k])
                     v.setMainModel(self)
+
 
         # self._queryResult = JPMySqlSingleTableQuery(
         #     self.__sql, True if md == JPEditFormDataMode.New else None)
@@ -451,6 +468,7 @@ class _JPFormModelSub(JPEditFormDataMode):
         self.__readOnlyColumns = []
         self.__fieldsRowSource = []
         self.__formulas = []
+        self.__editMode = JPEditFormDataMode.ReadOnly
 
     def setTabelInfo(self, sql: str):
         self.__sql = sql
@@ -466,6 +484,9 @@ class _JPFormModelSub(JPEditFormDataMode):
         self.__tableInfo = JPTabelFieldInfo(
             self.__sql,
             True if self.EditMode == JPEditFormDataMode.New else None)
+        if self.EditMode == JPEditFormDataMode.New and len(
+                self.__tableInfo.Data) == 0:
+            self.__tableInfo.addRowWithOutValue()
         if self.EditMode == JPEditFormDataMode.ReadOnly:
             self._model = JPTableViewModelReadOnly(subTableView,
                                                    self.__tableInfo)
@@ -489,6 +510,9 @@ class _JPFormModelSub(JPEditFormDataMode):
             subTableView.setColumnWidth(i, w)
         for field_key, data in self.__fieldsRowSource:
             self._model.TabelFieldInfo.setFieldsRowSource(field_key, data)
+        # 设置字段计算公式
+        for i, f in self.__formulas:
+            self._model.TabelFieldInfo.Fields[i].Formula = f
         # self._queryResult = JPMySqlSingleTableQuery(
         #     self.__sql,
         #     True if self.EditMode == JPEditFormDataMode.New else None)

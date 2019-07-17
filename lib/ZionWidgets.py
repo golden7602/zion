@@ -4,7 +4,6 @@ from os import getcwd
 from sys import path as jppath
 jppath.append(getcwd())
 
-
 from functools import reduce
 import datetime
 from dateutil.relativedelta import relativedelta
@@ -15,7 +14,7 @@ from PyQt5.QtPrintSupport import QPrinter
 from PyQt5.QtWidgets import QAbstractItemView, QMessageBox, QWidget, QDialog
 
 from lib.JPDatebase import getDataListAndFields
-from lib.JPDatebase import JPMySqlSingleTableQuery as JPQ, JPTabelFieldInfo
+from lib.JPDatebase import JPMySqlSingleTableQuery as JPQ, JPTabelFieldInfo, JPQueryFieldInfo
 from lib.JPFunction import NV, JPRound
 from lib.JPMvc.JPModel import JPFormModelMainSub, JPTableViewModelReadOnly
 from lib.JPPrintReport import JPReport
@@ -121,6 +120,8 @@ class FunctionForm(QWidget):
         self.checkBox_1.clicked.connect(self.btnRefreshClick)
         self.checkBox_2.clicked.connect(self.btnRefreshClick)
         self.comboBox.activated['int'].connect(self.btnRefreshClick)
+        # 行交错颜色
+        self.tableView.setAlternatingRowColors(True)
 
     def setSQL(self, sql_with_where, sql_base):
         '''setSQL(sql_without_para, where_string)\n
@@ -188,11 +189,12 @@ class FunctionForm(QWidget):
         self.checkBox_2.setText(_translate("Form", "CheckBox"))
 
 
-def getFuncForm_FormReport_Day():
+def getFuncForm_FormReport_Day(mainform):
     from Ui.Ui_FormReport_Day import Ui_Form
     Form = QWidget()
     ui = Ui_Form()
     ui.setupUi(Form)
+    mainform.addForm(Form)
 
     class myMod(JPTableViewModelReadOnly):
         def __init__(self, *args):
@@ -284,9 +286,10 @@ def getFuncForm_FormReport_Day():
     def _search():
         if cbo_year.currentIndex() != -1 and cbo_base.currentIndex() != -1:
             sql = cbo_base.currentData()
-            data, fields = getDataListAndFields(
-                sql.format(cbo_year.currentText()))
-            ui.mod = myMod(tw, data, fields)
+            queryInfo = JPQueryFieldInfo(sql.format(cbo_year.currentText()))
+            # data, fields = getDataListAndFields(
+            #     sql.format(cbo_year.currentText()))
+            ui.mod = myMod(tw, queryInfo)
 
     def butPrint():
         if ui.mod is None:
@@ -375,9 +378,12 @@ def showEditForm_Order(MainForm, edit_mode, PKValue=None):
             super().__init__(*args, **kwargs)
 
         def subModel_AfterSetDataBeforeInsterRowEvent(self, row_data, Index):
-            r, c = Index.row(), Index.column()
-            data = row_data[len(row_data) - 1]
-            if data[7] is None or data[7] == 0:
+            if row_data is None:
+                return False
+            if row_data[7] is None:
+                return False
+            data = row_data
+            if data[7] == 0:
                 return False
             lt = [data[2], data[4], data[5], data[6], data[7]]
             lt = [float(str(i)) if i else 0 for i in lt]
@@ -391,7 +397,7 @@ def showEditForm_Order(MainForm, edit_mode, PKValue=None):
     MF_M = MF.mainModel
     MF_M.setFieldsRowSource([('fCustomerID', pb.getCustomerList()),
                              ('fVendedorID', pb.getEnumList(10))])
-    MF_M.setTabelInfo(m_sql)
+    MF_M.setTabelInfo(m_sql, 1)
     MF_S.setColumnsHidden(0, 1)
     MF_S.setColumnWidths(0, 0, 60, 300, 100, 100, 100, 100)
     MF_S.setColumnsReadOnly(7)
@@ -491,7 +497,7 @@ class FuncForm_Order(FunctionForm):
     def getCurrentCustomerID(self):
         index = self.tableView.selectionModel().currentIndex()
         if index.isValid():
-            return self.model.basedata[index.row()][0]
+            return self.model.TabelFieldInfo.Data[index.row()][0]
 
     @QtCore.pyqtSlot()
     def on_CMDEXPORTTOEXCEL_clicked(self):
@@ -511,6 +517,22 @@ class FuncForm_Order(FunctionForm):
         print("CMDBROWSE被下")
 
 
+def getFuncForm_Enum(mainform):
+    from Ui.Ui_FormEnum import Ui_Form
+    Form = QWidget()
+    ui = Ui_Form()
+    ui.setupUi(Form)
+    mainform.addForm(Form)
+
+
+def getFuncForm_FormReceivables(mainform):
+    from Ui.Ui_FormReceivables import Ui_Form
+    Form = QWidget()
+    ui = Ui_Form()
+    ui.setupUi(Form)
+    mainform.addForm(Form)
+
+
 def getStackedWidget(mainForm, sysnavigationmenus_data):
     pub = JPPub()
     menus = pub.getSysNavigationMenusDict()
@@ -521,4 +543,10 @@ def getStackedWidget(mainForm, sysnavigationmenus_data):
     if menu_id == 2:  # Order
         widget = FuncForm_Order(mainForm)
         widget.addButtons(buts)
+    elif menu_id == 22:  #Report_day
+        getFuncForm_FormReport_Day(mainForm)
+    elif menu_id == 10:
+        getFuncForm_Enum(mainForm)
+    elif menu_id == 20:
+        getFuncForm_FormReceivables(mainForm)
     return

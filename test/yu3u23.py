@@ -39,7 +39,7 @@ if __name__ == "__main__":
                         fContato as 联系人Contato,
                         fCelular as 手机Celular,
                         cast(fSubmited as SIGNED) AS fSubmited
-                FROM v_order AS o
+                FROM v_order AS o000
                 WHERE fCanceled=0
                         AND left(fOrderID,2)='CP'
                         AND (fSubmited={}
@@ -48,12 +48,8 @@ if __name__ == "__main__":
                 ORDER BY  forderID DESC"""
 
     p = r"SELECT\s+.*from\s(\S+)\s"
-    s = re.sub('^\s', '', re.sub('\s+',' ',re.sub('\n','',s)))
+    s = re.sub(r'^\s', '', re.sub(r'\s+', ' ', re.sub(r'\n', '', s)))
     print(s)
+    p = r"(SELECT\s+.*from\s(\S+)\s(as\s\S+)*)"
     m = re.search(p, s, (re.I))
-
-
-
-    t=[(1,2),(3,4),(5,6)]
-    for a,b in t:
-        print(a,b)
+    print(m.groups()[0])

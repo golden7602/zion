@@ -1,8 +1,8 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
-import os
-import sys
-sys.path.append(os.getcwd())
+from os import getcwd
+from sys import path as jppath, argv, exit as sys_exit
+jppath.append(getcwd())
 
 from PyQt5.QtWidgets import (QApplication, QHBoxLayout, QLabel, QMainWindow,
                              QProgressBar, QTreeWidgetItem, QWidget)
@@ -18,7 +18,7 @@ class mianFormProcess():
 
         ui = Ui_mainform.Ui_MainWindow()
         ui.setupUi(MW)
-        ui.label_logo.setPixmap(QPixmap(os.getcwd() + "\\res\\Zions_100.png"))
+        ui.label_logo.setPixmap(QPixmap(getcwd() + "\\res\\Zions_100.png"))
         #MW.setStyleSheet(readQss(os.getcwd() + "\\res\\blackwhite.css"))
         # 堆叠布局调
         ui.stackedWidget.removeWidget(ui.page)
@@ -56,6 +56,7 @@ class mianFormProcess():
                 st.addWidget(form)
 
         MW.addForm = addForm
+
         def reeViewItemClicked(item, i):
             widget = getStackedWidget(MW, item.jpData)
             if widget:
@@ -68,8 +69,8 @@ class mianFormProcess():
 
 
 if __name__ == "__main__":
-    app = QApplication(sys.argv)
+    app = QApplication(argv)
     MainWindow = QMainWindow()
     mianFormProcess(MainWindow)
     MainWindow.showMaximized()
-    sys.exit(app.exec_())
+    sys_exit(app.exec_())

@@ -60,6 +60,50 @@ class JPFieldType(object):
     Other = 0
 
 
+class JPTabelRowData(object):
+    New = 0
+    OriginalValue = 1
+    Update = 2
+
+    def __init__(self, value):
+        super().__init__()
+        if isinstance(value, list):
+            self.__data = value
+            self._state = self.OriginalValue
+        elif isinstance(value, int):
+            self.__data = [None] * value
+        else:
+            raise ValueError("参数值错误")
+
+    @property
+    def State(self) -> int:
+        return self.__state
+    @property
+    def InteriorData(self):
+        return self.__data
+    def __len__(self):
+        return len(self.__data)
+
+    def __getitem__(self, key):
+        return self.__data[key]
+
+    def __setitem__(self, key, value):
+        self.__data[key] = value
+        self.__state = self.Update
+
+    def __iter__(self):
+        self.__curIndex = 0
+        return self
+
+    def __next__(self):
+        if self.__curIndex < len(self.__data):
+            r = self.__data[self.__curIndex]
+            self.__curIndex += 1
+            return r
+        else:
+            raise StopIteration
+
+
 class JPFieldInfo(JPFieldType):
     result_DataAlignment = {
         JPFieldType.Int: (Qt.AlignRight | Qt.AlignVCenter),
@@ -101,7 +145,7 @@ class JPRowFieldInfo(object):
         """代表无数据的一组字段信息
         fields 字段信息列表,类型
         """
-        self._rowData = None
+        self.__rowData = None
         self.__fields = fields
         self.__fieldsDict = {
             f.FieldName: i
@@ -109,6 +153,8 @@ class JPRowFieldInfo(object):
         }
 
     def setRowData(self, values: list):
+        for i, data in enumerate(values):
+            self.__fields[i].Value = data
         self.__rowData = values
 
     def __getitem__(self, key) -> JPFieldInfo:
@@ -119,8 +165,8 @@ class JPRowFieldInfo(object):
         elif isinstance(key, str):
             index = self.__fieldsDict[key]
         fld = self.__fields[index]
-        if self._rowData:
-            fld.Vlaue = self._rowData[index]
+        if self.__rowData:
+            fld.Vlaue = self.__rowData[index]
         else:
             fld.Vlaue = None
         return fld
@@ -132,7 +178,7 @@ class JPRowFieldInfo(object):
     def __next__(self) -> JPFieldInfo:
         if self.__curIndex < len(self.__fields):
             fld = self.__fields[self.__curIndex]
-            fld.Value = self._rowData[self.__curIndex]
+            fld.Value = self.__rowData[self.__curIndex]
             self.__curIndex += 1
             return fld
         else:
@@ -143,6 +189,9 @@ class JPRowFieldInfo(object):
 
     def getValueDict(self):
         return {fld.FieldName: fld.Value for fld in self.__fields}
+
+    def getFieldsDict(self):
+        return {fld.FieldName: fld for fld in self.__fields}
 
 
 class _JPMySQLFieldInfo(JPFieldInfo):
@@ -231,13 +280,18 @@ class JPTabelFieldInfo(object):
         self.TableName = None
 
         sql_or_tableName = re.sub(
-            '^\s', '', re.sub('\s+', ' ', re.sub('\n', '', sql_or_tableName)))
+            r'^\s', '', re.sub(r'\s+', ' ', re.sub(r'\n', '',
+                                                   sql_or_tableName)))
         sel_p = r"SELECT\s+.*from\s(\S+)\s"
         mt = re.match(sel_p, sql_or_tableName, flags=(re.I))
         tabel_name = mt.groups()[0] if mt else sql_or_tableName
         s_filter = _getOnlyStrcFilter()
         if noData:
-            sql = 'Select * from {} {}'.format(
+            # 找出不包含条件的SQL语句
+            p_s = r"(SELECT\s+.*from\s(\S+)\s(as\s\S+)*)"
+            mt1 = re.match(p_s, sql_or_tableName, flags=(re.I))
+            sql = mt1.groups(
+            )[0] + " " + s_filter if mt else 'Select * from {} {}'.format(
                 tabel_name, s_filter) if mt else sql_or_tableName
         else:
             sql = sql_or_tableName if mt else 'Select * from {} {}'.format(
@@ -269,7 +323,7 @@ class JPTabelFieldInfo(object):
 
     def __getitem__(self, key) -> JPRowFieldInfo:
         r = self.__RowFieldsInfo
-        r._rowData = self.__data[key]
+        r.setRowData(self.__data[key])
         return r
 
     def __iter__(self):
@@ -305,6 +359,23 @@ class JPTabelFieldInfo(object):
 
     def addRowWithProbablyValue(self):
         '''增加一行数据，且以最可能的值赋值'''
+
+class JPQueryFieldInfo(JPTabelFieldInfo):
+    def __init__(self, sql):
+        '''返回一个查询的数据信息'''
+        cur = JPDb().currentConn.cursor()
+        try:
+            cur.execute(sql)
+        except Exception as e:
+            raise ValueError(
+                '参数中的SQL语句或表名格式不正确!\n{}\n'.format(sql) + str(e))
+        flds = [_getClassFieldsInfo()(item) for item in cur._result.fields]
+        data = [list(row) for row in cur._result.rows]
+        self.Fields = flds
+        self.Data = data
+        self.FieldsDict = {fld.FieldName: fld for fld in flds}
+        self.__RowFieldsInfo = JPRowFieldInfo(flds)
+        self.__data = data
 
 
 def getDataListAndFields(sql: str) -> list:
