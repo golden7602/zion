@@ -44,10 +44,10 @@ class mianFormProcess():
         self.sysNavigationMenus = pub.getSysNavigationMenusDict()
         loadTreeview(ui.treeWidget, self.sysNavigationMenus)
         MW.Label = QLabel("")
-        MW.ProgressBar = QProgressBar()
-        MW.statusBar().addPermanentWidget(MW.Label)
-        MW.statusBar().addPermanentWidget(MW.ProgressBar)
-        MW.ProgressBar.hide()
+        # MW.ProgressBar = QProgressBar()
+        # MW.statusBar().addPermanentWidget(MW.Label)
+        # MW.statusBar().addPermanentWidget(MW.ProgressBar)
+        # MW.ProgressBar.hide()
 
         def addForm(form):
             st = ui.stackedWidget
