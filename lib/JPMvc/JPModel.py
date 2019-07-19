@@ -17,6 +17,7 @@ from lib.JPFunction import (JPBooleanString, JPDateConver, JPRound,
                             JPGetDisplayText)
 # from lib.JPMvc.JPWidgets import (QWidget, QCheckBox, QComboBox, QDateEdit,
 #                                 QLineEdit, QTextEdit)
+from lib.JPEnum import JPEditFormDataMode
 from lib.JPMvc import JPWidgets
 from decimal import Decimal
 
@@ -306,55 +307,6 @@ class JPTableViewModelEditForm(__JPTableViewModelBase):
         super().__init__(tabelFieldInfo)
         self.tableView = tableView
 
-    # def GetSQLS(self) -> dict:
-    #     d = self.TabelFieldInfo.Data
-    #     fs = self.TabelFieldInfo.Fields
-    #     pk_col = [i for i, f in enumerate(fs) if f.IsPrimarykey]
-    #     if len[pk_col] == 0:
-    #         raise ValueError("数据表中未包含主键字段！")
-    #     else:
-    #         pk_col = pk_col[0]
-    #     no_pk_fld = {
-    #         i: f
-    #         for i, f in enumerate(fs)
-    #         if f.IsPrimarykey is False and f.Auto_Increment is False
-    #     }
-
-    #     # 检查空值
-    #     not_null_cols = [k for k, f in no_pk_fld.items if f.NotNull is True]
-
-    #     for r, line in enumerate(d):
-    #         for i in not_null_cols:
-    #             if line[i] is None:
-    #                 raise ValueError("第{}行[{}]字段的值不能为空！".format(
-    #                     r + 1, fs[i].FieldName))
-    #     sqls = {}
-    #     sqls["DELETE"] = []
-    #     if self.del_data:
-    #         s = str(tuple(self.del_data))
-    #         sqls["DELETE"] = "delete from {} where {} in {}".format(s)
-    #     sqls["INSERT"] = []
-    #     sqls["UPDATE"] = []
-
-    #     def getRow():
-    #         for i, r in enumerate(d):
-    #             bz = 1 if r[pk_col] is None else 0
-    #             yield bz, i, r
-
-    #     for bz, i, r in getRow():
-    #         if bz == 1:
-    #             pass
-
-
-class JPEditFormDataMode(QObject):
-    """本类为编辑窗口数据类型的枚举"""
-    Edit = 1
-    ReadOnly = 2
-    New = 3
-
-    def __init__(self):
-        super().__init__()
-        self.EditMode = JPEditFormDataMode.ReadOnly
 
 
 class JPFormModelMain(JPEditFormDataMode):

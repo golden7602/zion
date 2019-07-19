@@ -189,7 +189,7 @@ def _(value, *args):
     return JPBooleanString().getBooleanString()[ord(x)]
 
 
-######################################################################
+###################日期转换器###################################################
 @singledispatch
 def JPDateConver(value, vCls=str):
     '''JPDateConver(value, vCls)\n
