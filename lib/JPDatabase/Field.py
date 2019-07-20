@@ -52,9 +52,7 @@ class JPFieldInfo(JPFieldType):
     def INIT(self):
         return self
 
-    @abstractmethod
-    def sqlValue(self, value=None):
-        pass
+
 
 
 class JPMySQLFieldInfo(JPFieldInfo):
@@ -123,7 +121,7 @@ class JPMySQLFieldInfo(JPFieldInfo):
         }
 
     def __init__(self, cursors_field):
-        super().__init__(self)
+        super().__init__()
         f = cursors_field
         fl = JPMySQLFieldInfo
         self.FieldName = f.org_name

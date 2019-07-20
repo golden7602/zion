@@ -7,7 +7,7 @@ from functools import singledispatch
 
 from pymysql import (connect as mysql_connect, cursors as mysql_cursors)
 
-from JPDatabase.Field import JPFieldInfo, JPMySQLFieldInfo
+from lib.JPDatabase.Field import JPFieldInfo, JPMySQLFieldInfo
 from lib.JPFunction import Singleton
 
 
@@ -22,7 +22,7 @@ class JPDb(object):
     def __init__(self):
         self.__currentConn = None
 
-    def setDatabaseType(self, db_type: int):
+    def setDatabaseType(self, db_type: JPDbType):
         self.__db_type = db_type
 
     @property
@@ -47,7 +47,7 @@ class JPDb(object):
     # 生成一个空对象
     def getFeildsInfoAndData(self, sql) -> JPFieldInfo:
         if self.__db_type == JPDbType.MySQL:
-            cur = JPDb().currentConn.cursor()
+            cur = self.currentConn.cursor()
             try:
                 cur.execute(sql)
             except Exception as e:
@@ -59,7 +59,7 @@ class JPDb(object):
             cover = [covsdict[fld.TypeCode] for fld in flds]
             datas = []
             for i in range(len(rs)):
-                datas.append([cover[i](v) for v in rs[i]])
+                datas.append([cover[j](v) for j, v in enumerate(rs[i])])
             return flds, datas
 
     def NewPkSQL(self, role_id: int):
@@ -82,6 +82,25 @@ class JPDb(object):
                 WHERE fRoleID={};""".format(role_id)
                     ]]
 
+    def getDataList(self, sql: str) -> list:
+        return self.getFeildsInfoAndData(sql)[1]
+
+    def getDict(self, sql) -> dict:
+        if self.__db_type == JPDbType.MySQL:
+            db = JPDb()
+            cursor = self.currentConn.cursor(mysql_cursors.DictCursor)
+            cursor.execute(sql)
+            return cursor.fetchall()
+
     def getOnlyStrcFilter(self):
         if self.__db_type == JPDbType.MySQL:
             return " Limit 0"
+    def __getattr__(self,name):
+        if name=='_JPDb__db_type':
+            raise AttributeError("应在第一使用此类时，先调用setDatabaseType方法指定数据库类型")
+
+if __name__ == "__main__":
+    db = JPDb()
+    db.setDatabaseType(JPDbType.MySQL)
+    a = db.getDataList("select * from t_order")
+    print(a)

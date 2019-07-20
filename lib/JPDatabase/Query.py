@@ -1,8 +1,8 @@
 import re
 from copy import deepcopy
 from PyQt5.QtCore import QModelIndex
-from JPDatabase.Database import JPDb
-from JPDatabase.Field import JPFieldInfo
+from Database import JPDb
+from Field import JPFieldInfo
 from PyQt5.QtWidgets import QMessageBox
 
 
@@ -112,6 +112,7 @@ class JPQueryFieldInfo(object):
 
 
 class JPTabelFieldInfo(JPQueryFieldInfo):
+
     def __init__(self, sql: str, noData: bool = False):
         db = JPDb()
         '''根据一个Sql或表名返回一个JPTabelFieldInfo对象\n
@@ -120,6 +121,7 @@ class JPTabelFieldInfo(JPQueryFieldInfo):
         self.PrimarykeyFieldName = None
         self.PrimarykeyFieldIndex = None
         self.TableName = None
+        self.DeleteRows = []
 
         sql = re.sub(r'^\s', '', re.sub(r'\s+', ' ', re.sub(r'\n', '', sql)))
         sel_p = r"SELECT\s+.*from\s(\S+)\s"
@@ -145,7 +147,7 @@ class JPTabelFieldInfo(JPQueryFieldInfo):
         if self.PrimarykeyFieldIndex is None:
             raise ValueError('查询语句:\n"{}"中未包含主键字段！'.format(sql))
         # 检查主键字段是不是自增
-        pk_fld=self.getFieldsInfoDict()
+        pk_fld = self.getFieldsInfoDict()
 
     def setData(self, index: [list, tuple, QModelIndex], value=None):
         r, c = super().getRC(index)
@@ -155,16 +157,26 @@ class JPTabelFieldInfo(JPQueryFieldInfo):
         '''增加一行数据，全为None'''
         self.RowsData.append(JPTabelRowData(len(self.Fields)))
 
-    def getSqlstatements(self, Mainform):
+    def deleteRow(self, row_num: int):
+        self.DeleteRows.append(self.RowsData[row_num])
+        del self.RowsData[row_num]
+
+    def ForeignKeyEnent(self, ForeignKeyRoleRole: int):
+        """此方法必须重写，根据ForeignKeyRoleRole接收外键各参数
+        """
+        return self.ForeignKeyType_NoForeignKey
+
+    def __getSqlStatements(self,
+                           Mainform,
+                           isMainTable: bool = False,
+                           foreignkey_col=None,
+                           foreignkey_value=None):
         sql = []
-        # 不能为空，不是主键，不是自增列的列号
+        # 不能为空，不是自增列的列号
         not_null_col = []
         for i in range(self.Fields):
             fld = self.Fields[i]
-            if all([
-                    fld.IsPrimarykey is False, fld.Auto_Increment is False,
-                    fld.NotNull is True
-            ]):
+            if all([fld.Auto_Increment is False, fld.NotNull is True]):
                 not_null_col.append(i)
         # 检查空值 如有不全要求的字段，则返回行号
         for r in range(self.RowsData):
@@ -173,51 +185,121 @@ class JPTabelFieldInfo(JPQueryFieldInfo):
                         self.RowsData[r].Datas[i] is None):
                     msg = "第{}行[{}]字段的值不能为空！".format(r + 1,
                                                      self.Fields[i].FieldName)
-                    QMessageBox.warning(self, msg, QMessageBox.Yes,
+                    QMessageBox.warning(Mainform, '提示', msg, QMessageBox.Yes,
                                         QMessageBox.Yes)
                     return r
+        # 开始生成语句
+        sqls = []  # 存放结果
+        m_t = self.TableName
+        sql_i = 'INSERT INTO ' + m_t + ' ({}) VALUES ({});'
+        sql_u = 'UPDATE ' + m_t + ' SET {} WHERE {}={}'
+        fn_lst = [fld.FieldName for fld in self.Fields]
+        pk_index = self.PrimarykeyFieldIndex
+        hasforeignkey = all((foreignkey_col, foreignkey_value))
         for row in self.RowsData:
             if row.State == JPTabelRowData.OriginalValue:
                 continue
-            if row.State == JPTabelRowData.New
-                if 
-            
+            cur_data = deepcopy(row.Datas)
+            cur_fn = deepcopy(fn_lst)
+            cur_row_sqlvalue = [
+                self.Fields[i].sqlValue(d) for i, d in enumerate(cur_data)
+            ]
 
-    # def GetSQLS(self) -> dict:
-    #     d = self.TabelFieldInfo.Data
-    #     fs = self.TabelFieldInfo.Fields
-    #     pk_col = [i for i, f in enumerate(fs) if f.IsPrimarykey]
-    #     if len[pk_col] == 0:
-    #         raise ValueError("数据表中未包含主键字段！")
-    #     else:
-    #         pk_col = pk_col[0]
-    #     no_pk_fld = {
-    #         i: f
-    #         for i, f in enumerate(fs)
-    #         if f.IsPrimarykey is False and f.Auto_Increment is False
-    #     }
+            # 分主子表两种模式分别写
 
-    #     # 检查空值
-    #     not_null_cols = [k for k, f in no_pk_fld.items if f.NotNull is True]
+            def creatSql_Mian():
+                # 检查主键是不是自增
+                if row.State == JPTabelRowData.New:
+                    if self.Fields[pk_index].Auto_Increment:
+                        del cur_data[pk_index]
+                        del cur_fn[pk_index]
+                    else:
+                        cur_data[pk_index] = '@PK'
+                    sqls.append(
+                        sql_i.format(','.join(cur_fn), ','.join(cur_data)))
+                if row.State == JPTabelRowData.Update:
+                    if not cur_data[pk_index]:
+                        raise ValueError("主键字段'{}'不能为空!".format(
+                            self.PrimarykeyFieldName))
+                    pk_value = cur_data[pk_index]
+                    del cur_data[pk_index]
+                    del cur_fn[pk_index]
+                    temp = [
+                        '{}={}'.format(n, v) for n, v in zip(cur_fn, cur_data)
+                    ]
+                    sqls.append(
+                        sql_i.format(','.join(temp), self.PrimarykeyFieldName,
+                                     pk_value))
 
-    #     for r, line in enumerate(d):
-    #         for i in not_null_cols:
-    #             if line[i] is None:
-    #                 raise ValueError("第{}行[{}]字段的值不能为空！".format(
-    #                     r + 1, fs[i].FieldName))
-    #     sqls = {}
-    #     sqls["DELETE"] = []
-    #     if self.del_data:
-    #         s = str(tuple(self.del_data))
-    #         sqls["DELETE"] = "delete from {} where {} in {}".format(s)
-    #     sqls["INSERT"] = []
-    #     sqls["UPDATE"] = []
+            def creatSql_Sub():
+                if not self.Fields[pk_index].Auto_Increment:
+                    raise ValueError("子表主键字段'{}'只能为自增加类型!".format(
+                        self.PrimarykeyFieldName))
+                if not foreignkey_col:
+                    raise ValueError("子表必须指定外键列号")
+                if row.State == JPTabelRowData.New:
+                    if foreignkey_value:
+                        cur_data[foreignkey_col] = '{}'.format(
+                            foreignkey_value)
+                    else:
+                        cur_data[foreignkey_col] = '@PK'
+                    del cur_data[pk_index]
+                    del cur_fn[pk_index]
+                    sqls.append(sql_i.format(cur_fn, ','.join(cur_data)))
+                if row.State == JPTabelRowData.Update:
+                    pk_value = cur_data[pk_index]
+                    del cur_data[pk_index]
+                    del cur_fn[pk_index]
+                    temp = [
+                        '{}={}'.format(n, v) for n, v in zip(cur_fn, cur_data)
+                    ]
+                    sqls.append(
+                        sql_i.format(','.join(temp), self.PrimarykeyFieldName,
+                                     pk_value))
 
-    #     def getRow():
-    #         for i, r in enumerate(d):
-    #             bz = 1 if r[pk_col] is None else 0
-    #             yield bz, i, r
+    def getMainSqlStatements(self, isMainTable):
+        return self.__getSqlStatements(Mainform, True)
 
-    #     for bz, i, r in getRow():
-    #         if bz == 1:
-    #             pass
+    def SqlSubStatements(self, Mainform, foreignkey_col,
+                         foreignkey_value=None):
+        return self.__getSqlStatements(Mainform, False, foreignkey_col,
+                                       foreignkey_value)
+
+
+
+if __name__ == "__main__":
+    from lib.JPDatabase.Database import JPDbType,JPDb
+    db = JPDb()
+    db.setDatabaseType(JPDbType.MySQL)
+    aa=JPQueryFieldInfo( """
+        SELECT if(isnull(Q3.d), 'Sum', Q3.d) AS Day0
+            , M1, M2, M3, M4, M5, M6, M7, M8, M9, M10
+            , M11, M12
+        FROM (
+            SELECT Q1.d
+                , IF(Q1.m = 1, Q1.j1, NULL) AS M1
+                , IF(Q1.m = 2, Q1.j1, NULL) AS M2
+                , IF(Q1.m = 3, Q1.j1, NULL) AS M3
+                , IF(Q1.m = 4, Q1.j1, NULL) AS M4
+                , IF(Q1.m = 5, Q1.j1, NULL) AS M5
+                , IF(Q1.m = 6, Q1.j1, NULL) AS M6
+                , IF(Q1.m = 7, Q1.j1, NULL) AS M7
+                , IF(Q1.m = 8, Q1.j1, NULL) AS M8
+                , IF(Q1.m = 9, Q1.j1, NULL) AS M9
+                , IF(Q1.m = 10, Q1.j1, NULL) AS M10
+                , IF(Q1.m = 11, Q1.j1, NULL) AS M11
+                , IF(Q1.m = 12, Q1.j1, NULL) AS M12
+            FROM (
+                SELECT MONTH(fOrderDate) AS m, DAY(fOrderDate) AS d
+                    , SUM(fPayable) AS j1
+                FROM t_order
+                WHERE (Year(fOrderDate) = {}
+                    AND fCanceled = 0
+                    AND fSubmited = 1
+                    AND fConfirmed = 1)
+                GROUP BY MONTH(fOrderDate), DAY(fOrderDate)
+            ) Q1
+            GROUP BY Q1.d WITH ROLLUP
+        ) Q3
+        """.format(2019))
+    print("dd")

@@ -13,13 +13,14 @@ from PyQt5.QtGui import QColor, QFont
 from PyQt5.QtPrintSupport import QPrinter
 from PyQt5.QtWidgets import QAbstractItemView, QMessageBox, QWidget, QDialog
 
-from lib.JPDatebase import getDataListAndFields
+from lib.JPDatabase.Database import JPDb
 from lib.JPDatebase import JPMySqlSingleTableQuery as JPQ, JPTabelFieldInfo, JPQueryFieldInfo
 from lib.JPFunction import NV, JPRound
 from lib.JPMvc.JPModel import JPFormModelMainSub, JPTableViewModelReadOnly
 from lib.JPPrintReport import JPReport
 from lib.ZionPublc import JPPub
 from PyQt5.QtGui import QIcon, QPixmap
+from lib.JPDatabase.Query import JPQueryFieldInfo
 
 
 class FunctionForm(QWidget):
@@ -287,8 +288,6 @@ def getFuncForm_FormReport_Day(mainform):
         if cbo_year.currentIndex() != -1 and cbo_base.currentIndex() != -1:
             sql = cbo_base.currentData()
             queryInfo = JPQueryFieldInfo(sql.format(cbo_year.currentText()))
-            # data, fields = getDataListAndFields(
-            #     sql.format(cbo_year.currentText()))
             ui.mod = myMod(tw, queryInfo)
 
     def butPrint():

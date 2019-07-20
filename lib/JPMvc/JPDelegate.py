@@ -16,7 +16,7 @@ from PyQt5.QtCore import (QAbstractItemModel, QModelIndex, QObject, Qt, QDate,
 from PyQt5.QtWidgets import (QPushButton, QStyledItemDelegate,
                              QStyleOptionViewItem, QWidget, QLineEdit,
                              QComboBox, QDateEdit)
-from lib.JPDatebase import JPFieldType
+from lib.JPDatabase.Field  import JPFieldType
 from PyQt5.QtGui import (QDoubleValidator, QIntValidator)
 
 
@@ -122,7 +122,7 @@ class JPDelegate_ComboBox(_JPDelegate_Base):
 
     def setModelData(self, editor: QWidget, model: QAbstractItemModel,
                      index: QModelIndex):
-        index.model().setData(index, editor.currentData(), Qt.EditRole)
+        index.model().setData(index, editor.currentData()[1], Qt.EditRole)
 
 
 class JPDelegate_DateEdit(_JPDelegate_Base):

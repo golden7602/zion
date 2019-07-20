@@ -11,6 +11,8 @@ from PyQt5.QtGui import QColor
 from PyQt5.QtWidgets import QAbstractItemView, QTableView
 
 import lib.JPMvc.JPDelegate as myDe
+from lib.JPDatabase.Field import JPFieldType
+from lib.JPDatabase.Query import JPTabelRowData,JPTabelFieldInfo,JPQueryFieldInfo
 from lib.JPDatebase import (JPTabelFieldInfo, JPFieldType, JPTabelRowData)
 
 from lib.JPFunction import (JPBooleanString, JPDateConver, JPRound,
@@ -74,25 +76,6 @@ class __JPTableViewModelBase(QAbstractTableModel):
     def _GetHeaderAlignment(self, Index: QModelIndex) -> int:
         return Qt.AlignCenter
 
-    # def _GetDataAlignment(self, Index: QModelIndex) -> int:
-    #     if self.TabelFieldInfo.Fields[Index.column()].RowSource:
-    #         return (Qt.AlignLeft | Qt.AlignVCenter)
-    #     else:
-    #         return self.result_DataAlignment[self.TabelFieldInfo.Fields[
-    #             Index.column()].TypeCode]
-
-    # def _GetDispText(self, Index: QModelIndex) -> int:
-    #     r, c, fn, tp, rs = self.__getPara(Index)
-    #     data_i = self.TabelFieldInfo.Data[r][c]
-    #     if data_i is None:
-    #         return
-    #     if rs:
-    #         sel = [item for item in rs if item[1] == data_i]
-    #         if len(sel) == 0:
-    #             return QVariant()
-    #         else:
-    #             return QVariant(str(sel[0][0]))
-    #     return JPGetDisplayText(data_i)
     def _GetDispText(self, Index: QModelIndex) -> str:
         r, c, = Index.row(), Index.column()
         rs = self.TabelFieldInfo.Fields[c].RowSource
@@ -148,30 +131,31 @@ class __JPTableViewModelBase(QAbstractTableModel):
     def setData(self, Index: QModelIndex, Any,
                 role: int = Qt.EditRole) -> bool:
         r, c = Index.row(), Index.column()
-        cur_fld = self.TabelFieldInfo[r][c]
+        self.TabelFieldInfo.Data[r].setData(c, Any)
+        # cur_fld = self.TabelFieldInfo[r][c]
 
-        tp = cur_fld.TypeCode
-        if Any is None:
-            self.TabelFieldInfo.Data[r][c] = None
-            return True
-        if cur_fld.RowSource:
-            self.TabelFieldInfo.Data[r][c] = Any
-            return True
-        elif tp == JPFieldType.Int:
-            if Any == '':
-                return True
-            self.TabelFieldInfo.Data[r][c] = int(str(Any).replace(',', ''))
-        elif tp == JPFieldType.Float:
-            if Any == '':
-                return True
-            self.TabelFieldInfo.Data[r][c] = float(str(Any).replace(',', ''))
-        elif tp == JPFieldType.Boolean:
-            self.TabelFieldInfo.Data[r][c] = (0 if Any == self.BooleanString[0]
-                                              else 1)
-        elif tp == JPFieldType.Date:
-            self.TabelFieldInfo.Data[r][c] = Any
-        else:
-            self.TabelFieldInfo.Data[r][c] = Any
+        # tp = cur_fld.TypeCode
+        # if Any is None:
+        #     self.TabelFieldInfo.Data[r][c] = None
+        #     return True
+        # if cur_fld.RowSource:
+        #     self.TabelFieldInfo.Data[r][c] = Any
+        #     return True
+        # elif tp == JPFieldType.Int:
+        #     if Any == '':
+        #         return True
+        #     self.TabelFieldInfo.Data[r][c] = int(str(Any).replace(',', ''))
+        # elif tp == JPFieldType.Float:
+        #     if Any == '':
+        #         return True
+        #     self.TabelFieldInfo.Data[r][c] = float(str(Any).replace(',', ''))
+        # elif tp == JPFieldType.Boolean:
+        #     self.TabelFieldInfo.Data[r][c] = (0 if Any == self.BooleanString[0]
+        #                                       else 1)
+        # elif tp == JPFieldType.Date:
+        #     self.TabelFieldInfo.Data[r][c] = Any
+        # else:
+        #     self.TabelFieldInfo.Data[r][c] = Any
         self.dirty = True
         self._formulaCacu(self.TabelFieldInfo.Data[r])
         # 执行重载函数，判断行数据是否合法
@@ -366,30 +350,6 @@ class JPFormModelMain(JPEditFormDataMode):
                 if k in fld_dict:
                     v.setFieldInfo(fld_dict[k])
                     v.setMainModel(self)
-
-
-        # self._queryResult = JPMySqlSingleTableQuery(
-        #     self.__sql, True if md == JPEditFormDataMode.New else None)
-        # if self.__fieldsRowSource:
-        #     self._queryResult.setFieldsRowSource(self.__fieldsRowSource)
-        # # 更新主窗体属性的语句
-        # if md in [JPEditFormDataMode.Edit, JPEditFormDataMode.ReadOnly]:
-        #     if len(self._queryResult.data) == 0:
-        #         raise ValueError(
-        #             '查询未返回数据，无法更新窗体！\nQuery did not return data, can not update the form!'
-        #         )
-        #     flds = {
-        #         fld.FieldName: fld
-        #         for fld in self._queryResult.getRecordFieldInfo(0)
-        #     }
-        #     for k, v in self.ObjectDict.items():
-        #         if k in flds:
-        #             v.setFieldInfo(flds[k])
-        #         v.setMainModel(self)
-        # if md == JPEditFormDataMode.ReadOnly:
-        #     for obj in self.ObjectDict.values():
-        #         obj.setFocusPolicy(Qt.NoFocus)
-        #         v.setMainModel(self)
         self.mainForm.show()
 
     def setObjectValue(self, obj_name: str, value):
@@ -465,18 +425,7 @@ class _JPFormModelSub(JPEditFormDataMode):
         # 设置字段计算公式
         for i, f in self.__formulas:
             self._model.TabelFieldInfo.Fields[i].Formula = f
-        # self._queryResult = JPMySqlSingleTableQuery(
-        #     self.__sql,
-        #     True if self.EditMode == JPEditFormDataMode.New else None)
-        # if self.__fieldsRowSource:
-        #     mod.setModelDataAndFields(que.data, self.__fieldsRowSource)
-        # mod.setTabelFieldInfo(self.__ta)
-        # mod.setModelDataAndFields(que.data, que.Fields)
-        # tv.setModel(mod)
-        # no_ed = QAbstractItemView.NoEditTriggers
-        # all_ed = QAbstractItemView.AllEditTriggers
-        # tv.setEditTriggers(no_ed if self.EditMode ==
-        #                    JPEditFormDataMode.ReadOnly else all_ed)
+
     def setFormula(self, key: [int, str], formula: str):
         """
         设置计算公式 {字段名}代表一个值
