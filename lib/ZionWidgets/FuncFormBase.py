@@ -109,7 +109,8 @@ class JPFunctionForm(QWidget):
         self.tableView.setAlternatingRowColors(True)
 
     def setSQL(self, sql_with_where, sql_base):
-        '''setSQL(sql_without_para, where_string)\n
+        '''
+        setSQL(sql_without_para, where_string)\n
         sql_without_para: 不带Where子句的sql
         where_string： where子句，参数用{}表示
         '''
@@ -118,8 +119,8 @@ class JPFunctionForm(QWidget):
         self.btnRefreshClick()
 
     def getModelClass(self):
-        '''此类或以重写，改写Model的行为,必须返回一个模型类
-        重写时可以在重载方法中内部继承一个类，将该类返回
+        '''此类可以重写，改写Model的行为,必须返回一个模型类
+        重写时可以在重载方法中内部定义模型类并继承自已有模型类，将该类返回
         '''
         return JPTableViewModelReadOnly
 

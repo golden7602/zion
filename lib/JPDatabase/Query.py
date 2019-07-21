@@ -3,16 +3,13 @@ from os import getcwd
 from sys import path as jppath
 jppath.append(getcwd())
 
-
-
-
 import re
 from copy import deepcopy
 from PyQt5.QtCore import QModelIndex
 from lib.JPDatabase.Database import JPDb
 from lib.JPDatabase.Field import JPFieldInfo
 from PyQt5.QtWidgets import QMessageBox
-
+from lib.JPFunction import JPGetDisplayText
 
 class JPTabelRowData(object):
     New = 0
@@ -31,7 +28,7 @@ class JPTabelRowData(object):
             self._state = self.OriginalValue
         elif isinstance(value, int):
             self.__data = [None] * value
-            self.OriginalValue = self.New
+            self._state = self.New
         else:
             raise ValueError("参数值错误")
 
@@ -39,7 +36,6 @@ class JPTabelRowData(object):
     def State(self) -> int:
         return self._state
 
-    @property
     def Data(self, column):
         return self.__data[column]
 
@@ -76,12 +72,29 @@ class JPQueryFieldInfo(object):
         self.RowsData = [JPTabelRowData(row) for row in data]
         self.FieldsDict = {fld.FieldName: fld for fld in flds}
 
+    def __len__(self):
+        return len(self.RowsData)
+
     def getOnlyData(self, index: [list, tuple, QModelIndex]):
         r, c = JPQueryFieldInfo.getRC(index)
-        return self.RowsData(r)[c]
+        return self.RowsData[r].Data(c)
+
+    def getDispText(self, index: [list, tuple, QModelIndex]):
+        r, c = JPQueryFieldInfo.getRC(index)
+        v = self.RowsData[r].Data(c)
+        rs = self.Fields[c].RowSource
+        if not v:
+            return ''
+        if rs:
+            txts=[item[1] for item in rs if item[0]==v]
+            if txts:
+                return txts[0]
+        else:
+            return JPGetDisplayText(v)
+
 
     def getRowData(self, row_num) -> JPTabelRowData:
-        pass
+        return self.RowsData[row_num].Datas
 
     def getFieldsInfo(self):
         return self.Fields
@@ -103,10 +116,10 @@ class JPQueryFieldInfo(object):
     def getFieldsInfoDict(self) -> dict:
         return self.FieldsDict
 
-    def getFieldInfoAndData(self, field_name: str,
-                            index: [list, tuple, QModelIndex]) -> JPFieldInfo:
+    def getFieldInfoAndData(self, index: [list, tuple,
+                                          QModelIndex]) -> JPFieldInfo:
         r, c = self.getRC(index)
-        fld = deepcopy(self.FieldsDict[field_name])
+        fld = deepcopy(self.Fields[c])
         fld.value = self.RowsData[r][0][c]
 
     def setFieldsRowSource(self, key, data: list):
@@ -120,7 +133,6 @@ class JPQueryFieldInfo(object):
 
 
 class JPTabelFieldInfo(JPQueryFieldInfo):
-
     def __init__(self, sql: str, noData: bool = False):
         db = JPDb()
         '''根据一个Sql或表名返回一个JPTabelFieldInfo对象\n
@@ -134,7 +146,7 @@ class JPTabelFieldInfo(JPQueryFieldInfo):
         sql = re.sub(r'^\s', '', re.sub(r'\s+', ' ', re.sub(r'\n', '', sql)))
         sel_p = r"SELECT\s+.*from\s(\S+)\s"
         mt = re.match(sel_p, sql, flags=(re.I))
-        JPEditFormDataMode = mt.groups()[0] if mt else sql
+        self.TableName = mt.groups()[0] if mt else sql
         s_filter = db.getOnlyStrcFilter()
         if noData:
             # 找出不包含条件的SQL语句
@@ -142,7 +154,7 @@ class JPTabelFieldInfo(JPQueryFieldInfo):
             mt1 = re.match(p_s, sql, flags=(re.I))
             sql = mt1.groups(
             )[0] + " " + s_filter if mt else 'Select * from {} {}'.format(
-                JPEditFormDataMode, s_filter) if mt else sql
+                self.TableName, s_filter) if mt else sql
         else:
             sql = sql if mt else 'Select * from {} {}'.format(sql, s_filter)
         super().__init__(sql)
@@ -156,8 +168,6 @@ class JPTabelFieldInfo(JPQueryFieldInfo):
             raise ValueError('查询语句:\n"{}"中未包含主键字段！'.format(sql))
         # 检查主键字段是不是自增
         pk_fld = self.getFieldsInfoDict()
-    def __len__(self):
-        return len(self.RowsData)
 
     def setData(self, index: [list, tuple, QModelIndex], value=None):
         r, c = super().getRC(index)
@@ -184,14 +194,14 @@ class JPTabelFieldInfo(JPQueryFieldInfo):
         sql = []
         # 不能为空，不是自增列的列号
         not_null_col = []
-        for i in range(self.Fields):
+        for i in range(len(self.Fields)):
             fld = self.Fields[i]
             if all([fld.Auto_Increment is False, fld.NotNull is True]):
                 not_null_col.append(i)
         # 检查空值 如有不全要求的字段，则返回行号
-        for r in range(self.RowsData):
+        for r in range(len(self.RowsData)):
             for i in not_null_col:
-                if (self.RowsData.State != JPTabelRowData.New) and (
+                if (self.RowsData[r].State != JPTabelRowData.New) and (
                         self.RowsData[r].Datas[i] is None):
                     msg = "第{}行[{}]字段的值不能为空！".format(r + 1,
                                                      self.Fields[i].FieldName)
@@ -202,7 +212,7 @@ class JPTabelFieldInfo(JPQueryFieldInfo):
         sqls = []  # 存放结果
         m_t = self.TableName
         sql_i = 'INSERT INTO ' + m_t + ' ({}) VALUES ({});'
-        sql_u = 'UPDATE ' + m_t + ' SET {} WHERE {}={}'
+        sql_u = 'UPDATE ' + m_t + ' SET {} WHERE {}={};'
         fn_lst = [fld.FieldName for fld in self.Fields]
         pk_index = self.PrimarykeyFieldIndex
         hasforeignkey = all((foreignkey_col, foreignkey_value))
@@ -217,7 +227,7 @@ class JPTabelFieldInfo(JPQueryFieldInfo):
 
             # 分主子表两种模式分别写
 
-            def creatSql_Mian():
+        def creatSql_Mian():
                 # 检查主键是不是自增
                 if row.State == JPTabelRowData.New:
                     if self.Fields[pk_index].Auto_Increment:
@@ -241,7 +251,7 @@ class JPTabelFieldInfo(JPQueryFieldInfo):
                         sql_i.format(','.join(temp), self.PrimarykeyFieldName,
                                      pk_value))
 
-            def creatSql_Sub():
+        def creatSql_Sub():
                 if not self.Fields[pk_index].Auto_Increment:
                     raise ValueError("子表主键字段'{}'只能为自增加类型!".format(
                         self.PrimarykeyFieldName))
@@ -266,22 +276,26 @@ class JPTabelFieldInfo(JPQueryFieldInfo):
                     sqls.append(
                         sql_i.format(','.join(temp), self.PrimarykeyFieldName,
                                      pk_value))
+        if isMainTable:
+            creatSql_Mian()
+        else:
+            creatSql_Sub()
+        return sqls
 
-    def getMainSqlStatements(self, Mainform,isMainTable):
+    def getMainSqlStatements(self, Mainform, isMainTable):
         return self.__getSqlStatements(Mainform, True)
 
-    def SqlSubStatements(self, Mainform, foreignkey_col,
+    def getSqlSubStatements(self, Mainform, foreignkey_col,
                          foreignkey_value=None):
         return self.__getSqlStatements(Mainform, False, foreignkey_col,
                                        foreignkey_value)
 
 
-
 if __name__ == "__main__":
-    from lib.JPDatabase.Database import JPDbType,JPDb
+    from lib.JPDatabase.Database import JPDbType, JPDb
     db = JPDb()
     db.setDatabaseType(JPDbType.MySQL)
-    aa=JPQueryFieldInfo( """
+    aa = JPQueryFieldInfo("""
         SELECT if(isnull(Q3.d), 'Sum', Q3.d) AS Day0
             , M1, M2, M3, M4, M5, M6, M7, M8, M9, M10
             , M11, M12

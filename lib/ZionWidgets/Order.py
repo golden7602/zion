@@ -75,7 +75,7 @@ class JPFuncForm_Order(JPFunctionForm):
     def getCurrentCustomerID(self):
         index = self.tableView.selectionModel().currentIndex()
         if index.isValid():
-            return self.model.TabelFieldInfo.Data[index.row()][0]
+            return self.model.TabelFieldInfo.getOnlyData([index.row(),0])
 
     @pyqtSlot()
     def on_CMDEXPORTTOEXCEL_clicked(self):
@@ -92,7 +92,7 @@ class JPFuncForm_Order(JPFunctionForm):
         if not cu_id:
             return
         #showEditForm_Order(self.MainForm, JPFormModelMainSub.ReadOnly, cu_id)
-        print("CMDBROWSE被下")
+        print("CMDBROWSE被下",cu_id)
 
 
 

@@ -5,7 +5,7 @@ jppath.append(getcwd())
 from pymysql.constants import FIELD_TYPE
 from PyQt5.QtCore import Qt, QDate
 
-from lib.JPFunction import JPDateConver
+from lib.JPFunction import JPDateConver,JPGetDisplayText
 from abc import abstractmethod
 
 
@@ -90,7 +90,6 @@ class JPMySQLFieldInfo(JPFieldInfo):
         FIELD_TYPE.TIMESTAMP: JPFieldInfo.Date,
         FIELD_TYPE.BIT: JPFieldInfo.Boolean
     }
-
     @staticmethod
     def getSqlValueCreater() -> object:
         return {
@@ -119,8 +118,8 @@ class JPMySQLFieldInfo(JPFieldInfo):
             JPFieldInfo.Boolean: lambda x: [False, True][ord(x)] if x else x,
             JPFieldInfo.Other: lambda x: x
         }
-
     def __init__(self, cursors_field):
+        """此类在处理时，应该已经把从表中取得的数据全部转换成了Python内部数据类型"""
         super().__init__()
         f = cursors_field
         fl = JPMySQLFieldInfo
@@ -134,7 +133,7 @@ class JPMySQLFieldInfo(JPFieldInfo):
         self.NoDefaultValue = f.flags & fl.NO_DEFAULT_VALUE_FLAG != 0
         self.Auto_Increment = f.flags & fl.AUTO_INCREMENT_FLAG != 0
 
-    def sqlValue(self, value=None):
+    def sqlValue(self, value):
         v = value if value else self.__dict__["Value"]
         if self.NotNull and v is None:
             raise ValueError(
@@ -144,3 +143,4 @@ class JPMySQLFieldInfo(JPFieldInfo):
         if v is None:
             return 'Null'
         return JPMySQLFieldInfo.getSqlValueCreater[tp](v)
+

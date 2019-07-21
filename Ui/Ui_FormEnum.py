@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'e:\Zion\Ui\FormEnum.ui'
+# Form implementation generated from reading ui file 'c:\Users\win10\Desktop\Zion\zion\Ui\FormEnum.ui'
 #
 # Created by: PyQt5 UI code generator 5.11.3
 #
@@ -36,6 +36,11 @@ class Ui_Form(object):
         self.label_2.setObjectName("label_2")
         self.verticalLayout.addWidget(self.label_2)
         self.tabelViewType = QtWidgets.QTableView(self.frame)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+        sizePolicy.setHorizontalStretch(2)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.tabelViewType.sizePolicy().hasHeightForWidth())
+        self.tabelViewType.setSizePolicy(sizePolicy)
         self.tabelViewType.setObjectName("tabelViewType")
         self.verticalLayout.addWidget(self.tabelViewType)
         self.frame_2 = QtWidgets.QFrame(self.splitter)
@@ -65,6 +70,11 @@ class Ui_Form(object):
         self.horizontalLayout.addWidget(self.butSave)
         self.verticalLayout_2.addLayout(self.horizontalLayout)
         self.tabelViewEnum = QtWidgets.QTableView(self.frame_2)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+        sizePolicy.setHorizontalStretch(4)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.tabelViewEnum.sizePolicy().hasHeightForWidth())
+        self.tabelViewEnum.setSizePolicy(sizePolicy)
         self.tabelViewEnum.setMaximumSize(QtCore.QSize(16777215, 16777215))
         self.tabelViewEnum.setObjectName("tabelViewEnum")
         self.verticalLayout_2.addWidget(self.tabelViewEnum)

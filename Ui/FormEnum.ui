@@ -85,7 +85,14 @@
         </widget>
        </item>
        <item>
-        <widget class="QTableView" name="tabelViewType"/>
+        <widget class="QTableView" name="tabelViewType">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+           <horstretch>2</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -163,6 +170,12 @@
        </item>
        <item>
         <widget class="QTableView" name="tabelViewEnum">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+           <horstretch>4</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="maximumSize">
           <size>
            <width>16777215</width>

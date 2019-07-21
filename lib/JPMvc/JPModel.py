@@ -76,19 +76,19 @@ class __JPTableViewModelBase(QAbstractTableModel):
     def _GetHeaderAlignment(self, Index: QModelIndex) -> int:
         return Qt.AlignCenter
 
-    def _GetDispText(self, Index: QModelIndex) -> str:
-        r, c, = Index.row(), Index.column()
-        rs = self.TabelFieldInfo.Fields[c].RowSource
-        data_i = self.TabelFieldInfo.Data[r][c]
-        if data_i is None:
-            return
-        if rs:
-            sel = [item for item in rs if item[1] == data_i]
-            if len(sel) == 0:
-                return QVariant()
-            else:
-                return QVariant(str(sel[0][0]))
-        return JPGetDisplayText(data_i)
+    # def _GetDispText(self, Index: QModelIndex) -> str:
+    #     r, c, = Index.row(), Index.column()
+    #     rs = self.TabelFieldInfo.Fields[c].RowSource
+    #     data_i = self.TabelFieldInfo.getOnlyData(Index)
+    #     if data_i is None:
+    #         return
+    #     if rs:
+    #         sel = [item for item in rs if item[1] == data_i]
+    #         if len(sel) == 0:
+    #             return QVariant()
+    #         else:
+    #             return QVariant(str(sel[0][0]))
+    #     return JPGetDisplayText(data_i)
 
     def _getDecoration(self, Index: QModelIndex) -> QVariant():
         """返回 (QColor, QIcon or QPixmap)"""
@@ -106,7 +106,8 @@ class __JPTableViewModelBase(QAbstractTableModel):
                     c].RowSource else self.TabelFieldInfo.Fields[c].Alignment
             #return int(self._GetDataAlignment(Index))
         elif role == Qt.DisplayRole:
-            return self._GetDispText(Index)
+            # return self._GetDispText(Index)
+            return self.TabelFieldInfo.getDispText(Index)
         elif role == Qt.DecorationRole:
             return self._getDecoration(Index)
         elif role == Qt.TextColorRole:
@@ -115,7 +116,7 @@ class __JPTableViewModelBase(QAbstractTableModel):
             return QColor(Qt.white)
         elif role == Qt.EditRole:
             r, c, fn, tp, rs = self.__getPara(Index)
-            return self.TabelFieldInfo[r][c].Value
+            return self.TabelFieldInfo.getOnlyData(Index)
 
     def _formulaCacu(self, row_data: int):
         # 这个可能要重新写
@@ -130,8 +131,9 @@ class __JPTableViewModelBase(QAbstractTableModel):
 
     def setData(self, Index: QModelIndex, Any,
                 role: int = Qt.EditRole) -> bool:
-        r, c = Index.row(), Index.column()
-        self.TabelFieldInfo.Data[r].setData(c, Any)
+        #r, c = Index.row(), Index.column()
+        self.TabelFieldInfo.setData(Index,Any)
+        #self.TabelFieldInfo.Data[r].setData(c, Any)
         # cur_fld = self.TabelFieldInfo[r][c]
 
         # tp = cur_fld.TypeCode
@@ -157,10 +159,10 @@ class __JPTableViewModelBase(QAbstractTableModel):
         # else:
         #     self.TabelFieldInfo.Data[r][c] = Any
         self.dirty = True
-        self._formulaCacu(self.TabelFieldInfo.Data[r])
+        row_data=self.TabelFieldInfo.getRowData(Index.row())
+        self._formulaCacu(row_data)
         # 执行重载函数，判断行数据是否合法
-        tempv = self.AfterSetDataBeforeInsterRowEvent(
-            self.TabelFieldInfo.Data[r].InteriorData, Index)
+        tempv = self.AfterSetDataBeforeInsterRowEvent(row_data, Index)
         if isinstance(tempv, bool):
             if tempv:
                 self.insertRows(self.rowCount())
@@ -228,18 +230,20 @@ class __JPTableViewModelBase(QAbstractTableModel):
 
     def insertRows(self, position, rows=1, index=QModelIndex()):
         self.beginInsertRows(QModelIndex(), position, position + rows - 1)
-        self.TabelFieldInfo.Data = (
-            self.TabelFieldInfo.Data[:position] +
-            [[None] * len(self.TabelFieldInfo.Fields)] +
-            self.TabelFieldInfo.Data[position:])
+        self.TabelFieldInfo.addRow()
+        # self.TabelFieldInfo.Data = (
+        #     self.TabelFieldInfo.Data[:position] +
+        #     [[None] * len(self.TabelFieldInfo.Fields)] +
+        #     self.TabelFieldInfo.Data[position:])
         self.endInsertRows()
         self.dirty = True
         return True
 
     def removeRows(self, position, rows=1, index=QModelIndex()):
         self.beginRemoveRows(QModelIndex(), position, position + rows - 1)
-        self.del_data.append(self.TabelFieldInfo.Data[position])
-        del self.TabelFieldInfo.Data[position]
+        #self.del_data.append(self.TabelFieldInfo.Data[position])
+        self.TabelFieldInfo.deleteRow(position)
+        #del self.TabelFieldInfo.Data[position]
         self.endRemoveRows()
         self.dirty = True
         return True

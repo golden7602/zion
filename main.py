@@ -53,12 +53,15 @@ class mianFormProcess():
         def addForm(form):
             st = ui.stackedWidget
             if st.count() > 0:
-                st.removeWidget(st.widget(0))
-                st.addWidget(form)
+                temp=st.widget(0)
+                st.removeWidget(temp)
+                del temp
+            st.addWidget(form)
 
         MW.addForm = addForm
 
         def reeViewItemClicked(item, i):
+            print(item)
             widget = getStackedWidget(MW, item.jpData)
             if widget:
                 ui.stackedWidget.addWidget(widget)
@@ -83,8 +86,9 @@ def getStackedWidget(mainForm, sysnavigationmenus_data):
     # elif menu_id == 22:  #Report_day
     #     from lib.ZionWidgets.Report_Day import
     #     getFuncForm_FormReport_Day(mainForm)
-    # elif menu_id == 10:
-    #     getFuncForm_Enum(mainForm)
+    elif menu_id == 10:
+        from lib.ZionWidgets.EnumManger import Form_EnumManger
+        Form_EnumManger(mainForm)
     # elif menu_id == 20:
     #     getFuncForm_FormReceivables(mainForm)
     return
