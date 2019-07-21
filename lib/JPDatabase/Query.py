@@ -1,8 +1,16 @@
+import datetime
+from os import getcwd
+from sys import path as jppath
+jppath.append(getcwd())
+
+
+
+
 import re
 from copy import deepcopy
 from PyQt5.QtCore import QModelIndex
-from Database import JPDb
-from Field import JPFieldInfo
+from lib.JPDatabase.Database import JPDb
+from lib.JPDatabase.Field import JPFieldInfo
 from PyQt5.QtWidgets import QMessageBox
 
 
@@ -148,6 +156,8 @@ class JPTabelFieldInfo(JPQueryFieldInfo):
             raise ValueError('查询语句:\n"{}"中未包含主键字段！'.format(sql))
         # 检查主键字段是不是自增
         pk_fld = self.getFieldsInfoDict()
+    def __len__(self):
+        return len(self.RowsData)
 
     def setData(self, index: [list, tuple, QModelIndex], value=None):
         r, c = super().getRC(index)
@@ -257,7 +267,7 @@ class JPTabelFieldInfo(JPQueryFieldInfo):
                         sql_i.format(','.join(temp), self.PrimarykeyFieldName,
                                      pk_value))
 
-    def getMainSqlStatements(self, isMainTable):
+    def getMainSqlStatements(self, Mainform,isMainTable):
         return self.__getSqlStatements(Mainform, True)
 
     def SqlSubStatements(self, Mainform, foreignkey_col,

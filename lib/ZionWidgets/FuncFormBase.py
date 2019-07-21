@@ -4,11 +4,11 @@ from sys import path as jppath
 jppath.append(getcwd())
 
 from dateutil.relativedelta import relativedelta
-from PyQt5.QtGui import QFont, QSize, QIcon, QPixmap
+from PyQt5.QtGui import QFont, QIcon, QPixmap
 from PyQt5.QtWidgets import (QAbstractItemView, QCheckBox, QComboBox,
                              QHBoxLayout, QLabel, QSizePolicy, QSpacerItem,
                              QTableView, QVBoxLayout, QWidget, QPushButton)
-from PyQt5.QtCore import QCoreApplication, QMetaObject
+from PyQt5.QtCore import QCoreApplication, QMetaObject,QSize,Qt,pyqtSlot
 from lib.JPDatabase.Query import JPQueryFieldInfo
 from lib.JPMvc.JPModel import JPFormModelMainSub, JPTableViewModelReadOnly
 
@@ -146,11 +146,11 @@ class JPFunctionForm(QWidget):
             self.tableView.setModel(self.model)
             self.tableView.resizeColumnsToContents()
 
-    @QtCore.pyqtSlot()
+    @pyqtSlot()
     def on_CMDEXPORTTOEXCEL_clicked(self):
         print("CMDEXPORTTOEXCEL 请重新写")
 
-    @QtCore.pyqtSlot()
+    @pyqtSlot()
     def on_CMDSEARCH_clicked(self):
         print("CMDSEARCH 请重新写")
 

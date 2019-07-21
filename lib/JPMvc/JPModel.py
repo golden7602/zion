@@ -13,7 +13,7 @@ from PyQt5.QtWidgets import QAbstractItemView, QTableView
 import lib.JPMvc.JPDelegate as myDe
 from lib.JPDatabase.Field import JPFieldType
 from lib.JPDatabase.Query import JPTabelRowData,JPTabelFieldInfo,JPQueryFieldInfo
-from lib.JPDatebase import (JPTabelFieldInfo, JPFieldType, JPTabelRowData)
+#from lib.JPDatebase import (JPTabelFieldInfo, JPFieldType, JPTabelRowData)
 
 from lib.JPFunction import (JPBooleanString, JPDateConver, JPRound,
                             JPGetDisplayText)
@@ -29,11 +29,11 @@ class __JPTableViewModelBase(QAbstractTableModel):
 
     def __init__(self, tabelFieldInfo: JPTabelFieldInfo = None):
         super().__init__()
-        tabelFieldInfo.Data = [
-            JPTabelRowData(item) for item in tabelFieldInfo.Data
-        ]
+        # tabelFieldInfo.Data = [
+        #     JPTabelRowData(item) for item in tabelFieldInfo.Data
+        # ]
         self.TabelFieldInfo = tabelFieldInfo
-        self.del_data = []
+        # self.del_data = []
         self.tableView = None
 
     def setTabelFieldInfo(self, tabelFieldInfo: JPTabelFieldInfo):
@@ -68,7 +68,7 @@ class __JPTableViewModelBase(QAbstractTableModel):
                 self.TabelFieldInfo.Fields[c].RowSource)
 
     def rowCount(self, parent: QModelIndex = QModelIndex()) -> int:
-        return len(self.TabelFieldInfo.Data)
+        return len(self.TabelFieldInfo)
 
     def columnCount(self, parent: QModelIndex = QModelIndex()) -> int:
         return len(self.TabelFieldInfo.Fields)

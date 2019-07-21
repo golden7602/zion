@@ -124,7 +124,7 @@ class JPMySQLFieldInfo(JPFieldInfo):
         super().__init__()
         f = cursors_field
         fl = JPMySQLFieldInfo
-        self.FieldName = f.org_name
+        self.FieldName = f.org_name if f.org_name else f.name
         self.Title = f.name
         self.TypeCode = self.tp.get(f.type_code, 0)
         self.Scale = f.scale

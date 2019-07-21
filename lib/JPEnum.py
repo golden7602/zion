@@ -1,4 +1,4 @@
-class JPEditFormDataMode(QObject):
+class JPEditFormDataMode():
     """本类为编辑窗口数据类型的枚举"""
     Edit = 1
     ReadOnly = 2

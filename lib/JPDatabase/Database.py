@@ -87,10 +87,20 @@ class JPDb(object):
 
     def getDict(self, sql) -> dict:
         if self.__db_type == JPDbType.MySQL:
-            db = JPDb()
-            cursor = self.currentConn.cursor(mysql_cursors.DictCursor)
-            cursor.execute(sql)
-            return cursor.fetchall()
+            cur = self.currentConn.cursor()
+            try:
+                cur.execute(sql)
+            except Exception as e:
+                raise ValueError('SQL语句或表名格式不正确!\n{}\n'.format(sql) + str(e))
+
+            covsdict = JPMySQLFieldInfo.getConvertersDict()
+            flds = [JPMySQLFieldInfo(item) for item in cur._result.fields]
+            rs = cur._result.rows
+            cover = [covsdict[fld.TypeCode] for fld in flds]
+            datas = []
+            for i in range(len(rs)):
+                datas.append({flds[j].FieldName:cover[j](v) for j, v in enumerate(rs[i])})
+            return datas
 
     def getOnlyStrcFilter(self):
         if self.__db_type == JPDbType.MySQL:
@@ -102,5 +112,6 @@ class JPDb(object):
 if __name__ == "__main__":
     db = JPDb()
     db.setDatabaseType(JPDbType.MySQL)
-    a = db.getDataList("select * from t_order")
+    sql="select * from t_order"
+    a = db.getDict(sql)
     print(a)

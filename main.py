@@ -8,9 +8,10 @@ from PyQt5.QtWidgets import (QApplication, QHBoxLayout, QLabel, QMainWindow,
                              QProgressBar, QTreeWidgetItem, QWidget)
 from PyQt5.QtGui import QIcon, QPixmap
 from lib.ZionPublc import JPPub, loadTreeview
-from lib.ZionWidgets import getStackedWidget
+#from lib.ZionWidgets import getStackedWidget
 from Ui import Ui_mainform
 from lib.JPFunction import readQss
+from lib.JPDatabase.Database import JPDb,JPDbType
 
 
 class mianFormProcess():
@@ -23,21 +24,21 @@ class mianFormProcess():
         # 堆叠布局调
         ui.stackedWidget.removeWidget(ui.page)
         ui.stackedWidget.removeWidget(ui.page_2)
-        EF = QWidget()
-        ui.empty = EF
-        EF.horizontalLayout = QHBoxLayout(EF)
-        EF.horizontalLayout.setContentsMargins(0, 0, 0, 0)
-        EF.horizontalLayout.setSpacing(0)
-        EF.horizontalLayout.setObjectName("horizontalLayout")
-        EF.label = QLabel(EF)
-        EF.label.setStyleSheet(
-            "background-color: rgb(255, 255, 255);border:0.5px solid rgb(127,127,127)"
-        )
-        EF.label.setText("")
-        EF.label.setObjectName("label")
-        EF.horizontalLayout.addWidget(EF.label)
-        ui.stackedWidget.addWidget(EF)
-        ui.stackedWidget.currentWidget = EF
+        # EF = QWidget()
+        # ui.empty = EF
+        # EF.horizontalLayout = QHBoxLayout(EF)
+        # EF.horizontalLayout.setContentsMargins(0, 0, 0, 0)
+        # EF.horizontalLayout.setSpacing(0)
+        # EF.horizontalLayout.setObjectName("horizontalLayout")
+        # EF.label = QLabel(EF)
+        # EF.label.setStyleSheet(
+        #     "background-color: rgb(255, 255, 255);border:0.5px solid rgb(127,127,127)"
+        # )
+        # EF.label.setText("")
+        # EF.label.setObjectName("label")
+        # EF.horizontalLayout.addWidget(EF.label)
+        # ui.stackedWidget.addWidget(EF)
+        # ui.stackedWidget.currentWidget = EF
         # 隐藏树标题
         ui.treeWidget.setHeaderHidden(True)
         pub = JPPub()
@@ -68,8 +69,30 @@ class mianFormProcess():
             reeViewItemClicked)
 
 
+def getStackedWidget(mainForm, sysnavigationmenus_data):
+    pub = JPPub()
+    menus = pub.getSysNavigationMenusDict()
+    menu_id = sysnavigationmenus_data['fNMID']
+    buts = [[m['fMenuText'], m['fIcon'], m['fObjectName']] for m in menus
+            if m['fParentId'] == menu_id and m['fIsCommandButton']]
+    widget = None
+    if menu_id == 2:  # Order
+        from lib.ZionWidgets.Order import JPFuncForm_Order
+        widget = JPFuncForm_Order(mainForm)
+        widget.addButtons(buts)
+    # elif menu_id == 22:  #Report_day
+    #     from lib.ZionWidgets.Report_Day import
+    #     getFuncForm_FormReport_Day(mainForm)
+    # elif menu_id == 10:
+    #     getFuncForm_Enum(mainForm)
+    # elif menu_id == 20:
+    #     getFuncForm_FormReceivables(mainForm)
+    return
+
 if __name__ == "__main__":
     app = QApplication(argv)
+    db = JPDb()
+    db.setDatabaseType(JPDbType.MySQL)
     MainWindow = QMainWindow()
     mianFormProcess(MainWindow)
     MainWindow.showMaximized()

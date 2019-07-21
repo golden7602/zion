@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'e:\Zion\Ui\mainform.ui'
+# Form implementation generated from reading ui file 'c:\Users\win10\Desktop\Zion\zion\Ui\mainform.ui'
 #
 # Created by: PyQt5 UI code generator 5.11.3
 #
@@ -15,10 +15,10 @@ class Ui_MainWindow(object):
         MainWindow.setStyleSheet("")
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
-        self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.centralwidget)
-        self.verticalLayout_2.setContentsMargins(2, 0, 2, 2)
-        self.verticalLayout_2.setSpacing(2)
-        self.verticalLayout_2.setObjectName("verticalLayout_2")
+        self.verticalLayout_4 = QtWidgets.QVBoxLayout(self.centralwidget)
+        self.verticalLayout_4.setContentsMargins(2, 2, 2, 2)
+        self.verticalLayout_4.setSpacing(2)
+        self.verticalLayout_4.setObjectName("verticalLayout_4")
         self.frame_2 = QtWidgets.QFrame(self.centralwidget)
         self.frame_2.setMinimumSize(QtCore.QSize(0, 70))
         self.frame_2.setMaximumSize(QtCore.QSize(16777215, 70))
@@ -96,24 +96,31 @@ class Ui_MainWindow(object):
         self.verticalLayout.addLayout(self.horizontalLayout)
         self.horizontalLayout_2.addLayout(self.verticalLayout)
         self.horizontalLayout_3.addLayout(self.horizontalLayout_2)
-        self.verticalLayout_2.addWidget(self.frame_2)
+        self.verticalLayout_4.addWidget(self.frame_2)
         self.line = QtWidgets.QFrame(self.centralwidget)
         self.line.setFrameShape(QtWidgets.QFrame.HLine)
         self.line.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.line.setObjectName("line")
-        self.verticalLayout_2.addWidget(self.line)
+        self.verticalLayout_4.addWidget(self.line)
         self.frame = QtWidgets.QFrame(self.centralwidget)
         self.frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame.setObjectName("frame")
         self.verticalLayout_3 = QtWidgets.QVBoxLayout(self.frame)
         self.verticalLayout_3.setContentsMargins(0, 0, 0, 0)
-        self.verticalLayout_3.setSpacing(0)
         self.verticalLayout_3.setObjectName("verticalLayout_3")
         self.splitter = QtWidgets.QSplitter(self.frame)
         self.splitter.setOrientation(QtCore.Qt.Horizontal)
+        self.splitter.setOpaqueResize(True)
+        self.splitter.setHandleWidth(5)
+        self.splitter.setChildrenCollapsible(True)
         self.splitter.setObjectName("splitter")
         self.treeWidget = QtWidgets.QTreeWidget(self.splitter)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+        sizePolicy.setHorizontalStretch(1)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.treeWidget.sizePolicy().hasHeightForWidth())
+        self.treeWidget.setSizePolicy(sizePolicy)
         self.treeWidget.setMinimumSize(QtCore.QSize(200, 0))
         self.treeWidget.setMaximumSize(QtCore.QSize(500, 16777215))
         self.treeWidget.setSizeIncrement(QtCore.QSize(300, 0))
@@ -126,7 +133,15 @@ class Ui_MainWindow(object):
         self.treeWidget.setFont(font)
         self.treeWidget.setObjectName("treeWidget")
         self.treeWidget.headerItem().setText(0, "1")
-        self.stackedWidget = QtWidgets.QStackedWidget(self.splitter)
+        self.layoutWidget = QtWidgets.QWidget(self.splitter)
+        self.layoutWidget.setObjectName("layoutWidget")
+        self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.layoutWidget)
+        self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout_2.setObjectName("verticalLayout_2")
+        self.label = QtWidgets.QLabel(self.layoutWidget)
+        self.label.setObjectName("label")
+        self.verticalLayout_2.addWidget(self.label)
+        self.stackedWidget = QtWidgets.QStackedWidget(self.layoutWidget)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(5)
         sizePolicy.setVerticalStretch(0)
@@ -141,17 +156,20 @@ class Ui_MainWindow(object):
         self.page_2 = QtWidgets.QWidget()
         self.page_2.setObjectName("page_2")
         self.stackedWidget.addWidget(self.page_2)
+        self.verticalLayout_2.addWidget(self.stackedWidget)
         self.verticalLayout_3.addWidget(self.splitter)
-        self.verticalLayout_2.addWidget(self.frame)
+        self.verticalLayout_4.addWidget(self.frame)
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
+        self.stackedWidget.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.label_Title.setText(_translate("MainWindow", "TextLabel"))
+        self.label.setText(_translate("MainWindow", "TextLabel"))
 
 
 if __name__ == "__main__":

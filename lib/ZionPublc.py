@@ -107,8 +107,7 @@ def loadTreeview(treeWidget, items):
         def run(self):  # 线程执行函数
             def additemtotree(parent, nmid, items, begin=0):
                 for i in range(begin, len(items) - 1):
-                    if items[i]["fParentId"] == nmid and int(
-                            items[i]["fIsCommandButton"]) == 0:
+                    if items[i]["fParentId"] == nmid and items[i]["fIsCommandButton"]==0:
                         item = QTreeWidgetItem(parent)
                         item.setText(0, items[i]["fMenuText"])
                         path = getcwd(

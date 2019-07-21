@@ -15,10 +15,11 @@ from PyQt5.QtWidgets import (QCheckBox as QCheckBox_, QComboBox as QComboBox_,
                              QDateEdit as QDateEdit_, QLineEdit as QLineEdit_,
                              QTextEdit as QTextEdit_, QWidget as QWidget_,
                              QCompleter)
-from lib.JPDatebase import JPDb, JPFieldType
+from lib.JPDatabase.Database import JPDb
+from lib.JPDatabase.Field import JPFieldType
 from lib.JPFunction import JPBooleanString, JPDateConver, JPGetDisplayText
 from PyQt5.QtGui import (QDoubleValidator, QIntValidator)
-from lib.JPDatebase import JPFieldType
+
 
 
 def __getattr__(name):
