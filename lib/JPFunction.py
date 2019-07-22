@@ -1,10 +1,25 @@
 # -*- coding: utf-8 -*-
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QDate
 import datetime
+from os import getcwd
 
-from PyQt5.QtCore import QDate
+from PyQt5.QtGui import QIcon, QPixmap
+from PyQt5.QtWidgets import QWidget, QPushButton
 from functools import singledispatch
 from decimal import Decimal
+
+
+def setButtonIcon(btn: QPushButton):
+    icon = QIcon()
+    icon.addPixmap(QPixmap(getcwd() + "\\res\\ico\\" + btn.text()),
+                   QIcon.Normal, QIcon.Off)
+    btn.setIcon(icon)
+
+
+def findButtonAndSetIcon(Widget: QWidget):
+    btns = Widget.findChildren((QPushButton))
+    for btn in btns:
+        setButtonIcon(btn)
 
 
 def PrintFunctionRunTime(func):

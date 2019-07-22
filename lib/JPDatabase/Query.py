@@ -172,6 +172,7 @@ class JPTabelFieldInfo(JPQueryFieldInfo):
         # 检查主键字段是不是自增
         #pk_fld = self.getFieldsInfoDict()
 
+
     def setData(self, index: [list, tuple, QModelIndex], value=None):
         r, c = super().getRC(index)
         self.RowsData[r].setData(c, value)

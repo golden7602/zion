@@ -4,17 +4,20 @@ jppath.append(getcwd())
 
 from Ui.Ui_FormReceivables import Ui_Form
 from PyQt5.QtWidgets import QDialog, QMessageBox, QWidget
-from PyQt5.QtCore import QDate
+from PyQt5.QtCore import QDate, QMetaObject, pyqtSlot
 from lib.JPDatabase.Query import JPQueryFieldInfo
 from lib.JPMvc.JPModel import JPTableViewModelReadOnly
-from lib.JPFunction import JPDateConver
+from lib.JPFunction import JPDateConver, findButtonAndSetIcon
 
 
 class Form_Receivables(Ui_Form):
     def __init__(self, mainform):
+        super().__init__()
         self.Widget = QWidget()
         self.setupUi(self.Widget)
-        self.dateEdit.dateChanged[QDate].connect(self.dateChange)
+        findButtonAndSetIcon(self.Widget)
+        self.SelectDate.setDate(QDate.currentDate())
+        #QMetaObject.connectSlotsByName(self.Widget)
         mainform.addForm(self.Widget)
         self.SQLCustomerArrearsList = """
             select c.fCustomerID,
@@ -146,7 +149,11 @@ class Form_Receivables(Ui_Form):
         self.tabCustomerRecorder.setModel(self.modCustomerRecorder)
         self.tabCustomerArrearsList.setModel(self.modCustomerArrearsList)
 
+        self.SelectDate.dateChanged.connect(self.mmm)
 
-
-    def dateChange(self, *args):
+    @pyqtSlot()
+    def on_SelectDate_dateChanged(self, *args):
         print(args)
+
+    def mmm(self, *args):
+        print(*args)

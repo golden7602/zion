@@ -1,109 +1,148 @@
+from os import getcwd
+from sys import path as jppath
+jppath.append(getcwd())
 
-def getFuncForm_FormReport_Day(mainform):
-    from Ui.Ui_FormReport_Day import Ui_Form
-    Form = QWidget()
-    ui = Ui_Form()
-    ui.setupUi(Form)
-    mainform.addForm(Form)
+from PyQt5.QtCore import Qt, QDate  #, QMetaObject, pyqtSlot
+from PyQt5.QtGui import QColor, QFont
+from PyQt5.QtWidgets import QWidget, QAbstractItemView
+from lib.JPMvc.JPModel import JPTableViewModelReadOnly
+from Ui.Ui_FormReport_Day import Ui_Form
+from lib.JPDatabase.Database import JPDb
+from lib.JPDatabase.Query import JPQueryFieldInfo
+from lib.JPFunction import findButtonAndSetIcon
+from lib.JPPrintReport import JPReport
+from PyQt5.QtPrintSupport import QPrinter
 
-    class myMod(JPTableViewModelReadOnly):
-        def __init__(self, *args):
-            super().__init__(*args)
-            self.f = QFont()
-            self.f.Black = True
-            self.f.setBold(True)
 
-        def data(self, Index, role: int = Qt.DisplayRole):
-            if Index.column() == 0 and role == Qt.TextAlignmentRole:
-                return Qt.AlignCenter
-            if Index.column() == 0 and role == Qt.BackgroundColorRole:
-                return QColor(Qt.gray)
-            if Index.column() == 0 and role == Qt.FontRole:
-                return self.f
-            if Index.row() == (super().rowCount() -
-                               1) and role == Qt.BackgroundColorRole:
-                return QColor(Qt.gray)
-            if Index.row() == (super().rowCount() - 1) and role == Qt.FontRole:
-                return self.f
-            return super().data(Index, role)
+class _myMod(JPTableViewModelReadOnly):
+    def __init__(self, *args):
+        super().__init__(*args)
+        self.f = QFont()
+        self.f.Black = True
+        self.f.setBold(True)
 
-    cbo_year, cbo_base = ui.cbo_year, ui.cbo_base
-    tw = ui.tableView
-    sql_receivables = """
-        SELECT IF(ISNULL(Q3.d), 'Sum', Q3.d) AS Day0
-            , M1, M2, M3, M4, M5, M6, M7, M8, M9, M10
-            , M11, M12
-        FROM (
-            SELECT Q1.d
-                , IF(Q1.m = 1, Q1.j1, NULL) AS M1
-                , IF(Q1.m = 2, Q1.j1, NULL) AS M2
-                , IF(Q1.m = 3, Q1.j1, NULL) AS M3
-                , IF(Q1.m = 4, Q1.j1, NULL) AS M4
-                , IF(Q1.m = 5, Q1.j1, NULL) AS M5
-                , IF(Q1.m = 6, Q1.j1, NULL) AS M6
-                , IF(Q1.m = 7, Q1.j1, NULL) AS M7
-                , IF(Q1.m = 8, Q1.j1, NULL) AS M8
-                , IF(Q1.m = 9, Q1.j1, NULL) AS M9
-                , IF(Q1.m = 10, Q1.j1, NULL) AS M10
-                , IF(Q1.m = 11, Q1.j1, NULL) AS M11
-                , IF(Q1.m = 12, Q1.j1, NULL) AS M12
-            FROM (
-                SELECT MONTH(fReceiptDate) AS m, DAY(fReceiptDate) AS d
-                    , SUM(fAmountCollected) AS j1
-                FROM t_receivables
-                WHERE YEAR(fReceiptDate) = {}
-                GROUP BY MONTH(fReceiptDate), DAY(fReceiptDate)
-            ) Q1
-            GROUP BY Q1.d WITH ROLLUP
-        ) Q3
-        """
-    sql_payment = """
-        SELECT if(isnull(Q3.d), 'Sum', Q3.d) AS Day0
-            , M1, M2, M3, M4, M5, M6, M7, M8, M9, M10
-            , M11, M12
-        FROM (
-            SELECT Q1.d
-                , IF(Q1.m = 1, Q1.j1, NULL) AS M1
-                , IF(Q1.m = 2, Q1.j1, NULL) AS M2
-                , IF(Q1.m = 3, Q1.j1, NULL) AS M3
-                , IF(Q1.m = 4, Q1.j1, NULL) AS M4
-                , IF(Q1.m = 5, Q1.j1, NULL) AS M5
-                , IF(Q1.m = 6, Q1.j1, NULL) AS M6
-                , IF(Q1.m = 7, Q1.j1, NULL) AS M7
-                , IF(Q1.m = 8, Q1.j1, NULL) AS M8
-                , IF(Q1.m = 9, Q1.j1, NULL) AS M9
-                , IF(Q1.m = 10, Q1.j1, NULL) AS M10
-                , IF(Q1.m = 11, Q1.j1, NULL) AS M11
-                , IF(Q1.m = 12, Q1.j1, NULL) AS M12
-            FROM (
-                SELECT MONTH(fOrderDate) AS m, DAY(fOrderDate) AS d
-                    , SUM(fPayable) AS j1
-                FROM t_order
-                WHERE (Year(fOrderDate) = {}
-                    AND fCanceled = 0
-                    AND fSubmited = 1
-                    AND fConfirmed = 1)
-                GROUP BY MONTH(fOrderDate), DAY(fOrderDate)
-            ) Q1
-            GROUP BY Q1.d WITH ROLLUP
-        ) Q3
-        """
-    db=JPDb
-    year = db.getDataList('''select year(fOrderDate) as y  
+    def data(self, Index, role: int = Qt.DisplayRole):
+        if Index.column() == 0 and role == Qt.TextAlignmentRole:
+            return Qt.AlignCenter
+        if Index.column() == 0 and role == Qt.BackgroundColorRole:
+            return QColor(Qt.gray)
+        if Index.column() == 0 and role == Qt.FontRole:
+            return self.f
+        if Index.row() == (super().rowCount() -
+                           1) and role == Qt.BackgroundColorRole:
+            return QColor(Qt.gray)
+        if Index.row() == (super().rowCount() - 1) and role == Qt.FontRole:
+            return self.f
+        return super().data(Index, role)
+
+
+class Form_Repoet_Day(Ui_Form):
+    def __init__(self, mainform):
+        super().__init__()
+        self.Widget = QWidget()
+        self.setupUi(self.Widget)
+        mainform.addForm(self.Widget)
+        findButtonAndSetIcon(self.Widget)
+        year_sql = """
+                select year(fOrderDate) as y  
                 from t_order union select year(fReceiptDate) 
-                as y from t_receivables''')[0]
-    ui.mod = None
+                as y from t_receivables
+        """
+        self.sql_none = """
+            SELECT 
+            Null as M1, Null as M2, Null as M3, Null as M4, 
+            Null as M5, Null as M6, Null as M7, Null as M8, 
+            Null as M9, Null as M10, Null as M11, Null as M12 
+            from  t_order {}
+        """
+        sql_receivables = """
+            SELECT IF(ISNULL(Q3.d), 'Sum', Q3.d) AS Day0
+                , M1, M2, M3, M4, M5, M6, M7, M8, M9, M10
+                , M11, M12
+            FROM (
+                SELECT Q1.d
+                    , IF(Q1.m = 1, Q1.j1, NULL) AS M1
+                    , IF(Q1.m = 2, Q1.j1, NULL) AS M2
+                    , IF(Q1.m = 3, Q1.j1, NULL) AS M3
+                    , IF(Q1.m = 4, Q1.j1, NULL) AS M4
+                    , IF(Q1.m = 5, Q1.j1, NULL) AS M5
+                    , IF(Q1.m = 6, Q1.j1, NULL) AS M6
+                    , IF(Q1.m = 7, Q1.j1, NULL) AS M7
+                    , IF(Q1.m = 8, Q1.j1, NULL) AS M8
+                    , IF(Q1.m = 9, Q1.j1, NULL) AS M9
+                    , IF(Q1.m = 10, Q1.j1, NULL) AS M10
+                    , IF(Q1.m = 11, Q1.j1, NULL) AS M11
+                    , IF(Q1.m = 12, Q1.j1, NULL) AS M12
+                FROM (
+                    SELECT MONTH(fReceiptDate) AS m, DAY(fReceiptDate) AS d
+                        , SUM(fAmountCollected) AS j1
+                    FROM t_receivables
+                    WHERE YEAR(fReceiptDate) = {}
+                    GROUP BY MONTH(fReceiptDate), DAY(fReceiptDate)
+                ) Q1
+                GROUP BY Q1.d WITH ROLLUP
+            ) Q3
+        """
+        sql_payment = """
+                SELECT if(isnull(Q3.d), 'Sum', Q3.d) AS Day0
+                    , M1, M2, M3, M4, M5, M6, M7, M8, M9, M10
+                    , M11, M12
+                FROM (
+                    SELECT Q1.d
+                        , IF(Q1.m = 1, Q1.j1, NULL) AS M1
+                        , IF(Q1.m = 2, Q1.j1, NULL) AS M2
+                        , IF(Q1.m = 3, Q1.j1, NULL) AS M3
+                        , IF(Q1.m = 4, Q1.j1, NULL) AS M4
+                        , IF(Q1.m = 5, Q1.j1, NULL) AS M5
+                        , IF(Q1.m = 6, Q1.j1, NULL) AS M6
+                        , IF(Q1.m = 7, Q1.j1, NULL) AS M7
+                        , IF(Q1.m = 8, Q1.j1, NULL) AS M8
+                        , IF(Q1.m = 9, Q1.j1, NULL) AS M9
+                        , IF(Q1.m = 10, Q1.j1, NULL) AS M10
+                        , IF(Q1.m = 11, Q1.j1, NULL) AS M11
+                        , IF(Q1.m = 12, Q1.j1, NULL) AS M12
+                    FROM (
+                        SELECT MONTH(fOrderDate) AS m, DAY(fOrderDate) AS d
+                            , SUM(fPayable) AS j1
+                        FROM t_order
+                        WHERE (Year(fOrderDate) = {}
+                            AND fCanceled = 0
+                            AND fSubmited = 1
+                            AND fConfirmed = 1)
+                        GROUP BY MONTH(fOrderDate), DAY(fOrderDate)
+                    ) Q1
+                    GROUP BY Q1.d WITH ROLLUP
+                ) Q3        """
+        self.cbo_base.addItem('Payment', sql_payment)
+        self.cbo_base.addItem('Receivables', sql_receivables)
+        db = JPDb()
+        year_list = db.getDataList(year_sql)
+        year_list = [str(y[0]) for y in year_list if y[0]]
+        for y in year_list:
+            self.cbo_year.addItem(y)
+        self.cbo_year.setCurrentIndex(-1)
+        self.tableView.setSelectionMode(QAbstractItemView.SingleSelection)
+        self.tableView.setSelectionBehavior(QAbstractItemView.SelectRows)
+        self.cbo_base.currentTextChanged.connect(self._search)
+        self.cbo_year.currentTextChanged.connect(self._search)
+        #self.butPrint.clicked.connect(self.onbutPrint)
+        self._search()
 
-    def _search():
-        if cbo_year.currentIndex() != -1 and cbo_base.currentIndex() != -1:
-            sql = cbo_base.currentData()
-            queryInfo = JPQueryFieldInfo(sql.format(cbo_year.currentText()))
-            ui.mod = myMod(tw, queryInfo)
+    def _search(self):
+        db = JPDb()
+        sql = self.cbo_base.currentData() if (
+            self.cbo_base.currentIndex() != -1
+            and self.cbo_year.currentIndex() != -1) else self.sql_none.format(
+                db.getOnlyStrcFilter())
+        self.queryInfo = JPQueryFieldInfo(
+            sql.format(self.cbo_year.currentText()))
+        self.mod = _myMod(self.tableView, self.queryInfo)
+        self.tableView.setModel(self.mod)
 
-    def butPrint():
-        if ui.mod is None:
+    def onbutPrint(self):
+        if len(self.queryInfo) == 0:
             return
-        flds = ui.mod.fields
+        flds = self.queryInfo.Fields
         rpt = JPReport(QPrinter.A4, QPrinter.Orientation(1))
         rpt.ReportHeader.AddItem(1,
                                  0,
@@ -112,7 +151,7 @@ def getFuncForm_FormReport_Day(mainform):
                                  40,
                                  '收款日报表',
                                  Bolder=False,
-                                 AlignmentFlag=(QtCore.Qt.AlignCenter))
+                                 AlignmentFlag=(Qt.AlignCenter))
         title = [fld.Title for fld in flds]
         fns = [fld.FieldName for fld in flds]
         cols = len(flds)
@@ -140,8 +179,31 @@ def getFuncForm_FormReport_Day(mainform):
                                fns[i],
                                AlignmentFlag=al_r,
                                FormatString='{:,.2f}')
-        rpt.DataSource = ui.mod.getDataDict(Qt.EditRole)
+        rpt.DataSource = self.mod.getDataDict(Qt.EditRole)
         rpt.BeginPrint()
+
+
+def getFuncForm_FormReport_Day(mainform):
+    from Ui.Ui_FormReport_Day import Ui_Form
+    Form = QWidget()
+    ui = Ui_Form()
+    ui.setupUi(Form)
+    mainform.addForm(Form)
+
+    cbo_year, cbo_base = ui.cbo_year, ui.cbo_base
+    tw = ui.tableView
+
+    db = JPDb
+    year = db.getDataList('''select year(fOrderDate) as y
+                from t_order union select year(fReceiptDate)
+                as y from t_receivables''')[0]
+    ui.mod = None
+
+    def _search():
+        if cbo_year.currentIndex() != -1 and cbo_base.currentIndex() != -1:
+            sql = cbo_base.currentData()
+            queryInfo = JPQueryFieldInfo(sql.format(cbo_year.currentText()))
+            ui.mod = myMod(tw, queryInfo)
 
     cbo_year.addItems([str(y[0]) for y in year if y[0]])
     cbo_year.setCurrentIndex(-1)
@@ -155,4 +217,3 @@ def getFuncForm_FormReport_Day(mainform):
     cbo_year.currentTextChanged.connect(_search)
     ui.butPrint.clicked.connect(butPrint)
     return Form
-

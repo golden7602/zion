@@ -146,6 +146,9 @@
              <bold>true</bold>
             </font>
            </property>
+           <property name="styleSheet">
+            <string notr="true">color: #0098DA</string>
+           </property>
            <property name="text">
             <string>TextLabel</string>
            </property>
@@ -359,11 +362,14 @@
              </property>
              <property name="font">
               <font>
-               <family>Arial</family>
+               <family>Arial Black</family>
                <pointsize>10</pointsize>
                <weight>75</weight>
                <bold>true</bold>
               </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">color: #0098DA</string>
              </property>
              <property name="text">
               <string>TextLabel</string>

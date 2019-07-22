@@ -99,19 +99,24 @@ class JPDb(object):
             cover = [covsdict[fld.TypeCode] for fld in flds]
             datas = []
             for i in range(len(rs)):
-                datas.append({flds[j].FieldName:cover[j](v) for j, v in enumerate(rs[i])})
+                datas.append({
+                    flds[j].FieldName: cover[j](v)
+                    for j, v in enumerate(rs[i])
+                })
             return datas
 
     def getOnlyStrcFilter(self):
         if self.__db_type == JPDbType.MySQL:
             return " Limit 0"
-    def __getattr__(self,name):
-        if name=='_JPDb__db_type':
+
+    def __getattr__(self, name):
+        if name == '_JPDb__db_type':
             raise AttributeError("应在第一使用此类时，先调用setDatabaseType方法指定数据库类型")
+
 
 if __name__ == "__main__":
     db = JPDb()
     db.setDatabaseType(JPDbType.MySQL)
-    sql="select * from t_order"
+    sql = "select * from t_order"
     a = db.getDict(sql)
     print(a)

@@ -18,6 +18,7 @@ class mianFormProcess():
 
         ui = Ui_mainform.Ui_MainWindow()
         ui.setupUi(MW)
+        ui.label_Title.setText("Zion OrderM")
         ui.label_logo.setPixmap(QPixmap(getcwd() + "\\res\\Zions_100.png"))
         #MW.setStyleSheet(readQss(os.getcwd() + "\\res\\blackwhite.css"))
         # 堆叠布局调
@@ -65,9 +66,9 @@ def getStackedWidget(mainForm, sysnavigationmenus_data):
         from lib.ZionWidgets.Order import JPFuncForm_Order
         widget = JPFuncForm_Order(mainForm)
         widget.addButtons(buts)
-    # elif menu_id == 22:  #Report_day
-    #     from lib.ZionWidgets.Report_Day import
-    #     getFuncForm_FormReport_Day(mainForm)
+    elif menu_id == 22:
+        from lib.ZionWidgets.Report_Day import Form_Repoet_Day
+        Form_Repoet_Day(mainForm)
     elif menu_id == 9:
         from lib.ZionWidgets.payment import JPFuncForm_Payment
         widget = JPFuncForm_Payment(mainForm)
@@ -78,6 +79,17 @@ def getStackedWidget(mainForm, sysnavigationmenus_data):
     elif menu_id == 20:
         from lib.ZionWidgets.Receivables import Form_Receivables
         Form_Receivables(mainForm)
+    elif menu_id == 72:
+        from lib.ZionWidgets.PrintingOrder import JPFuncForm_PrintingOrder
+        widget = JPFuncForm_PrintingOrder(mainForm)
+        widget.addButtons(buts)
+    elif menu_id == 73:
+        from lib.ZionWidgets.Customer import Form_Customer
+        widget = Form_Customer(mainForm)
+        widget.addButtons(buts)
+
+
+
     return
 
 

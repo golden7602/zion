@@ -42,8 +42,6 @@ class Ui_Form(object):
         self.cbo_base = QtWidgets.QComboBox(Form)
         self.cbo_base.setMinimumSize(QtCore.QSize(100, 0))
         self.cbo_base.setObjectName("cbo_base")
-        self.cbo_base.addItem("")
-        self.cbo_base.addItem("")
         self.horizontalLayout_3.addWidget(self.cbo_base)
         spacerItem1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_3.addItem(spacerItem1)
@@ -83,8 +81,8 @@ class Ui_Form(object):
         self.tableView.setMinimumSize(QtCore.QSize(0, 250))
         self.tableView.setObjectName("tableView")
         self.tableView.verticalHeader().setVisible(False)
-        self.tableView.verticalHeader().setDefaultSectionSize(30)
-        self.tableView.verticalHeader().setMinimumSectionSize(25)
+        self.tableView.verticalHeader().setDefaultSectionSize(23)
+        self.tableView.verticalHeader().setMinimumSectionSize(23)
         self.verticalLayout.addWidget(self.tableView)
 
         self.retranslateUi(Form)
@@ -95,11 +93,9 @@ class Ui_Form(object):
         Form.setWindowTitle(_translate("Form", "Order"))
         self.label.setText(_translate("Form", "年度Year:"))
         self.label_3.setText(_translate("Form", "基于BasedOn:"))
-        self.cbo_base.setItemText(0, _translate("Form", "Payment"))
-        self.cbo_base.setItemText(1, _translate("Form", "Receivables"))
         self.butPrint.setText(_translate("Form", "Print"))
         self.butPDF.setText(_translate("Form", "PDF"))
-        self.butSave.setText(_translate("Form", "Excel"))
+        self.butSave.setText(_translate("Form", "ExportToExcel"))
 
 
 if __name__ == "__main__":

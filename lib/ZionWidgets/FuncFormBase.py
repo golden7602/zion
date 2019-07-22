@@ -4,13 +4,14 @@ from sys import path as jppath
 jppath.append(getcwd())
 
 from dateutil.relativedelta import relativedelta
-from PyQt5.QtGui import QFont, QIcon, QPixmap
+from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import (QAbstractItemView, QCheckBox, QComboBox,
                              QHBoxLayout, QLabel, QSizePolicy, QSpacerItem,
                              QTableView, QVBoxLayout, QWidget, QPushButton)
 from PyQt5.QtCore import QCoreApplication, QMetaObject, QSize, Qt, pyqtSlot
 from lib.JPDatabase.Query import JPQueryFieldInfo
 from lib.JPMvc.JPModel import JPFormModelMainSub, JPTableViewModelReadOnly
+from lib.JPFunction import setButtonIcon
 
 
 class JPFunctionForm(QWidget):
@@ -144,10 +145,7 @@ class JPFunctionForm(QWidget):
         for item in btnNames:
             btn = QPushButton(item[0])
             btn.setObjectName(item[2].upper())
-            icon = QIcon()
-            icon.addPixmap(QPixmap(getcwd() + "\\res\\ico\\" + item[1]),
-                           QIcon.Normal, QIcon.Off)
-            btn.setIcon(icon)
+            setButtonIcon(btn)
             self.horizontalLayout_Button.addWidget(btn)
         QMetaObject.connectSlotsByName(self)
 
