@@ -191,7 +191,7 @@
               <number>0</number>
              </property>
              <item>
-              <widget class="QCommandLinkButton" name="commandLinkButton">
+              <widget class="QCommandLinkButton" name="ChangeUser">
                <property name="minimumSize">
                 <size>
                  <width>32</width>
@@ -220,7 +220,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QCommandLinkButton" name="commandLinkButton_2">
+              <widget class="QCommandLinkButton" name="ChangePassword">
                <property name="minimumSize">
                 <size>
                  <width>32</width>

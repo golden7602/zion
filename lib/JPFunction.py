@@ -16,6 +16,13 @@ def setButtonIcon(btn: QPushButton):
     btn.setIcon(icon)
 
 
+def setButtonIconByName(btn: QPushButton):
+    icon = QIcon()
+    icon.addPixmap(QPixmap(getcwd() + "\\res\\ico\\" + btn.objectName()),
+                   QIcon.Normal, QIcon.Off)
+    btn.setIcon(icon)
+
+
 def findButtonAndSetIcon(Widget: QWidget):
     btns = Widget.findChildren((QPushButton))
     for btn in btns:

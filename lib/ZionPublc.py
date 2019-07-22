@@ -83,7 +83,8 @@ class JPPub():
             ORDER BY fDispIndex
             """
         self.__sysNavigationMenusDict = db.getDict(sql)
-
+        a=[row for row in self.__sysNavigationMenusDict if row["fNMID"]==13]
+        print(a)
     def getEnumList(self, enum_type_id: int):
         return self.__EnumDict[enum_type_id]
 

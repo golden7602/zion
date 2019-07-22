@@ -107,6 +107,9 @@
            <height>16777215</height>
           </size>
          </property>
+         <attribute name="verticalHeaderDefaultSectionSize">
+          <number>25</number>
+         </attribute>
         </widget>
        </item>
       </layout>
@@ -206,6 +209,9 @@
          <property name="editTriggers">
           <set>QAbstractItemView::AllEditTriggers</set>
          </property>
+         <attribute name="verticalHeaderDefaultSectionSize">
+          <number>25</number>
+         </attribute>
         </widget>
        </item>
       </layout>

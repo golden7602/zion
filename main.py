@@ -9,7 +9,7 @@ from PyQt5.QtWidgets import (QApplication, QHBoxLayout, QLabel, QMainWindow,
 from PyQt5.QtGui import QIcon, QPixmap
 from lib.ZionPublc import JPPub, loadTreeview
 from Ui import Ui_mainform
-from lib.JPFunction import readQss
+from lib.JPFunction import readQss, setButtonIconByName
 from lib.JPDatabase.Database import JPDb, JPDbType
 from lib.ZionWidgets.Background import Form_Background
 
@@ -20,6 +20,8 @@ class mianFormProcess():
         ui = Ui_mainform.Ui_MainWindow()
         ui.setupUi(MW)
         ui.label_Title.setText("Zion OrderM")
+        setButtonIconByName(ui.ChangeUser)
+        setButtonIconByName(ui.ChangePassword)
         ui.label_logo.setPixmap(QPixmap(getcwd() + "\\res\\Zions_100.png"))
         #MW.setStyleSheet(readQss(os.getcwd() + "\\res\\blackwhite.css"))
         # 堆叠布局调
@@ -90,7 +92,7 @@ def getStackedWidget(mainForm, sysnavigationmenus_data):
         widget = Form_Customer(mainForm)
         widget.addButtons(buts)
     elif menu_id == 13:
-        from lib.ZionWidgets.user import Form_User
+        from lib.ZionWidgets.User import Form_User
         widget = Form_User(mainForm)
         widget.addButtons(buts)
     elif menu_id == 15:
@@ -101,10 +103,16 @@ def getStackedWidget(mainForm, sysnavigationmenus_data):
         from lib.ZionWidgets.Adjustment import JPFuncForm_Adjustment
         widget = JPFuncForm_Adjustment(mainForm)
         widget.addButtons(buts)
+    elif menu_id == 56:
+        from lib.ZionWidgets.Quotation import JPFuncForm_Quotation
+        widget = JPFuncForm_Quotation(mainForm)
+        widget.addButtons(buts)
+    elif menu_id == 55:
+        from lib.ZionWidgets.PrintingQuotation import JPFuncForm_PrintingQuotation
+        widget = JPFuncForm_PrintingQuotation(mainForm)
+        widget.addButtons(buts)
     else:
         Form_Background(mainForm)
-
-
 
     return
 
