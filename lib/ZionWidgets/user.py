@@ -10,7 +10,7 @@ from lib.JPMvc.JPModel import JPTableViewModelEditForm
 from lib.JPFunction import JPDateConver, setButtonIcon
 
 
-class Form_Customer(Ui_Form):
+class Form_User(Ui_Form):
     def __init__(self, mainform):
         super().__init__()
         self.Widget = QWidget()
@@ -18,18 +18,13 @@ class Form_Customer(Ui_Form):
         mainform.addForm(self.Widget)
         self.SQL = """
             select 
-                fCustomerID as `ID`, 
-                fCustomerName as `客户名称Cliente`, 
-                fNUIT as `税号NUIT`, 
-                fCity as `城市City`, 
-                fContato as `联系人Contato`, 
-                fCelular as `手机Celular`, 
-                fTelefone as `电话Telefone`, 
-                fEmail as `电子邮件Email`, 
-                fWeb as `主页Web`, 
-                fEndereco as `地址Endereco`, 
-                fFax as `传真Fax` 
-            from  t_customer
+                fUserID as `编号 ID`, 
+                fUsername as `用户名Name`, 
+                fNickname as `昵称Nickname`, 
+                fDepartment as `部门Department`, 
+                fNotes as `备注Note ` 
+                from  sysusers 
+            where  fUserID > 1
         """
         self.dataInfo = JPTabelFieldInfo(self.SQL)
         self.mod = JPTableViewModelEditForm(self.tableView, self.dataInfo)

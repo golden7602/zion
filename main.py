@@ -11,6 +11,7 @@ from lib.ZionPublc import JPPub, loadTreeview
 from Ui import Ui_mainform
 from lib.JPFunction import readQss
 from lib.JPDatabase.Database import JPDb, JPDbType
+from lib.ZionWidgets.Background import Form_Background
 
 
 class mianFormProcess():
@@ -53,6 +54,7 @@ class mianFormProcess():
 
         ui.treeWidget.itemClicked[QTreeWidgetItem, int].connect(
             treeViewItemClicked)
+        Form_Background(MW)
 
 
 def getStackedWidget(mainForm, sysnavigationmenus_data):
@@ -87,6 +89,20 @@ def getStackedWidget(mainForm, sysnavigationmenus_data):
         from lib.ZionWidgets.Customer import Form_Customer
         widget = Form_Customer(mainForm)
         widget.addButtons(buts)
+    elif menu_id == 13:
+        from lib.ZionWidgets.user import Form_User
+        widget = Form_User(mainForm)
+        widget.addButtons(buts)
+    elif menu_id == 15:
+        from lib.ZionWidgets.Complete import JPFuncForm_Complete
+        widget = JPFuncForm_Complete(mainForm)
+        widget.addButtons(buts)
+    elif menu_id == 18:
+        from lib.ZionWidgets.Adjustment import JPFuncForm_Adjustment
+        widget = JPFuncForm_Adjustment(mainForm)
+        widget.addButtons(buts)
+    else:
+        Form_Background(mainForm)
 
 
 
