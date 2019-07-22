@@ -3,11 +3,13 @@ from os import getcwd
 from sys import path as jppath
 jppath.append(getcwd())
 
-from PyQt5.QtWidgets import QWidget, QAbstractItemView, QMenu
-from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QIcon, QPixmap
+from PyQt5.QtWidgets import (QWidget, QAbstractItemView, QMenu, QAction)
+from PyQt5.QtCore import Qt, QModelIndex
 from Ui.Ui_FormEnum import Ui_Form
 from lib.JPDatabase.Query import JPQueryFieldInfo, JPTabelFieldInfo
-from lib.JPMvc.JPModel import JPTableViewModelReadOnly, JPTableViewModelEditForm
+from lib.JPMvc.JPModel import (JPTableViewModelReadOnly,
+                               JPTableViewModelEditForm)
 
 
 class _myReadOnlyMod(JPTableViewModelReadOnly):
@@ -75,7 +77,11 @@ class Form_EnumManger(QWidget):
         self.setTab2Column()
 
     def but_Save(self):
-        print(self.tabinfo2.getSqlSubStatements(self.mainform, 1, self.CurrentTypeID))
+        icon = QIcon(QPixmap(getcwd() + "\\res\\ico\\folder.png"))
+        self.tab2.verticalHeader().addAction(QAction(icon, "aaa", self.tab2))
+        print(
+            self.tabinfo2.getSqlSubStatements(self.mainform, 1,
+                                              self.CurrentTypeID))
 
     def custom_right_menu(self, pos):
         menu = QMenu()
@@ -84,6 +90,7 @@ class Form_EnumManger(QWidget):
         action = menu.exec_(self.tab2.mapToGlobal(pos))
         if action == opt1:
             self.mod2.insertRows(len(self.tabinfo2.RowsData))
+            self.tab2.selectRow(self.mod2.rowCount() - 1)
             return
         elif action == opt2:
             self.mod2.removeRows(

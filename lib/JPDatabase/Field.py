@@ -5,7 +5,7 @@ jppath.append(getcwd())
 from pymysql.constants import FIELD_TYPE
 from PyQt5.QtCore import Qt, QDate
 
-from lib.JPFunction import JPDateConver,JPGetDisplayText
+from lib.JPFunction import JPDateConver, JPGetDisplayText
 from abc import abstractmethod
 
 
@@ -53,8 +53,6 @@ class JPFieldInfo(JPFieldType):
         return self
 
 
-
-
 class JPMySQLFieldInfo(JPFieldInfo):
     NOT_NULL_FLAG = 1
     PRI_KEY_FLAG = 2
@@ -90,22 +88,21 @@ class JPMySQLFieldInfo(JPFieldInfo):
         FIELD_TYPE.TIMESTAMP: JPFieldInfo.Date,
         FIELD_TYPE.BIT: JPFieldInfo.Boolean
     }
-    @staticmethod
-    def getSqlValueCreater() -> object:
-        return {
-            JPFieldInfo.Int:
-            lambda x: "'{}'".format(x),
-            JPFieldInfo.Float:
-            lambda x: "'{}'".format(x),
-            JPFieldInfo.String:
-            lambda x: "'{}'".format(x),
-            JPFieldInfo.Date:
-            lambda x: "'{}'".format(JPDateConver(x, str)),
-            JPFieldInfo.Boolean:
-            lambda x: "'{}'".format(ord(x) if isinstance(x, bytes) else x),
-            JPFieldInfo.Other:
-            lambda x: "'{}'".format(x)
-        }
+
+    SqlValueCreater = {
+        JPFieldInfo.Int:
+        lambda x: "'{}'".format(x),
+        JPFieldInfo.Float:
+        lambda x: "'{}'".format(x),
+        JPFieldInfo.String:
+        lambda x: "'{}'".format(x),
+        JPFieldInfo.Date:
+        lambda x: "'{}'".format(JPDateConver(x, str)),
+        JPFieldInfo.Boolean:
+        lambda x: "'{}'".format(ord(x) if isinstance(x, bytes) else x),
+        JPFieldInfo.Other:
+        lambda x: "'{}'".format(x)
+    }
 
     @staticmethod
     def getConvertersDict() -> dict:
@@ -118,6 +115,7 @@ class JPMySQLFieldInfo(JPFieldInfo):
             JPFieldInfo.Boolean: lambda x: [False, True][ord(x)] if x else x,
             JPFieldInfo.Other: lambda x: x
         }
+
     def __init__(self, cursors_field):
         """此类在处理时，应该已经把从表中取得的数据全部转换成了Python内部数据类型"""
         super().__init__()
@@ -133,14 +131,15 @@ class JPMySQLFieldInfo(JPFieldInfo):
         self.NoDefaultValue = f.flags & fl.NO_DEFAULT_VALUE_FLAG != 0
         self.Auto_Increment = f.flags & fl.AUTO_INCREMENT_FLAG != 0
 
-    def sqlValue(self, value):
-        v = value if value else self.__dict__["Value"]
-        if self.NotNull and v is None:
-            raise ValueError(
-                "字段[{title}]的值不能为空!\nField[{title}] not be Empty!",
-                format(title=self.Title))
+    def sqlValue(self, value, check_null: bool = False):
+        v = value
+        if check_null:
+            if self.NotNull and v is None:
+                t = self.Title if self.Title else self.FieldName
+                raise ValueError(
+                    "字段[{title}]的值不能为空!\nField[{title}] not be Empty!".format(
+                        title=t))
         tp = self.TypeCode
         if v is None:
             return 'Null'
-        return JPMySQLFieldInfo.getSqlValueCreater[tp](v)
-
+        return self.SqlValueCreater[tp](v)

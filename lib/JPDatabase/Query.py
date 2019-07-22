@@ -45,7 +45,10 @@ class JPTabelRowData(object):
         return self.__data
 
     def setData(self, column, value):
-        self.OriginalValue = self.Update
+        if self.__data[column] == value:
+            return
+        if self._state == self.OriginalValue:
+            self._state = self.Update
         self.__data[column] = value
 
 
@@ -167,7 +170,7 @@ class JPTabelFieldInfo(JPQueryFieldInfo):
         if self.PrimarykeyFieldIndex is None:
             raise ValueError('查询语句:\n"{}"中未包含主键字段！'.format(sql))
         # 检查主键字段是不是自增
-        pk_fld = self.getFieldsInfoDict()
+        #pk_fld = self.getFieldsInfoDict()
 
     def setData(self, index: [list, tuple, QModelIndex], value=None):
         r, c = super().getRC(index)
@@ -192,12 +195,19 @@ class JPTabelFieldInfo(JPQueryFieldInfo):
                            foreignkey_col=None,
                            foreignkey_value=None):
         sql = []
-        # 不能为空，不是自增列的列号
+        hasforeignkey = all((foreignkey_col, foreignkey_value))
+        # 不能为空，不是自增列的列号，如果给定了外键值，则不检查该列
+        if foreignkey_col and not foreignkey_value:
+            raise ValueError("指定了外键列但没有指定值！")
         not_null_col = []
         for i in range(len(self.Fields)):
             fld = self.Fields[i]
             if all([fld.Auto_Increment is False, fld.NotNull is True]):
-                not_null_col.append(i)
+                if hasforeignkey:
+                    if i!= foreignkey_col:
+                        not_null_col.append(i)
+                else:
+                    not_null_col.append(i)
         # 检查空值 如有不全要求的字段，则返回行号
         for r in range(len(self.RowsData)):
             for i in not_null_col:
@@ -215,14 +225,13 @@ class JPTabelFieldInfo(JPQueryFieldInfo):
         sql_u = 'UPDATE ' + m_t + ' SET {} WHERE {}={};'
         fn_lst = [fld.FieldName for fld in self.Fields]
         pk_index = self.PrimarykeyFieldIndex
-        hasforeignkey = all((foreignkey_col, foreignkey_value))
+
         for row in self.RowsData:
             if row.State == JPTabelRowData.OriginalValue:
                 continue
-            cur_data = deepcopy(row.Datas)
             cur_fn = deepcopy(fn_lst)
             cur_row_sqlvalue = [
-                self.Fields[i].sqlValue(d) for i, d in enumerate(cur_data)
+                self.Fields[i].sqlValue(d) for i, d in enumerate(row.Datas)
             ]
 
             # 分主子表两种模式分别写
@@ -231,22 +240,27 @@ class JPTabelFieldInfo(JPQueryFieldInfo):
                 # 检查主键是不是自增
                 if row.State == JPTabelRowData.New:
                     if self.Fields[pk_index].Auto_Increment:
-                        del cur_data[pk_index]
+                        del cur_row_sqlvalue[pk_index]
                         del cur_fn[pk_index]
                     else:
-                        cur_data[pk_index] = '@PK'
-                    sqls.append(sql_i.format(','.join(cur_fn), ','.join(cur_data)))
+                        cur_row_sqlvalue[pk_index] = '@PK'
+                    sqls.append(
+                        sql_i.format(','.join(cur_fn),
+                                     ','.join(cur_row_sqlvalue)))
                 if row.State == JPTabelRowData.Update:
-                    if not cur_data[pk_index]:
+                    if not cur_row_sqlvalue[pk_index]:
                         raise ValueError("主键字段'{}'不能为空!".format(
                             self.PrimarykeyFieldName))
-                    pk_value = cur_data[pk_index]
-                    del cur_data[pk_index]
+                    pk_value = cur_row_sqlvalue[pk_index]
+                    del cur_row_sqlvalue[pk_index]
                     del cur_fn[pk_index]
-                    temp = ['{}={}'.format(n, v) for n, v in zip(cur_fn, cur_data)]
+                    temp = [
+                        '{}={}'.format(n, v)
+                        for n, v in zip(cur_fn, cur_row_sqlvalue)
+                    ]
                     sqls.append(
                         sql_u.format(','.join(temp), self.PrimarykeyFieldName,
-                                    pk_value))
+                                     pk_value))
 
             if isMainTable is False:
                 if not self.Fields[pk_index].Auto_Increment:
@@ -256,20 +270,25 @@ class JPTabelFieldInfo(JPQueryFieldInfo):
                     raise ValueError("子表必须指定外键列号")
                 if row.State == JPTabelRowData.New:
                     if foreignkey_value:
-                        cur_data[foreignkey_col] = '{}'.format(foreignkey_value)
+                        cur_row_sqlvalue[foreignkey_col] = '{}'.format(
+                            foreignkey_value)
                     else:
-                        cur_data[foreignkey_col] = '@PK'
-                    del cur_data[pk_index]
+                        cur_row_sqlvalue[foreignkey_col] = '@PK'
+                    del cur_row_sqlvalue[pk_index]
                     del cur_fn[pk_index]
-                    sqls.append(sql_i.format(cur_fn, ','.join(cur_data)))
+                    sqls.append(
+                        sql_i.format(','.join(cur_fn), ','.join(cur_row_sqlvalue)))
                 if row.State == JPTabelRowData.Update:
-                    pk_value = cur_data[pk_index]
-                    del cur_data[pk_index]
+                    pk_value = cur_row_sqlvalue[pk_index]
+                    del cur_row_sqlvalue[pk_index]
                     del cur_fn[pk_index]
-                    temp = ['{}={}'.format(n, v) for n, v in zip(cur_fn, cur_data)]
+                    temp = [
+                        '{}={}'.format(n, v)
+                        for n, v in zip(cur_fn, cur_row_sqlvalue)
+                    ]
                     sqls.append(
                         sql_u.format(','.join(temp), self.PrimarykeyFieldName,
-                                    pk_value))
+                                     pk_value))
 
             # if isMainTable:
             #     creatSql_Mian()

@@ -2,12 +2,11 @@ from os import getcwd
 from sys import path as jppath
 jppath.append(getcwd())
 
-
 from functools import reduce
 
-from PyQt5.QtCore import Qt,QModelIndex,pyqtSlot
+from PyQt5.QtCore import Qt, QModelIndex, pyqtSlot
 from PyQt5.QtGui import QColor, QFont, QPainter, QPixmap
-from PyQt5.QtWidgets import QDialog, QMessageBox,QWidget
+from PyQt5.QtWidgets import QDialog, QMessageBox, QWidget
 from PyQt5.QtPrintSupport import QPrinter
 
 from lib.JPPrintReport import JPPrintSectionType, JPReport
@@ -36,9 +35,9 @@ class JPFuncForm_Order(JPFunctionForm):
                 FROM v_order AS o
                 WHERE fCanceled=0
                         AND left(fOrderID,2)='CP'
-                        AND (fSubmited={}
-                        OR fSubmited={})
-                        AND fOrderDate{}
+                        AND (fSubmited={ch1}
+                        OR fSubmited={ch2})
+                        AND fOrderDate{date}
                 ORDER BY  forderID DESC"""
         sql_2 = """
                 SELECT fOrderID as 订单号码OrderID,
@@ -75,7 +74,7 @@ class JPFuncForm_Order(JPFunctionForm):
     def getCurrentCustomerID(self):
         index = self.tableView.selectionModel().currentIndex()
         if index.isValid():
-            return self.model.TabelFieldInfo.getOnlyData([index.row(),0])
+            return self.model.TabelFieldInfo.getOnlyData([index.row(), 0])
 
     @pyqtSlot()
     def on_CMDEXPORTTOEXCEL_clicked(self):
@@ -92,8 +91,7 @@ class JPFuncForm_Order(JPFunctionForm):
         if not cu_id:
             return
         #showEditForm_Order(self.MainForm, JPFormModelMainSub.ReadOnly, cu_id)
-        print("CMDBROWSE被下",cu_id)
-
+        print("CMDBROWSE被下", cu_id)
 
 
 def showEditForm_Order(MainForm, edit_mode, PKValue=None):
@@ -183,9 +181,6 @@ def showEditForm_Order(MainForm, edit_mode, PKValue=None):
     MF.dataChanged[QWidget].connect(Cacu)
 
     MF.show(edit_mode)
-
-
-
 
 
 def formatEvent(self):

@@ -80,6 +80,15 @@ class Ui_Form(object):
         sizePolicy.setHeightForWidth(self.tabelViewEnum.sizePolicy().hasHeightForWidth())
         self.tabelViewEnum.setSizePolicy(sizePolicy)
         self.tabelViewEnum.setMaximumSize(QtCore.QSize(16777215, 16777215))
+        self.tabelViewEnum.setStyleSheet("QTableView QTableCornerButton::section {\n"
+"    color: white;/*文字颜色*/\n"
+"    background-color: rgb(41, 139, 201);/*背景色*/\n"
+"    border: 5px solid #418bc9;/*边框*/\n"
+"    border-radius:0px;/*边框圆角*/\n"
+"    border-color: rgb(41, 139, 201);/*边框颜色*/\n"
+"    font: bold 11pt;/*字体大小*/\n"
+"    padding:12px 0 0 10px;/*内边距*/\n"
+" }")
         self.tabelViewEnum.setEditTriggers(QtWidgets.QAbstractItemView.AllEditTriggers)
         self.tabelViewEnum.setObjectName("tabelViewEnum")
         self.verticalLayout_2.addWidget(self.tabelViewEnum)

@@ -8,7 +8,7 @@ from PyQt5.QtGui import QFont, QIcon, QPixmap
 from PyQt5.QtWidgets import (QAbstractItemView, QCheckBox, QComboBox,
                              QHBoxLayout, QLabel, QSizePolicy, QSpacerItem,
                              QTableView, QVBoxLayout, QWidget, QPushButton)
-from PyQt5.QtCore import QCoreApplication, QMetaObject,QSize,Qt,pyqtSlot
+from PyQt5.QtCore import QCoreApplication, QMetaObject, QSize, Qt, pyqtSlot
 from lib.JPDatabase.Query import JPQueryFieldInfo
 from lib.JPMvc.JPModel import JPFormModelMainSub, JPTableViewModelReadOnly
 
@@ -32,23 +32,8 @@ class JPFunctionForm(QWidget):
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout.setSpacing(0)
         self.verticalLayout.setObjectName("verticalLayout")
-        self.horizontalLayout_2 = QHBoxLayout()
-        self.horizontalLayout_2.setObjectName("horizontalLayout_2")
-        spacerItem = QSpacerItem(10, 20, QSizePolicy.Fixed,
-                                 QSizePolicy.Minimum)
-        self.horizontalLayout_2.addItem(spacerItem)
-        self.label_FuncFullPath = QLabel(self)
-        font = QFont()
-        font.setFamily("Arial")
-        font.setPointSize(11)
-        font.setBold(True)
-        font.setWeight(75)
-        self.label_FuncFullPath.setFont(font)
-        self.label_FuncFullPath.setObjectName("label_FuncFullPath")
-        self.horizontalLayout_2.addWidget(self.label_FuncFullPath)
-        self.verticalLayout.addLayout(self.horizontalLayout_2)
         self.horizontalLayout_3 = QHBoxLayout()
-        self.horizontalLayout_3.setContentsMargins(-1, 5, -1, 5)
+        self.horizontalLayout_3.setContentsMargins(-1, 0, -1, 5)
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
         self.widget_Button = QWidget(self)
         font = QFont()
@@ -62,9 +47,9 @@ class JPFunctionForm(QWidget):
         self.horizontalLayout_3.addWidget(self.widget_Button)
         self.horizontalLayout = QHBoxLayout()
         self.horizontalLayout.setObjectName("horizontalLayout")
-        spacerItem1 = QSpacerItem(20, 20, QSizePolicy.Fixed,
-                                  QSizePolicy.Minimum)
-        self.horizontalLayout.addItem(spacerItem1)
+        spacerItem = QSpacerItem(20, 20, QSizePolicy.Fixed,
+                                 QSizePolicy.Minimum)
+        self.horizontalLayout.addItem(spacerItem)
         self.label_2 = QLabel(self)
         font = QFont()
         font.setFamily("Arial")
@@ -75,18 +60,18 @@ class JPFunctionForm(QWidget):
         self.comboBox.setMinimumSize(QSize(100, 0))
         self.comboBox.setObjectName("comboBox")
         self.horizontalLayout.addWidget(self.comboBox)
-        spacerItem2 = QSpacerItem(20, 20, QSizePolicy.Fixed,
+        spacerItem1 = QSpacerItem(20, 20, QSizePolicy.Fixed,
                                   QSizePolicy.Minimum)
-        self.horizontalLayout.addItem(spacerItem2)
+        self.horizontalLayout.addItem(spacerItem1)
         self.checkBox_1 = QCheckBox(self)
         self.checkBox_1.setObjectName("checkBox_1")
         self.horizontalLayout.addWidget(self.checkBox_1)
         self.checkBox_2 = QCheckBox(self)
         self.checkBox_2.setObjectName("checkBox_2")
         self.horizontalLayout.addWidget(self.checkBox_2)
-        spacerItem3 = QSpacerItem(40, 20, QSizePolicy.Expanding,
+        spacerItem2 = QSpacerItem(40, 20, QSizePolicy.Expanding,
                                   QSizePolicy.Minimum)
-        self.horizontalLayout.addItem(spacerItem3)
+        self.horizontalLayout.addItem(spacerItem2)
         self.horizontalLayout_3.addLayout(self.horizontalLayout)
         self.verticalLayout.addLayout(self.horizontalLayout_3)
         self.tableView = QTableView(self)
@@ -94,8 +79,8 @@ class JPFunctionForm(QWidget):
         self.tableView.setAlternatingRowColors(True)
         self.tableView.setSelectionBehavior(QAbstractItemView.SelectRows)
         self.tableView.setObjectName("tableView")
+        self.tableView.verticalHeader().setDefaultSectionSize(25)
         self.tableView.verticalHeader().setMinimumSectionSize(23)
-        self.tableView.verticalHeader().setDefaultSectionSize(24)
         self.verticalLayout.addWidget(self.tableView)
 
         self.retranslateUi(self)
@@ -140,8 +125,8 @@ class JPFunctionForm(QWidget):
                 3:
                 '=fOrderDate'
             }
-            sql = self.DefauleParaSQL.format(ch1, ch2,
-                                             cb[self.comboBox.currentIndex()])
+            sql = self.DefauleParaSQL.format(
+                ch1=ch1, ch2=ch2, date=cb[self.comboBox.currentIndex()])
             info = JPQueryFieldInfo(sql)
             self.model = self.getModelClass()(self.tableView, info)
             self.tableView.setModel(self.model)
@@ -168,8 +153,7 @@ class JPFunctionForm(QWidget):
 
     def retranslateUi(self, Form):
         _translate = QCoreApplication.translate
-        self.setWindowTitle(_translate("Form", "Form"))
-        self.label_FuncFullPath.setText(_translate("Form", "Function Path"))
+        Form.setWindowTitle(_translate("Form", "Form"))
         self.label_2.setText(_translate("Form", "Filter:"))
         self.checkBox_1.setText(_translate("Form", "CheckBox"))
         self.checkBox_2.setText(_translate("Form", "CheckBox"))

@@ -35,44 +35,9 @@
     <number>0</number>
    </property>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_2">
-     <item>
-      <spacer name="horizontalSpacer_4">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeType">
-        <enum>QSizePolicy::Fixed</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>10</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item>
-      <widget class="QLabel" name="label_FuncFullPath">
-       <property name="font">
-        <font>
-         <family>Arial</family>
-         <pointsize>11</pointsize>
-         <weight>75</weight>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>Function Path</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </item>
-   <item>
     <layout class="QHBoxLayout" name="horizontalLayout_3">
      <property name="topMargin">
-      <number>5</number>
+      <number>0</number>
      </property>
      <property name="bottomMargin">
       <number>5</number>
