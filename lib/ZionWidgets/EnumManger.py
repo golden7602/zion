@@ -3,7 +3,7 @@ from os import getcwd
 from sys import path as jppath
 jppath.append(getcwd())
 
-from PyQt5.QtWidgets import QWidget, QAbstractItemView,QMenu
+from PyQt5.QtWidgets import QWidget, QAbstractItemView, QMenu
 from PyQt5.QtCore import Qt
 from Ui.Ui_FormEnum import Ui_Form
 from lib.JPDatabase.Query import JPQueryFieldInfo, JPTabelFieldInfo
@@ -24,7 +24,7 @@ class _myReadOnlyMod(JPTableViewModelReadOnly):
 class Form_EnumManger(QWidget):
     def __init__(self, mainform):
         super().__init__()
-        self.CurrentTypeID=None
+        self.CurrentTypeID = None
         ui = Ui_Form()
         ui.setupUi(self)
         sql1 = """SELECT fTypeID AS 'TypeID 类别ID', 
@@ -33,7 +33,7 @@ class Form_EnumManger(QWidget):
                 FROM t_enumeration_type
                 ORDER BY fTypeID
         """
-        self.UI=ui
+        self.UI = ui
         #ui.butSave.setHidden(True)
         self.tab1 = ui.tabelViewType
         self.tab2 = ui.tabelViewEnum
@@ -57,7 +57,7 @@ class Form_EnumManger(QWidget):
         self.UI.butSave.clicked.connect(self.but_Save)
 
     def type_selected(self, index1, index2):
-        self.CurrentTypeID=self.tabinfo1.getOnlyData([index1.row(),0])
+        self.CurrentTypeID = self.tabinfo1.getOnlyData([index1.row(), 0])
         self.refreshTabEnum(self.CurrentTypeID)
 
     def refreshTabEnum(self, type_id: int = -1):
@@ -74,9 +74,8 @@ class Form_EnumManger(QWidget):
         self.tab2.setModel(self.mod2)
         self.setTab2Column()
 
-
     def but_Save(self):
-        self.tabinfo2.getSqlSubStatements(self.mainform,1,self.CurrentTypeID)
+        print(self.tabinfo2.getSqlSubStatements(self.mainform, 1, self.CurrentTypeID))
 
     def custom_right_menu(self, pos):
         menu = QMenu()
@@ -87,14 +86,16 @@ class Form_EnumManger(QWidget):
             self.mod2.insertRows(len(self.tabinfo2.RowsData))
             return
         elif action == opt2:
-            self.mod2.removeRows(self.tab2.selectionModel().currentIndex().row())
+            self.mod2.removeRows(
+                self.tab2.selectionModel().currentIndex().row())
             return
         else:
             return
+
     def setTab2Column(self):
         self.tab2.setColumnHidden(0, True)
         self.tab2.setColumnHidden(1, True)
-        self.tab2.setColumnWidth(2,300)
-        self.tab2.setColumnWidth(3,100)
-        self.tab2.setColumnWidth(4,100)
-        self.tab2.setColumnWidth(5,300)
+        self.tab2.setColumnWidth(2, 300)
+        self.tab2.setColumnWidth(3, 100)
+        self.tab2.setColumnWidth(4, 100)
+        self.tab2.setColumnWidth(5, 300)

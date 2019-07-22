@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'c:\Users\win10\Desktop\Zion\zion\Ui\mainform.ui'
+# Form implementation generated from reading ui file 'e:\Zion\Ui\mainform.ui'
 #
 # Created by: PyQt5 UI code generator 5.11.3
 #
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -30,10 +31,12 @@ class Ui_MainWindow(object):
         self.horizontalLayout_3.setSpacing(0)
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
         self.label_logo = QtWidgets.QLabel(self.frame_2)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred,
+                                           QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.label_logo.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.label_logo.sizePolicy().hasHeightForWidth())
         self.label_logo.setSizePolicy(sizePolicy)
         self.label_logo.setMinimumSize(QtCore.QSize(0, 70))
         self.label_logo.setMaximumSize(QtCore.QSize(450, 70))
@@ -45,13 +48,17 @@ class Ui_MainWindow(object):
         self.horizontalLayout_3.addWidget(self.label_logo)
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
-        spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        spacerItem = QtWidgets.QSpacerItem(40, 20,
+                                           QtWidgets.QSizePolicy.Expanding,
+                                           QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_2.addItem(spacerItem)
         self.label_Title = QtWidgets.QLabel(self.frame_2)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Preferred)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding,
+                                           QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.label_Title.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.label_Title.sizePolicy().hasHeightForWidth())
         self.label_Title.setSizePolicy(sizePolicy)
         self.label_Title.setMinimumSize(QtCore.QSize(221, 40))
         self.label_Title.setMaximumSize(QtCore.QSize(16777215, 40))
@@ -64,11 +71,15 @@ class Ui_MainWindow(object):
         self.label_Title.setAlignment(QtCore.Qt.AlignCenter)
         self.label_Title.setObjectName("label_Title")
         self.horizontalLayout_2.addWidget(self.label_Title)
-        spacerItem1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        spacerItem1 = QtWidgets.QSpacerItem(40, 20,
+                                            QtWidgets.QSizePolicy.Expanding,
+                                            QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_2.addItem(spacerItem1)
         self.verticalLayout = QtWidgets.QVBoxLayout()
         self.verticalLayout.setObjectName("verticalLayout")
-        spacerItem2 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        spacerItem2 = QtWidgets.QSpacerItem(20, 40,
+                                            QtWidgets.QSizePolicy.Minimum,
+                                            QtWidgets.QSizePolicy.Expanding)
         self.verticalLayout.addItem(spacerItem2)
         self.horizontalLayout = QtWidgets.QHBoxLayout()
         self.horizontalLayout.setSpacing(0)
@@ -78,7 +89,8 @@ class Ui_MainWindow(object):
         self.commandLinkButton.setMaximumSize(QtCore.QSize(32, 32))
         self.commandLinkButton.setText("")
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("../res/ico/changeuser.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap("../res/ico/changeuser.png"),
+                       QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.commandLinkButton.setIcon(icon)
         self.commandLinkButton.setIconSize(QtCore.QSize(16, 16))
         self.commandLinkButton.setObjectName("commandLinkButton")
@@ -88,7 +100,8 @@ class Ui_MainWindow(object):
         self.commandLinkButton_2.setMaximumSize(QtCore.QSize(32, 32))
         self.commandLinkButton_2.setText("")
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap("../res/ico/changepassword.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap("../res/ico/changepassword.png"),
+                        QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.commandLinkButton_2.setIcon(icon1)
         self.commandLinkButton_2.setIconSize(QtCore.QSize(16, 16))
         self.commandLinkButton_2.setObjectName("commandLinkButton_2")
@@ -116,10 +129,12 @@ class Ui_MainWindow(object):
         self.splitter.setChildrenCollapsible(True)
         self.splitter.setObjectName("splitter")
         self.treeWidget = QtWidgets.QTreeWidget(self.splitter)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding,
+                                           QtWidgets.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(1)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.treeWidget.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.treeWidget.sizePolicy().hasHeightForWidth())
         self.treeWidget.setSizePolicy(sizePolicy)
         self.treeWidget.setMinimumSize(QtCore.QSize(200, 0))
         self.treeWidget.setMaximumSize(QtCore.QSize(500, 16777215))
@@ -138,14 +153,24 @@ class Ui_MainWindow(object):
         self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.layoutWidget)
         self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
-        self.label = QtWidgets.QLabel(self.layoutWidget)
-        self.label.setObjectName("label")
-        self.verticalLayout_2.addWidget(self.label)
+        self.label_FunPath = QtWidgets.QLabel(self.layoutWidget)
+        self.label_FunPath.setMinimumSize(QtCore.QSize(0, 25))
+        self.label_FunPath.setMaximumSize(QtCore.QSize(16777215, 25))
+        font = QtGui.QFont()
+        font.setFamily("Arial")
+        font.setPointSize(10)
+        font.setBold(True)
+        font.setWeight(75)
+        self.label_FunPath.setFont(font)
+        self.label_FunPath.setObjectName("label_FunPath")
+        self.verticalLayout_2.addWidget(self.label_FunPath)
         self.stackedWidget = QtWidgets.QStackedWidget(self.layoutWidget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred,
+                                           QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(5)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.stackedWidget.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.stackedWidget.sizePolicy().hasHeightForWidth())
         self.stackedWidget.setSizePolicy(sizePolicy)
         self.stackedWidget.setMinimumSize(QtCore.QSize(200, 0))
         self.stackedWidget.setStyleSheet("")
@@ -169,7 +194,7 @@ class Ui_MainWindow(object):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.label_Title.setText(_translate("MainWindow", "TextLabel"))
-        self.label.setText(_translate("MainWindow", "TextLabel"))
+        self.label_FunPath.setText(_translate("MainWindow", "TextLabel"))
 
 
 if __name__ == "__main__":
@@ -180,4 +205,3 @@ if __name__ == "__main__":
     ui.setupUi(MainWindow)
     MainWindow.show()
     sys.exit(app.exec_())
-

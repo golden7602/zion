@@ -11,6 +11,7 @@ from lib.JPDatabase.Field import JPFieldInfo
 from PyQt5.QtWidgets import QMessageBox
 from lib.JPFunction import JPGetDisplayText
 
+
 class JPTabelRowData(object):
     New = 0
     OriginalValue = 1
@@ -86,12 +87,11 @@ class JPQueryFieldInfo(object):
         if not v:
             return ''
         if rs:
-            txts=[item[1] for item in rs if item[0]==v]
+            txts = [item[1] for item in rs if item[0] == v]
             if txts:
                 return txts[0]
         else:
             return JPGetDisplayText(v)
-
 
     def getRowData(self, row_num) -> JPTabelRowData:
         return self.RowsData[row_num].Datas
@@ -227,7 +227,7 @@ class JPTabelFieldInfo(JPQueryFieldInfo):
 
             # 分主子表两种模式分别写
 
-        def creatSql_Mian():
+            if isMainTable is True:
                 # 检查主键是不是自增
                 if row.State == JPTabelRowData.New:
                     if self.Fields[pk_index].Auto_Increment:
@@ -235,8 +235,7 @@ class JPTabelFieldInfo(JPQueryFieldInfo):
                         del cur_fn[pk_index]
                     else:
                         cur_data[pk_index] = '@PK'
-                    sqls.append(
-                        sql_i.format(','.join(cur_fn), ','.join(cur_data)))
+                    sqls.append(sql_i.format(','.join(cur_fn), ','.join(cur_data)))
                 if row.State == JPTabelRowData.Update:
                     if not cur_data[pk_index]:
                         raise ValueError("主键字段'{}'不能为空!".format(
@@ -244,14 +243,12 @@ class JPTabelFieldInfo(JPQueryFieldInfo):
                     pk_value = cur_data[pk_index]
                     del cur_data[pk_index]
                     del cur_fn[pk_index]
-                    temp = [
-                        '{}={}'.format(n, v) for n, v in zip(cur_fn, cur_data)
-                    ]
+                    temp = ['{}={}'.format(n, v) for n, v in zip(cur_fn, cur_data)]
                     sqls.append(
-                        sql_i.format(','.join(temp), self.PrimarykeyFieldName,
-                                     pk_value))
+                        sql_u.format(','.join(temp), self.PrimarykeyFieldName,
+                                    pk_value))
 
-        def creatSql_Sub():
+            if isMainTable is False:
                 if not self.Fields[pk_index].Auto_Increment:
                     raise ValueError("子表主键字段'{}'只能为自增加类型!".format(
                         self.PrimarykeyFieldName))
@@ -259,8 +256,7 @@ class JPTabelFieldInfo(JPQueryFieldInfo):
                     raise ValueError("子表必须指定外键列号")
                 if row.State == JPTabelRowData.New:
                     if foreignkey_value:
-                        cur_data[foreignkey_col] = '{}'.format(
-                            foreignkey_value)
+                        cur_data[foreignkey_col] = '{}'.format(foreignkey_value)
                     else:
                         cur_data[foreignkey_col] = '@PK'
                     del cur_data[pk_index]
@@ -270,23 +266,24 @@ class JPTabelFieldInfo(JPQueryFieldInfo):
                     pk_value = cur_data[pk_index]
                     del cur_data[pk_index]
                     del cur_fn[pk_index]
-                    temp = [
-                        '{}={}'.format(n, v) for n, v in zip(cur_fn, cur_data)
-                    ]
+                    temp = ['{}={}'.format(n, v) for n, v in zip(cur_fn, cur_data)]
                     sqls.append(
-                        sql_i.format(','.join(temp), self.PrimarykeyFieldName,
-                                     pk_value))
-        if isMainTable:
-            creatSql_Mian()
-        else:
-            creatSql_Sub()
+                        sql_u.format(','.join(temp), self.PrimarykeyFieldName,
+                                    pk_value))
+
+            # if isMainTable:
+            #     creatSql_Mian()
+            # else:
+            #     creatSql_Sub()
         return sqls
 
     def getMainSqlStatements(self, Mainform, isMainTable):
         return self.__getSqlStatements(Mainform, True)
 
-    def getSqlSubStatements(self, Mainform, foreignkey_col,
-                         foreignkey_value=None):
+    def getSqlSubStatements(self,
+                            Mainform,
+                            foreignkey_col,
+                            foreignkey_value=None):
         return self.__getSqlStatements(Mainform, False, foreignkey_col,
                                        foreignkey_value)
 

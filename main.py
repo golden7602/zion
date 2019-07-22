@@ -11,7 +11,7 @@ from lib.ZionPublc import JPPub, loadTreeview
 #from lib.ZionWidgets import getStackedWidget
 from Ui import Ui_mainform
 from lib.JPFunction import readQss
-from lib.JPDatabase.Database import JPDb,JPDbType
+from lib.JPDatabase.Database import JPDb, JPDbType
 
 
 class mianFormProcess():
@@ -44,7 +44,8 @@ class mianFormProcess():
         pub = JPPub()
         self.sysNavigationMenus = pub.getSysNavigationMenusDict()
         loadTreeview(ui.treeWidget, self.sysNavigationMenus)
-        MW.Label = QLabel("")
+
+        # MW.Label = QLabel("")
         # MW.ProgressBar = QProgressBar()
         # MW.statusBar().addPermanentWidget(MW.Label)
         # MW.statusBar().addPermanentWidget(MW.ProgressBar)
@@ -53,15 +54,15 @@ class mianFormProcess():
         def addForm(form):
             st = ui.stackedWidget
             if st.count() > 0:
-                temp=st.widget(0)
+                temp = st.widget(0)
                 st.removeWidget(temp)
                 del temp
             st.addWidget(form)
 
         MW.addForm = addForm
 
-        def reeViewItemClicked(item, i):
-            print(item)
+        def treeViewItemClicked(item, i):
+            ui.label_FunPath.setText(item.FullPath)
             widget = getStackedWidget(MW, item.jpData)
             if widget:
                 ui.stackedWidget.addWidget(widget)
@@ -69,7 +70,7 @@ class mianFormProcess():
                 ui.stackedWidget.setCurrentIndex(1)
 
         ui.treeWidget.itemClicked[QTreeWidgetItem, int].connect(
-            reeViewItemClicked)
+            treeViewItemClicked)
 
 
 def getStackedWidget(mainForm, sysnavigationmenus_data):
@@ -92,6 +93,7 @@ def getStackedWidget(mainForm, sysnavigationmenus_data):
     # elif menu_id == 20:
     #     getFuncForm_FormReceivables(mainForm)
     return
+
 
 if __name__ == "__main__":
     app = QApplication(argv)

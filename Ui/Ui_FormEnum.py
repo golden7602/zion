@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'c:\Users\win10\Desktop\Zion\zion\Ui\FormEnum.ui'
+# Form implementation generated from reading ui file 'e:\Zion\Ui\FormEnum.ui'
 #
 # Created by: PyQt5 UI code generator 5.11.3
 #
@@ -32,7 +32,8 @@ class Ui_Form(object):
         self.verticalLayout.setObjectName("verticalLayout")
         self.label_2 = QtWidgets.QLabel(self.frame)
         self.label_2.setMinimumSize(QtCore.QSize(0, 25))
-        self.label_2.setMaximumSize(QtCore.QSize(16777215, 15))
+        self.label_2.setMaximumSize(QtCore.QSize(16777215, 25))
+        self.label_2.setAlignment(QtCore.Qt.AlignBottom|QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft)
         self.label_2.setObjectName("label_2")
         self.verticalLayout.addWidget(self.label_2)
         self.tabelViewType = QtWidgets.QTableView(self.frame)
@@ -41,6 +42,8 @@ class Ui_Form(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.tabelViewType.sizePolicy().hasHeightForWidth())
         self.tabelViewType.setSizePolicy(sizePolicy)
+        self.tabelViewType.setMinimumSize(QtCore.QSize(400, 0))
+        self.tabelViewType.setMaximumSize(QtCore.QSize(16777215, 16777215))
         self.tabelViewType.setObjectName("tabelViewType")
         self.verticalLayout.addWidget(self.tabelViewType)
         self.frame_2 = QtWidgets.QFrame(self.splitter)
@@ -59,8 +62,9 @@ class Ui_Form(object):
         self.horizontalLayout = QtWidgets.QHBoxLayout()
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.label_3 = QtWidgets.QLabel(self.frame_2)
-        self.label_3.setMinimumSize(QtCore.QSize(0, 25))
-        self.label_3.setMaximumSize(QtCore.QSize(16777215, 15))
+        self.label_3.setMinimumSize(QtCore.QSize(0, 20))
+        self.label_3.setMaximumSize(QtCore.QSize(16777215, 20))
+        self.label_3.setAlignment(QtCore.Qt.AlignBottom|QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft)
         self.label_3.setObjectName("label_3")
         self.horizontalLayout.addWidget(self.label_3)
         spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
@@ -76,6 +80,7 @@ class Ui_Form(object):
         sizePolicy.setHeightForWidth(self.tabelViewEnum.sizePolicy().hasHeightForWidth())
         self.tabelViewEnum.setSizePolicy(sizePolicy)
         self.tabelViewEnum.setMaximumSize(QtCore.QSize(16777215, 16777215))
+        self.tabelViewEnum.setEditTriggers(QtWidgets.QAbstractItemView.AllEditTriggers)
         self.tabelViewEnum.setObjectName("tabelViewEnum")
         self.verticalLayout_2.addWidget(self.tabelViewEnum)
         self.verticalLayout_3.addWidget(self.splitter)
