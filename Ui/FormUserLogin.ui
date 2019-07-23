@@ -7,19 +7,19 @@
     <x>0</x>
     <y>0</y>
     <width>379</width>
-    <height>194</height>
+    <height>176</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
     <width>379</width>
-    <height>194</height>
+    <height>176</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
     <width>379</width>
-    <height>194</height>
+    <height>176</height>
    </size>
   </property>
   <property name="font">
@@ -138,12 +138,15 @@
       <number>10</number>
      </property>
      <property name="verticalSpacing">
-      <number>15</number>
+      <number>5</number>
      </property>
      <item row="0" column="0">
       <widget class="QLabel" name="label_2">
        <property name="text">
-        <string>UserCode:</string>
+        <string>用户代码UserCode:</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
        </property>
       </widget>
      </item>
@@ -160,7 +163,10 @@
      <item row="1" column="0">
       <widget class="QLabel" name="label_3">
        <property name="text">
-        <string>Password:</string>
+        <string>密码 Password:</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
        </property>
       </widget>
      </item>
@@ -187,6 +193,9 @@
    </item>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <property name="rightMargin">
+      <number>20</number>
+     </property>
      <item>
       <spacer name="horizontalSpacer">
        <property name="orientation">

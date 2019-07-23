@@ -11,9 +11,9 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
-        Dialog.resize(379, 194)
-        Dialog.setMinimumSize(QtCore.QSize(379, 194))
-        Dialog.setMaximumSize(QtCore.QSize(379, 194))
+        Dialog.resize(379, 176)
+        Dialog.setMinimumSize(QtCore.QSize(379, 176))
+        Dialog.setMaximumSize(QtCore.QSize(379, 176))
         font = QtGui.QFont()
         font.setFamily("Arial")
         Dialog.setFont(font)
@@ -55,9 +55,10 @@ class Ui_Dialog(object):
         self.gridLayout = QtWidgets.QGridLayout()
         self.gridLayout.setContentsMargins(20, -1, 20, -1)
         self.gridLayout.setHorizontalSpacing(10)
-        self.gridLayout.setVerticalSpacing(15)
+        self.gridLayout.setVerticalSpacing(5)
         self.gridLayout.setObjectName("gridLayout")
         self.label_2 = QtWidgets.QLabel(Dialog)
+        self.label_2.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.label_2.setObjectName("label_2")
         self.gridLayout.addWidget(self.label_2, 0, 0, 1, 1)
         self.lineEdit = QtWidgets.QLineEdit(Dialog)
@@ -65,6 +66,7 @@ class Ui_Dialog(object):
         self.lineEdit.setObjectName("lineEdit")
         self.gridLayout.addWidget(self.lineEdit, 0, 1, 1, 1)
         self.label_3 = QtWidgets.QLabel(Dialog)
+        self.label_3.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.label_3.setObjectName("label_3")
         self.gridLayout.addWidget(self.label_3, 1, 0, 1, 1)
         self.lineEdit_2 = QtWidgets.QLineEdit(Dialog)
@@ -76,6 +78,7 @@ class Ui_Dialog(object):
         self.gridLayout.addWidget(self.lineEdit_2, 1, 1, 1, 1)
         self.verticalLayout.addLayout(self.gridLayout)
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_2.setContentsMargins(-1, -1, 20, -1)
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
         spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_2.addItem(spacerItem)
@@ -95,16 +98,22 @@ class Ui_Dialog(object):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "UserLogin"))
         self.label_4.setText(_translate("Dialog", "User Login"))
-        self.label_2.setText(_translate("Dialog", "UserCode:"))
-        self.label_3.setText(_translate("Dialog", "Password:"))
+        self.label_2.setText(_translate("Dialog", "用户代码UserCode:"))
+        self.label_3.setText(_translate("Dialog", "密码 Password:"))
 
 
 if __name__ == "__main__":
     import sys
+    from os import getcwd
+    from sys import path as jppath
+    jppath.append(getcwd())
+    from lib.JPFunction import md5_passwd
+    from lib.JPDatabase.Database import JPDb
+    sql = "select fUserID from sysusers where fUserID={uid} and fPassword='{pwd}' and fEnabled=1"
+    print(md5_passwd('1234'))
     app = QtWidgets.QApplication(sys.argv)
     Dialog = QtWidgets.QDialog()
     ui = Ui_Dialog()
     ui.setupUi(Dialog)
     Dialog.show()
     sys.exit(app.exec_())
-
