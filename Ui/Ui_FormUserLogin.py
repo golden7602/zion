@@ -61,21 +61,22 @@ class Ui_Dialog(object):
         self.label_2.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.label_2.setObjectName("label_2")
         self.gridLayout.addWidget(self.label_2, 0, 0, 1, 1)
-        self.lineEdit = QtWidgets.QLineEdit(Dialog)
-        self.lineEdit.setMinimumSize(QtCore.QSize(0, 25))
-        self.lineEdit.setObjectName("lineEdit")
-        self.gridLayout.addWidget(self.lineEdit, 0, 1, 1, 1)
         self.label_3 = QtWidgets.QLabel(Dialog)
         self.label_3.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.label_3.setObjectName("label_3")
-        self.gridLayout.addWidget(self.label_3, 1, 0, 1, 1)
-        self.lineEdit_2 = QtWidgets.QLineEdit(Dialog)
-        self.lineEdit_2.setMinimumSize(QtCore.QSize(0, 25))
-        self.lineEdit_2.setInputMask("")
-        self.lineEdit_2.setEchoMode(QtWidgets.QLineEdit.Password)
-        self.lineEdit_2.setPlaceholderText("")
-        self.lineEdit_2.setObjectName("lineEdit_2")
-        self.gridLayout.addWidget(self.lineEdit_2, 1, 1, 1, 1)
+        self.gridLayout.addWidget(self.label_3, 2, 0, 1, 1)
+        self.Password = QtWidgets.QLineEdit(Dialog)
+        self.Password.setMinimumSize(QtCore.QSize(0, 25))
+        self.Password.setInputMask("")
+        self.Password.setEchoMode(QtWidgets.QLineEdit.Password)
+        self.Password.setPlaceholderText("")
+        self.Password.setObjectName("Password")
+        self.gridLayout.addWidget(self.Password, 2, 1, 1, 1)
+        self.User = QtWidgets.QComboBox(Dialog)
+        self.User.setMinimumSize(QtCore.QSize(0, 25))
+        self.User.setMaximumSize(QtCore.QSize(16777215, 25))
+        self.User.setObjectName("User")
+        self.gridLayout.addWidget(self.User, 0, 1, 1, 1)
         self.verticalLayout.addLayout(self.gridLayout)
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_2.setContentsMargins(-1, -1, 20, -1)
@@ -104,16 +105,10 @@ class Ui_Dialog(object):
 
 if __name__ == "__main__":
     import sys
-    from os import getcwd
-    from sys import path as jppath
-    jppath.append(getcwd())
-    from lib.JPFunction import md5_passwd
-    from lib.JPDatabase.Database import JPDb
-    sql = "select fUserID from sysusers where fUserID={uid} and fPassword='{pwd}' and fEnabled=1"
-    print(md5_passwd('1234'))
     app = QtWidgets.QApplication(sys.argv)
     Dialog = QtWidgets.QDialog()
     ui = Ui_Dialog()
     ui.setupUi(Dialog)
     Dialog.show()
     sys.exit(app.exec_())
+

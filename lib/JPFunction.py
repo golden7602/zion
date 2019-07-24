@@ -14,7 +14,7 @@ def md5_passwd(str0, salt='al;dkfjgutriepw,cmvnfjisjmwudnus000999'):
     # satl是盐值，
     str0 = salt + str(str0) + salt
     md = hashlib.md5()  # 构造一个md5对象
-    md.update(str.encode())
+    md.update(str0.encode())
     res = md.hexdigest()
     return res
 

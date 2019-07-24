@@ -7,7 +7,7 @@ jppath.append(getcwd())
 from PyQt5.QtWidgets import (QApplication, QHBoxLayout, QLabel, QMainWindow,
                              QProgressBar, QTreeWidgetItem, QWidget)
 from PyQt5.QtGui import QIcon, QPixmap
-from lib.ZionPublc import JPPub, loadTreeview
+from lib.ZionPublc import JPPub, loadTreeview, JPUser
 from Ui import Ui_mainform
 from lib.JPFunction import readQss, setButtonIconByName
 from lib.JPDatabase.Database import JPDb, JPDbType
@@ -23,6 +23,15 @@ class mianFormProcess():
         setButtonIconByName(ui.ChangeUser)
         setButtonIconByName(ui.ChangePassword)
         ui.label_logo.setPixmap(QPixmap(getcwd() + "\\res\\Zions_100.png"))
+
+        def onUserChanged(uid, username):
+            ui.label_UserName.setText(username)
+
+        pub = JPPub()
+        objUser = JPUser()
+        objUser.INIT() #程序开始时只初始化一次
+        objUser.userChange.connect(onUserChanged)
+        objUser.currentUserID()
         #MW.setStyleSheet(readQss(os.getcwd() + "\\res\\blackwhite.css"))
         # 堆叠布局调
         ui.stackedWidget.removeWidget(ui.page)
@@ -30,7 +39,7 @@ class mianFormProcess():
         # 隐藏树标题
         ui.label_FunPath.setText('')
         ui.treeWidget.setHeaderHidden(True)
-        pub = JPPub()
+
         self.sysNavigationMenus = pub.getSysNavigationMenusDict()
         loadTreeview(ui.treeWidget, self.sysNavigationMenus)
 

@@ -24,7 +24,6 @@ class JPDb(object):
 
     def setDatabaseType(self, db_type: JPDbType):
         self.__db_type = db_type
-
     @property
     def currentConn(self):
         if self.__db_type == JPDbType.MySQL:
@@ -83,7 +82,13 @@ class JPDb(object):
                     ]]
 
     def getDataList(self, sql: str) -> list:
-        return self.getFeildsInfoAndData(sql)[1]
+        if self.__db_type == JPDbType.MySQL:
+            cur = self.currentConn.cursor()
+            try:
+                cur.execute(sql)
+            except Exception as e:
+                raise ValueError('SQL语句或表名格式不正确!\n{}\n'.format(sql) + str(e))
+        return [list(r) for r in cur._result.rows]
 
     def getDict(self, sql) -> dict:
         if self.__db_type == JPDbType.MySQL:
@@ -111,7 +116,7 @@ class JPDb(object):
 
     def __getattr__(self, name):
         if name == '_JPDb__db_type':
-            raise AttributeError("应在第一使用此类时，先调用setDatabaseType方法指定数据库类型")
+            raise AttributeError("应在第一使用JPDb类时，先调用其setDatabaseType方法指定数据库类型")
 
 
 if __name__ == "__main__":
