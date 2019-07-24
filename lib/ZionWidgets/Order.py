@@ -31,7 +31,7 @@ class JPFuncForm_Order(JPFunctionForm):
                         fPayable as `应付金额Valor a Pagar`,
                         fContato as 联系人Contato,
                         fCelular as 手机Celular,
-                        cast(fSubmited as SIGNED) AS fSubmited
+                        ord(fSubmited) AS fSubmited
                 FROM v_order AS o
                 WHERE fCanceled=0
                         AND left(fOrderID,2)='CP'
@@ -53,7 +53,7 @@ class JPFuncForm_Order(JPFunctionForm):
                         fPayable as `应付金额Valor a Pagar`,
                         fContato as 联系人Contato,
                         fCelular as 手机Celular,
-                        cast(fSubmited as SIGNED) AS fSubmited
+                        ord(fSubmited) AS fSubmited
                 FROM v_order AS o
                 WHERE fCanceled=0
                         AND left(fOrderID,2)='CP'

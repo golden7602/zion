@@ -12,6 +12,7 @@ from Ui import Ui_mainform
 from lib.JPFunction import readQss, setButtonIconByName
 from lib.JPDatabase.Database import JPDb, JPDbType
 from lib.ZionWidgets.Background import Form_Background
+from Ui.Ui_FormUserLogin import Ui_Dialog
 
 
 class mianFormProcess():
@@ -22,16 +23,23 @@ class mianFormProcess():
         ui.label_Title.setText("Zion OrderM")
         setButtonIconByName(ui.ChangeUser)
         setButtonIconByName(ui.ChangePassword)
+        
         ui.label_logo.setPixmap(QPixmap(getcwd() + "\\res\\Zions_100.png"))
 
-        def onUserChanged(uid, username):
-            ui.label_UserName.setText(username)
+        def onUserChanged(args):
+            ui.label_UserName.setText(args[1])
+            loadTreeview(ui.treeWidget, objUser.currentUserRight())
+            Form_Background(MW)
+
 
         pub = JPPub()
         objUser = JPUser()
-        objUser.INIT() #程序开始时只初始化一次
+        objUser.INIT()  #程序开始时只初始化一次
         objUser.userChange.connect(onUserChanged)
         objUser.currentUserID()
+        # def onBtnUserClicked():
+        #     objUser.changeUser()
+        ui.ChangeUser.clicked.connect(objUser.changeUser)
         #MW.setStyleSheet(readQss(os.getcwd() + "\\res\\blackwhite.css"))
         # 堆叠布局调
         ui.stackedWidget.removeWidget(ui.page)
@@ -40,8 +48,6 @@ class mianFormProcess():
         ui.label_FunPath.setText('')
         ui.treeWidget.setHeaderHidden(True)
 
-        self.sysNavigationMenus = pub.getSysNavigationMenusDict()
-        loadTreeview(ui.treeWidget, self.sysNavigationMenus)
 
         # MW.Label = QLabel("")
         # MW.ProgressBar = QProgressBar()
@@ -65,7 +71,7 @@ class mianFormProcess():
 
         ui.treeWidget.itemClicked[QTreeWidgetItem, int].connect(
             treeViewItemClicked)
-        Form_Background(MW)
+        
 
 
 def getStackedWidget(mainForm, sysnavigationmenus_data):

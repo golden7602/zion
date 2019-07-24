@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'e:\Zion\Ui\mainform.ui'
+# Form implementation generated from reading ui file 'c:\Users\win10\Desktop\Zion\zion\Ui\mainform.ui'
 #
 # Created by: PyQt5 UI code generator 5.11.3
 #
@@ -74,10 +74,12 @@ class Ui_MainWindow(object):
         self.horizontalLayout = QtWidgets.QHBoxLayout()
         self.horizontalLayout.setSpacing(0)
         self.horizontalLayout.setObjectName("horizontalLayout")
-        self.label_UserName = QtWidgets.QLabel(self.frame_2)
-        self.label_UserName.setObjectName("label_UserName")
-        self.horizontalLayout.addWidget(self.label_UserName)
         self.ChangeUser = QtWidgets.QCommandLinkButton(self.frame_2)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.ChangeUser.sizePolicy().hasHeightForWidth())
+        self.ChangeUser.setSizePolicy(sizePolicy)
         self.ChangeUser.setMinimumSize(QtCore.QSize(0, 0))
         self.ChangeUser.setMaximumSize(QtCore.QSize(32, 32))
         self.ChangeUser.setText("")
@@ -87,6 +89,13 @@ class Ui_MainWindow(object):
         self.ChangeUser.setIconSize(QtCore.QSize(16, 16))
         self.ChangeUser.setObjectName("ChangeUser")
         self.horizontalLayout.addWidget(self.ChangeUser)
+        self.label_UserName = QtWidgets.QLabel(self.frame_2)
+        font = QtGui.QFont()
+        font.setFamily("Arial")
+        self.label_UserName.setFont(font)
+        self.label_UserName.setText("")
+        self.label_UserName.setObjectName("label_UserName")
+        self.horizontalLayout.addWidget(self.label_UserName)
         self.ChangePassword = QtWidgets.QCommandLinkButton(self.frame_2)
         self.ChangePassword.setMinimumSize(QtCore.QSize(32, 32))
         self.ChangePassword.setMaximumSize(QtCore.QSize(32, 32))
@@ -183,7 +192,6 @@ class Ui_MainWindow(object):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.label_Title.setText(_translate("MainWindow", "TextLabel"))
-        self.label_UserName.setText(_translate("MainWindow", "7"))
         self.label_FunPath.setText(_translate("MainWindow", "TextLabel"))
 
 

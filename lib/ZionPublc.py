@@ -12,47 +12,51 @@ from Ui.Ui_FormUserLogin import Ui_Dialog
 from lib.JPFunction import md5_passwd
 
 
-class Form_UserLogin(Ui_Dialog):
+class Form_UserLogin(QDialog):
     def __init__(self, isLogin=True):
-        self.Dialog = QDialog()
-        self.setupUi(self.Dialog)
-        self.buttonBox.clicked.connect(self.onOkClick)
-        self.Dialog.setWindowModality(Qt.ApplicationModal)
+        super().__init__()
+        self.ui = Ui_Dialog()
+        self.ui.setupUi(self)
         self.isLogin = isLogin
         us = JPUser()
-        for r in us.getAllUserList():
-            self.User.addItem('{} {}'.format(r[0], r[1]), r[0])
-        self.User.setCurrentIndex(-1)
-        self.Dialog.show()
+        for r in [r for r in us.getAllUserList() if r[0]>1]:
+            self.ui.User.addItem('{} {}'.format(r[0], r[1]), r[0])
+        self.ui.User.setCurrentIndex(-1)
+        self.setWindowFlags(Qt.WindowTitleHint)
+        if not isLogin:
+            self.setWindowTitle("Change User")
+            self.ui.label_Title.setText("Change User")
+        self.exec_()
 
-    def show(self):
-        self.Dialog.setWindowModality(Qt.ApplicationModal)
-        self.Dialog.show()
+    def accept(self):
+        def msgbox(msg: str):
+            QMessageBox.warning(self, '提示', msg, QMessageBox.Yes,
+                                QMessageBox.Yes)
 
-    def onOkClick(self, btn):
-        if btn.objectName() == "Ok":
-            db = JPDb()
-            us = JPUser()
-            sql = "select fUserID from sysusers where fUserID={uid} and fPassword='{pwd}' and fEnabled=1"
-            if self.Password.text() == '' or self.User.currentIndex == -1:
-                QMessageBox.warning(self.Dialog, '提示', '用名或密码没有输入！',
-                                    QMessageBox.Yes, QMessageBox.Yes)
-            sql = sql.format(pwd=md5_passwd(self.Password.text()),
-                             uid=self.User.currentData())
-            lst = db.getDict(sql)
+        uid = self.ui.User.currentText()
+        pwd = self.ui.Password.text()
+        sql0 = "select fUserID from sysusers where fUserName='{uid}' and fPassword='{pwd}'"
+        sql1 = "select fUserID from sysusers where fUserID='{uid}' and fPassword='{pwd}' and ord(fEnabled)=1"
+        if all((pwd, uid)):
+            isAdmin = 1 if uid.upper() == 'ADMIN' else 0
+            if isAdmin:
+                sql=sql0.format(pwd=md5_passwd(pwd), uid=uid)
+            else:
+                sql = sql1.format(pwd=md5_passwd(pwd), uid=self.ui.User.currentData())
+            lst = JPDb().getDict(sql)
             if lst:
-                us.setCurrentUserID(lst[0]['fUserID'])
-                self.Dialog.close()
+                JPUser().setCurrentUserID(lst[0]['fUserID'])
+                self.hide()
             else:
-                QMessageBox.warning(
-                    self.Dialog, '提示',
-                    '用户名或密码错误！\nUsername or password incorrect!',
-                    QMessageBox.Yes, QMessageBox.Yes)
+                msgbox('用户名或密码错误！\nUsername or password incorrect!')
         else:
-            if self.isLogin:
-                self.Dialog.close()
-            else:
-                exit()
+            msgbox('用名或密码没有输入！')
+
+    def reject(self):
+        if not self.isLogin:
+            self.hide()
+        else:
+            exit()
 
 
 @Singleton
@@ -66,14 +70,16 @@ class JPUser(QObject):
 
     def reFreshAllUser(self):
         db = JPDb()
-        sql = """select fUserID,fUsername from sysusers where fUserID>1"""
+        sql = """select fUserID,fUsername from sysusers where fUserID=1 or ord(fEnabled)=1"""
         self.__AllUser = db.getDataList(sql)
 
     def currentUserID(self):
         if self.__ID:
             return self.__ID
         self.FRM_LOGIN = Form_UserLogin()
-        #self.FRM_LOGIN.show()
+
+    def changeUser(self):
+        self.FRM_LOGIN = Form_UserLogin(False)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -100,9 +106,10 @@ class JPUser(QObject):
 
     def setCurrentUserID(self, user_id: int):
         self.__ID = user_id
-        self.Name = [r[1] for r in self.__AllUser][0]
+        self.Name = [r[1] for r in self.__AllUser if r[0]==self.__ID][0]
         self.__refreshCurrentUserRight()
-        self.userChange.emit((self.__ID, self.Name))
+        print(self.__CurrentUserRight)
+        self.userChange.emit([self.__ID, self.Name])
 
     def getAllUserList(self) -> list:
         return [r[0:2] for r in self.__AllUser]
