@@ -23,14 +23,25 @@ class mianFormProcess():
         ui.label_Title.setText("Zion OrderM")
         setButtonIconByName(ui.ChangeUser)
         setButtonIconByName(ui.ChangePassword)
-        
+
         ui.label_logo.setPixmap(QPixmap(getcwd() + "\\res\\Zions_100.png"))
+
+        def addForm(form):
+            st = ui.stackedWidget
+            if st.count() > 0:
+                temp = st.widget(0)
+                st.removeWidget(temp)
+                del temp
+            st.addWidget(form)
+
+        MW.addForm = addForm
+        self.addForm = addForm
 
         def onUserChanged(args):
             ui.label_UserName.setText(args[1])
+            ui.treeWidget.clear()
             loadTreeview(ui.treeWidget, objUser.currentUserRight())
             Form_Background(MW)
-
 
         pub = JPPub()
         objUser = JPUser()
@@ -48,22 +59,11 @@ class mianFormProcess():
         ui.label_FunPath.setText('')
         ui.treeWidget.setHeaderHidden(True)
 
-
         # MW.Label = QLabel("")
         # MW.ProgressBar = QProgressBar()
         # MW.statusBar().addPermanentWidget(MW.Label)
         # MW.statusBar().addPermanentWidget(MW.ProgressBar)
         # MW.ProgressBar.hide()
-
-        def addForm(form):
-            st = ui.stackedWidget
-            if st.count() > 0:
-                temp = st.widget(0)
-                st.removeWidget(temp)
-                del temp
-            st.addWidget(form)
-
-        MW.addForm = addForm
 
         def treeViewItemClicked(item, i):
             ui.label_FunPath.setText(item.FullPath)
@@ -71,7 +71,6 @@ class mianFormProcess():
 
         ui.treeWidget.itemClicked[QTreeWidgetItem, int].connect(
             treeViewItemClicked)
-        
 
 
 def getStackedWidget(mainForm, sysnavigationmenus_data):

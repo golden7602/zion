@@ -19,7 +19,7 @@ class Form_UserLogin(QDialog):
         self.ui.setupUi(self)
         self.isLogin = isLogin
         us = JPUser()
-        for r in [r for r in us.getAllUserList() if r[0]>1]:
+        for r in [r for r in us.getAllUserList() if r[0] > 1]:
             self.ui.User.addItem('{} {}'.format(r[0], r[1]), r[0])
         self.ui.User.setCurrentIndex(-1)
         self.setWindowFlags(Qt.WindowTitleHint)
@@ -40,9 +40,10 @@ class Form_UserLogin(QDialog):
         if all((pwd, uid)):
             isAdmin = 1 if uid.upper() == 'ADMIN' else 0
             if isAdmin:
-                sql=sql0.format(pwd=md5_passwd(pwd), uid=uid)
+                sql = sql0.format(pwd=md5_passwd(pwd), uid=uid)
             else:
-                sql = sql1.format(pwd=md5_passwd(pwd), uid=self.ui.User.currentData())
+                sql = sql1.format(pwd=md5_passwd(pwd),
+                                  uid=self.ui.User.currentData())
             lst = JPDb().getDict(sql)
             if lst:
                 JPUser().setCurrentUserID(lst[0]['fUserID'])
@@ -100,15 +101,15 @@ class JPUser(QObject):
             WHERE r.fHasRight=1
             ORDER BY n.fDispIndex'''.format(uid)
         self.__CurrentUserRight = db.getDict(sql)
+        pass
 
     def currentUserRight(self):
         return self.__CurrentUserRight
 
     def setCurrentUserID(self, user_id: int):
         self.__ID = user_id
-        self.Name = [r[1] for r in self.__AllUser if r[0]==self.__ID][0]
+        self.Name = [r[1] for r in self.__AllUser if r[0] == self.__ID][0]
         self.__refreshCurrentUserRight()
-        print(self.__CurrentUserRight)
         self.userChange.emit([self.__ID, self.Name])
 
     def getAllUserList(self) -> list:
@@ -154,7 +155,6 @@ class JPPub():
         a = [
             row for row in self.__sysNavigationMenusDict if row["fNMID"] == 13
         ]
-        print(a)
 
     def getEnumList(self, enum_type_id: int):
         return self.__EnumDict[enum_type_id]
@@ -176,23 +176,23 @@ def loadTreeview(treeWidget, items, hasCommandButton=False):
             self.root = root
             self.items = items
             self.hasCommandButton = 1 if hasCommandButton else 0
+            self.icopath = getcwd() + "\\res\\ico\\"
+
+        def addItems(self, parent, items):
+            for r in items:
+                item = QTreeWidgetItem(parent)
+                item.setText(0, r["fMenuText"])
+                item.setIcon(0, QIcon(self.icopath + r["fIcon"]))
+                item.jpData = r
+                item.FullPath = (parent.FullPath + '\\' + r["fMenuText"])
+                self.addItems(
+                    item,
+                    [l for l in self.items if l["fParentId"] == r["fNMID"]])
+                item.setExpanded(1)
 
         def run(self):  # 线程执行函数
-            def additemtotree(parent, nmid, items, begin=0):
-                for i in range(begin, len(items) - 1):
-                    if items[i]["fParentId"] == nmid and items[i][
-                            "fIsCommandButton"] == self.hasCommandButton:
-                        item = QTreeWidgetItem(parent)
-                        item.setText(0, items[i]["fMenuText"])
-                        path = getcwd() + "\\res\\ico\\" + items[i]["fIcon"]
-                        item.setIcon(0, QIcon(path))
-                        item.jpData = items[i]
-                        item.FullPath = parent.FullPath + \
-                            '\\' + items[i]["fMenuText"]
-                        additemtotree(item, items[i]["fNMID"], items, i)
-                        item.setExpanded(1)
-
-            additemtotree(self.root, 1, self.items)
+            self.addItems(self.root, 
+                          [l for l in self.items if l["fParentId"] == 0])
             self.root.setExpanded(True)
 
         def getRoot(self):
@@ -200,3 +200,41 @@ def loadTreeview(treeWidget, items, hasCommandButton=False):
 
     _readTree = MyThreadReadTree(treeWidget, items)
     _readTree.run()
+
+
+# def loadTreeview(treeWidget, items, hasCommandButton=False):
+#     class MyThreadReadTree(QThread):  # 加载功能树的线程类
+#         def __init__(self, treeWidget, items):
+#             super().__init__()
+#             root = QTreeWidgetItem(treeWidget)
+#             root.setText(0, "Function")
+#             root.FullPath = "Function"
+#             self.root = root
+#             self.items = items
+#             self.hasCommandButton = 1 if hasCommandButton else 0
+
+#         def run(self):  # 线程执行函数
+#             def additemtotree(parent, nmid, items, begin=0):
+#                 for i in range(begin, len(items)):
+#                     if items[i]["fParentId"] == nmid and items[i][
+#                             "fIsCommandButton"] == self.hasCommandButton:
+#                         item = QTreeWidgetItem(parent)
+#                         item.setText(0, items[i]["fMenuText"])
+#                         item.setIcon(
+#                             0,
+#                             QIcon(getcwd() + "\\res\\ico\\" +
+#                                   items[i]["fIcon"]))
+#                         item.jpData = items[i]
+#                         item.FullPath = (parent.FullPath + '\\' +
+#                                          items[i]["fMenuText"])
+#                         additemtotree(item, items[i]["fNMID"], items, i)
+#                         item.setExpanded(1)
+
+#             additemtotree(self.root, 1, self.items)
+#             self.root.setExpanded(True)
+
+#         def getRoot(self):
+#             return
+
+#     _readTree = MyThreadReadTree(treeWidget, items)
+#     _readTree.run()

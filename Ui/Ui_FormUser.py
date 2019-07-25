@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'e:\Zion\Ui\FormUser.ui'
+# Form implementation generated from reading ui file 'c:\Users\win10\Desktop\Zion\zion\Ui\FormUser.ui'
 #
 # Created by: PyQt5 UI code generator 5.11.3
 #
@@ -42,11 +42,13 @@ class Ui_Form(object):
         self.splitter.setOrientation(QtCore.Qt.Horizontal)
         self.splitter.setObjectName("splitter")
         self.tableView = QtWidgets.QTableView(self.splitter)
+        self.tableView.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
+        self.tableView.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
         self.tableView.setObjectName("tableView")
         self.tableView.verticalHeader().setDefaultSectionSize(25)
-        self.widget = QtWidgets.QWidget(self.splitter)
-        self.widget.setObjectName("widget")
-        self.horizontalLayout = QtWidgets.QHBoxLayout(self.widget)
+        self.layoutWidget = QtWidgets.QWidget(self.splitter)
+        self.layoutWidget.setObjectName("layoutWidget")
+        self.horizontalLayout = QtWidgets.QHBoxLayout(self.layoutWidget)
         self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout.setSpacing(0)
         self.horizontalLayout.setObjectName("horizontalLayout")
@@ -55,11 +57,11 @@ class Ui_Form(object):
         self.verticalLayout = QtWidgets.QVBoxLayout()
         self.verticalLayout.setSpacing(2)
         self.verticalLayout.setObjectName("verticalLayout")
-        self.treeWidget = QtWidgets.QTreeWidget(self.widget)
+        self.treeWidget = QtWidgets.QTreeWidget(self.layoutWidget)
         self.treeWidget.setObjectName("treeWidget")
         self.treeWidget.headerItem().setText(0, "1")
         self.verticalLayout.addWidget(self.treeWidget)
-        self.butSave = QtWidgets.QPushButton(self.widget)
+        self.butSave = QtWidgets.QPushButton(self.layoutWidget)
         self.butSave.setObjectName("butSave")
         self.verticalLayout.addWidget(self.butSave)
         self.horizontalLayout.addLayout(self.verticalLayout)
