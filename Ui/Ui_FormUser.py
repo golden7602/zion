@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'c:\Users\win10\Desktop\Zion\zion\Ui\FormUser.ui'
+# Form implementation generated from reading ui file 'e:\Zion\Ui\FormUser.ui'
 #
 # Created by: PyQt5 UI code generator 5.11.3
 #
@@ -21,8 +21,6 @@ class Ui_Form(object):
         self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout_2.setSpacing(0)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
-        self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_2.setObjectName("horizontalLayout_2")
         self.widget_Button = QtWidgets.QWidget(Form)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -34,10 +32,16 @@ class Ui_Form(object):
         self.widget_Button.setSizeIncrement(QtCore.QSize(0, 25))
         self.widget_Button.setBaseSize(QtCore.QSize(0, 25))
         self.widget_Button.setObjectName("widget_Button")
-        self.horizontalLayout_2.addWidget(self.widget_Button)
-        spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_2.addItem(spacerItem)
-        self.verticalLayout_2.addLayout(self.horizontalLayout_2)
+        self.horizontalLayout_3 = QtWidgets.QHBoxLayout(self.widget_Button)
+        self.horizontalLayout_3.setContentsMargins(0, 0, 0, 0)
+        self.horizontalLayout_3.setSpacing(0)
+        self.horizontalLayout_3.setObjectName("horizontalLayout_3")
+        self.Layout_Button = QtWidgets.QHBoxLayout()
+        self.Layout_Button.setObjectName("Layout_Button")
+        self.horizontalLayout_3.addLayout(self.Layout_Button)
+        spacerItem = QtWidgets.QSpacerItem(1075, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_3.addItem(spacerItem)
+        self.verticalLayout_2.addWidget(self.widget_Button)
         self.splitter = QtWidgets.QSplitter(Form)
         self.splitter.setOrientation(QtCore.Qt.Horizontal)
         self.splitter.setObjectName("splitter")
@@ -61,9 +65,6 @@ class Ui_Form(object):
         self.treeWidget.setObjectName("treeWidget")
         self.treeWidget.headerItem().setText(0, "1")
         self.verticalLayout.addWidget(self.treeWidget)
-        self.butSave = QtWidgets.QPushButton(self.layoutWidget)
-        self.butSave.setObjectName("butSave")
-        self.verticalLayout.addWidget(self.butSave)
         self.horizontalLayout.addLayout(self.verticalLayout)
         self.verticalLayout_2.addWidget(self.splitter)
 
@@ -73,7 +74,6 @@ class Ui_Form(object):
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
         Form.setWindowTitle(_translate("Form", "Form"))
-        self.butSave.setText(_translate("Form", "SaveRight"))
 
 
 if __name__ == "__main__":

@@ -5,14 +5,53 @@ from sys import path as jppath, argv, exit as sys_exit
 jppath.append(getcwd())
 
 from PyQt5.QtWidgets import (QApplication, QHBoxLayout, QLabel, QMainWindow,
-                             QProgressBar, QTreeWidgetItem, QWidget)
+                             QProgressBar, QTreeWidgetItem, QWidget,
+                             QPushButton)
 from PyQt5.QtGui import QIcon, QPixmap
-from lib.ZionPublc import JPPub, loadTreeview, JPUser
+from lib.ZionPublc import JPPub, JPUser
 from Ui import Ui_mainform
 from lib.JPFunction import readQss, setButtonIconByName
 from lib.JPDatabase.Database import JPDb, JPDbType
 from lib.ZionWidgets.Background import Form_Background
 from Ui.Ui_FormUserLogin import Ui_Dialog
+from lib.JPFunction import setButtonIconByName, setButtonIcon
+from PyQt5.QtCore import QThread, QMetaObject
+
+
+def loadTreeview(treeWidget, items):
+    class MyThreadReadTree(QThread):  # 加载功能树的线程类
+        def __init__(self, treeWidget, items):
+            super().__init__()
+            treeWidget.clear()
+            root = QTreeWidgetItem(treeWidget)
+            root.setText(0, "Function")
+            root.FullPath = "Function"
+            self.root = root
+            self.items = items
+            self.icopath = getcwd() + "\\res\\ico\\"
+
+        def addItems(self, parent, items):
+            for r in items:
+                item = QTreeWidgetItem(parent)
+                item.setText(0, r["fMenuText"])
+                item.setIcon(0, QIcon(self.icopath + r["fIcon"]))
+                item.jpData = r
+                item.FullPath = (parent.FullPath + '\\' + r["fMenuText"])
+                self.addItems(
+                    item,
+                    [l for l in self.items if l["fParentId"] == r["fNMID"]])
+                item.setExpanded(1)
+
+        def run(self):  # 线程执行函数
+            self.addItems(self.root,
+                          [l for l in self.items if l["fParentId"] == 1])
+            self.root.setExpanded(True)
+
+        def getRoot(self):
+            return
+
+    _readTree = MyThreadReadTree(treeWidget, items)
+    _readTree.run()
 
 
 class mianFormProcess():
@@ -39,7 +78,6 @@ class mianFormProcess():
 
         def onUserChanged(args):
             ui.label_UserName.setText(args[1])
-            ui.treeWidget.clear()
             loadTreeview(ui.treeWidget, objUser.currentUserRight())
             Form_Background(MW)
 
@@ -48,9 +86,8 @@ class mianFormProcess():
         objUser.INIT()  #程序开始时只初始化一次
         objUser.userChange.connect(onUserChanged)
         objUser.currentUserID()
-        # def onBtnUserClicked():
-        #     objUser.changeUser()
         ui.ChangeUser.clicked.connect(objUser.changeUser)
+        ui.ChangePassword.clicked.connect(objUser.changePassword)
         #MW.setStyleSheet(readQss(os.getcwd() + "\\res\\blackwhite.css"))
         # 堆叠布局调
         ui.stackedWidget.removeWidget(ui.page)
@@ -73,24 +110,39 @@ class mianFormProcess():
             treeViewItemClicked)
 
 
+def addButtons(widget: QWidget, btns):
+    layout = widget.findChild(QHBoxLayout, 'Layout_Button')
+    if not (layout is None):
+        for m in btns:
+            btn = QPushButton(m['fMenuText'])
+            btn.NMID = m['fNMID']
+            btn.setObjectName(m['fObjectName'])
+            setButtonIcon(btn)
+            btn.setEnabled(m['fHasRight'])
+            layout.addWidget(btn)
+        QMetaObject.connectSlotsByName(widget)
+
+
 def getStackedWidget(mainForm, sysnavigationmenus_data):
-    pub = JPPub()
-    menus = pub.getSysNavigationMenusDict()
+    btns = sysnavigationmenus_data['btns']
     menu_id = sysnavigationmenus_data['fNMID']
-    buts = [[m['fMenuText'], m['fIcon'], m['fObjectName']] for m in menus
-            if m['fParentId'] == menu_id and m['fIsCommandButton']]
+
+    # btns = [[
+    #     m['fMenuText'], m['fIcon'], m['fObjectName'], m['fHasRight'],
+    #     m['fNMID']
+    # ] for m in menus if m['fParentId'] == menu_id and m['fIsCommandButton']]
     widget = None
     if menu_id == 2:  # Order
         from lib.ZionWidgets.Order import JPFuncForm_Order
         widget = JPFuncForm_Order(mainForm)
-        widget.addButtons(buts)
+        widget.addButtons(btns)
     elif menu_id == 22:
         from lib.ZionWidgets.Report_Day import Form_Repoet_Day
         Form_Repoet_Day(mainForm)
     elif menu_id == 9:
-        from lib.ZionWidgets.payment import JPFuncForm_Payment
+        from lib.ZionWidgets.Payment import JPFuncForm_Payment
         widget = JPFuncForm_Payment(mainForm)
-        widget.addButtons(buts)
+        widget.addButtons(btns)
     elif menu_id == 10:
         from lib.ZionWidgets.EnumManger import Form_EnumManger
         Form_EnumManger(mainForm)
@@ -100,31 +152,31 @@ def getStackedWidget(mainForm, sysnavigationmenus_data):
     elif menu_id == 72:
         from lib.ZionWidgets.PrintingOrder import JPFuncForm_PrintingOrder
         widget = JPFuncForm_PrintingOrder(mainForm)
-        widget.addButtons(buts)
+        widget.addButtons(btns)
     elif menu_id == 73:
         from lib.ZionWidgets.Customer import Form_Customer
         widget = Form_Customer(mainForm)
-        widget.addButtons(buts)
+        widget.addButtons(btns)
     elif menu_id == 13:
         from lib.ZionWidgets.User import Form_User
         widget = Form_User(mainForm)
-        widget.addButtons(buts)
+        addButtons(widget, btns)
     elif menu_id == 15:
         from lib.ZionWidgets.Complete import JPFuncForm_Complete
         widget = JPFuncForm_Complete(mainForm)
-        widget.addButtons(buts)
+        widget.addButtons(btns)
     elif menu_id == 18:
         from lib.ZionWidgets.Adjustment import JPFuncForm_Adjustment
         widget = JPFuncForm_Adjustment(mainForm)
-        widget.addButtons(buts)
+        widget.addButtons(btns)
     elif menu_id == 56:
         from lib.ZionWidgets.Quotation import JPFuncForm_Quotation
         widget = JPFuncForm_Quotation(mainForm)
-        widget.addButtons(buts)
+        widget.addButtons(btns)
     elif menu_id == 55:
         from lib.ZionWidgets.PrintingQuotation import JPFuncForm_PrintingQuotation
         widget = JPFuncForm_PrintingQuotation(mainForm)
-        widget.addButtons(buts)
+        widget.addButtons(btns)
     else:
         Form_Background(mainForm)
 

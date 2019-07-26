@@ -87,7 +87,7 @@
        </spacer>
       </item>
       <item>
-       <widget class="QLabel" name="label">
+       <widget class="QLabel" name="Login_64">
         <property name="minimumSize">
          <size>
           <width>32</width>
@@ -116,7 +116,7 @@
          <string/>
         </property>
         <property name="pixmap">
-         <pixmap>../res/Login_64px.net.png</pixmap>
+         <pixmap>../res/Login_64.png</pixmap>
         </property>
         <property name="scaledContents">
          <bool>true</bool>

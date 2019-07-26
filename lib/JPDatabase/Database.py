@@ -4,9 +4,9 @@ jppath.append(getcwd())
 
 from configparser import ConfigParser
 from functools import singledispatch
-
+import re
 from pymysql import (connect as mysql_connect, cursors as mysql_cursors)
-
+from PyQt5.QtWidgets import QMessageBox
 from lib.JPDatabase.Field import JPFieldInfo, JPMySQLFieldInfo
 from lib.JPFunction import Singleton
 
@@ -24,8 +24,9 @@ class JPDb(object):
 
     def setDatabaseType(self, db_type: JPDbType):
         self.__db_type = db_type
+
     @property
-    def currentConn(self):
+    def currentConn(self) -> mysql_connect:
         if self.__db_type == JPDbType.MySQL:
             if self.__currentConn is None:
                 config = ConfigParser()
@@ -113,6 +114,27 @@ class JPDb(object):
     def getOnlyStrcFilter(self):
         if self.__db_type == JPDbType.MySQL:
             return " Limit 0"
+
+    def executeTransaction(self, sqls):
+        con = self.currentConn
+        cur = con.cursor()
+        con.begin()
+        try:
+            if isinstance(sqls, str):
+                cur.execute(sqls)
+            if isinstance(sqls, (list, tuple)):
+                for sql in sqls:
+                    sql_t = re.sub(r'^\s', '',
+                                   re.sub(r'\s+', ' ', re.sub(r'\n', '', sql)))
+                    cur.execute(sql_t)
+        except Exception as e:
+            con.rollback()
+            QMessageBox.warning(None, '提示', "执行保存命令出错！" + '\n' + str(e),
+                                QMessageBox.Yes, QMessageBox.Yes)
+            return False
+        else:
+            con.commit()
+            return True
 
     def __getattr__(self, name):
         if name == '_JPDb__db_type':

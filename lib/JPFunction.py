@@ -4,7 +4,7 @@ import datetime
 from os import getcwd
 
 from PyQt5.QtGui import QIcon, QPixmap
-from PyQt5.QtWidgets import QWidget, QPushButton
+from PyQt5.QtWidgets import QWidget, QPushButton, QLabel
 from functools import singledispatch
 from decimal import Decimal
 import hashlib
@@ -27,10 +27,16 @@ def setButtonIcon(btn: QPushButton):
 
 
 def setButtonIconByName(btn: QPushButton):
-    icon = QIcon()
-    icon.addPixmap(QPixmap(getcwd() + "\\res\\ico\\" + btn.objectName()),
-                   QIcon.Normal, QIcon.Off)
-    btn.setIcon(icon)
+    if isinstance(btn, QLabel):
+        print(getcwd() + "\\res\\ico\\" + btn.objectName() + ".png")
+        pix = QPixmap(getcwd() + "\\res\\ico\\" + btn.objectName()+".png")
+        btn.setPixmap(pix)
+
+    if isinstance(btn, QPushButton):
+        icon = QIcon()
+        icon.addPixmap(QPixmap(getcwd() + "\\res\\ico\\" + btn.objectName()),
+                       QIcon.Normal, QIcon.Off)
+        btn.setIcon(icon)
 
 
 def findButtonAndSetIcon(Widget: QWidget):
