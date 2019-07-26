@@ -141,13 +141,13 @@ class JPFunctionForm(QWidget):
     def on_CMDSEARCH_clicked(self):
         print("CMDSEARCH 请重新写")
 
-    def addButtons(self, btnNames: list):
-        for item in btnNames:
-            btn = QPushButton(item[0])
-            btn.setObjectName(item[2].upper())
-            setButtonIcon(btn)
-            self.horizontalLayout_Button.addWidget(btn)
-        QMetaObject.connectSlotsByName(self)
+    # def addButtons(self, btnNames: list):
+    #     for item in btnNames:
+    #         btn = QPushButton(item[0])
+    #         btn.setObjectName(item[2].upper())
+    #         setButtonIcon(btn)
+    #         self.horizontalLayout_Button.addWidget(btn)
+    #     QMetaObject.connectSlotsByName(self)
 
     def retranslateUi(self, Form):
         _translate = QCoreApplication.translate

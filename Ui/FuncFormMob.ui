@@ -43,13 +43,13 @@
       <number>5</number>
      </property>
      <item>
-      <widget class="QWidget" name="widget_Button" native="true">
+      <widget class="QWidget" name="Layout_Button" native="true">
        <property name="font">
         <font>
          <pointsize>8</pointsize>
         </font>
        </property>
-       <layout class="QHBoxLayout" name="horizontalLayout_Button">
+       <layout class="QHBoxLayout" name="Layout_Button111">
         <property name="spacing">
          <number>0</number>
         </property>

@@ -111,7 +111,7 @@ class mianFormProcess():
 
 
 def addButtons(widget: QWidget, btns):
-    layout = widget.findChild(QHBoxLayout, 'Layout_Button')
+    layout = widget.findChild((QHBoxLayout,QWidget), 'Layout_Button')
     if not (layout is None):
         for m in btns:
             btn = QPushButton(m['fMenuText'])
@@ -135,7 +135,7 @@ def getStackedWidget(mainForm, sysnavigationmenus_data):
     if menu_id == 2:  # Order
         from lib.ZionWidgets.Order import JPFuncForm_Order
         widget = JPFuncForm_Order(mainForm)
-        widget.addButtons(btns)
+        addButtons(widget,btns)
     elif menu_id == 22:
         from lib.ZionWidgets.Report_Day import Form_Repoet_Day
         Form_Repoet_Day(mainForm)
@@ -164,7 +164,7 @@ def getStackedWidget(mainForm, sysnavigationmenus_data):
     elif menu_id == 15:
         from lib.ZionWidgets.Complete import JPFuncForm_Complete
         widget = JPFuncForm_Complete(mainForm)
-        widget.addButtons(btns)
+        addButtons(widget,btns)
     elif menu_id == 18:
         from lib.ZionWidgets.Adjustment import JPFuncForm_Adjustment
         widget = JPFuncForm_Adjustment(mainForm)

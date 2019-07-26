@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'e:\Zion\Ui\FuncFormMob.ui'
+# Form implementation generated from reading ui file 'c:\Users\win10\Desktop\Zion\zion\Ui\FuncFormMob.ui'
 #
 # Created by: PyQt5 UI code generator 5.11.3
 #
@@ -20,18 +20,18 @@ class Ui_Form(object):
         self.verticalLayout.setSpacing(0)
         self.verticalLayout.setObjectName("verticalLayout")
         self.horizontalLayout_3 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_3.setContentsMargins(-1, 5, -1, 5)
+        self.horizontalLayout_3.setContentsMargins(-1, 0, -1, 5)
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
-        self.widget_Button = QtWidgets.QWidget(Form)
+        self.Layout_Button = QtWidgets.QWidget(Form)
         font = QtGui.QFont()
         font.setPointSize(8)
-        self.widget_Button.setFont(font)
-        self.widget_Button.setObjectName("widget_Button")
-        self.horizontalLayout_Button = QtWidgets.QHBoxLayout(self.widget_Button)
-        self.horizontalLayout_Button.setContentsMargins(0, 0, 0, 0)
-        self.horizontalLayout_Button.setSpacing(0)
-        self.horizontalLayout_Button.setObjectName("horizontalLayout_Button")
-        self.horizontalLayout_3.addWidget(self.widget_Button)
+        self.Layout_Button.setFont(font)
+        self.Layout_Button.setObjectName("Layout_Button")
+        self.Layout_Button111 = QtWidgets.QHBoxLayout(self.Layout_Button)
+        self.Layout_Button111.setContentsMargins(0, 0, 0, 0)
+        self.Layout_Button111.setSpacing(0)
+        self.Layout_Button111.setObjectName("Layout_Button111")
+        self.horizontalLayout_3.addWidget(self.Layout_Button)
         self.horizontalLayout = QtWidgets.QHBoxLayout()
         self.horizontalLayout.setObjectName("horizontalLayout")
         spacerItem = QtWidgets.QSpacerItem(20, 20, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)

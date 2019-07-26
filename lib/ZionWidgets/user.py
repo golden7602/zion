@@ -69,6 +69,15 @@ class Form_User(QWidget):
         self.ui = Ui_Form()
         self.ui.setupUi(self)
         mainform.addForm(self)
+        tr = self.ui.treeWidget
+        tb = self.ui.tableView
+        tr.setColumnCount(2)
+        tr.setHeaderLabels(["权限分配 Permission Assignment", "Right"])
+        tr.setColumnWidth(0, 300)
+        tr.setColumnWidth(1, 100)
+        tr.itemChanged.connect(self.onItemChanged)
+        self.refreshTable()
+    def refreshTable(self):
         self.SQL = """
             select 
                 fUserID as `编号 ID`, 
@@ -85,13 +94,8 @@ class Form_User(QWidget):
         self.mod = JPTableViewModelEditForm(tb, self.dataInfo)
         tb.setModel(self.mod)
         tb.resizeColumnsToContents()
-        tr.setColumnCount(2)
-        tr.setHeaderLabels(["权限分配 Permission Assignment", "Right"])
-        tr.setColumnWidth(0, 300)
-        tr.setColumnWidth(1, 100)
         tb.selectionModel().currentChanged.connect(
             self.on_tableView_currentChanged)
-        tr.itemChanged.connect(self.onItemChanged)
 
     def checkDirty(self):
         try:
@@ -156,7 +160,9 @@ class Form_User(QWidget):
 
     @pyqtSlot()
     def on_CmdNew_clicked(self):
-        pass
+        db=JPDb()
+        db.executeTransaction("insert into sysusers (fUsername,fPassword) Values ('New User','1234') ")
+        self.refreshTable()
 
     @pyqtSlot()
     def on_CmdDelete_clicked(self):

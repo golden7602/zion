@@ -8,7 +8,7 @@
 from os import getcwd
 from sys import path as jppath
 jppath.append(getcwd())
-from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5 import QtCore, QtGui
 from lib.JPMvc import JPWidgets as QtWidgets
 
 

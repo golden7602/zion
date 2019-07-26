@@ -12,6 +12,20 @@ from PyQt5.QtPrintSupport import QPrinter
 from lib.JPPrintReport import JPPrintSectionType, JPReport
 from lib.ZionPublc import JPPub
 from lib.ZionWidgets.FuncFormBase import JPFunctionForm
+from lib.JPMvc.JPModel import JPTableViewModelReadOnly
+
+class _myMod(JPTableViewModelReadOnly):
+    def __init__(self, *args):
+        super().__init__(*args)
+        self.f = QFont()
+        self.f.Black = True
+        self.f.setBold(True)
+
+    def data(self, Index, role: int = Qt.DisplayRole):
+        if role == Qt.TextColorRole:
+            return QColor(Qt.blue)
+        return super().data(Index, role)
+
 
 
 class JPFuncForm_Complete(JPFunctionForm):
@@ -28,8 +42,8 @@ class JPFuncForm_Complete(JPFunctionForm):
                     fEndereco as `fEndereco`,
                     fContato as `联系人Contato`,
                     fCelular as `手机Celular`,
-                    fTelefone as `fTelefone`
-
+                    fTelefone as `fTelefone`,
+                    fDeliverReaded
                 FROM v_order AS o
                 WHERE fConfirmed=1 AND fCanceled=0 And fOrderDate{date}
                         AND (fDelivered={ch1} OR fDelivered={ch2})
@@ -46,7 +60,8 @@ class JPFuncForm_Complete(JPFunctionForm):
                     fEndereco as `fEndereco`,
                     fContato as `联系人Contato`,
                     fCelular as `手机Celular`,
-                    fTelefone as `fTelefone`
+                    fTelefone as `fTelefone`,
+                    fDeliverReaded
                 FROM v_order AS o
                 WHERE fConfirmed=1 AND fCanceled=0
                 ORDER BY  forderID DESC"""
@@ -59,6 +74,9 @@ class JPFuncForm_Complete(JPFunctionForm):
         self.checkBox_2.setChecked(False)
         super().setSQL(sql_1, sql_2)
         self.tableView.setColumnHidden(13, True)
+
+    def getModelClass(self):
+        return _myMod
 
     def but_click(self, name):
         for n, fun in JPFuncForm_Complete.__dict__.items():
