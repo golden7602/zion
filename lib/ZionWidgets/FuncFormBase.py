@@ -12,7 +12,7 @@ from PyQt5.QtCore import QCoreApplication, QMetaObject, QSize, Qt, pyqtSlot
 from lib.JPDatabase.Query import JPQueryFieldInfo
 from lib.JPMvc.JPModel import JPFormModelMainSub, JPTableViewModelReadOnly
 from lib.JPFunction import setButtonIcon
-
+from Ui.Ui_FuncFormMob import Ui_Form
 
 class JPFunctionForm(QWidget):
     def __init__(self, parent, flags=Qt.WindowFlags()):
@@ -23,76 +23,20 @@ class JPFunctionForm(QWidget):
         self.DefauleParaSQL = ''
         self.DefauleBaseSQL = ''
         self.backgroundWhenValueIsTrueFieldName = []
+        self.ui=Ui_Form()
+        self.ui.setupUi(self)
+        self.comboBox=self.ui.comboBox
+        self.checkBox_1=self.ui.checkBox_1
+        self.checkBox_2=self.ui.checkBox_2
+        self.tableView=self.ui.tableView
 
-        self.setObjectName("Form")
-        self.resize(742, 300)
-        font = QFont()
-        font.setFamily("Arial")
-        self.setFont(font)
-        self.verticalLayout = QVBoxLayout(self)
-        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
-        self.verticalLayout.setSpacing(0)
-        self.verticalLayout.setObjectName("verticalLayout")
-        self.horizontalLayout_3 = QHBoxLayout()
-        self.horizontalLayout_3.setContentsMargins(-1, 0, -1, 5)
-        self.horizontalLayout_3.setObjectName("horizontalLayout_3")
-        self.widget_Button = QWidget(self)
-        font = QFont()
-        font.setPointSize(8)
-        self.widget_Button.setFont(font)
-        self.widget_Button.setObjectName("widget_Button")
-        self.horizontalLayout_Button = QHBoxLayout(self.widget_Button)
-        self.horizontalLayout_Button.setContentsMargins(0, 0, 0, 0)
-        self.horizontalLayout_Button.setSpacing(0)
-        self.horizontalLayout_Button.setObjectName("horizontalLayout_Button")
-        self.horizontalLayout_3.addWidget(self.widget_Button)
-        self.horizontalLayout = QHBoxLayout()
-        self.horizontalLayout.setObjectName("horizontalLayout")
-        spacerItem = QSpacerItem(20, 20, QSizePolicy.Fixed,
-                                 QSizePolicy.Minimum)
-        self.horizontalLayout.addItem(spacerItem)
-        self.label_2 = QLabel(self)
-        font = QFont()
-        font.setFamily("Arial")
-        self.label_2.setFont(font)
-        self.label_2.setObjectName("label_2")
-        self.horizontalLayout.addWidget(self.label_2)
-        self.comboBox = QComboBox(self)
-        self.comboBox.setMinimumSize(QSize(100, 0))
-        self.comboBox.setObjectName("comboBox")
-        self.horizontalLayout.addWidget(self.comboBox)
-        spacerItem1 = QSpacerItem(20, 20, QSizePolicy.Fixed,
-                                  QSizePolicy.Minimum)
-        self.horizontalLayout.addItem(spacerItem1)
-        self.checkBox_1 = QCheckBox(self)
-        self.checkBox_1.setObjectName("checkBox_1")
-        self.horizontalLayout.addWidget(self.checkBox_1)
-        self.checkBox_2 = QCheckBox(self)
-        self.checkBox_2.setObjectName("checkBox_2")
-        self.horizontalLayout.addWidget(self.checkBox_2)
-        spacerItem2 = QSpacerItem(40, 20, QSizePolicy.Expanding,
-                                  QSizePolicy.Minimum)
-        self.horizontalLayout.addItem(spacerItem2)
-        self.horizontalLayout_3.addLayout(self.horizontalLayout)
-        self.verticalLayout.addLayout(self.horizontalLayout_3)
-        self.tableView = QTableView(self)
-        self.tableView.setEditTriggers(QAbstractItemView.SelectedClicked)
-        self.tableView.setAlternatingRowColors(True)
-        self.tableView.setSelectionBehavior(QAbstractItemView.SelectRows)
-        self.tableView.setObjectName("tableView")
-        self.tableView.verticalHeader().setDefaultSectionSize(25)
-        self.tableView.verticalHeader().setMinimumSectionSize(23)
-        self.verticalLayout.addWidget(self.tableView)
-
-        self.retranslateUi(self)
-
-        # 以下为初始化部分，不能删除
-        self.comboBox.addItems(['Today', 'Last Month', 'Last Year', 'All'])
-        self.checkBox_1.clicked.connect(self.btnRefreshClick)
-        self.checkBox_2.clicked.connect(self.btnRefreshClick)
-        self.comboBox.activated['int'].connect(self.btnRefreshClick)
+        # 以下为初始化部分
+        self.ui.comboBox.addItems(['Today', 'Last Month', 'Last Year', 'All'])
+        self.ui.checkBox_1.clicked.connect(self.btnRefreshClick)
+        self.ui.checkBox_2.clicked.connect(self.btnRefreshClick)
+        self.ui.comboBox.activated['int'].connect(self.btnRefreshClick)
         # 行交错颜色
-        self.tableView.setAlternatingRowColors(True)
+        self.ui.tableView.setAlternatingRowColors(True)
 
     def setSQL(self, sql_with_where, sql_base):
         '''
@@ -112,10 +56,10 @@ class JPFunctionForm(QWidget):
 
     def btnRefreshClick(self):
         if self.DefauleParaSQL:
-            #self.tableView.clear()
-            self.tableView.setSelectionMode(QAbstractItemView.SingleSelection)
-            ch1 = 1 if self.checkBox_1.isChecked() else 0
-            ch2 = 0 if self.checkBox_2.isChecked() else 1
+            #self.ui.tableView.clear()
+            self.ui.tableView.setSelectionMode(QAbstractItemView.SingleSelection)
+            ch1 = 1 if self.ui.checkBox_1.isChecked() else 0
+            ch2 = 0 if self.ui.checkBox_2.isChecked() else 1
             cb = {
                 0:
                 '=CURRENT_DATE()',
@@ -127,31 +71,16 @@ class JPFunctionForm(QWidget):
                 '=fOrderDate'
             }
             sql = self.DefauleParaSQL.format(
-                ch1=ch1, ch2=ch2, date=cb[self.comboBox.currentIndex()])
+                ch1=ch1, ch2=ch2, date=cb[self.ui.comboBox.currentIndex()])
             info = JPQueryFieldInfo(sql)
-            self.model = self.getModelClass()(self.tableView, info)
-            self.tableView.setModel(self.model)
-            self.tableView.resizeColumnsToContents()
+            self.model = self.getModelClass()(self.ui.tableView, info)
+            self.ui.tableView.setModel(self.model)
+            self.ui.tableView.resizeColumnsToContents()
 
     @pyqtSlot()
-    def on_CMDEXPORTTOEXCEL_clicked(self):
+    def on_CmdExportToExcel_clicked(self):
         print("CMDEXPORTTOEXCEL 请重新写")
 
     @pyqtSlot()
-    def on_CMDSEARCH_clicked(self):
+    def on_CmdSearch_clicked(self):
         print("CMDSEARCH 请重新写")
-
-    # def addButtons(self, btnNames: list):
-    #     for item in btnNames:
-    #         btn = QPushButton(item[0])
-    #         btn.setObjectName(item[2].upper())
-    #         setButtonIcon(btn)
-    #         self.horizontalLayout_Button.addWidget(btn)
-    #     QMetaObject.connectSlotsByName(self)
-
-    def retranslateUi(self, Form):
-        _translate = QCoreApplication.translate
-        Form.setWindowTitle(_translate("Form", "Form"))
-        self.label_2.setText(_translate("Form", "Filter:"))
-        self.checkBox_1.setText(_translate("Form", "CheckBox"))
-        self.checkBox_2.setText(_translate("Form", "CheckBox"))

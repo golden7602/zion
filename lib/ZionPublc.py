@@ -184,35 +184,38 @@ class JPUser(QObject):
 
 
 @Singleton
-class JPPub():
+class JPPub(QObject):
+    MainForm=None
     def __init__(self):
-        self.user = JPUser()
-        db = JPDb()
-        sql = '''select fCustomerName,fCustomerID,fNUIT,
-                fCity,fContato from t_customer'''
-        self.customerList = db.getDataList(sql)
-        sql = '''select fCustomerName,fCustomerID,
-            fNUIT,fCity,fContato from t_customer'''
-        self.__allCustomerList = db.getDataList(sql)
+        if self.MainForm is None:
+            super().__init__()
+            self.user = JPUser()
+            db = JPDb()
+            sql = '''select fCustomerName,fCustomerID,fNUIT,
+                    fCity,fContato from t_customer'''
+            self.customerList = db.getDataList(sql)
+            sql = '''select fCustomerName,fCustomerID,
+                fNUIT,fCity,fContato from t_customer'''
+            self.__allCustomerList = db.getDataList(sql)
 
-        def getEnumDict() -> dict:
-            sql = '''select fTypeID,fTitle,fItemID,fSpare1,
-                    fSpare2,fNote from t_enumeration'''
-            rows = db.getDataList(sql)
-            return {
-                k: [row1[1:] for row1 in rows if row1[0] == k]
-                for k in set(row[0] for row in rows)
-            }
+            def getEnumDict() -> dict:
+                sql = '''select fTypeID,fTitle,fItemID,fSpare1,
+                        fSpare2,fNote from t_enumeration'''
+                rows = db.getDataList(sql)
+                return {
+                    k: [row1[1:] for row1 in rows if row1[0] == k]
+                    for k in set(row[0] for row in rows)
+                }
 
-        self.__EnumDict = getEnumDict()
-        sql = """
-            SELECT fNMID, fMenuText, fParentId, fCommand, fObjectName, fIcon,
-                    cast(fIsCommandButton AS SIGNED) AS fIsCommandButton
-            FROM sysnavigationmenus
-            WHERE fEnabled=1 AND fNMID>1
-            ORDER BY fDispIndex
-            """
-        self.__sysNavigationMenusDict = db.getDict(sql)
+            self.__EnumDict = getEnumDict()
+            sql = """
+                SELECT fNMID, fMenuText, fParentId, fCommand, fObjectName, fIcon,
+                        cast(fIsCommandButton AS SIGNED) AS fIsCommandButton
+                FROM sysnavigationmenus
+                WHERE fEnabled=1 AND fNMID>1
+                ORDER BY fDispIndex
+                """
+            self.__sysNavigationMenusDict = db.getDict(sql)
 
     def getEnumList(self, enum_type_id: int):
         return self.__EnumDict[enum_type_id]

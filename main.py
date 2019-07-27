@@ -82,6 +82,7 @@ class mianFormProcess():
             Form_Background(MW)
 
         pub = JPPub()
+        pub.MainForm=MW
         objUser = JPUser()
         objUser.INIT()  #程序开始时只初始化一次
         objUser.userChange.connect(onUserChanged)
@@ -126,11 +127,6 @@ def addButtons(widget: QWidget, btns):
 def getStackedWidget(mainForm, sysnavigationmenus_data):
     btns = sysnavigationmenus_data['btns']
     menu_id = sysnavigationmenus_data['fNMID']
-
-    # btns = [[
-    #     m['fMenuText'], m['fIcon'], m['fObjectName'], m['fHasRight'],
-    #     m['fNMID']
-    # ] for m in menus if m['fParentId'] == menu_id and m['fIsCommandButton']]
     widget = None
     if menu_id == 2:  # Order
         from lib.ZionWidgets.Order import JPFuncForm_Order

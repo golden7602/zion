@@ -80,10 +80,14 @@ class JPQueryFieldInfo(object):
         return len(self.RowsData)
 
     def getOnlyData(self, index: [list, tuple, QModelIndex]):
+        """getOnlyData(index: [list, tuple, QModelIndex])
+        根据指定的数据位置返回数据的值"""
         r, c = JPQueryFieldInfo.getRC(index)
         return self.RowsData[r].Data(c)
 
     def getDispText(self, index: [list, tuple, QModelIndex]):
+        """getDispText(index: [list, tuple, QModelIndex])
+        根据指定的数据位置返回数据的显示文本"""
         r, c = JPQueryFieldInfo.getRC(index)
         v = self.RowsData[r].Data(c)
         rs = self.Fields[c].RowSource
@@ -96,31 +100,53 @@ class JPQueryFieldInfo(object):
         else:
             return JPGetDisplayText(v)
 
-    def getRowData(self, row_num) -> JPTabelRowData:
+    def getRowData(self, row_num) -> list:
+        """根据指定的行号返回一个列表,仅仅包含数据"""
         return self.RowsData[row_num].Datas
 
     def getFieldsInfo(self):
         return self.Fields
 
-    def getRowFieldsInfoAndData(self, row_num):
+    def getRowFieldsInfoAndData(self, row_num: int) -> list:
+        """getRowFieldsInfoAndData(row_num: int)
+        根据指定的行号返回一个列表，包含所有FieldInfo对象，且有Value属性"""
         flds = deepcopy(self.Fields)
         data = self.RowsData[row_num]
         for i, fld in flds:
             fld.Value = data[i]
         return flds
 
+    def getRowFieldsInfoAndDataDict(self, row_num: int) -> dict:
+        """getRowValueDict(row_num: int)
+        根据指定的行号返回一个字典，键是字段名，值为FieldInfo对象，且有Value属性"""
+        flds = deepcopy(self.Fields)
+        data = self.RowsData[row_num].Datas
+        r = {}
+        for i, item in enumerate(data):
+            flds[i].Value = item
+            r[flds[i].FieldName] = flds[i]
+        return r
+
     def getRowValueDict(self, row_num: int) -> dict:
-        data = self.RowsData(row_num)
+        """getRowValueDict(row_num: int)
+        根据指定的行号返回一个字典，键是字段名，值为数据"""
+        data = self.RowsData[row_num].Datas
         r = {}
         for i, item in enumerate(data):
             r[self.Fields[i].FieldName] = item
         return r
 
     def getFieldsInfoDict(self) -> dict:
+        """返回一个FieldsInfo对象的字典，键是字段名"""
         return self.FieldsDict
 
     def getFieldInfoAndData(self, index: [list, tuple,
                                           QModelIndex]) -> JPFieldInfo:
+        """
+         getFieldInfoAndData(index: [list, tuple,QModelIndex])-> JPFieldInfo
+        根据行列返回一个包含Value属性的JPFieldInfo对象
+        
+        """
         r, c = self.getRC(index)
         fld = deepcopy(self.Fields[c])
         fld.value = self.RowsData[r][0][c]
@@ -172,7 +198,6 @@ class JPTabelFieldInfo(JPQueryFieldInfo):
         # 检查主键字段是不是自增
         #pk_fld = self.getFieldsInfoDict()
 
-
     def setData(self, index: [list, tuple, QModelIndex], value=None):
         r, c = super().getRC(index)
         self.RowsData[r].setData(c, value)
@@ -205,7 +230,7 @@ class JPTabelFieldInfo(JPQueryFieldInfo):
             fld = self.Fields[i]
             if all([fld.Auto_Increment is False, fld.NotNull is True]):
                 if hasforeignkey:
-                    if i!= foreignkey_col:
+                    if i != foreignkey_col:
                         not_null_col.append(i)
                 else:
                     not_null_col.append(i)
@@ -278,7 +303,8 @@ class JPTabelFieldInfo(JPQueryFieldInfo):
                     del cur_row_sqlvalue[pk_index]
                     del cur_fn[pk_index]
                     sqls.append(
-                        sql_i.format(','.join(cur_fn), ','.join(cur_row_sqlvalue)))
+                        sql_i.format(','.join(cur_fn),
+                                     ','.join(cur_row_sqlvalue)))
                 if row.State == JPTabelRowData.Update:
                     pk_value = cur_row_sqlvalue[pk_index]
                     del cur_row_sqlvalue[pk_index]

@@ -19,7 +19,7 @@ from lib.JPFunction import (JPBooleanString, JPDateConver, JPRound,
                             JPGetDisplayText)
 # from lib.JPMvc.JPWidgets import (QWidget, QCheckBox, QComboBox, QDateEdit,
 #                                 QLineEdit, QTextEdit)
-from lib.JPEnum import JPEditFormDataMode
+# from lib.JPEnum import JPEditFormDataMode
 from lib.JPMvc import JPWidgets
 from decimal import Decimal
 
@@ -75,20 +75,6 @@ class __JPTableViewModelBase(QAbstractTableModel):
 
     def _GetHeaderAlignment(self, Index: QModelIndex) -> int:
         return Qt.AlignCenter
-
-    # def _GetDispText(self, Index: QModelIndex) -> str:
-    #     r, c, = Index.row(), Index.column()
-    #     rs = self.TabelFieldInfo.Fields[c].RowSource
-    #     data_i = self.TabelFieldInfo.getOnlyData(Index)
-    #     if data_i is None:
-    #         return
-    #     if rs:
-    #         sel = [item for item in rs if item[1] == data_i]
-    #         if len(sel) == 0:
-    #             return QVariant()
-    #         else:
-    #             return QVariant(str(sel[0][0]))
-    #     return JPGetDisplayText(data_i)
 
     def _getDecoration(self, Index: QModelIndex) -> QVariant():
         """返回 (QColor, QIcon or QPixmap)"""
@@ -295,12 +281,20 @@ class JPTableViewModelEditForm(__JPTableViewModelBase):
         super().__init__(tabelFieldInfo)
         self.tableView = tableView
 
+class JPEditFormDataMode(QObject):
+    """本类为编辑窗口数据类型的枚举"""
+    Edit = 1
+    ReadOnly = 2
+    New = 3
 
+    def __init__(self):
+        super().__init__()
+        self.EditMode = JPEditFormDataMode.ReadOnly
 
 class JPFormModelMain(JPEditFormDataMode):
     dataChanged = pyqtSignal([JPWidgets.QWidget])
 
-    def __init__(self, mainform):
+    def __init__(self, mainform,ui=None):
         super().__init__()
         self.mainForm = mainform
         self.__JPFormModelMainSub = None
@@ -310,7 +304,8 @@ class JPFormModelMain(JPEditFormDataMode):
         self._queryResult = None
         self.__fieldsRowSource = None
         self.ObjectDict = {}
-
+        if ui:
+            self.setUi(ui)
     def setUi(self, ui):
         cls_tup = (JPWidgets.QLineEdit, JPWidgets.QDateEdit,
                    JPWidgets.QComboBox, JPWidgets.QTextEdit,
@@ -338,22 +333,39 @@ class JPFormModelMain(JPEditFormDataMode):
         self.__fieldsRowSource = lst
 
     def readData(self):
-        nodata = False if self.EditMode in [
-            JPEditFormDataMode.Edit, JPEditFormDataMode.ReadOnly
-        ] else True
-        self.tableFieldsInfo = JPTabelFieldInfo(self.__sql, nodata)
+        if self.EditMode ==  JPEditFormDataMode.ReadOnly:
+            self.tableFieldsInfo=JPQueryFieldInfo(self.__sql)
+        if self.EditMode ==  JPEditFormDataMode.Edit:
+            self.tableFieldsInfo = JPTabelFieldInfo(self.__sql)
+        if self.EditMode == JPEditFormDataMode.New:
+            self.tableFieldsInfo = JPTabelFieldInfo(self.__sql, True)
+        # 如果是只读模式，主表增加一行数据
         if (self.EditMode == JPEditFormDataMode.New
-                and len(self.tableFieldsInfo.Data)) == 0:
+                and len(self.tableFieldsInfo.Data) == 0):
             self.tableFieldsInfo.addRowWithOutValue()
         # 设置字段行来源
         for item in self.__fieldsRowSource:
             self.tableFieldsInfo.setFieldsRowSource(*item)
-        fld_dict = self.tableFieldsInfo[0].getFieldsDict()
+        fld_dict = self.tableFieldsInfo.getRowFieldsInfoAndDataDict(0)
         if fld_dict:
             for k, v in self.ObjectDict.items():
                 if k in fld_dict:
                     v.setFieldInfo(fld_dict[k])
                     v.setMainModel(self)
+        # 设置编辑状态
+        if self.EditMode==JPEditFormDataMode.ReadOnly:
+            for item in self.ObjectDict.values():
+                if isinstance(item,JPWidgets.QLineEdit):
+                    item.setReadOnly(True)
+                if isinstance(item,JPWidgets.QDateEdit):
+                    item.setReadOnly(True)
+                if isinstance(item,JPWidgets.QComboBox):
+                    item.setEnabled(False)
+                if isinstance(item,JPWidgets.QTextEdit):
+                    item.setReadOnly(True)
+                if isinstance(item,JPWidgets.QCheckBox):
+                    item.setCheckable(True)
+
         self.mainForm.show()
 
     def setObjectValue(self, obj_name: str, value):
