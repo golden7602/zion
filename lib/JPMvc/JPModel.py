@@ -12,7 +12,7 @@ from PyQt5.QtWidgets import QAbstractItemView, QTableView
 
 import lib.JPMvc.JPDelegate as myDe
 from lib.JPDatabase.Field import JPFieldType
-from lib.JPDatabase.Query import JPTabelRowData,JPTabelFieldInfo,JPQueryFieldInfo
+from lib.JPDatabase.Query import JPTabelRowData, JPTabelFieldInfo, JPQueryFieldInfo
 #from lib.JPDatebase import (JPTabelFieldInfo, JPFieldType, JPTabelRowData)
 
 from lib.JPFunction import (JPBooleanString, JPDateConver, JPRound,
@@ -44,12 +44,14 @@ class __JPTableViewModelBase(QAbstractTableModel):
 
     def getDataDict(self, role: int = Qt.DisplayRole):
         ''''按行返回数据字典的列表,一般用于打印'''
-        r = []
-        dic = [row.getDataDict() for row in self.TabelFieldInfo]
+        dic = [
+            self.TabelFieldInfo.getRowValueDict(i)
+            for i in range(len(self.TabelFieldInfo))
+        ]
         if role == Qt.EditRole:
             return dic
         if role == Qt.DisplayRole:
-            return {k: JPGetDisplayText(v) for k, v in dic.items()}
+            r= {k: JPGetDisplayText(v) for k, v in dic.items()}
         return r
 
     # def setModelDataAndFields(self, data: list, fields: list):
@@ -104,56 +106,34 @@ class __JPTableViewModelBase(QAbstractTableModel):
             r, c, fn, tp, rs = self.__getPara(Index)
             return self.TabelFieldInfo.getOnlyData(Index)
 
-    def _formulaCacu(self, row_data: int):
+    def _formulaCacu(self, row_num: int):
         # 这个可能要重新写
-        if isinstance(row_data, JPTabelRowData):
-            d = row_data.InteriorData
+        rd = self.TabelFieldInfo.RowsData[row_num]
         for i, fld in enumerate(self.TabelFieldInfo.Fields):
             if fld.Formula:
                 try:
-                    d[i] = eval(fld.Formula.format(*d))
+                    d = rd.Datas
+                    v = eval(fld.Formula.format(*d))
+                    rd.setData(i, v)
                 except Exception:
                     pass
 
     def setData(self, Index: QModelIndex, Any,
                 role: int = Qt.EditRole) -> bool:
-        #r, c = Index.row(), Index.column()
-        self.TabelFieldInfo.setData(Index,Any)
-        #self.TabelFieldInfo.Data[r].setData(c, Any)
-        # cur_fld = self.TabelFieldInfo[r][c]
-
-        # tp = cur_fld.TypeCode
-        # if Any is None:
-        #     self.TabelFieldInfo.Data[r][c] = None
-        #     return True
-        # if cur_fld.RowSource:
-        #     self.TabelFieldInfo.Data[r][c] = Any
-        #     return True
-        # elif tp == JPFieldType.Int:
-        #     if Any == '':
-        #         return True
-        #     self.TabelFieldInfo.Data[r][c] = int(str(Any).replace(',', ''))
-        # elif tp == JPFieldType.Float:
-        #     if Any == '':
-        #         return True
-        #     self.TabelFieldInfo.Data[r][c] = float(str(Any).replace(',', ''))
-        # elif tp == JPFieldType.Boolean:
-        #     self.TabelFieldInfo.Data[r][c] = (0 if Any == self.BooleanString[0]
-        #                                       else 1)
-        # elif tp == JPFieldType.Date:
-        #     self.TabelFieldInfo.Data[r][c] = Any
-        # else:
-        #     self.TabelFieldInfo.Data[r][c] = Any
+        t_inof = self.TabelFieldInfo
+        t_inof.setData(Index, Any)
         self.dirty = True
-        row_data=self.TabelFieldInfo.getRowData(Index.row())
-        self._formulaCacu(row_data)
+        self._formulaCacu(Index.row())
         # 执行重载函数，判断行数据是否合法
+        # 给函数参数的值 是最后一行的数据list
+        row_data = t_inof.getRowData(len(t_inof.RowsData) - 1)
         tempv = self.AfterSetDataBeforeInsterRowEvent(row_data, Index)
         if isinstance(tempv, bool):
             if tempv:
                 self.insertRows(self.rowCount())
         else:
-            raise TypeError('AfterSetDataBeforeInsterRowEvent函数的返回值必须为逻辑值！')
+            strErr = 'AfterSetDataBeforeInsterRowEvent函数的返回值必须为逻辑值！'
+            raise TypeError(strErr)
         self.dataChanged[QModelIndex].emit(Index)
         return True
 
@@ -192,25 +172,30 @@ class __JPTableViewModelBase(QAbstractTableModel):
         if role != Qt.DisplayRole:
             return QVariant()
         if Orientation == Qt.Horizontal:
-            return QVariant(self.TabelFieldInfo.Fields[section].Title if self.
-                            TabelFieldInfo.Fields[section].Title else self.
-                            TabelFieldInfo.Fields[section].FieldName)
+            flds = self.TabelFieldInfo.Fields
+            return QVariant(flds[section].Title if flds[section].
+                            Title else flds[section].FieldName)
         return QVariant(int(section + 1))
 
     def getColumnSum(self, col):
         """得到某一列的合计值"""
         tp = self.TabelFieldInfo.Fields[col].TypeCode
+        rd = self.TabelFieldInfo.getOnlyData
         if tp in [tp == JPFieldType.Int, JPFieldType.Float]:
             if tp == JPFieldType.Int:
                 r, con = 0, lambda v: int(v.to_eng_string())
             if tp == JPFieldType.Float:
                 r, con = 0.0, lambda v: float(v.to_eng_string())
-            for row in self.TabelFieldInfo.Data:
-                v = row[col] if row[col] else 0
-                if isinstance(v, Decimal):
-                    r += con(v)
-                else:
-                    r += v
+            for i in range(len(self.TabelFieldInfo.RowsData)):
+                tempValue = rd([i, col])
+                tempValue = tempValue if tempValue else 0
+                r += tempValue
+            # for row in self.TabelFieldInfo.getRowData(i):
+            #     v = row[col] if row[col] else 0
+            #     if isinstance(v, Decimal):
+            #         r += con(v)
+            #     else:
+            #         r += v
             return r
         raise TypeError("指定的列[{}]不能进行数值运算".format(col))
 
@@ -281,6 +266,7 @@ class JPTableViewModelEditForm(__JPTableViewModelBase):
         super().__init__(tabelFieldInfo)
         self.tableView = tableView
 
+
 class JPEditFormDataMode(QObject):
     """本类为编辑窗口数据类型的枚举"""
     Edit = 1
@@ -291,10 +277,11 @@ class JPEditFormDataMode(QObject):
         super().__init__()
         self.EditMode = JPEditFormDataMode.ReadOnly
 
+
 class JPFormModelMain(JPEditFormDataMode):
     dataChanged = pyqtSignal([JPWidgets.QWidget])
 
-    def __init__(self, mainform,ui=None):
+    def __init__(self, mainform, ui=None):
         super().__init__()
         self.mainForm = mainform
         self.__JPFormModelMainSub = None
@@ -306,6 +293,7 @@ class JPFormModelMain(JPEditFormDataMode):
         self.ObjectDict = {}
         if ui:
             self.setUi(ui)
+
     def setUi(self, ui):
         cls_tup = (JPWidgets.QLineEdit, JPWidgets.QDateEdit,
                    JPWidgets.QComboBox, JPWidgets.QTextEdit,
@@ -333,16 +321,16 @@ class JPFormModelMain(JPEditFormDataMode):
         self.__fieldsRowSource = lst
 
     def readData(self):
-        if self.EditMode ==  JPEditFormDataMode.ReadOnly:
-            self.tableFieldsInfo=JPQueryFieldInfo(self.__sql)
-        if self.EditMode ==  JPEditFormDataMode.Edit:
+        if self.EditMode == JPEditFormDataMode.ReadOnly:
+            self.tableFieldsInfo = JPQueryFieldInfo(self.__sql)
+        if self.EditMode == JPEditFormDataMode.Edit:
             self.tableFieldsInfo = JPTabelFieldInfo(self.__sql)
         if self.EditMode == JPEditFormDataMode.New:
             self.tableFieldsInfo = JPTabelFieldInfo(self.__sql, True)
         # 如果是只读模式，主表增加一行数据
         if (self.EditMode == JPEditFormDataMode.New
-                and len(self.tableFieldsInfo.Data) == 0):
-            self.tableFieldsInfo.addRowWithOutValue()
+                and len(self.tableFieldsInfo.RowsData) == 0):
+            self.tableFieldsInfo.addRow()
         # 设置字段行来源
         for item in self.__fieldsRowSource:
             self.tableFieldsInfo.setFieldsRowSource(*item)
@@ -350,20 +338,23 @@ class JPFormModelMain(JPEditFormDataMode):
         if fld_dict:
             for k, v in self.ObjectDict.items():
                 if k in fld_dict:
+                    v.setRowsData(self.tableFieldsInfo.RowsData[0])
                     v.setFieldInfo(fld_dict[k])
                     v.setMainModel(self)
+                    # 给输入控件指定查询的或增加的第一行数据
+
         # 设置编辑状态
-        if self.EditMode==JPEditFormDataMode.ReadOnly:
+        if self.EditMode == JPEditFormDataMode.ReadOnly:
             for item in self.ObjectDict.values():
-                if isinstance(item,JPWidgets.QLineEdit):
+                if isinstance(item, JPWidgets.QLineEdit):
                     item.setReadOnly(True)
-                if isinstance(item,JPWidgets.QDateEdit):
+                if isinstance(item, JPWidgets.QDateEdit):
                     item.setReadOnly(True)
-                if isinstance(item,JPWidgets.QComboBox):
+                if isinstance(item, JPWidgets.QComboBox):
                     item.setEnabled(False)
-                if isinstance(item,JPWidgets.QTextEdit):
+                if isinstance(item, JPWidgets.QTextEdit):
                     item.setReadOnly(True)
-                if isinstance(item,JPWidgets.QCheckBox):
+                if isinstance(item, JPWidgets.QCheckBox):
                     item.setCheckable(True)
 
         self.mainForm.show()
@@ -409,18 +400,18 @@ class _JPFormModelSub(JPEditFormDataMode):
         if self.EditMode is None:
             raise ValueError("没有指定子窗体的编辑模式！")
         # 建立子窗体模型
-        self.__tableInfo = JPTabelFieldInfo(
+        self.tableFieldsInfo = JPTabelFieldInfo(
             self.__sql,
             True if self.EditMode == JPEditFormDataMode.New else None)
         if self.EditMode == JPEditFormDataMode.New and len(
-                self.__tableInfo.Data) == 0:
-            self.__tableInfo.addRowWithOutValue()
+                self.tableFieldsInfo.DeleteRows) == 0:
+            self.tableFieldsInfo.addRow()
         if self.EditMode == JPEditFormDataMode.ReadOnly:
             self._model = JPTableViewModelReadOnly(subTableView,
-                                                   self.__tableInfo)
+                                                   self.tableFieldsInfo)
         if self.EditMode in [JPEditFormDataMode.Edit, JPEditFormDataMode.New]:
             self._model = JPTableViewModelEditForm(subTableView,
-                                                   self.__tableInfo)
+                                                   self.tableFieldsInfo)
         self.__tableView.setModel(self._model)
         # 设置子窗体可编辑状态
         if self.EditMode == JPEditFormDataMode.ReadOnly:
@@ -469,8 +460,8 @@ class _JPFormModelSub(JPEditFormDataMode):
     def setColumnsReadOnly(self, *args: int):
         self.__readOnlyColumns = args
 
-    def GetSQLS(self):
-        return self._model.GetSQLS()
+    # def GetSQLS(self):
+    #     return self._model.GetSQLS()
 
 
 class JPFormModelMainSub(JPEditFormDataMode):

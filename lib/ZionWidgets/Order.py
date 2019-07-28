@@ -13,7 +13,8 @@ from lib.JPPrintReport import JPPrintSectionType, JPReport
 from lib.ZionPublc import JPPub
 from lib.ZionWidgets.FuncFormBase import JPFunctionForm
 from Ui.Ui_FormOrderMob import Ui_Form
-from lib.JPMvc.JPModel import JPFormModelMainSub,JPEditFormDataMode
+from lib.JPMvc.JPModel import JPFormModelMainSub, JPEditFormDataMode
+from lib.JPDatabase.Database import JPDb
 
 
 class JPFuncForm_Order(JPFunctionForm):
@@ -33,7 +34,7 @@ class JPFuncForm_Order(JPFunctionForm):
                         fPayable as `应付金额Valor a Pagar`,
                         fContato as 联系人Contato,
                         fCelular as 手机Celular,
-                        ord(fSubmited) AS fSubmited
+                        fSubmited AS fSubmited
                 FROM v_order AS o"""
         sql_1 = sql_0 + """
                 WHERE fCanceled=0
@@ -49,50 +50,16 @@ class JPFuncForm_Order(JPFunctionForm):
         self.backgroundWhenValueIsTrueFieldName = ['fSubmited']
         self.checkBox_1.setText('UnSubmited')
         self.checkBox_2.setText('Submited')
-        self.checkBox_1.setChecked(True)
-        self.checkBox_2.setChecked(False)
+        self.checkBox_1.setChecked(False)
+        self.checkBox_2.setChecked(True)
         super().setSQL(sql_1, sql_2)
         self.tableView.setColumnHidden(13, True)
+        self.fSubmited_column = 13
+        self.TableName = "t_order"
+        self.PrimarykeyFieldName = "fOrderID"
 
-    def but_click(self, name):
-        for n, fun in JPFuncForm_Order.__dict__.items():
-            if n.upper() == 'BTN{}CLICKED'.format(name.upper()):
-                fun(self)
-
-    def getCurrentCustomerID(self):
-        index = self.tableView.selectionModel().currentIndex()
-        if index.isValid():
-            return self.model.TabelFieldInfo.getOnlyData([index.row(), 0])
-
-    @pyqtSlot()
-    def on_CmdExportToExcel_clicked(self):
-        print('单击了CMDEXPORTTOEXCEL按钮')
-
-    @pyqtSlot()
-    def on_CmdNew_clicked(self):
-        cu_id = self.getCurrentCustomerID()
-        if not cu_id:
-            return
-        form=EditForm_Order(JPFormModelMainSub.New)
-        form.exec_()
-
-    @pyqtSlot()
-    def on_CmdEdit_clicked(self):
-        cu_id = self.getCurrentCustomerID()
-        if not cu_id:
-            return
-        form=EditForm_Order(JPFormModelMainSub.Edit,cu_id)
-        form.exec_()
-
-    @pyqtSlot()
-    def on_CmdBrowse_clicked(self):
-        cu_id = self.getCurrentCustomerID()
-        if not cu_id:
-            return
-        form=EditForm_Order(JPFormModelMainSub.ReadOnly,cu_id)
-        form.exec_()
-        #showEditForm_Order(self.MainForm, JPFormModelMainSub.ReadOnly, cu_id)
-        # print("CMDBROWSE被下", cu_id)
+    def getEditFormClass(self):
+        return EditForm_Order
 
 
 # 继承模型，为了设置重载方法，必要要时也可以用动态绑定到函数
@@ -152,7 +119,7 @@ class EditForm_Order(QDialog):
         self.SubMod.setColumnsReadOnly(7)
         self.SubMod.setTabelInfo(s_sql)
         self.SubMod.setFormula(7, (
-            "JPRound(JPRound({2}) * JPRound({4}) * JPRound({5}) * JPRound({6}))"
+            "JPRound(JPRound({2}) * JPRound({4},2) * JPRound({5},2) * JPRound({6},2))"
         ))
         self.MS_Mod.dataChanged[QModelIndex].connect(self.Cacu)
         self.MS_Mod.dataChanged[QWidget].connect(self.Cacu)
@@ -160,7 +127,7 @@ class EditForm_Order(QDialog):
 
     # 计算金额事件
     def Cacu(self, *args):
-        if self.EditMode!=JPEditFormDataMode.ReadOnly:
+        if self.EditMode != JPEditFormDataMode.ReadOnly:
             v_sum = self.SubMod._model.getColumnSum(7)
             fDesconto = self.MainMod.getObjectValue("fDesconto")
             fTax = (v_sum - fDesconto) * 0.17
@@ -179,10 +146,15 @@ class EditForm_Order(QDialog):
     @pyqtSlot()
     def on_butSave_clicked(self):
         try:
-            self.SubMod.GetSQLS()
+            pub = JPPub()
+            print(self.MainMod.tableFieldsInfo.getMainSqlStatements())
+            print(
+                self.SubMod.tableFieldsInfo.getSubSqlStatements(
+                    1, self.PKValue))
         except Exception as e:
             msgBox = QMessageBox(QMessageBox.Critical, u'提示', str(e))
             msgBox.exec_()
+
 
 def formatEvent(self):
     if (self.SectionType is JPPrintSectionType.PageHeader

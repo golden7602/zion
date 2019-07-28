@@ -36,13 +36,13 @@ class _myMod(JPTableViewModelReadOnly):
         return super().data(Index, role)
 
 
-class Form_Repoet_Day(Ui_Form):
+class Form_Repoet_Day(QWidget):
     def __init__(self, mainform):
         super().__init__()
-        self.Widget = QWidget()
-        self.setupUi(self.Widget)
-        mainform.addForm(self.Widget)
-        findButtonAndSetIcon(self.Widget)
+        self.ui=Ui_Form()
+        self.ui.setupUi(self)
+        mainform.addForm(self)
+        findButtonAndSetIcon(self)
         year_sql = """
                 select year(fOrderDate) as y  
                 from t_order union select year(fReceiptDate) 
@@ -113,6 +113,9 @@ class Form_Repoet_Day(Ui_Form):
                     ) Q1
                     GROUP BY Q1.d WITH ROLLUP
                 ) Q3        """
+        self.cbo_base=self.ui.cbo_base
+        self.cbo_year=self.ui.cbo_year
+        self.tableView=self.ui.tableView
         self.cbo_base.addItem('Payment', sql_payment)
         self.cbo_base.addItem('Receivables', sql_receivables)
         db = JPDb()
@@ -139,7 +142,7 @@ class Form_Repoet_Day(Ui_Form):
         self.mod = _myMod(self.tableView, self.queryInfo)
         self.tableView.setModel(self.mod)
 
-    def onbutPrint(self):
+    def on_CmdPrint_clicked(self):
         if len(self.queryInfo) == 0:
             return
         flds = self.queryInfo.Fields
@@ -183,37 +186,37 @@ class Form_Repoet_Day(Ui_Form):
         rpt.BeginPrint()
 
 
-def getFuncForm_FormReport_Day(mainform):
-    from Ui.Ui_FormReport_Day import Ui_Form
-    Form = QWidget()
-    ui = Ui_Form()
-    ui.setupUi(Form)
-    mainform.addForm(Form)
+# def getFuncForm_FormReport_Day(mainform):
+#     from Ui.Ui_FormReport_Day import Ui_Form
+#     Form = QWidget()
+#     ui = Ui_Form()
+#     ui.setupUi(Form)
+#     mainform.addForm(Form)
 
-    cbo_year, cbo_base = ui.cbo_year, ui.cbo_base
-    tw = ui.tableView
+#     cbo_year, cbo_base = ui.cbo_year, ui.cbo_base
+#     tw = ui.tableView
 
-    db = JPDb
-    year = db.getDataList('''select year(fOrderDate) as y
-                from t_order union select year(fReceiptDate)
-                as y from t_receivables''')[0]
-    ui.mod = None
+#     db = JPDb
+#     year = db.getDataList('''select year(fOrderDate) as y
+#                 from t_order union select year(fReceiptDate)
+#                 as y from t_receivables''')[0]
+#     ui.mod = None
 
-    def _search():
-        if cbo_year.currentIndex() != -1 and cbo_base.currentIndex() != -1:
-            sql = cbo_base.currentData()
-            queryInfo = JPQueryFieldInfo(sql.format(cbo_year.currentText()))
-            ui.mod = myMod(tw, queryInfo)
+#     def _search():
+#         if cbo_year.currentIndex() != -1 and cbo_base.currentIndex() != -1:
+#             sql = cbo_base.currentData()
+#             queryInfo = JPQueryFieldInfo(sql.format(cbo_year.currentText()))
+#             ui.mod = myMod(tw, queryInfo)
 
-    cbo_year.addItems([str(y[0]) for y in year if y[0]])
-    cbo_year.setCurrentIndex(-1)
-    cbo_base.clear()
-    cbo_base.addItem('Payment', sql_payment)
-    cbo_base.addItem('Receivables', sql_receivables)
-    cbo_base.setCurrentIndex(-1)
-    tw.setSelectionMode(QAbstractItemView.SingleSelection)
-    tw.setSelectionBehavior(QAbstractItemView.SelectRows)
-    cbo_base.currentTextChanged.connect(_search)
-    cbo_year.currentTextChanged.connect(_search)
-    ui.butPrint.clicked.connect(butPrint)
-    return Form
+#     cbo_year.addItems([str(y[0]) for y in year if y[0]])
+#     cbo_year.setCurrentIndex(-1)
+#     cbo_base.clear()
+#     cbo_base.addItem('Payment', self.sql_payment)
+#     cbo_base.addItem('Receivables', sql_receivables)
+#     cbo_base.setCurrentIndex(-1)
+#     tw.setSelectionMode(QAbstractItemView.SingleSelection)
+#     tw.setSelectionBehavior(QAbstractItemView.SelectRows)
+#     cbo_base.currentTextChanged.connect(_search)
+#     cbo_year.currentTextChanged.connect(_search)
+#     ui.butPrint.clicked.connect(butPrint)
+#     return Form

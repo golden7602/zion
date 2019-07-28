@@ -17,9 +17,9 @@ from PyQt5.QtWidgets import (QCheckBox as QCheckBox_, QComboBox as QComboBox_,
                              QCompleter)
 from lib.JPDatabase.Database import JPDb
 from lib.JPDatabase.Field import JPFieldType
+from lib.JPDatabase.Query import JPTabelRowData
 from lib.JPFunction import JPBooleanString, JPDateConver, JPGetDisplayText
 from PyQt5.QtGui import (QDoubleValidator, QIntValidator)
-
 
 
 def __getattr__(name):
@@ -39,13 +39,19 @@ class __JPWidgetBase(object):
     def __init__(self, *args):
         self._FieldInfo: JPFieldType = None
         self.__MainModel = None
+        self.__RowsData = None
 
-    def _dataChange(self):
+    def _onValueChange(self, value: str):
+        self.__RowsData.setData(self._FieldInfo._index, self.Value())
         if self.__MainModel:
             self.__MainModel._emmitDataChange(self)
 
+
     def setMainModel(self, QWidget: QWidget_):
         self.__MainModel = QWidget
+
+    def setRowsData(self, rd: JPTabelRowData):
+        self.__RowsData = rd
 
     @property
     def FieldInfo(self):
@@ -63,9 +69,10 @@ class __JPWidgetBase(object):
     def getSqlValue(self):
         """返回字段值，可直接用于SQL语句中"""
 
-    @abc.abstractmethod
-    def setFieldInfo(self, fld: JPFieldType):
+    
+    def setFieldInfo(self, fld: JPFieldType=None):
         """设置字段信息"""
+        self.textChanged.connect(self._onValueChange)
 
     @abc.abstractmethod
     def Value(self):
@@ -75,6 +82,7 @@ class __JPWidgetBase(object):
 class QLineEdit(QLineEdit_, __JPWidgetBase):
     def __init__(self, parent):
         super().__init__(parent)
+        
 
     def getSqlValue(self) -> str:
         t = self.text()
@@ -107,17 +115,18 @@ class QLineEdit(QLineEdit_, __JPWidgetBase):
                 va = QDoubleValidator()
                 va.setDecimals(fld.Scale)
                 self.setValidator(va)
+        super().setFieldInfo()
+        
 
     def focusOutEvent(self, e):
         self.setText(JPGetDisplayText(self.Value()))
-        self._dataChange()
+        #self._dataChange()
         QLineEdit_.focusOutEvent(self, e)
 
 
 class QTextEdit(QTextEdit_, __JPWidgetBase):
     def __init__(self, parent):
         super().__init__(parent)
-        self.textChanged.connect(self._dataChange)
 
     def getSqlValue(self) -> str:
         t = self.text()
@@ -129,7 +138,7 @@ class QTextEdit(QTextEdit_, __JPWidgetBase):
         self._FieldInfo = fld
         self.setText(fld.Value)
         if raiseEvent:
-            self.textChanged.connect(self._dataChange)
+            super().setFieldInfo()
 
     def Value(self):
         return self.toPlainText()
@@ -140,7 +149,6 @@ class QComboBox(QComboBox_, __JPWidgetBase):
         super().__init__(parent)
         self.setEditable(True)
         self.BindingColumn = 1
-        self.currentIndexChanged.connect(self._dataChange)
 
     # def setRowDict(self, value: list, Binding_column: int = 1):
     #     """value为一个行，行可为可为列表或元组
@@ -194,7 +202,7 @@ class QComboBox(QComboBox_, __JPWidgetBase):
     #     self.lineEdit().textChanged.connect(self.editTextChanged)
 
     @property
-    def RowSource(self)->list:
+    def RowSource(self) -> list:
         return self._FieldInfo.RowSource
 
     def setFieldInfo(self, fld: JPFieldType, raiseEvent=True):
@@ -211,7 +219,7 @@ class QComboBox(QComboBox_, __JPWidgetBase):
                 self.addItem(str(r[0]), r)
             self.setEnumValue(fld.Value)
         if raiseEvent:
-            self.currentIndexChanged.connect(self._dataChange)
+            self.currentIndexChanged.connect(self._onValueChange)
 
     def focusOutEvent(self, e):
         t = self.currentText()
@@ -229,13 +237,10 @@ class QComboBox(QComboBox_, __JPWidgetBase):
         #self.setEditText(self.currentText().upper())
 
 
-
-
-
 class QDateEdit(QDateEdit_, __JPWidgetBase):
     def __init__(self, parent):
         super().__init__(QDate.currentDate(), parent)
-        self.dateChanged.connect(self._dataChange)
+
 
     def getSqlValue(self) -> str:
         return "'{}'".format(JPDateConver(self.date(), str))
@@ -246,7 +251,7 @@ class QDateEdit(QDateEdit_, __JPWidgetBase):
             return
         self.setDate(JPDateConver(self._FieldInfo.Value, datetime.date))
         if raiseEvent:
-            self.dateChanged.connect(self._dataChange)
+            self.dateChanged.connect(self._onValueChange)
 
     def Value(self):
         return JPDateConver(self.date(), datetime.date)
@@ -256,7 +261,7 @@ class QCheckBox(QCheckBox_, __JPWidgetBase):
     def __init__(self, parent):
         super().__init__(parent)
         self._FieldInfo: JPFieldType = None
-        self.stateChanged.connect(self._dataChange)
+
 
     def getSqlValue(self) -> str:
         if self.checkState() is None:
@@ -265,10 +270,10 @@ class QCheckBox(QCheckBox_, __JPWidgetBase):
 
     def setFieldInfo(self, fld: JPFieldType, raiseEvent=True):
         self._FieldInfo = fld
-        v= True if self._FieldInfo.Value else False
+        v = True if self._FieldInfo.Value else False
         self.setChecked(v)
         if raiseEvent:
-            self.stateChanged.connect(self._dataChange)
+            self.stateChanged.connect(self._onValueChange)
 
     def Value(self):
         return 1 if self.checkState() == Qt.Checked else 0

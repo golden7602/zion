@@ -7,6 +7,8 @@ from PyQt5.QtCore import Qt, QDate
 
 from lib.JPFunction import JPDateConver, JPGetDisplayText
 from abc import abstractmethod
+from decimal import Decimal
+from datetime import date as datetime_date
 
 
 class JPFieldType(object):
@@ -106,13 +108,33 @@ class JPMySQLFieldInfo(JPFieldInfo):
 
     @staticmethod
     def getConvertersDict() -> dict:
+        def v_float(x):
+            if isinstance(x, Decimal):
+                return float(x.to_eng_string())
+            if isinstance(x, (float, int, str)):
+                return float(x)
+            
+        def v_date(x):
+            if isinstance(x, QDate):
+                return x
+            if isinstance(x,datetime_date):
+                return QDate(x.year, x.month, x.day)
+
+        def v_bool(x):
+            if isinstance(x, bool):
+                return 1 if x else 0
+            if isinstance(x, bytes):
+                return ord(x)
+        def v_int(x):
+            if isinstance(x,str):
+                return int(x)
+            return x
         return {
-            JPFieldInfo.Int: lambda x: x,
-            JPFieldInfo.Float: lambda x: float(x.to_eng_string()) if x else x,
+            JPFieldInfo.Int: v_int,
+            JPFieldInfo.Float: v_float,
             JPFieldInfo.String: lambda x: x,
-            JPFieldInfo.Date: lambda x: QDate(x.year, x.month, x.day)
-            if x else x,
-            JPFieldInfo.Boolean: lambda x: [False, True][ord(x)] if x else x,
+            JPFieldInfo.Date: v_date,
+            JPFieldInfo.Boolean: v_bool,
             JPFieldInfo.Other: lambda x: x
         }
 

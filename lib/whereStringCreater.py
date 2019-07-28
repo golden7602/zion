@@ -4,13 +4,10 @@ import os
 sys.path.append(os.getcwd())
 from PyQt5.QtWidgets import (QFileDialog, QPushButton, QDialog, QHeaderView,
                              QComboBox, QTabWidget, QStyledItemDelegate,
-                             QApplication)
+                             QApplication, QWidget)
 from lib.Ui_WhereStringCreater import Ui_DlgSearch
-from lib.JPDatebase import JPFieldInfo, JPFieldType
+from lib.JPDatabase.Field import JPFieldInfo, JPFieldType
 from lib.JPMvc import JPDelegate
-
-
-
 
 
 class _JPWhereStringCreater(Ui_DlgSearch):
@@ -363,44 +360,42 @@ class _JPWhereStringCreater(Ui_DlgSearch):
         self.tab.setCellWidget(row - 1, 7, self.btnAddNew)
 
 
+# class _JPDelegate_Base(QStyledItemDelegate):
+#     def __init__(self, parent: QWidget = None):
+#         super().__init__(parent)
 
-class _JPDelegate_Base(QStyledItemDelegate):
+#     #@abc.abstractmethod
+#     def createEditor(self, parent: QWidget, option: QStyleOptionViewItem,
+#                      index: QModelIndex) -> QWidget:
+#         pass
 
-    def __init__(self, parent: QObject = None):
-        super().__init__(parent)
+#     #@abc.abstractmethod
+#     def setEditorData(self, editor: QWidget, index: QModelIndex):
+#         pass
 
-    @abc.abstractmethod
-    def createEditor(self, parent: QWidget, option: QStyleOptionViewItem,
-                     index: QModelIndex) -> QWidget:
-        pass
+#     #@abc.abstractmethod
+#     def setModelData(self, editor: QWidget, model: QAbstractItemModel,
+#                      index: QModelIndex):
+#         pass
 
-    @abc.abstractmethod
-    def setEditorData(self, editor: QWidget, index: QModelIndex):
-        pass
-
-    @abc.abstractmethod
-    def setModelData(self, editor: QWidget, model: QAbstractItemModel,
-                     index: QModelIndex):
-        pass
-
-    def updateEditorGeometry(self, editor: QWidget,
-                             StyleOptionViewItem: QStyleOptionViewItem,
-                             index: QModelIndex):
-        editor.setGeometry(StyleOptionViewItem.rect)
-
-
-
+#     def updateEditorGeometry(self, editor: QWidget,
+#                              StyleOptionViewItem: QStyleOptionViewItem,
+#                              index: QModelIndex):
+#         editor.setGeometry(StyleOptionViewItem.rect)
 
 
 if __name__ == "__main__":
     import sys
-    from lib.JPDatebase import jpGetDataListAndFields
+    from lib.JPDatabase.Query import JPQueryFieldInfo
+    from lib.JPDatabase.Database import JPDb
+    db=JPDb()
+    db.setDatabaseType(1)
     app = QApplication(sys.argv)
     SQL = """select fID,fOrderID,fQuant as '数量Qtd',
             fProductName as '名称Descrição',fLength as '长Larg.',
             fWidth as '宽Comp.',fPrice as '单价P. Unitario',
             fAmount as '金额Total' from t_order_detail limit 0"""
-    data, fields = jpGetDataListAndFields(SQL)
-    dlg = _JPWhereStringCreater(fields, app)
+    Qi = JPQueryFieldInfo(SQL)
+    dlg = _JPWhereStringCreater(Qi.Fields, app)
     dlg.show()
     sys.exit(app.exec_())

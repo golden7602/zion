@@ -112,7 +112,7 @@
         </spacer>
        </item>
        <item>
-        <widget class="QPushButton" name="butPrint">
+        <widget class="QPushButton" name="CmdPrint">
          <property name="font">
           <font>
            <pointsize>8</pointsize>
@@ -134,7 +134,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="butPDF">
+        <widget class="QPushButton" name="CmdPDF">
          <property name="font">
           <font>
            <pointsize>8</pointsize>
@@ -156,7 +156,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="butSave">
+        <widget class="QPushButton" name="CmdExportToExcel">
          <property name="font">
           <font>
            <pointsize>8</pointsize>
