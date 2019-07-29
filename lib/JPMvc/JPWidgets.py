@@ -41,7 +41,7 @@ class __JPWidgetBase(object):
         self.__MainModel = None
         self.__RowsData = None
 
-    def _onValueChange(self, value: str):
+    def _onValueChange(self):
         self.__RowsData.setData(self._FieldInfo._index, self.Value())
         if self.__MainModel:
             self.__MainModel._emmitDataChange(self)
@@ -239,19 +239,20 @@ class QComboBox(QComboBox_, __JPWidgetBase):
 
 class QDateEdit(QDateEdit_, __JPWidgetBase):
     def __init__(self, parent):
-        super().__init__(QDate.currentDate(), parent)
+        super().__init__(parent)
 
 
     def getSqlValue(self) -> str:
         return "'{}'".format(JPDateConver(self.date(), str))
 
     def setFieldInfo(self, fld: JPFieldType, raiseEvent=True):
+        if raiseEvent:
+            self.dateChanged[QDate].connect(self._onValueChange)
         self._FieldInfo = fld
         if self._FieldInfo.Value is None:
+            self.setDate(QDate.currentDate())
             return
         self.setDate(JPDateConver(self._FieldInfo.Value, datetime.date))
-        if raiseEvent:
-            self.dateChanged.connect(self._onValueChange)
 
     def Value(self):
         return JPDateConver(self.date(), datetime.date)

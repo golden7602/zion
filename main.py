@@ -15,7 +15,7 @@ from lib.JPDatabase.Database import JPDb, JPDbType
 from lib.ZionWidgets.Background import Form_Background
 from Ui.Ui_FormUserLogin import Ui_Dialog
 from lib.JPFunction import setButtonIconByName, setButtonIcon
-from PyQt5.QtCore import QThread, QMetaObject
+from PyQt5.QtCore import QThread, QMetaObject,Qt
 
 
 def loadTreeview(treeWidget, items):
@@ -165,6 +165,7 @@ class JPMainWindow(QMainWindow):
 
 
 if __name__ == "__main__":
+    QApplication.(Qt.AA_EnableHighDpiScaling)
     app = QApplication(argv)
     db = JPDb()
     db.setDatabaseType(JPDbType.MySQL)

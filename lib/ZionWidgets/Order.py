@@ -154,6 +154,7 @@ class EditForm_Order(QDialog):
                 self.ui.fOrderID.setText(result)
                 self.ui.butSave.setEnabled(False)
                 self.MS_Mod.setEditState(False)
+                self.btnRefreshClick()
         except Exception as e:
             msgBox = QMessageBox(QMessageBox.Critical, u'提示', str(e))
             msgBox.exec_()
