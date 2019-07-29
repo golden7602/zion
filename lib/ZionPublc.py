@@ -13,7 +13,6 @@ from Ui.Ui_FormChangePassword import Ui_Dialog as Ui_Dialog_ChnPwd
 from lib.JPFunction import md5_passwd, setButtonIconByName
 
 
-
 class Form_ChangePassword(QDialog):
     def __init__(self, parent=None, flags=Qt.WindowFlags()):
         super().__init__(parent=parent, flags=flags)
@@ -185,7 +184,8 @@ class JPUser(QObject):
 
 @Singleton
 class JPPub(QObject):
-    MainForm=None
+    MainForm = None
+
     def __init__(self):
         if self.MainForm is None:
             super().__init__()

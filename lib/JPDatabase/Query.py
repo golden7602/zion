@@ -335,139 +335,139 @@ class JPTabelFieldInfo(JPQueryFieldInfo):
 
     #     return sqls
 
-    def getSubSqlStatements(self, foreignkey_col: int, foreignkey_value=None):
-        """
-        getSubSqlStatements(foreignkey_col:int,foreignkey_value=None)
-        返回子表的SQL语句，必须指定外键列号(主表键值对应列号)，外键值在Update模式时必须指定
-        外键名在New模式时可不指定，将用主表新生成的主键替换“@PK”
-        """
-        pb = JPPub()
-        appform = pb.MainForm
-        sql = []
-        hasforeignkey = all((foreignkey_col, foreignkey_value))
-        # 不能为空，不是自增列的列号，如果给定了外键值，则不检查该列
-        if foreignkey_col and not foreignkey_value:
-            raise ValueError("指定了外键列但没有指定值！")
-        not_null_col = []
-        for i in range(len(self.Fields)):
-            fld = self.Fields[i]
-            if all([fld.Auto_Increment is False, fld.NotNull is True]):
-                if hasforeignkey:
-                    if i != foreignkey_col:
-                        not_null_col.append(i)
-                else:
-                    not_null_col.append(i)
-        # 检查空值 如有不合要求的字段，则返回行号
-        for r in range(len(self.RowsData)):
-            for i in not_null_col:
-                if (self.RowsData[r].State != JPTabelRowData.New) and (
-                        self.RowsData[r].Datas[i] is None):
-                    msg = '第{row}行【{fn}】字段的值不能为空！\nRow {row} field [{fn}] cannot be empty!'.format(
-                        row=r + 1, fn=self.Fields[i].FieldName)
-                    QMessageBox.warning(appform, '提示', msg, QMessageBox.Yes,
-                                        QMessageBox.Yes)
-                    return r
-        # 开始生成语句
-        sqls = []  # 存放结果
-        m_t = self.TableName
-        sql_i = 'INSERT INTO ' + m_t + ' ({}) VALUES ({});'
-        sql_u = 'UPDATE ' + m_t + ' SET {} WHERE {}={};'
-        fn_lst = [fld.FieldName for fld in self.Fields]
-        pk_index = self.PrimarykeyFieldIndex
-        st = self.RowsData[0].State
-        if not self.Fields[pk_index].Auto_Increment:
-            raise ValueError("子表主键字段'{}'只能为自增加类型!".format(
-                self.PrimarykeyFieldName))
+    # def getSubSqlStatements(self, foreignkey_col: int, model, foreignkey_value=None):
+    #     """
+    #     getSubSqlStatements(foreignkey_col:int,foreignkey_value=None)
+    #     返回子表的SQL语句，必须指定外键列号(主表键值对应列号)，外键值在Update模式时必须指定
+    #     外键名在New模式时可不指定，将用主表新生成的主键替换“@PK”
+    #     """
+    #     pb = JPPub()
+    #     appform = pb.MainForm
+    #     sql = []
+    #     hasforeignkey = all((foreignkey_col, foreignkey_value))
+    #     # 不能为空，不是自增列的列号，如果给定了外键值，则不检查该列
+    #     if foreignkey_col and not foreignkey_value:
+    #         raise ValueError("指定了外键列但没有指定值！")
+    #     not_null_col = []
+    #     for i in range(len(self.Fields)):
+    #         fld = self.Fields[i]
+    #         if all([fld.Auto_Increment is False, fld.NotNull is True]):
+    #             if hasforeignkey:
+    #                 if i != foreignkey_col:
+    #                     not_null_col.append(i)
+    #             else:
+    #                 not_null_col.append(i)
+    #     # 检查空值 如有不合要求的字段，则返回行号
+    #     for r in range(len(self.RowsData)):
+    #         for i in not_null_col:
+    #             if (self.RowsData[r].State != JPTabelRowData.New) and (
+    #                     self.RowsData[r].Datas[i] is None):
+    #                 msg = '第{row}行【{fn}】字段的值不能为空！\nRow {row} field [{fn}] cannot be empty!'.format(
+    #                     row=r + 1, fn=self.Fields[i].FieldName)
+    #                 QMessageBox.warning(appform, '提示', msg, QMessageBox.Yes,
+    #                                     QMessageBox.Yes)
+    #                 return r
+    #     # 开始生成语句
+    #     sqls = []  # 存放结果
+    #     m_t = self.TableName
+    #     sql_i = 'INSERT INTO ' + m_t + ' ({}) VALUES ({});'
+    #     sql_u = 'UPDATE ' + m_t + ' SET {} WHERE {}={};'
+    #     fn_lst = [fld.FieldName for fld in self.Fields]
+    #     pk_index = self.PrimarykeyFieldIndex
+    #     st = self.RowsData[0].State
+    #     if not self.Fields[pk_index].Auto_Increment:
+    #         raise ValueError("子表主键字段'{}'只能为自增加类型!".format(
+    #             self.PrimarykeyFieldName))
                 
-        if st == JPTabelRowData.New:
-            pass
-        if st == JPTabelRowData.Update:
-            pass
-        for row in self.RowsData:
-            if row.State == JPTabelRowData.OriginalValue or row.State == JPTabelRowData.New_None:
-                continue
-            cur_fn = deepcopy(fn_lst)
-            cur_row_sqlvalue = [
-                self.Fields[i].sqlValue(d) for i, d in enumerate(row.Datas)
-            ]
+    #     if st == JPTabelRowData.New:
+    #         pass
+    #     if st == JPTabelRowData.Update:
+    #         pass
+    #     for row in self.RowsData:
+    #         if row.State == JPTabelRowData.OriginalValue or row.State == JPTabelRowData.New_None:
+    #             continue
+    #         cur_fn = deepcopy(fn_lst)
+    #         cur_row_sqlvalue = [
+    #             self.Fields[i].sqlValue(d) for i, d in enumerate(row.Datas)
+    #         ]
 
-            if not self.Fields[pk_index].Auto_Increment:
-                raise ValueError("子表主键字段'{}'只能为自增加类型!".format(
-                    self.PrimarykeyFieldName))
-            if not foreignkey_col:
-                raise ValueError("子表必须指定外键列号")
-            if row.State == JPTabelRowData.New:
-                if foreignkey_value:
-                    cur_row_sqlvalue[foreignkey_col] = '{}'.format(
-                        foreignkey_value)
-                else:
-                    cur_row_sqlvalue[foreignkey_col] = '@PK'
-                del cur_row_sqlvalue[pk_index]
-                del cur_fn[pk_index]
-                sqls.append(
-                    sql_i.format(','.join(cur_fn), ','.join(cur_row_sqlvalue)))
-            if row.State == JPTabelRowData.Update:
-                pk_value = cur_row_sqlvalue[pk_index]
-                del cur_row_sqlvalue[pk_index]
-                del cur_fn[pk_index]
-                temp = [
-                    '{}={}'.format(n, v)
-                    for n, v in zip(cur_fn, cur_row_sqlvalue)
-                ]
-                sqls.append(
-                    sql_u.format(','.join(temp), self.PrimarykeyFieldName,
-                                 pk_value))
-        return sqls
+    #         if not self.Fields[pk_index].Auto_Increment:
+    #             raise ValueError("子表主键字段'{}'只能为自增加类型!".format(
+    #                 self.PrimarykeyFieldName))
+    #         if not foreignkey_col:
+    #             raise ValueError("子表必须指定外键列号")
+    #         if row.State == JPTabelRowData.New:
+    #             if foreignkey_value:
+    #                 cur_row_sqlvalue[foreignkey_col] = '{}'.format(
+    #                     foreignkey_value)
+    #             else:
+    #                 cur_row_sqlvalue[foreignkey_col] = '@PK'
+    #             del cur_row_sqlvalue[pk_index]
+    #             del cur_fn[pk_index]
+    #             sqls.append(
+    #                 sql_i.format(','.join(cur_fn), ','.join(cur_row_sqlvalue)))
+    #         if row.State == JPTabelRowData.Update:
+    #             pk_value = cur_row_sqlvalue[pk_index]
+    #             del cur_row_sqlvalue[pk_index]
+    #             del cur_fn[pk_index]
+    #             temp = [
+    #                 '{}={}'.format(n, v)
+    #                 for n, v in zip(cur_fn, cur_row_sqlvalue)
+    #             ]
+    #             sqls.append(
+    #                 sql_u.format(','.join(temp), self.PrimarykeyFieldName,
+    #                              pk_value))
+    #     return sqls
 
-    def getMainSqlStatements(self):
-        """返回主表的SQL语句，如果有检查空值错误，则引发一个错误，错误信息中包含字段名"""
-        pb = JPPub()
-        appform = pb.MainForm
-        nm_lst = []
-        v_lst = []
-        ds = self.RowsData[0].Datas
-        st = self.RowsData[0].State
-        # 空值检查
-        for fld in self.Fields:
-            if fld.IsPrimarykey or fld.Auto_Increment:
-                continue
-            if fld.NotNull:
-                if ds[fld._index] is None:
-                    raise ValueError(fld)
-                    msg = '字段【{fn}】的值不能为空！\nField [{fn}] cannot be empty!'.format(
-                        fn=fld.FieldName)
-                    QMessageBox.warning(appform, '提示', msg, QMessageBox.Ok,
-                                        QMessageBox.Ok)
-        # 空值检查完成
-        sql_i = 'INSERT INTO ' + self.TableName + ' ({}) VALUES ({});'
-        sql_u = 'UPDATE ' + self.TableName + ' SET {} WHERE {}={};'
-        if (st == JPTabelRowData.New_None
-                or st == JPTabelRowData.OriginalValue):
-            return ''
-        if st == JPTabelRowData.New:
-            for fld in self.Fields:
-                if fld.IsPrimarykey:
-                    if fld.Auto_Increment:
-                        continue
-                    else:
-                        nm_lst.append(fld.FieldName)
-                        v_lst.append("@PK")
-                else:
-                    nm_lst.append(fld.FieldName)
-                    v_lst.append(fld.sqlValue(ds[fld._index]))
-            return sql_i.format(",".join(nm_lst), ",".join(v_lst))
-        if st == JPTabelRowData.Update:
-            for fld in self.Fields:
-                if fld.IsPrimarykey:
-                    r_pk_name = fld.FieldName
-                    r_pk_v = fld.sqlValue(ds[fld._index])
-                else:
-                    nm_lst.append(fld.FieldName)
-                    v_lst.append(fld.sqlValue(ds[fld._index]))
-            temp = ['{}={}'.format(n, v) for n, v in zip(nm_lst, v_lst)]
-            return sql_u.format(",".join(temp), r_pk_name, r_pk_v)
+    # def getMainSqlStatements(self):
+    #     """返回主表的SQL语句，如果有检查空值错误，则引发一个错误，错误信息中包含字段名"""
+    #     pb = JPPub()
+    #     appform = pb.MainForm
+    #     nm_lst = []
+    #     v_lst = []
+    #     ds = self.RowsData[0].Datas
+    #     st = self.RowsData[0].State
+    #     # 空值检查
+    #     for fld in self.Fields:
+    #         if fld.IsPrimarykey or fld.Auto_Increment:
+    #             continue
+    #         if fld.NotNull:
+    #             if ds[fld._index] is None:
+    #                 raise ValueError(fld)
+    #                 msg = '字段【{fn}】的值不能为空！\nField [{fn}] cannot be empty!'.format(
+    #                     fn=fld.FieldName)
+    #                 QMessageBox.warning(appform, '提示', msg, QMessageBox.Ok,
+    #                                     QMessageBox.Ok)
+    #     # 空值检查完成
+    #     sql_i = 'INSERT INTO ' + self.TableName + ' ({}) VALUES ({});'
+    #     sql_u = 'UPDATE ' + self.TableName + ' SET {} WHERE {}={};'
+    #     if (st == JPTabelRowData.New_None
+    #             or st == JPTabelRowData.OriginalValue):
+    #         return ''
+    #     if st == JPTabelRowData.New:
+    #         for fld in self.Fields:
+    #             if fld.IsPrimarykey:
+    #                 if fld.Auto_Increment:
+    #                     continue
+    #                 else:
+    #                     nm_lst.append(fld.FieldName)
+    #                     v_lst.append("@PK")
+    #             else:
+    #                 nm_lst.append(fld.FieldName)
+    #                 v_lst.append(fld.sqlValue(ds[fld._index]))
+    #         return sql_i.format(",".join(nm_lst), ",".join(v_lst))
+    #     if st == JPTabelRowData.Update:
+    #         for fld in self.Fields:
+    #             if fld.IsPrimarykey:
+    #                 r_pk_name = fld.FieldName
+    #                 r_pk_v = fld.sqlValue(ds[fld._index])
+    #             else:
+    #                 nm_lst.append(fld.FieldName)
+    #                 v_lst.append(fld.sqlValue(ds[fld._index]))
+    #         temp = ['{}={}'.format(n, v) for n, v in zip(nm_lst, v_lst)]
+    #         return sql_u.format(",".join(temp), r_pk_name, r_pk_v)
 
-    # def getSubSqlStatements(self,
+    # # def getSubSqlStatements(self,
     #                         Mainform,
     #                         foreignkey_col,
     #                         foreignkey_value=None):

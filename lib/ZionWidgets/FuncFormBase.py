@@ -53,8 +53,6 @@ class JPFunctionForm(QWidget):
         self.DefauleBaseSQL = sql_base
         self.btnRefreshClick()
 
-
-
     def getModelClass(self):
         '''此类可以重写，改写Model的行为,必须返回一个模型类
         重写时可以在重载方法中内部定义模型类并继承自已有模型类，将该类返回
@@ -105,20 +103,20 @@ class JPFunctionForm(QWidget):
             return self.model.TabelFieldInfo.getOnlyData(
                 [index.row(), self.PrimarykeyFieldIndex])
 
-    @pyqtSlot()
+    #@pyqtSlot()
     def on_CmdExportToExcel_clicked(self):
         print("父类的 CMDEXPORTTOEXCEL 请重新写")
 
-    @pyqtSlot()
+    #@pyqtSlot()
     def on_CmdSearch_clicked(self):
         print(" 父类的 CMDSEARCH 请重新写")
 
-    @pyqtSlot()
+    #@pyqtSlot()
     def on_CmdNew_clicked(self):
         form = self.getEditFormClass()(JPFormModelMainSub.New)
         form.exec_()
 
-    @pyqtSlot()
+    #@pyqtSlot()
     def on_CmdEdit_clicked(self):
         cu_id = self.getCurrentSelectPKValue()
         if not cu_id:
@@ -126,7 +124,7 @@ class JPFunctionForm(QWidget):
         form = self.getEditFormClass()(JPFormModelMainSub.Edit, cu_id)
         form.exec_()
 
-    @pyqtSlot()
+    #@pyqtSlot()
     def on_CmdBrowse_clicked(self):
         cu_id = self.getCurrentSelectPKValue()
         if not cu_id:
@@ -134,11 +132,11 @@ class JPFunctionForm(QWidget):
         form = self.getEditFormClass()(JPFormModelMainSub.ReadOnly, cu_id)
         form.exec_()
 
-    @pyqtSlot()
+    #@pyqtSlot()
     def on_CmdRefresh_clicked(self):
         self.btnRefreshClick()
 
-    @pyqtSlot()
+    #@pyqtSlot()
     def on_CmdDelete_clicked(self):
         cu_id = self.getCurrentSelectPKValue()
         if not cu_id:
@@ -157,21 +155,27 @@ class JPFunctionForm(QWidget):
                     del_i = (
                         self.tableView.selectionModel().currentIndex().row())
                     info.deleteRow(del_i)
-    @pyqtSlot()
+
+    #@pyqtSlot()
     def on_CmdSubmit_clicked(self):
         cu_id = self.getCurrentSelectPKValue()
         if not cu_id:
             return
         db = JPDb()
         info = self.model.TabelFieldInfo
-        if info.getOnlyData(
-            [self.tableView.selectionModel().currentIndex().row(), self.fSubmited_column]) == 1:
-            msg='记录【{cu_id}】已经提交，不能重复提交!\nThe order [{cu_id}] has been submitted, can not be repeated submission!'
-            msg=msg.format(cu_id=cu_id)
+        if info.getOnlyData([
+                self.tableView.selectionModel().currentIndex().row(),
+                self.fSubmited_column
+        ]) == 1:
+            msg = '记录【{cu_id}】已经提交，不能重复提交!\nThe order [{cu_id}] '
+            msg = msg + 'has been submitted, can not be repeated submission!'
+            msg = msg.format(cu_id=cu_id)
             QMessageBox.warning(self, '提示', msg, QMessageBox.Ok,
-                                    QMessageBox.Ok)
+                                QMessageBox.Ok)
             return
-        msg = '提交后订单将不能修改！确定继续提交记录【{cu_id}】吗？\nThe order "{cu_id}" will not be modified after submission. Click OK to continue submitting?'.format(cu_id=cu_id)
+        msg = '提交后订单将不能修改！确定继续提交记录【{cu_id}】吗？\n'
+        msg = msg + 'The order "{cu_id}" will not be modified after submission. '
+        msg = msg + 'Click OK to continue submitting?'.format(cu_id=cu_id)
         if QMessageBox.question(self, '确认', msg, QMessageBox.Ok,
                                 QMessageBox.Ok) != QMessageBox.Ok:
             return

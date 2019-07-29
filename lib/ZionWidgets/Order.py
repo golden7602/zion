@@ -55,8 +55,8 @@ class JPFuncForm_Order(JPFunctionForm):
         super().setSQL(sql_1, sql_2)
         self.tableView.setColumnHidden(13, True)
         self.fSubmited_column = 13
-        self.TableName = "t_order"
-        self.PrimarykeyFieldName = "fOrderID"
+        # self.TableName = "t_order"
+        # self.PrimarykeyFieldName = "fOrderID"
 
     def getEditFormClass(self):
         return EditForm_Order
@@ -106,8 +106,7 @@ class EditForm_Order(QDialog):
                 FROM t_order_detail
                 WHERE fOrderID = '{}'    
                 """.format(curPK)
-        self.MS_Mod = myMainSubMode(pub.MainForm, self.tv)
-        self.MS_Mod.setUi(self.ui)
+        self.MS_Mod = myMainSubMode(self.ui, self.tv)
         self.SubMod = self.MS_Mod.subModel
         self.MainMod = self.MS_Mod.mainModel
         self.MainMod.setFieldsRowSource([('fCustomerID',
@@ -119,10 +118,12 @@ class EditForm_Order(QDialog):
         self.SubMod.setColumnsReadOnly(7)
         self.SubMod.setTabelInfo(s_sql)
         self.SubMod.setFormula(7, (
-            "JPRound(JPRound({2}) * JPRound({4},2) * JPRound({5},2) * JPRound({6},2))"
+            "JPRound(JPRound({2}) * JPRound({4},2) * JPRound({5},2) * JPRound({6},2),2)"
         ))
         self.MS_Mod.dataChanged[QModelIndex].connect(self.Cacu)
         self.MS_Mod.dataChanged[QWidget].connect(self.Cacu)
+        self.ui.fCustomerID.currentIndexChanged.connect(
+            self.fCustomerID_currentIndexChanged)
         self.MS_Mod.show(edit_mode)
 
     # 计算金额事件
@@ -136,21 +137,16 @@ class EditForm_Order(QDialog):
             self.MainMod.setObjectValue("fTax", fTax)
             self.MainMod.setObjectValue("fPayable", fPayable)
 
-    @pyqtSlot()
-    def on_fCustomerID_currentIndexChanged(self, r):
+    def fCustomerID_currentIndexChanged(self, r):
         obj = self.ui.fCustomerID
         row = obj.RowSource[r]
-        ui.fNUIT.setText(row[2])
-        ui.fCity.setText(row[3])
+        self.ui.fNUIT.setText(row[2])
+        self.ui.fCity.setText(row[3])
 
-    @pyqtSlot()
     def on_butSave_clicked(self):
         try:
-            pub = JPPub()
-            print(self.MainMod.tableFieldsInfo.getMainSqlStatements())
-            print(
-                self.SubMod.tableFieldsInfo.getSubSqlStatements(
-                    1, self.PKValue))
+            print(self.MainMod.getSqls())
+            print(self.SubMod.getSqls())
         except Exception as e:
             msgBox = QMessageBox(QMessageBox.Critical, u'提示', str(e))
             msgBox.exec_()

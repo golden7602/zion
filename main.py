@@ -62,7 +62,6 @@ class mianFormProcess():
         ui.label_Title.setText("Zion OrderM")
         setButtonIconByName(ui.ChangeUser)
         setButtonIconByName(ui.ChangePassword)
-
         ui.label_logo.setPixmap(QPixmap(getcwd() + "\\res\\Zions_100.png"))
 
         def addForm(form):
@@ -82,7 +81,7 @@ class mianFormProcess():
             Form_Background(MW)
 
         pub = JPPub()
-        pub.MainForm=MW
+        pub.MainForm = MW
         objUser = JPUser()
         objUser.INIT()  #程序开始时只初始化一次
         objUser.userChange.connect(onUserChanged)
@@ -112,7 +111,7 @@ class mianFormProcess():
 
 
 def addButtons(widget: QWidget, btns):
-    layout = widget.findChild((QHBoxLayout,QWidget), 'Layout_Button')
+    layout = widget.findChild((QHBoxLayout, QWidget), 'Layout_Button')
     if not (layout is None):
         for m in btns:
             btn = QPushButton(m['fMenuText'])
@@ -131,7 +130,7 @@ def getStackedWidget(mainForm, sysnavigationmenus_data):
     if menu_id == 2:  # Order
         from lib.ZionWidgets.Order import JPFuncForm_Order
         widget = JPFuncForm_Order(mainForm)
-        addButtons(widget,btns)
+        addButtons(widget, btns)
     elif menu_id == 22:
         from lib.ZionWidgets.Report_Day import Form_Repoet_Day
         Form_Repoet_Day(mainForm)
@@ -160,7 +159,7 @@ def getStackedWidget(mainForm, sysnavigationmenus_data):
     elif menu_id == 15:
         from lib.ZionWidgets.Complete import JPFuncForm_Complete
         widget = JPFuncForm_Complete(mainForm)
-        addButtons(widget,btns)
+        addButtons(widget, btns)
     elif menu_id == 18:
         from lib.ZionWidgets.Adjustment import JPFuncForm_Adjustment
         widget = JPFuncForm_Adjustment(mainForm)
@@ -184,6 +183,10 @@ if __name__ == "__main__":
     db = JPDb()
     db.setDatabaseType(JPDbType.MySQL)
     MainWindow = QMainWindow()
+    icon = QIcon()
+    icon.addPixmap(
+        QPixmap(getcwd() + "\\res\\ico\\medical_invoice_information.png"))
+    MainWindow.setWindowIcon(icon)
     mianFormProcess(MainWindow)
     MainWindow.showMaximized()
     sys_exit(app.exec_())
