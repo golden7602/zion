@@ -22,6 +22,8 @@ from lib.JPFunction import (JPBooleanString, JPDateConver, JPGetDisplayText,
 from lib.JPMvc import JPWidgets
 from lib.ZionPublc import JPPub
 
+from lib.JPFunction import PrintFunctionRunTime
+
 
 class __JPTableViewModelBase(QAbstractTableModel):
     dataChanged = pyqtSignal(QModelIndex)
@@ -34,6 +36,7 @@ class __JPTableViewModelBase(QAbstractTableModel):
         self.TabelFieldInfo = tabelFieldInfo
         # self.del_data = []
         self.tableView = None
+        self.__isCalculating = False
 
     def setTabelFieldInfo(self, tabelFieldInfo: JPTabelFieldInfo):
         tabelFieldInfo.Data = [
@@ -108,21 +111,24 @@ class __JPTableViewModelBase(QAbstractTableModel):
     def _formulaCacu(self, row_num: int):
         # 这个可能要重新写
         rd = self.TabelFieldInfo.RowsData[row_num]
-        for i, fld in enumerate(self.TabelFieldInfo.Fields):
-            if fld.Formula:
-                try:
-                    d = rd.Datas
-                    v = eval(fld.Formula.format(*d))
-                    rd.setData(i, v)
-                except Exception:
-                    pass
+        fms = [f for f in self.TabelFieldInfo.Fields if f.Formula]
+        for fld in fms:
+            try:
+                d = rd.Datas
+                v = eval(fld.Formula.format(*d))
+                self.__isCalculating = True
+                rd.setData(fld._index, v)
+                self.__isCalculating = False
+            except Exception:
+                pass
 
     def setData(self, Index: QModelIndex, Any,
                 role: int = Qt.EditRole) -> bool:
         t_inof = self.TabelFieldInfo
         t_inof.setData(Index, Any)
         self.dirty = True
-        self._formulaCacu(Index.row())
+        if self.__isCalculating is False:
+            self._formulaCacu(Index.row())
         # 执行重载函数，判断行数据是否合法
         # 给函数参数的值 是最后一行的数据list
         row_data = t_inof.getRowData(len(t_inof.RowsData) - 1)
@@ -284,7 +290,6 @@ class JPFormModelMain(JPEditFormDataMode):
         super().__init__()
         self.__JPFormModelMainSub = None
         self.__sql = None
-        self.autoPkRole = None
         self.__editMode = JPEditFormDataMode.ReadOnly
         self._queryResult = None
         self.__fieldsRowSource = None
@@ -311,9 +316,9 @@ class JPFormModelMain(JPEditFormDataMode):
         if self.__JPFormModelMainSub:
             self.__JPFormModelMainSub._emmitDataChange(arg)
 
-    def setTabelInfo(self, sql: str, auto_pk_role: int = None):
+    def setTabelInfo(self, sql: str):
         self.__sql = sql
-        self.autoPkRole = auto_pk_role
+        #self.autoPkRole = auto_pk_role
 
     def setFieldsRowSource(self, lst: list):
         self.__fieldsRowSource = lst
@@ -344,20 +349,21 @@ class JPFormModelMain(JPEditFormDataMode):
                     # 给输入控件指定查询的或增加的第一行数据
 
         # 设置编辑状态
-        if self.EditMode == JPEditFormDataMode.ReadOnly:
-            for item in self.ObjectDict.values():
-                if isinstance(item, JPWidgets.QLineEdit):
-                    item.setReadOnly(True)
-                if isinstance(item, JPWidgets.QDateEdit):
-                    item.setReadOnly(True)
-                if isinstance(item, JPWidgets.QComboBox):
-                    item.setEnabled(False)
-                if isinstance(item, JPWidgets.QTextEdit):
-                    item.setReadOnly(True)
-                if isinstance(item, JPWidgets.QCheckBox):
-                    item.setCheckable(True)
+        self.setEditState(self.EditMode != JPEditFormDataMode.ReadOnly)
 
         #self.mainForm.show()
+    def setEditState(self, can_edit: bool = False):
+        for item in self.ObjectDict.values():
+            if isinstance(item, JPWidgets.QLineEdit):
+                item.setReadOnly(not can_edit)
+            if isinstance(item, JPWidgets.QDateEdit):
+                item.setReadOnly(not can_edit)
+            if isinstance(item, JPWidgets.QComboBox):
+                item.setEnabled(can_edit)
+            if isinstance(item, JPWidgets.QTextEdit):
+                item.setReadOnly(not can_edit)
+            if isinstance(item, JPWidgets.QCheckBox):
+                item.setCheckable(not can_edit)
 
     def setObjectValue(self, obj_name: str, value):
         """按名称设置一个控件的值"""
@@ -375,7 +381,7 @@ class JPFormModelMain(JPEditFormDataMode):
         """返回指定控件的实际值，可用于计算，数值型字段为None时，将返回0"""
         return self.ObjectDict[obj_name].Value()
 
-    def getSqls(self):
+    def getSqls(self, pk_role: int = None):
         """返回主表的SQL语句，如果有检查空值错误，则引发一个错误，错误信息中包含字段名"""
         sqls = []
         pb = JPPub()
@@ -398,8 +404,9 @@ class JPFormModelMain(JPEditFormDataMode):
                                         QMessageBox.Ok)
         # 空值检查完成
         TN = self.tableFieldsInfo.TableName
-        sql_i = 'INSERT INTO ' + TN + ' ({}) VALUES ({});'
-        sql_u = 'UPDATE ' + TN + ' SET {} WHERE {}={};'
+
+        sql_i = 'INSERT INTO ' + TN + ' ({}) VALUES ({});\n'
+        sql_u = 'UPDATE ' + TN + ' SET {} WHERE {}={};\n'
         row_st = self.tableFieldsInfo.RowsData[0].State
         if (row_st == JPTabelRowData.New_None
                 or row_st == JPTabelRowData.OriginalValue):
@@ -411,12 +418,14 @@ class JPFormModelMain(JPEditFormDataMode):
                         continue
                     else:
                         nm_lst.append(fld.FieldName)
-                        v_lst.append("@PK")
+                        v_lst.append('@PK')
                 else:
                     nm_lst.append(fld.FieldName)
                     v_lst.append(fld.sqlValue(ds[fld._index]))
-            sqls.append(JPDb().NewPkSQL)
             sqls.append(sql_i.format(",".join(nm_lst), ",".join(v_lst)))
+            if pk_role:
+                newPKSQL = JPDb().NewPkSQL(pk_role)
+                sqls = newPKSQL[0:2] + sqls + newPKSQL[2:]
             return sqls
         if st == self.Edit:
             for fld in self.tableFieldsInfo.Fields:
@@ -477,10 +486,7 @@ class _JPFormModelSub(JPEditFormDataMode):
                                                    self.tableFieldsInfo)
         self.__tableView.setModel(self._model)
         # 设置子窗体可编辑状态
-        if self.EditMode == JPEditFormDataMode.ReadOnly:
-            self.__tableView.setEditTriggers(QAbstractItemView.NoEditTriggers)
-        if self.EditMode in [JPEditFormDataMode.Edit, JPEditFormDataMode.New]:
-            self.__tableView.setEditTriggers(QAbstractItemView.AllEditTriggers)
+        self.setEditState(self.EditMode != JPEditFormDataMode.ReadOnly)
         # 设置子窗体的输入委托控件及格式等
         tv = self.__tableView
         self._model.setColumnsDetegate()
@@ -495,6 +501,13 @@ class _JPFormModelSub(JPEditFormDataMode):
         # 设置字段计算公式
         for i, f in self.__formulas:
             self._model.TabelFieldInfo.Fields[i].Formula = f
+
+    def setEditState(self, can_edit: bool = False):
+        st = {
+            True: QAbstractItemView.AllEditTriggers,
+            False: QAbstractItemView.NoEditTriggers
+        }
+        self.__tableView.setEditTriggers(st[can_edit])
 
     def setFormula(self, key: [int, str], formula: str):
         """
@@ -539,10 +552,11 @@ class _JPFormModelSub(JPEditFormDataMode):
             raise ValueError("主窗体模型中竟然没有找到主键名，或子窗体模型中没有找到主键名")
         if self.EditMode == self.Edit:
             # 如果是编辑模式，则要取得主表的键值
-            main_pk_value = t_main.getOnlyData(
-                [0, t_main.PrimarykeyFieldIndex])
+            pk_i = t_main.PrimarykeyFieldIndex
+            main_pk_value = t_main.Fields[pk_i].sqlValue(
+                t_main.getOnlyData([0, pk_i]))
         else:
-            main_pk_value = '@Pk'
+            main_pk_value = '@PK'
         if main_pk_value is None:
             raise ValueError("获取主表主键值失败！")
         # 检查空值
@@ -570,8 +584,8 @@ class _JPFormModelSub(JPEditFormDataMode):
         # 开始生成SQL
         sqls = []
         TN = self.tableFieldsInfo.TableName
-        sql_i = 'INSERT INTO ' + TN + ' ({}) VALUES ({});'
-        sql_u = 'UPDATE ' + TN + ' SET {} WHERE {}={};'
+        sql_i = 'INSERT INTO ' + TN + ' ({}) VALUES ({});\n'
+        sql_u = 'UPDATE ' + TN + ' SET {} WHERE {}={};\n'
         if self.EditMode == self.New:
             for row in self.tableFieldsInfo.RowsData:
                 fn_lst = []
@@ -584,7 +598,7 @@ class _JPFormModelSub(JPEditFormDataMode):
                     for fld in self.tableFieldsInfo.Fields:
                         if fld._index == sub_main_pk_index:
                             fn_lst.append(fld.FieldName)
-                            v_lst.append(fld.sqlValue(main_pk_value))
+                            v_lst.append(main_pk_value)
                             continue
                         if fld.IsPrimarykey:
                             if not fld.Auto_Increment:
@@ -611,7 +625,7 @@ class _JPFormModelSub(JPEditFormDataMode):
                         for fld in self.tableFieldsInfo.Fields:
                             if fld._index == sub_main_pk_index:
                                 fn_lst.append(fld.FieldName)
-                                v_lst.append(fld.sqlValue(main_pk_value))
+                                v_lst.append(main_pk_value)
                                 continue
                             if fld.IsPrimarykey:
                                 if not fld.Auto_Increment:
@@ -629,7 +643,7 @@ class _JPFormModelSub(JPEditFormDataMode):
                         for fld in self.tableFieldsInfo.Fields:
                             if fld._index == sub_main_pk_index:
                                 fn_lst.append(fld.FieldName)
-                                v_lst.append(fld.sqlValue(main_pk_value))
+                                v_lst.append(main_pk_value)
                                 continue
                             if fld.IsPrimarykey:
                                 sub_pk_name = fld.FieldName
@@ -662,10 +676,10 @@ class JPFormModelMainSub(JPEditFormDataMode):
         self.mainModel.setUi(ui)
 
     def _emmitDataChange(self, arg):
-        try:
-            print(arg.row(), arg.column())
-        except AttributeError:
-            print(arg.objectName())
+        # try:
+        #     print(arg.row(), arg.column())
+        # except AttributeError:
+        #     print(arg.objectName())
         if isinstance(arg, QModelIndex):
             self.dataChanged[QModelIndex].emit(arg)
         if isinstance(arg, JPWidgets.QWidget):
@@ -673,6 +687,20 @@ class JPFormModelMainSub(JPEditFormDataMode):
 
     def setTabelInfo(self, tabelName):
         self.tableView = tabelName
+
+    def getSqls(self, pk_role: int = None):
+        sql_m = self.mainModel.getSqls()
+        sql_s = self.subModel.getSqls()
+        if pk_role:
+            newPKSQL = JPDb().NewPkSQL(pk_role)
+            sqls = newPKSQL[0:2] + sql_m + sql_s + newPKSQL[2:]
+            return sqls
+        else:
+            return sql_m + sql_s
+
+    def setEditState(self, can_edit: bool = False):
+        self.mainModel.setEditState(can_edit)
+        self.subModel.setEditState(can_edit)
 
     def show(self, edit_mode, pk_value: str = None):
         # 处理子窗体

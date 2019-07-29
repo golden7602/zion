@@ -3,7 +3,8 @@ from sys import path as jppath
 jppath.append(getcwd())
 
 from Ui.Ui_FormUser import Ui_Form
-from PyQt5.QtWidgets import QMessageBox, QWidget, QTreeWidgetItem, QTreeWidgetItemIterator
+from PyQt5.QtWidgets import (QMessageBox, QWidget, QTreeWidgetItem,
+                             QTreeWidgetItemIterator)
 from PyQt5.QtCore import (QDate, pyqtSlot, QThread, Qt, QAbstractItemModel,
                           QModelIndex)
 from lib.JPDatabase.Query import JPTabelFieldInfo
@@ -77,6 +78,7 @@ class Form_User(QWidget):
         tr.setColumnWidth(1, 100)
         tr.itemChanged.connect(self.onItemChanged)
         self.refreshTable()
+
     def refreshTable(self):
         self.SQL = """
             select 
@@ -160,8 +162,10 @@ class Form_User(QWidget):
 
     @pyqtSlot()
     def on_CmdNew_clicked(self):
-        db=JPDb()
-        db.executeTransaction("insert into sysusers (fUsername,fPassword) Values ('New User','1234') ")
+        db = JPDb()
+        db.executeTransaction(
+            "insert into sysusers (fUsername,fPassword) Values ('New User','1234') "
+        )
         self.refreshTable()
 
     @pyqtSlot()
@@ -181,4 +185,3 @@ class Form_User(QWidget):
         uid = self.getCurrentUID()
         if uid is None:
             return
-        

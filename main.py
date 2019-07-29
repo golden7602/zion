@@ -54,47 +54,36 @@ def loadTreeview(treeWidget, items):
     _readTree.run()
 
 
-class mianFormProcess():
-    def __init__(self, MW):
-
-        ui = Ui_mainform.Ui_MainWindow()
-        ui.setupUi(MW)
-        ui.label_Title.setText("Zion OrderM")
-        setButtonIconByName(ui.ChangeUser)
-        setButtonIconByName(ui.ChangePassword)
-        ui.label_logo.setPixmap(QPixmap(getcwd() + "\\res\\Zions_100.png"))
-
-        def addForm(form):
-            st = ui.stackedWidget
-            if st.count() > 0:
-                temp = st.widget(0)
-                st.removeWidget(temp)
-                del temp
-            st.addWidget(form)
-
-        MW.addForm = addForm
-        self.addForm = addForm
+class JPMainWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        JPPub().MainForm = self
+        self.ui = Ui_mainform.Ui_MainWindow()
+        self.ui.setupUi(self)
+        self.ui.label_Title.setText("Zion OrderM")
+        setButtonIconByName(self.ui.ChangeUser)
+        setButtonIconByName(self.ui.ChangePassword)
+        self.ui.label_logo.setPixmap(QPixmap(getcwd() +
+                                             "\\res\\Zions_100.png"))
 
         def onUserChanged(args):
-            ui.label_UserName.setText(args[1])
-            loadTreeview(ui.treeWidget, objUser.currentUserRight())
-            Form_Background(MW)
+            self.ui.label_UserName.setText(args[1])
+            loadTreeview(self.ui.treeWidget, objUser.currentUserRight())
+            Form_Background(self)
 
-        pub = JPPub()
-        pub.MainForm = MW
         objUser = JPUser()
-        objUser.INIT()  #程序开始时只初始化一次
+        objUser.INIT()  # 程序开始时只初始化一次
         objUser.userChange.connect(onUserChanged)
         objUser.currentUserID()
-        ui.ChangeUser.clicked.connect(objUser.changeUser)
-        ui.ChangePassword.clicked.connect(objUser.changePassword)
-        #MW.setStyleSheet(readQss(os.getcwd() + "\\res\\blackwhite.css"))
+        self.ui.ChangeUser.clicked.connect(objUser.changeUser)
+        self.ui.ChangePassword.clicked.connect(objUser.changePassword)
+        # MW.setStyleSheet(readQss(os.getcwd() + "\\res\\blackwhite.css"))
         # 堆叠布局调
-        ui.stackedWidget.removeWidget(ui.page)
-        ui.stackedWidget.removeWidget(ui.page_2)
+        self.ui.stackedWidget.removeWidget(self.ui.page)
+        self.ui.stackedWidget.removeWidget(self.ui.page_2)
         # 隐藏树标题
-        ui.label_FunPath.setText('')
-        ui.treeWidget.setHeaderHidden(True)
+        self.ui.label_FunPath.setText('')
+        self.ui.treeWidget.setHeaderHidden(True)
 
         # MW.Label = QLabel("")
         # MW.ProgressBar = QProgressBar()
@@ -103,90 +92,86 @@ class mianFormProcess():
         # MW.ProgressBar.hide()
 
         def treeViewItemClicked(item, i):
-            ui.label_FunPath.setText(item.FullPath)
-            getStackedWidget(MW, item.jpData)
+            self.ui.label_FunPath.setText(item.FullPath)
+            self.getStackedWidget(item.jpData)
 
-        ui.treeWidget.itemClicked[QTreeWidgetItem, int].connect(
+        self.ui.treeWidget.itemClicked[QTreeWidgetItem, int].connect(
             treeViewItemClicked)
 
+    def addForm(self, form):
+        st = self.ui.stackedWidget
+        if st.count() > 0:
+            temp = st.widget(0)
+            st.removeWidget(temp)
+            del temp
+        st.addWidget(form)
 
-def addButtons(widget: QWidget, btns):
-    layout = widget.findChild((QHBoxLayout, QWidget), 'Layout_Button')
-    if not (layout is None):
-        for m in btns:
-            btn = QPushButton(m['fMenuText'])
-            btn.NMID = m['fNMID']
-            btn.setObjectName(m['fObjectName'])
-            setButtonIcon(btn)
-            btn.setEnabled(m['fHasRight'])
-            layout.addWidget(btn)
-        QMetaObject.connectSlotsByName(widget)
+    def addButtons(self):
+        widget = self.ui.stackedWidget.widget(0)
+        layout = widget.findChild((QHBoxLayout, QWidget), 'Layout_Button')
+        if not (layout is None):
+            for m in self.btns:
+                widget.ui.btn = QPushButton(m['fMenuText'])
+                widget.ui.btn.NMID = m['fNMID']
+                widget.ui.btn.setObjectName(m['fObjectName'])
+                setButtonIcon(widget.ui.btn)
+                widget.ui.btn.setEnabled(m['fHasRight'])
+                layout.addWidget(widget.ui.btn)
+            QMetaObject.connectSlotsByName(widget)
 
+    def getStackedWidget(self, sysnavigationmenus_data):
+        self.btns = sysnavigationmenus_data['btns']
+        self.menu_id = sysnavigationmenus_data['fNMID']
+        if self.menu_id == 2:  # Order
+            from lib.ZionWidgets.Order import JPFuncForm_Order
+            JPFuncForm_Order(self)
+        elif self.menu_id == 9:
+            from lib.ZionWidgets.Payment import JPFuncForm_Payment
+            JPFuncForm_Payment(self)
+        elif self.menu_id == 22:
+            from lib.ZionWidgets.Report_Day import Form_Repoet_Day
+            Form_Repoet_Day(self)
+        elif self.menu_id == 10:
+            from lib.ZionWidgets.EnumManger import Form_EnumManger
+            Form_EnumManger(self)
+        elif self.menu_id == 20:
+            from lib.ZionWidgets.Receivables import Form_Receivables
+            Form_Receivables(self)
+        elif self.menu_id == 72:
+            from lib.ZionWidgets.PrintingOrder import JPFuncForm_PrintingOrder
+            JPFuncForm_PrintingOrder(self)
+        elif self.menu_id == 73:
+            from lib.ZionWidgets.Customer import Form_Customer
+            Form_Customer(self)
+        elif self.menu_id == 13:
+            from lib.ZionWidgets.User import Form_User
+            Form_User(self)
+        elif self.menu_id == 15:
+            from lib.ZionWidgets.Complete import JPFuncForm_Complete
+            JPFuncForm_Complete(self)
+        elif self.menu_id == 18:
+            from lib.ZionWidgets.Adjustment import JPFuncForm_Adjustment
+            JPFuncForm_Adjustment(self)
+        elif self.menu_id == 56:
+            from lib.ZionWidgets.Quotation import JPFuncForm_Quotation
+            JPFuncForm_Quotation(self)
+        elif self.menu_id == 55:
+            from lib.ZionWidgets.PrintingQuotation import JPFuncForm_PrintingQuotation
+            JPFuncForm_PrintingQuotation(self)
+        else:
+            Form_Background(self)
 
-def getStackedWidget(mainForm, sysnavigationmenus_data):
-    btns = sysnavigationmenus_data['btns']
-    menu_id = sysnavigationmenus_data['fNMID']
-    widget = None
-    if menu_id == 2:  # Order
-        from lib.ZionWidgets.Order import JPFuncForm_Order
-        widget = JPFuncForm_Order(mainForm)
-        addButtons(widget, btns)
-    elif menu_id == 22:
-        from lib.ZionWidgets.Report_Day import Form_Repoet_Day
-        Form_Repoet_Day(mainForm)
-    elif menu_id == 9:
-        from lib.ZionWidgets.Payment import JPFuncForm_Payment
-        widget = JPFuncForm_Payment(mainForm)
-        widget.addButtons(btns)
-    elif menu_id == 10:
-        from lib.ZionWidgets.EnumManger import Form_EnumManger
-        Form_EnumManger(mainForm)
-    elif menu_id == 20:
-        from lib.ZionWidgets.Receivables import Form_Receivables
-        Form_Receivables(mainForm)
-    elif menu_id == 72:
-        from lib.ZionWidgets.PrintingOrder import JPFuncForm_PrintingOrder
-        widget = JPFuncForm_PrintingOrder(mainForm)
-        widget.addButtons(btns)
-    elif menu_id == 73:
-        from lib.ZionWidgets.Customer import Form_Customer
-        widget = Form_Customer(mainForm)
-        widget.addButtons(btns)
-    elif menu_id == 13:
-        from lib.ZionWidgets.User import Form_User
-        widget = Form_User(mainForm)
-        addButtons(widget, btns)
-    elif menu_id == 15:
-        from lib.ZionWidgets.Complete import JPFuncForm_Complete
-        widget = JPFuncForm_Complete(mainForm)
-        addButtons(widget, btns)
-    elif menu_id == 18:
-        from lib.ZionWidgets.Adjustment import JPFuncForm_Adjustment
-        widget = JPFuncForm_Adjustment(mainForm)
-        widget.addButtons(btns)
-    elif menu_id == 56:
-        from lib.ZionWidgets.Quotation import JPFuncForm_Quotation
-        widget = JPFuncForm_Quotation(mainForm)
-        widget.addButtons(btns)
-    elif menu_id == 55:
-        from lib.ZionWidgets.PrintingQuotation import JPFuncForm_PrintingQuotation
-        widget = JPFuncForm_PrintingQuotation(mainForm)
-        widget.addButtons(btns)
-    else:
-        Form_Background(mainForm)
-
-    return
+        return
 
 
 if __name__ == "__main__":
     app = QApplication(argv)
     db = JPDb()
     db.setDatabaseType(JPDbType.MySQL)
-    MainWindow = QMainWindow()
+    MainWindow = JPMainWindow()
     icon = QIcon()
     icon.addPixmap(
         QPixmap(getcwd() + "\\res\\ico\\medical_invoice_information.png"))
     MainWindow.setWindowIcon(icon)
-    mianFormProcess(MainWindow)
     MainWindow.showMaximized()
     sys_exit(app.exec_())

@@ -19,8 +19,15 @@ class JPDbType(object):
 
 @Singleton
 class JPDb(object):
-    def __init__(self):
-        self.__currentConn = None
+    __init_times = 0
+    __currentConn = None
+    __db_type = None
+
+    def __init__(self, dbtype=None):
+        if self.__init_times == 0:
+            self.__db_type = dbtype
+            self.__currentConn = self.currentConn
+        self.__init_times += 1
 
     def setDatabaseType(self, db_type: JPDbType):
         self.__db_type = db_type
@@ -64,23 +71,23 @@ class JPDb(object):
 
     def NewPkSQL(self, role_id: int):
         if self.__db_type == JPDbType.MySQL:
-            return [[
-                """
-                SELECT CONCAT(fPreFix,
-                        if(fHasDateTime,
-                        DATE_FORMAT(CURRENT_DATE(),
-                        replace(replace(replace(replace(fDateFormat,
-                        'yyyy','%Y'),'yy','%y'),'mm','%m'),'dd','%d')),''),
-                        LPAD(fCurrentValue+1, fLenght , 0)) into @PK
-                FROM systabelautokeyroles
-                WHERE fRoleID={};""".format(role_id)
-            ],
-                    [
-                        """
-                UPDATE systabelautokeyroles 
-                    SET fCurrentValue=@fCurrentValue+1 
-                WHERE fRoleID={};""".format(role_id)
-                    ]]
+            sql1 = 'SELECT CONCAT(fPreFix,if(fHasDateTime,'
+            sql1 = sql1 + 'DATE_FORMAT(CURRENT_DATE(),'
+            sql1 = sql1 + 'replace(replace(replace(replace(fDateFormat,'
+            sql1 = sql1 + "'yyyy','%Y'),'yy','%y')"
+            sql1 = sql1 + ",'mm','%m'),'dd','%d')),'')"
+            sql1 = sql1 + ',LPAD(fCurrentValue+1, fLenght , 0)) into @PK'
+            sql1 = sql1 + ' FROM systabelautokeyroles'
+            sql1 = sql1 + ' WHERE fRoleID={r_id};'
+            sql1 = sql1.format(r_id=role_id)
+
+            sql2 = "UPDATE systabelautokeyroles"
+            sql2 = sql2 + " SET fCurrentValue=fCurrentValue+1, fLastKey=@PK"
+            sql2 = sql2 + " WHERE fRoleID={r_id};"
+            sql2 = sql2.format(r_id=role_id)
+
+            sql3 = "SELECT @PK as NewID;"
+            return [sql1, sql2, sql3]
 
     def getDataList(self, sql: str) -> list:
         if self.__db_type == JPDbType.MySQL:
@@ -131,10 +138,10 @@ class JPDb(object):
             con.rollback()
             QMessageBox.warning(None, '提示', "执行保存命令出错！" + '\n' + str(e),
                                 QMessageBox.Yes, QMessageBox.Yes)
-            return False
+            return False, None
         else:
             con.commit()
-            return True
+            return True, cur._rows[0][0]
 
     def __getattr__(self, name):
         if name == '_JPDb__db_type':

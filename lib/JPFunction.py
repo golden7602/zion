@@ -8,6 +8,7 @@ from PyQt5.QtWidgets import QWidget, QPushButton, QLabel
 from functools import singledispatch
 from decimal import Decimal
 import hashlib
+import time
 
 
 def md5_passwd(str0, salt='al;dkfjgutriepw,cmvnfjisjmwudnus000999'):
@@ -29,7 +30,7 @@ def setButtonIcon(btn: QPushButton):
 def setButtonIconByName(btn: QPushButton):
     if isinstance(btn, QLabel):
         print(getcwd() + "\\res\\ico\\" + btn.objectName() + ".png")
-        pix = QPixmap(getcwd() + "\\res\\ico\\" + btn.objectName()+".png")
+        pix = QPixmap(getcwd() + "\\res\\ico\\" + btn.objectName() + ".png")
         btn.setPixmap(pix)
 
     if isinstance(btn, QPushButton):

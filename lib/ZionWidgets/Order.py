@@ -55,8 +55,6 @@ class JPFuncForm_Order(JPFunctionForm):
         super().setSQL(sql_1, sql_2)
         self.tableView.setColumnHidden(13, True)
         self.fSubmited_column = 13
-        # self.TableName = "t_order"
-        # self.PrimarykeyFieldName = "fOrderID"
 
     def getEditFormClass(self):
         return EditForm_Order
@@ -112,7 +110,7 @@ class EditForm_Order(QDialog):
         self.MainMod.setFieldsRowSource([('fCustomerID',
                                           pub.getCustomerList()),
                                          ('fVendedorID', pub.getEnumList(10))])
-        self.MainMod.setTabelInfo(m_sql, 1)
+        self.MainMod.setTabelInfo(m_sql)
         self.SubMod.setColumnsHidden(0, 1)
         self.SubMod.setColumnWidths(0, 0, 60, 300, 100, 100, 100, 100)
         self.SubMod.setColumnsReadOnly(7)
@@ -128,6 +126,8 @@ class EditForm_Order(QDialog):
 
     # 计算金额事件
     def Cacu(self, *args):
+        self.MS_Mod.dataChanged[QModelIndex].disconnect(self.Cacu)
+        self.MS_Mod.dataChanged[QWidget].disconnect(self.Cacu)
         if self.EditMode != JPEditFormDataMode.ReadOnly:
             v_sum = self.SubMod._model.getColumnSum(7)
             fDesconto = self.MainMod.getObjectValue("fDesconto")
@@ -136,6 +136,8 @@ class EditForm_Order(QDialog):
             self.MainMod.setObjectValue('fAmount', v_sum)
             self.MainMod.setObjectValue("fTax", fTax)
             self.MainMod.setObjectValue("fPayable", fPayable)
+        self.MS_Mod.dataChanged[QWidget].connect(self.Cacu)
+        self.MS_Mod.dataChanged[QModelIndex].connect(self.Cacu)
 
     def fCustomerID_currentIndexChanged(self, r):
         obj = self.ui.fCustomerID
@@ -143,10 +145,15 @@ class EditForm_Order(QDialog):
         self.ui.fNUIT.setText(row[2])
         self.ui.fCity.setText(row[3])
 
+    @pyqtSlot()
     def on_butSave_clicked(self):
         try:
-            print(self.MainMod.getSqls())
-            print(self.SubMod.getSqls())
+            lst = self.MS_Mod.getSqls(1)
+            isOK, result = JPDb().executeTransaction(lst)
+            if isOK:
+                self.ui.fOrderID.setText(result)
+                self.ui.butSave.setEnabled(False)
+                self.MS_Mod.setEditState(False)
         except Exception as e:
             msgBox = QMessageBox(QMessageBox.Critical, u'提示', str(e))
             msgBox.exec_()

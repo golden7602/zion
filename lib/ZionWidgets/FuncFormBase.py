@@ -9,7 +9,7 @@ from PyQt5.QtWidgets import (QAbstractItemView, QCheckBox, QComboBox,
                              QHBoxLayout, QLabel, QSizePolicy, QSpacerItem,
                              QTableView, QVBoxLayout, QWidget, QPushButton,
                              QMessageBox)
-from PyQt5.QtCore import QCoreApplication, QMetaObject, QSize, Qt, pyqtSlot
+from PyQt5.QtCore import QCoreApplication, QSize, Qt, pyqtSlot
 from lib.JPDatabase.Query import JPQueryFieldInfo
 from lib.JPMvc.JPModel import JPFormModelMainSub, JPTableViewModelReadOnly
 from lib.JPFunction import setButtonIcon
@@ -28,6 +28,7 @@ class JPFunctionForm(QWidget):
         self.backgroundWhenValueIsTrueFieldName = []
         self.ui = Ui_Form()
         self.ui.setupUi(self)
+        parent.addButtons()
         self.comboBox = self.ui.comboBox
         self.checkBox_1 = self.ui.checkBox_1
         self.checkBox_2 = self.ui.checkBox_2
@@ -42,6 +43,7 @@ class JPFunctionForm(QWidget):
         self.ui.comboBox.activated['int'].connect(self.btnRefreshClick)
         # 行交错颜色
         self.ui.tableView.setAlternatingRowColors(True)
+
 
     def setSQL(self, sql_with_where, sql_base):
         '''
@@ -103,20 +105,20 @@ class JPFunctionForm(QWidget):
             return self.model.TabelFieldInfo.getOnlyData(
                 [index.row(), self.PrimarykeyFieldIndex])
 
-    #@pyqtSlot()
+    @pyqtSlot()
     def on_CmdExportToExcel_clicked(self):
         print("父类的 CMDEXPORTTOEXCEL 请重新写")
 
-    #@pyqtSlot()
+    @pyqtSlot()
     def on_CmdSearch_clicked(self):
         print(" 父类的 CMDSEARCH 请重新写")
 
-    #@pyqtSlot()
+    @pyqtSlot()
     def on_CmdNew_clicked(self):
         form = self.getEditFormClass()(JPFormModelMainSub.New)
         form.exec_()
 
-    #@pyqtSlot()
+    @pyqtSlot()
     def on_CmdEdit_clicked(self):
         cu_id = self.getCurrentSelectPKValue()
         if not cu_id:
@@ -124,7 +126,7 @@ class JPFunctionForm(QWidget):
         form = self.getEditFormClass()(JPFormModelMainSub.Edit, cu_id)
         form.exec_()
 
-    #@pyqtSlot()
+    @pyqtSlot()
     def on_CmdBrowse_clicked(self):
         cu_id = self.getCurrentSelectPKValue()
         if not cu_id:
@@ -132,11 +134,11 @@ class JPFunctionForm(QWidget):
         form = self.getEditFormClass()(JPFormModelMainSub.ReadOnly, cu_id)
         form.exec_()
 
-    #@pyqtSlot()
+    @pyqtSlot()
     def on_CmdRefresh_clicked(self):
         self.btnRefreshClick()
 
-    #@pyqtSlot()
+    @pyqtSlot()
     def on_CmdDelete_clicked(self):
         cu_id = self.getCurrentSelectPKValue()
         if not cu_id:
@@ -155,8 +157,7 @@ class JPFunctionForm(QWidget):
                     del_i = (
                         self.tableView.selectionModel().currentIndex().row())
                     info.deleteRow(del_i)
-
-    #@pyqtSlot()
+    @pyqtSlot()
     def on_CmdSubmit_clicked(self):
         cu_id = self.getCurrentSelectPKValue()
         if not cu_id:
