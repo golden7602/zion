@@ -129,9 +129,9 @@ class _jpPrintPageField(_jpPrintItem):
     def GetPrintText(self):
         try:
             return self.FormatString.format(
-                Page=_jpPrintSection.Report.__dict__["_JPreport__CurrentPage"],
+                Page=_jpPrintSection.Report._CurrentPage,
                 Pages=_jpPrintSection.Report.PageCount)
-        except Exception:
+        except Exception as e:
             return 'ForamtString Error'
 
 
@@ -331,6 +331,7 @@ class _jpPrintSection(object):
 
 class _SectionAutoPaging(_jpPrintSection):
     """定义一个自动分页的节，实现，请不要实例化"""
+
     def __init__(self):
         #  当前页面条目打印时的向下偏移量
         self._CurPageOffset = 0
@@ -370,6 +371,7 @@ class _SectionAutoPaging(_jpPrintSection):
 
 class _jpSectionReportHeader(_SectionAutoPaging):
     """报表、组页头类"""
+
     def __init__(self):
         self.SectionType = JPPrintSectionType.ReportHeader
         super().__init__()
@@ -380,6 +382,7 @@ class _jpSectionReportHeader(_SectionAutoPaging):
 
 class _jpSectionReportFooter(_SectionAutoPaging):
     """报表、组页脚类"""
+
     def __init__(self):
         self.SectionType = JPPrintSectionType.ReportFooter
         super().__init__()
@@ -764,6 +767,7 @@ class _jpPrintGroup(object):
 
 class JPReport(object):
     """报表类"""
+
     def __init__(self, PaperSize, Orientation):
         _jpPrintSection.Report = self
         _jpPrintItem.Report = self
@@ -777,7 +781,7 @@ class JPReport(object):
         self.PageFooter = _jpSectionPageFooter()
         self.Detail = _jpSectionDetail()
         self.Copys = 1
-        self.__CurrentPage = 0
+        self._CurrentPage = 0
         self._CurrentCopys = 0
         self.__PageCount = 0
         self.__Groups = []
@@ -883,7 +887,7 @@ class JPReport(object):
         if _jpPrintItem.TotalPagesCalculated and self.__ExecNewPageTimes > 0:
             self.__Printer.newPage()
         self._SectionPrintBeginY = 0
-        self.__CurrentPage += 1
+        self._CurrentPage += 1
         self.PageCount += 1
         self.PageFooter.Print(painter)
         self.PageHeader.Print(painter)
@@ -914,7 +918,7 @@ class JPReport(object):
         self.__ExecNewPageTimes = 0
         _jpPrintItem.TotalPagesCalculated = True
         for i in range(self.Copys):
-            self.__CurrentPage = 0
+            self._CurrentPage = 0
             self._CurrentCopys += 1
             self.__PrintOrCalcOneCopy(painter)
 
