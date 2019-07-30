@@ -1,16 +1,15 @@
 # -*- coding: utf-8 -*-
 
 import abc
+import datetime
 import itertools
-
-#from decimal import Decimal
+from decimal import Decimal
 from enum import IntEnum
 
-from PyQt5.QtCore import QMargins, QRect, Qt
-from PyQt5.QtGui import (QFont, QPainter, QPixmap, QTransform, QFontMetrics,
-                         QColor)
+from PyQt5.QtCore import QDate, QMargins, QRect, Qt
+from PyQt5.QtGui import (QColor, QFont, QFontMetrics, QPainter, QPixmap,
+                         QTransform)
 from PyQt5.QtPrintSupport import QPrinter, QPrintPreviewDialog
-import datetime
 
 # from .lib.globalVar import PrintFunctionRunTime
 
@@ -167,9 +166,19 @@ class _jpPrintField(_jpPrintItem):
 
     def GetPrintText(self):
         try:
-            v=self.Section._GetCurrentPrintDataRow()[self.PrintObject]
-            if v:
-                return self.FormatString.format(v)
+            Ori_v = self.Section._GetCurrentPrintDataRow()[self.PrintObject]
+            if Ori_v:
+                if isinstance(Ori_v, (int, float)):
+                    return self.FormatString.format(Ori_v)
+                elif isinstance(Ori_v, QDate):
+                    new_v = datetime.datetime(Ori_v.year(), Ori_v.month(),
+                                              Ori_v.day()).date()
+                    return self.FormatString.format(new_v)
+                elif isinstance(Ori_v, Decimal):
+                    new_v = float(Ori_v.to_eng_string())
+                else:
+                    new_v = Ori_v
+                return self.FormatString.format(Ori_v)
             else:
                 return ''
         except (KeyError, TypeError):
@@ -322,7 +331,6 @@ class _jpPrintSection(object):
 
 class _SectionAutoPaging(_jpPrintSection):
     """定义一个自动分页的节，实现，请不要实例化"""
-
     def __init__(self):
         #  当前页面条目打印时的向下偏移量
         self._CurPageOffset = 0
@@ -362,7 +370,6 @@ class _SectionAutoPaging(_jpPrintSection):
 
 class _jpSectionReportHeader(_SectionAutoPaging):
     """报表、组页头类"""
-
     def __init__(self):
         self.SectionType = JPPrintSectionType.ReportHeader
         super().__init__()
@@ -373,7 +380,6 @@ class _jpSectionReportHeader(_SectionAutoPaging):
 
 class _jpSectionReportFooter(_SectionAutoPaging):
     """报表、组页脚类"""
-
     def __init__(self):
         self.SectionType = JPPrintSectionType.ReportFooter
         super().__init__()
@@ -758,7 +764,6 @@ class _jpPrintGroup(object):
 
 class JPReport(object):
     """报表类"""
-
     def __init__(self, PaperSize, Orientation):
         _jpPrintSection.Report = self
         _jpPrintItem.Report = self

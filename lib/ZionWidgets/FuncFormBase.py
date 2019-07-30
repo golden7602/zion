@@ -116,6 +116,7 @@ class JPFunctionForm(QWidget):
     @pyqtSlot()
     def on_CmdNew_clicked(self):
         form = self.getEditFormClass()(JPFormModelMainSub.New)
+        form.afterSaveData.connect(self.btnRefreshClick)
         form.exec_()
 
     @pyqtSlot()

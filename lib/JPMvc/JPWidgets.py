@@ -44,8 +44,7 @@ class __JPWidgetBase(object):
     def _onValueChange(self):
         self.__RowsData.setData(self._FieldInfo._index, self.Value())
         if self.__MainModel:
-            self.__MainModel._emmitDataChange(self)
-
+            self.__MainModel._emitDataChange(self)
 
     def setMainModel(self, QWidget: QWidget_):
         self.__MainModel = QWidget
@@ -68,9 +67,7 @@ class __JPWidgetBase(object):
     @abc.abstractmethod
     def getSqlValue(self):
         """返回字段值，可直接用于SQL语句中"""
-
-    
-    def setFieldInfo(self, fld: JPFieldType=None):
+    def setFieldInfo(self, fld: JPFieldType = None):
         """设置字段信息"""
         self.textChanged.connect(self._onValueChange)
 
@@ -82,7 +79,6 @@ class __JPWidgetBase(object):
 class QLineEdit(QLineEdit_, __JPWidgetBase):
     def __init__(self, parent):
         super().__init__(parent)
-        
 
     def getSqlValue(self) -> str:
         t = self.text()
@@ -116,7 +112,6 @@ class QLineEdit(QLineEdit_, __JPWidgetBase):
                 va.setDecimals(fld.Scale)
                 self.setValidator(va)
         super().setFieldInfo()
-        
 
     def focusOutEvent(self, e):
         self.setText(JPGetDisplayText(self.Value()))
@@ -241,7 +236,6 @@ class QDateEdit(QDateEdit_, __JPWidgetBase):
     def __init__(self, parent):
         super().__init__(parent)
 
-
     def getSqlValue(self) -> str:
         return "'{}'".format(JPDateConver(self.date(), str))
 
@@ -263,7 +257,6 @@ class QCheckBox(QCheckBox_, __JPWidgetBase):
         super().__init__(parent)
         self._FieldInfo: JPFieldType = None
 
-
     def getSqlValue(self) -> str:
         if self.checkState() is None:
             return 'Null'
@@ -278,3 +271,7 @@ class QCheckBox(QCheckBox_, __JPWidgetBase):
 
     def Value(self):
         return 1 if self.checkState() == Qt.Checked else 0
+
+
+
+   

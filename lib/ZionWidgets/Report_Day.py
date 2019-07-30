@@ -2,7 +2,7 @@ from os import getcwd
 from sys import path as jppath
 jppath.append(getcwd())
 
-from PyQt5.QtCore import Qt, QDate  #, QMetaObject, pyqtSlot
+from PyQt5.QtCore import Qt, QDate, pyqtSlot  #, QMetaObject, pyqtSlot
 from PyQt5.QtGui import QColor, QFont
 from PyQt5.QtWidgets import QWidget, QAbstractItemView
 from lib.JPMvc.JPModel import JPTableViewModelReadOnly
@@ -142,6 +142,7 @@ class Form_Repoet_Day(QWidget):
         self.mod = _myMod(self.tableView, self.queryInfo)
         self.tableView.setModel(self.mod)
 
+    @pyqtSlot()
     def on_CmdPrint_clicked(self):
         if len(self.queryInfo) == 0:
             return

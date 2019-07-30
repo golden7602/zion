@@ -4,9 +4,9 @@ jppath.append(getcwd())
 
 from functools import reduce
 
-from PyQt5.QtCore import Qt, QModelIndex, pyqtSlot
+from PyQt5.QtCore import Qt, QModelIndex, pyqtSlot, pyqtSignal
 from PyQt5.QtGui import QColor, QFont, QPainter, QPixmap
-from PyQt5.QtWidgets import QDialog, QMessageBox, QWidget
+from PyQt5.QtWidgets import QMessageBox, QWidget, QDialog
 from PyQt5.QtPrintSupport import QPrinter
 
 from lib.JPPrintReport import JPPrintSectionType, JPReport
@@ -27,8 +27,8 @@ class JPFuncForm_Order(JPFunctionForm):
                         fCity as 城市City,
                         fSubmited1 as 提交Submited,
                         fSubmit_Name as 提交人Submitter,
+                        fRequiredDeliveryDate as 交货日期RequiredDeliveryDate,
                         fAmount as 金额SubTotal,
-                        fRequiredDeliveryDate as 交货日期RDD,
                         fDesconto as 折扣Desconto,
                         fTax as 税金IVA,
                         fPayable as `应付金额Valor a Pagar`,
@@ -80,6 +80,8 @@ class myMainSubMode(JPFormModelMainSub):
 
 
 class EditForm_Order(QDialog):
+    afterSaveData = pyqtSignal()
+
     def __init__(self, edit_mode, PKValue=None, flags=Qt.WindowFlags()):
         pub = JPPub()
         super().__init__(pub.MainForm, flags=flags)
@@ -88,6 +90,7 @@ class EditForm_Order(QDialog):
         self.EditMode = edit_mode
         self.PKValue = PKValue
         self.tv = self.ui.tableView
+        self.ui.butSave.setEnabled(False)
         curPK = PKValue if PKValue else ''
         m_sql = """
                 SELECT fOrderID, fOrderDate, fVendedorID, fRequiredDeliveryDate
@@ -118,11 +121,15 @@ class EditForm_Order(QDialog):
         self.SubMod.setFormula(7, (
             "JPRound(JPRound({2}) * JPRound({4},2) * JPRound({5},2) * JPRound({6},2),2)"
         ))
+        self.MS_Mod.firstHasDirty.connect(self.firstDirty)
         self.MS_Mod.dataChanged[QModelIndex].connect(self.Cacu)
         self.MS_Mod.dataChanged[QWidget].connect(self.Cacu)
         self.ui.fCustomerID.currentIndexChanged.connect(
             self.fCustomerID_currentIndexChanged)
         self.MS_Mod.show(edit_mode)
+
+    def firstDirty(self):
+        self.ui.butSave.setEnabled(True)
 
     # 计算金额事件
     def Cacu(self, *args):
@@ -154,10 +161,15 @@ class EditForm_Order(QDialog):
                 self.ui.fOrderID.setText(result)
                 self.ui.butSave.setEnabled(False)
                 self.MS_Mod.setEditState(False)
-                self.btnRefreshClick()
+                self.afterSaveData.emit()
         except Exception as e:
             msgBox = QMessageBox(QMessageBox.Critical, u'提示', str(e))
             msgBox.exec_()
+
+    @pyqtSlot()
+    def on_butPrint_clicked(self):
+        rpt = Order_report()
+        rpt.PrintCurrentReport(self.ui.fOrderID.text())
 
 
 def formatEvent(self):
@@ -166,7 +178,7 @@ def formatEvent(self):
         return True
 
 
-class Order(JPReport):
+class Order_report(JPReport):
     def __init__(self,
                  PaperSize=QPrinter.A5,
                  Orientation=QPrinter.Orientation(1)):
@@ -185,10 +197,10 @@ class Order(JPReport):
         self.font_Algerian_12.setPointSize(12)
 
         self.font_YaHei = QFont("微软雅黑")
-        self.font_YaHei_8 = QFont(self.self.font_YaHei)
+        self.font_YaHei_8 = QFont(self.font_YaHei)
         self.font_YaHei_8.setPointSize(8)
 
-        self.font_YaHei_10 = QFont(self.self.font_YaHei)
+        self.font_YaHei_10 = QFont(self.font_YaHei)
         self.font_YaHei_10.setPointSize(10)
         self.font_YaHei_10.setBold(True)
 
@@ -500,7 +512,7 @@ class Order(JPReport):
                    "fRequiredDeliveryDate",
                    Font=self.font_YaHei_8,
                    AlignmentFlag=Qt.AlignCenter)
-        self.fyh10.setBold(True)
+        self.font_YaHei_10.setBold(True)
         PH.AddItem(1,
                    400,
                    55,
@@ -697,15 +709,13 @@ class Order(JPReport):
                                 AlignmentFlag=Qt.AlignRight,
                                 Font=self.font_YaHei_8)
 
-    def PrintCurrentReport(self, OrderID: str = "CP2019-0201000021"):
+    def PrintCurrentReport(self, OrderID: str):
         SQL = "select o.*, d.fQuant,d.fProductName,d.fLength,d.fWidth,\
             d.fPrice,d.fAmount as fAmountDetail from  v_order as o right join t_order_detail \
                     as d on o.fOrderID=d.fOrderID  where d.fOrderID='{}'"
 
-        # SQL = "select o.*, d.fQuant,d.fProductName,d.fLength,d.fWidth,\
-        #     d.fPrice,d.fAmount as fAmountDetail from  v_order as o right join t_order_detail \
-        #         as d on o.fOrderID=d.fOrderID  "
-        data = pub.getDict(SQL.format(OrderID))
+        db = JPDb()
+        data = db.getDict(SQL.format(OrderID))
         data.sort(key=lambda x: (x['fCustomerName'], x['fCity'], x['fAmount']
                                  is None, x['fAmount']))
         self.DataSource = data

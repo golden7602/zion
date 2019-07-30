@@ -99,6 +99,10 @@ class JPDb(object):
         return [list(r) for r in cur._result.rows]
 
     def getDict(self, sql) -> dict:
+        '''getDict(sql)
+        此方法返回的数据可用于界面显示，数据类型进行了转换，其中
+        Decimal 转换成了Float,datetime转换成了QDate
+        '''
         if self.__db_type == JPDbType.MySQL:
             cur = self.currentConn.cursor()
             try:

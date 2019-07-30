@@ -9,7 +9,7 @@ jppath.append(getcwd())
 from PyQt5.QtCore import (QAbstractTableModel, QDate, QModelIndex, QObject, Qt,
                           QVariant, pyqtSignal)
 from PyQt5.QtGui import QColor
-from PyQt5.QtWidgets import (QAbstractItemView, QMessageBox, QTableView)
+from PyQt5.QtWidgets import QAbstractItemView, QMessageBox, QTableView
 
 import lib.JPMvc.JPDelegate as myDe
 from lib.JPDatabase.Database import JPDb
@@ -17,26 +17,32 @@ from lib.JPDatabase.Field import JPFieldType
 from lib.JPDatabase.Query import (JPQueryFieldInfo, JPTabelFieldInfo,
                                   JPTabelRowData)
 from lib.JPFunction import (JPBooleanString, JPDateConver, JPGetDisplayText,
-                            JPRound)
-
+                            JPRound, PrintFunctionRunTime)
 from lib.JPMvc import JPWidgets
 from lib.ZionPublc import JPPub
-
-from lib.JPFunction import PrintFunctionRunTime
 
 
 class __JPTableViewModelBase(QAbstractTableModel):
     dataChanged = pyqtSignal(QModelIndex)
+    firstHasDirty = pyqtSignal()
 
     def __init__(self, tabelFieldInfo: JPTabelFieldInfo = None):
         super().__init__()
-        # tabelFieldInfo.Data = [
-        #     JPTabelRowData(item) for item in tabelFieldInfo.Data
-        # ]
         self.TabelFieldInfo = tabelFieldInfo
-        # self.del_data = []
         self.tableView = None
+        self.__dirty = False
         self.__isCalculating = False
+
+    def __setdirty(self, state: bool = True):
+        # 第一次存在脏数据时，发送一个信号
+        if self.__dirty is False and state is True:
+            self.__dirty = True
+            self.firstHasDirty.emit()
+
+    @property
+    def dirty(self) -> bool:
+        """返回模型中是否有脏数据"""
+        return self.__dirty
 
     def setTabelFieldInfo(self, tabelFieldInfo: JPTabelFieldInfo):
         tabelFieldInfo.Data = [
@@ -55,15 +61,6 @@ class __JPTableViewModelBase(QAbstractTableModel):
         if role == Qt.DisplayRole:
             r = {k: JPGetDisplayText(v) for k, v in dic.items()}
         return r
-
-    # def setModelDataAndFields(self, data: list, fields: list):
-    #     """设置模型数据源及字段信息
-    #     data:列表，数据源。列表每一项为一行数据的列表，不能是元组
-    #     fields：存储列表字段信息的列表，每一项为一个JPFieldInfo对象
-    #     """
-    #     self.TabelFieldInfo.Data= ([list(row) for row in data] if isinstance(
-    #         data, tuple) else data)
-    #     self.TabelFieldInfo.Fields = fields
 
     def __getPara(self, Index):
         c = Index.column()
@@ -86,18 +83,16 @@ class __JPTableViewModelBase(QAbstractTableModel):
 
     def data(self, Index: QModelIndex,
              role: int = Qt.DisplayRole) -> QVariant():
-        r, c = Index.row(), Index.column()
+        c = Index.column()
+        tf = self.TabelFieldInfo
         if not Index.isValid():
             raise Exception("行数或列数设置有误！")
         if role == Qt.TextAlignmentRole:
-            return (
-                Qt.AlignLeft
-                | Qt.AlignVCenter) if self.TabelFieldInfo.Fields[
-                    c].RowSource else self.TabelFieldInfo.Fields[c].Alignment
-            #return int(self._GetDataAlignment(Index))
+            return (Qt.AlignLeft
+                    | Qt.AlignVCenter
+                    ) if tf.Fields[c].RowSource else tf.Fields[c].Alignment
         elif role == Qt.DisplayRole:
-            # return self._GetDispText(Index)
-            return self.TabelFieldInfo.getDispText(Index)
+            return tf.getDispText(Index)
         elif role == Qt.DecorationRole:
             return self._getDecoration(Index)
         elif role == Qt.TextColorRole:
@@ -105,10 +100,10 @@ class __JPTableViewModelBase(QAbstractTableModel):
         elif role == Qt.BackgroundColorRole:
             return QColor(Qt.white)
         elif role == Qt.EditRole:
-            r, c, fn, tp, rs = self.__getPara(Index)
-            return self.TabelFieldInfo.getOnlyData(Index)
+            # r, c, fn, tp, rs = self.__getPara(Index)
+            return tf.getOnlyData(Index)
 
-    def _formulaCacu(self, row_num: int):
+    def __formulaCacu(self, row_num: int):
         # 这个可能要重新写
         rd = self.TabelFieldInfo.RowsData[row_num]
         fms = [f for f in self.TabelFieldInfo.Fields if f.Formula]
@@ -126,9 +121,9 @@ class __JPTableViewModelBase(QAbstractTableModel):
                 role: int = Qt.EditRole) -> bool:
         t_inof = self.TabelFieldInfo
         t_inof.setData(Index, Any)
-        self.dirty = True
+        self.__setdirty()
         if self.__isCalculating is False:
-            self._formulaCacu(Index.row())
+            self.__formulaCacu(Index.row())
         # 执行重载函数，判断行数据是否合法
         # 给函数参数的值 是最后一行的数据list
         row_data = t_inof.getRowData(len(t_inof.RowsData) - 1)
@@ -195,33 +190,20 @@ class __JPTableViewModelBase(QAbstractTableModel):
                 tempValue = rd([i, col])
                 tempValue = tempValue if tempValue else 0
                 r += tempValue
-            # for row in self.TabelFieldInfo.getRowData(i):
-            #     v = row[col] if row[col] else 0
-            #     if isinstance(v, Decimal):
-            #         r += con(v)
-            #     else:
-            #         r += v
             return r
         raise TypeError("指定的列[{}]不能进行数值运算".format(col))
 
     def insertRows(self, position, rows=1, index=QModelIndex()):
         self.beginInsertRows(QModelIndex(), position, position + rows - 1)
         self.TabelFieldInfo.addRow()
-        # self.TabelFieldInfo.Data = (
-        #     self.TabelFieldInfo.Data[:position] +
-        #     [[None] * len(self.TabelFieldInfo.Fields)] +
-        #     self.TabelFieldInfo.Data[position:])
         self.endInsertRows()
-        self.dirty = True
         return True
 
     def removeRows(self, position, rows=1, index=QModelIndex()):
         self.beginRemoveRows(QModelIndex(), position, position + rows - 1)
-        #self.del_data.append(self.TabelFieldInfo.Data[position])
         self.TabelFieldInfo.deleteRow(position)
-        #del self.TabelFieldInfo.Data[position]
         self.endRemoveRows()
-        self.dirty = True
+        self.__setdirty()
         return True
 
     def setColumnsDetegate(self):
@@ -285,16 +267,29 @@ class JPEditFormDataMode(QObject):
 
 class JPFormModelMain(JPEditFormDataMode):
     dataChanged = pyqtSignal([JPWidgets.QWidget])
+    firstHasDirty = pyqtSignal()
 
     def __init__(self, Ui):
         super().__init__()
         self.__JPFormModelMainSub = None
         self.__sql = None
         self.__editMode = JPEditFormDataMode.ReadOnly
-        self._queryResult = None
+        #self._queryResult = None
+        self.__dirty = False
         self.__fieldsRowSource = None
         self.ObjectDict = {}
         self.__findJPObject(Ui)
+
+    def __setdirty(self, state: bool = True):
+        # 第一次存在脏数据时，发送一个信号
+        if self.__dirty is False and state is True:
+            self.__dirty = True
+            self.firstHasDirty.emit()
+
+    @property
+    def dirty(self) -> bool:
+        """返回模型中是否有脏数据"""
+        return self.__dirty
 
     def __findJPObject(self, Ui):
         cls_tup = (JPWidgets.QLineEdit, JPWidgets.QDateEdit,
@@ -311,10 +306,11 @@ class JPFormModelMain(JPEditFormDataMode):
     def setFormModelMainSub(self, mod):
         self.__JPFormModelMainSub = mod
 
-    def _emmitDataChange(self, arg):
+    def _emitDataChange(self, arg):
         self.dataChanged.emit(arg)
+        self.__setdirty()
         if self.__JPFormModelMainSub:
-            self.__JPFormModelMainSub._emmitDataChange(arg)
+            self.__JPFormModelMainSub._emitDataChange(arg)
 
     def setTabelInfo(self, sql: str):
         self.__sql = sql
@@ -324,26 +320,26 @@ class JPFormModelMain(JPEditFormDataMode):
         self.__fieldsRowSource = lst
 
     def readData(self):
-        if self.EditMode == JPEditFormDataMode.ReadOnly:
+        em = self.EditMode
+        jpem = JPEditFormDataMode
+        if em == jpem.ReadOnly:
             self.tableFieldsInfo = JPQueryFieldInfo(self.__sql)
-        if self.EditMode == JPEditFormDataMode.Edit:
+        if em == jpem.Edit:
             self.tableFieldsInfo = JPTabelFieldInfo(self.__sql)
-        if self.EditMode == JPEditFormDataMode.New:
+        if em == jpem.New:
             self.tableFieldsInfo = JPTabelFieldInfo(self.__sql, True)
+        tf = self.tableFieldsInfo
         # 如果是亲增加或修改模式，主表增加一行数据
-        if self.EditMode != JPEditFormDataMode.ReadOnly:
-            self.tableFieldsInfo.addRow()
-        # if (self.EditMode == JPEditFormDataMode.New
-        #         and len(self.tableFieldsInfo.RowsData) == 0):
-        #     self.tableFieldsInfo.addRow()
+        if em != jpem.ReadOnly:
+            tf.addRow()
         # 设置字段行来源
         for item in self.__fieldsRowSource:
-            self.tableFieldsInfo.setFieldsRowSource(*item)
-        fld_dict = self.tableFieldsInfo.getRowFieldsInfoAndDataDict(0)
+            tf.setFieldsRowSource(*item)
+        fld_dict = tf.getRowFieldsInfoAndDataDict(0)
         if fld_dict:
             for k, v in self.ObjectDict.items():
                 if k in fld_dict:
-                    v.setRowsData(self.tableFieldsInfo.RowsData[0])
+                    v.setRowsData(tf.RowsData[0])
                     v.setFieldInfo(fld_dict[k])
                     v.setMainModel(self)
                     # 给输入控件指定查询的或增加的第一行数据
@@ -441,17 +437,42 @@ class JPFormModelMain(JPEditFormDataMode):
 
 
 class _JPFormModelSub(JPEditFormDataMode):
+    dataChanged = pyqtSignal([QModelIndex])
+    firstHasDirty = pyqtSignal()
+
     def __init__(self):
         super().__init__()
         self.__tableView = None
         self.__sql = None
         self._model = None
+        self.__JPFormModelMainSub = None
         self.__hideColumns = []
         self.__columnWidths = []
         self.__readOnlyColumns = []
         self.__fieldsRowSource = []
         self.__formulas = []
+        self.__dirty = False
         self.__editMode = JPEditFormDataMode.ReadOnly
+
+    def setFormModelMainSub(self, mod):
+        self.__JPFormModelMainSub = mod
+
+    def _emitDataChange(self, arg):
+        self.dataChanged.emit(arg)
+        self.__setdirty()
+        if self.__JPFormModelMainSub:
+            self.__JPFormModelMainSub._emitDataChange(arg)
+
+    def __setdirty(self, state: bool = True):
+        # 第一次存在脏数据时，发送一个信号
+        if self.__dirty is False and state is True:
+            self.__dirty = True
+            self.firstHasDirty.emit()
+
+    @property
+    def dirty(self) -> bool:
+        """返回模型中是否有脏数据"""
+        return self.__dirty
 
     @property
     def MainModel(self) -> JPFormModelMain:
@@ -485,6 +506,7 @@ class _JPFormModelSub(JPEditFormDataMode):
             self._model = JPTableViewModelEditForm(subTableView,
                                                    self.tableFieldsInfo)
         self.__tableView.setModel(self._model)
+        self._model.dataChanged.connect(self._emitDataChange)
         # 设置子窗体可编辑状态
         self.setEditState(self.EditMode != JPEditFormDataMode.ReadOnly)
         # 设置子窗体的输入委托控件及格式等
@@ -537,6 +559,7 @@ class _JPFormModelSub(JPEditFormDataMode):
         self.__readOnlyColumns = args
 
     def getSqls(self):
+        """返回子表的保存数据用SQL语句"""
         appform = JPPub().MainForm
         # 计算主窗体键名、键名列及键值
         m_main = self.MainModel
@@ -664,6 +687,7 @@ class _JPFormModelSub(JPEditFormDataMode):
 
 class JPFormModelMainSub(JPEditFormDataMode):
     dataChanged = pyqtSignal([QModelIndex], [JPWidgets.QWidget])
+    firstHasDirty = pyqtSignal()
 
     def __init__(self, Ui, subTableView: QTableView):
         super().__init__()
@@ -671,24 +695,37 @@ class JPFormModelMainSub(JPEditFormDataMode):
         self.mainModel.setFormModelMainSub(self)
         self.tableView = subTableView
         self.subModel = _JPFormModelSub()
+        self.subModel.setFormModelMainSub(self)
+        self.__dirty = False
+
+    def __setdirty(self, state: bool = True):
+        # 第一次存在脏数据时，发送一个信号
+        if self.__dirty is False and state is True:
+            self.__dirty = True
+            self.firstHasDirty.emit()
+
+    @property
+    def dirty(self) -> bool:
+        """返回模型中是否有脏数据"""
+        return self.__dirty
 
     def setUi(self, ui):
         self.mainModel.setUi(ui)
 
-    def _emmitDataChange(self, arg):
-        # try:
-        #     print(arg.row(), arg.column())
-        # except AttributeError:
-        #     print(arg.objectName())
+    def _emitDataChange(self, arg):
         if isinstance(arg, QModelIndex):
             self.dataChanged[QModelIndex].emit(arg)
         if isinstance(arg, JPWidgets.QWidget):
             self.dataChanged[JPWidgets.QWidget].emit(arg)
+        self.__setdirty()
 
     def setTabelInfo(self, tabelName):
         self.tableView = tabelName
 
     def getSqls(self, pk_role: int = None):
+        if (self.mainModel._model.dirty is False
+                and self.subModel._model.dirty is False):
+            raise ValueError("未输入数据或不存在未保存数据")
         sql_m = self.mainModel.getSqls()
         sql_s = self.subModel.getSqls()
         if pk_role:
@@ -710,7 +747,8 @@ class JPFormModelMainSub(JPEditFormDataMode):
         self.subModel.readData(self.tableView)
         self.subModel.MainModel = self.mainModel
         self.mainModel.readData()
-        self.subModel._model.dataChanged.connect(self._emmitDataChange)
+        self.mainModel.dataChanged.connect(self._emitDataChange)
+        self.subModel._model.dataChanged.connect(self._emitDataChange)
         # 设置更新数据后计算重载方法
         t = self.subModel_AfterSetDataBeforeInsterRowEvent
         self.subModel._model.AfterSetDataBeforeInsterRowEvent = t
