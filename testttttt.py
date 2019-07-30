@@ -13,3 +13,6 @@ def a(role_id: int):
         return sql
 
 print(a(1))
+
+
+JPPrintSectionType

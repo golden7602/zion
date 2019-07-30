@@ -171,13 +171,6 @@ class EditForm_Order(QDialog):
         rpt = Order_report()
         rpt.PrintCurrentReport(self.ui.fOrderID.text())
 
-
-def formatEvent(self):
-    if (self.SectionType is JPPrintSectionType.PageHeader
-            and self.Report.CurrentPage == 1):
-        return True
-
-
 class Order_report(JPReport):
     def __init__(self,
                  PaperSize=QPrinter.A5,
@@ -185,7 +178,6 @@ class Order_report(JPReport):
         super().__init__(PaperSize, Orientation)
         self.SetMargins(30, 60, 30, 30)
         self.Copys = 2
-        self.PageHeader.OnFormat = formatEvent
         self.logo = QPixmap(
             "D:\\JinptConfig\\桌面2018\\newPYprj\\res\\Zions_100.png")
         self.FillColor = QColor(128, 128, 128)
@@ -204,6 +196,10 @@ class Order_report(JPReport):
         self.font_YaHei_10.setPointSize(10)
         self.font_YaHei_10.setBold(True)
 
+    def onFormat(self, SectionType,CurrentPage, RowDate=None):
+        if (SectionType == JPPrintSectionType.PageHeader
+                and CurrentPage == 1):
+            return True    
     def _init_ReportHeader(self,
                            title1="NOTA DE PAGAMENTO",
                            title2="(ESTE DOCUMENTO É DO USO INTERNO)"):

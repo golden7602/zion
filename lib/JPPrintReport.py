@@ -343,8 +343,8 @@ class _SectionAutoPaging(_jpPrintSection):
         rpt = _jpPrintSection.Report
         self._SectionOffset = 0
         self._CurPageOffset = rpt._SectionPrintBeginY
-
-        if self.OnFormat(self) or len(self) == 0:
+        if rpt.onFormat(self.SectionType,rpt._CurrentPage) or len(self) == 0:
+        #if self.OnFormat(self) or len(self) == 0:
             return
         lastItem = None
         for item in self.Items:
@@ -400,7 +400,8 @@ class _jpSectionDetail(_jpPrintSection):
     def Print(self, painter, sec_data={}):
         rpt = _jpPrintSection.Report
         curSecH = self.SectionHeight
-        if self.OnFormat(self) or len(self) == 0:
+        if rpt.onFormat(self.SectionType,rpt._CurrentPage) or len(self) == 0:
+        #if self.OnFormat(self) or len(self) == 0:
             return
         # 判断一下能否同时容纳主体节、页面页眉、页面页脚，不能容纳则抛出错误
 
@@ -410,7 +411,8 @@ class _jpSectionDetail(_jpPrintSection):
         if sec_data:
             for row in sec_data:
                 self._CurrentPrintRowData = row
-                if self.OnFormat(self, row):
+                if rpt.onFormat(self.SectionType,rpt._CurrentPage, row):
+                #if self.OnFormat(self, row):
                     continue
                 # 判断页面剩余空间能否容纳一个节高度及页脚高度，不能则分页
                 if rpt.PageValidHeight < (rpt._SectionPrintBeginY + curSecH +
@@ -429,7 +431,8 @@ class _jpSectionPageHeader(_jpPrintSection):
 
     def Print(self, painter):
         rpt = self.Report
-        if self.OnFormat(self) or len(self) == 0:
+        if rpt.onFormat(self.SectionType,rpt._CurrentPage) or len(self) == 0:
+        #if self.OnFormat(self) or len(self) == 0:
             return
         # 判断当前页面剩余空间能否容纳本节，如不能则引发错误
         if rpt.PageValidHeight < (rpt._SectionPrintBeginY +
@@ -449,7 +452,8 @@ class _jpSectionPageFooter(_jpPrintSection):
 
     def Print(self, painter):
         rpt = _jpPrintSection.Report
-        if self.OnFormat(self) or len(self) == 0:
+        if rpt.onFormat(self.SectionType,rpt._CurrentPage) or len(self) == 0:
+        #if self.OnFormat(self) or len(self) == 0:
             return
         # 判断当前页面剩余空间能否容纳本节，如不能则引发错误
         if rpt.PageValidHeight < (rpt._SectionPrintBeginY +
@@ -794,6 +798,14 @@ class JPReport(object):
         self.__Reseted = False
         self.__SectionPrintBeginY = 0
         self.__ExecNewPageTimes = 0
+
+    def onFormat(self, SectionType: JPPrintSectionType,CurrentPage:int, RowDate=None):
+        """
+        请在子类中覆盖本方法
+        本方法为报表类各节的格式化事件，返回值为False或None时，
+        当前节或Detail节的本行数据不打印，其他值均正常打印。
+        """
+        return True
 
     def __del__(self):
         _jpPrintSection.Report = None
