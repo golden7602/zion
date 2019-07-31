@@ -331,7 +331,6 @@ class _jpPrintSection(object):
 
 class _SectionAutoPaging(_jpPrintSection):
     """定义一个自动分页的节，实现，请不要实例化"""
-
     def __init__(self):
         #  当前页面条目打印时的向下偏移量
         self._CurPageOffset = 0
@@ -340,11 +339,11 @@ class _SectionAutoPaging(_jpPrintSection):
         super().__init__()
 
     def Print(self, painter):
-        rpt = _jpPrintSection.Report
+        rpt = self.Report
         self._SectionOffset = 0
         self._CurPageOffset = rpt._SectionPrintBeginY
-        if rpt.onFormat(self.SectionType,rpt._CurrentPage) or len(self) == 0:
-        #if self.OnFormat(self) or len(self) == 0:
+        if rpt.onFormat(self.SectionType, rpt._CurrentPage) or len(self) == 0:
+            #if self.OnFormat(self) or len(self) == 0:
             return
         lastItem = None
         for item in self.Items:
@@ -371,7 +370,6 @@ class _SectionAutoPaging(_jpPrintSection):
 
 class _jpSectionReportHeader(_SectionAutoPaging):
     """报表、组页头类"""
-
     def __init__(self):
         self.SectionType = JPPrintSectionType.ReportHeader
         super().__init__()
@@ -382,7 +380,6 @@ class _jpSectionReportHeader(_SectionAutoPaging):
 
 class _jpSectionReportFooter(_SectionAutoPaging):
     """报表、组页脚类"""
-
     def __init__(self):
         self.SectionType = JPPrintSectionType.ReportFooter
         super().__init__()
@@ -398,10 +395,10 @@ class _jpSectionDetail(_jpPrintSection):
         super().__init__()
 
     def Print(self, painter, sec_data={}):
-        rpt = _jpPrintSection.Report
+        rpt = self.Report
         curSecH = self.SectionHeight
-        if rpt.onFormat(self.SectionType,rpt._CurrentPage) or len(self) == 0:
-        #if self.OnFormat(self) or len(self) == 0:
+        if rpt.onFormat(self.SectionType, rpt._CurrentPage) or len(self) == 0:
+            #if self.OnFormat(self) or len(self) == 0:
             return
         # 判断一下能否同时容纳主体节、页面页眉、页面页脚，不能容纳则抛出错误
 
@@ -411,8 +408,8 @@ class _jpSectionDetail(_jpPrintSection):
         if sec_data:
             for row in sec_data:
                 self._CurrentPrintRowData = row
-                if rpt.onFormat(self.SectionType,rpt._CurrentPage, row):
-                #if self.OnFormat(self, row):
+                if rpt.onFormat(self.SectionType, rpt._CurrentPage, row):
+                    #if self.OnFormat(self, row):
                     continue
                 # 判断页面剩余空间能否容纳一个节高度及页脚高度，不能则分页
                 if rpt.PageValidHeight < (rpt._SectionPrintBeginY + curSecH +
@@ -431,8 +428,8 @@ class _jpSectionPageHeader(_jpPrintSection):
 
     def Print(self, painter):
         rpt = self.Report
-        if rpt.onFormat(self.SectionType,rpt._CurrentPage) or len(self) == 0:
-        #if self.OnFormat(self) or len(self) == 0:
+        if rpt.onFormat(self.SectionType, rpt._CurrentPage) or len(self) == 0:
+            #if self.OnFormat(self) or len(self) == 0:
             return
         # 判断当前页面剩余空间能否容纳本节，如不能则引发错误
         if rpt.PageValidHeight < (rpt._SectionPrintBeginY +
@@ -451,9 +448,9 @@ class _jpSectionPageFooter(_jpPrintSection):
         super().__init__()
 
     def Print(self, painter):
-        rpt = _jpPrintSection.Report
-        if rpt.onFormat(self.SectionType,rpt._CurrentPage) or len(self) == 0:
-        #if self.OnFormat(self) or len(self) == 0:
+        rpt = self.Report
+        if rpt.onFormat(self.SectionType, rpt._CurrentPage) or len(self) == 0:
+            #if self.OnFormat(self) or len(self) == 0:
             return
         # 判断当前页面剩余空间能否容纳本节，如不能则引发错误
         if rpt.PageValidHeight < (rpt._SectionPrintBeginY +
@@ -771,7 +768,6 @@ class _jpPrintGroup(object):
 
 class JPReport(object):
     """报表类"""
-
     def __init__(self, PaperSize, Orientation):
         _jpPrintSection.Report = self
         _jpPrintItem.Report = self
@@ -784,6 +780,11 @@ class JPReport(object):
         self.PageHeader = _jpSectionPageHeader()
         self.PageFooter = _jpSectionPageFooter()
         self.Detail = _jpSectionDetail()
+        self.ReportHeader.Report = self
+        self.ReportFooter.Report = self
+        self.PageHeader.Report = self
+        self.PageFooter.Report = self
+        self.Detail.Report = self
         self.Copys = 1
         self._CurrentPage = 0
         self._CurrentCopys = 0
@@ -799,7 +800,10 @@ class JPReport(object):
         self.__SectionPrintBeginY = 0
         self.__ExecNewPageTimes = 0
 
-    def onFormat(self, SectionType: JPPrintSectionType,CurrentPage:int, RowDate=None):
+    def onFormat(self,
+                 SectionType: JPPrintSectionType,
+                 CurrentPage: int,
+                 RowDate=None):
         """
         请在子类中覆盖本方法
         本方法为报表类各节的格式化事件，返回值为False或None时，
@@ -832,6 +836,7 @@ class JPReport(object):
     def AddGroup(self, GroupFieldName: str) -> _jpPrintGroup:
         """添加一个组，参数是组名"""
         grp = _jpPrintGroup(GroupFieldName)
+        grp.Report = self
         if len(self.__Groups) == 0:
             grp.Parent = self
         else:

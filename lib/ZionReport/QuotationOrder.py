@@ -1,5 +1,13 @@
+from os import getcwd
+from sys import path as jppath
+jppath.append(getcwd())
 
-class QuotationOrder(order):
+from lib.JPDatabase import Database
+from lib.ZionWidgets.Order import EditForm_Order,Order_report
+
+
+
+class QuotationOrder(EditForm_Order):
     def __init__(self):
         super().__init__()
 
@@ -18,3 +26,4 @@ class QuotationOrder(order):
         self._init_ReportFooter()
         super().BeginPrint()
 
+class QuotationOrder_report(Order_report)

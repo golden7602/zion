@@ -2,20 +2,12 @@ from os import getcwd
 from sys import path as jppath
 jppath.append(getcwd())
 
-from functools import reduce
 
-from PyQt5.QtCore import Qt, QModelIndex, pyqtSlot
-from PyQt5.QtGui import QColor, QFont, QPainter, QPixmap
-from PyQt5.QtWidgets import QDialog, QMessageBox, QWidget
-from PyQt5.QtPrintSupport import QPrinter
-
-from lib.JPPrintReport import JPPrintSectionType, JPReport
-from lib.ZionPublc import JPPub
-from lib.JPMvc.JPModel import JPFormModelMainSub, JPEditFormDataMode
+from PyQt5.QtCore import pyqtSlot
 from lib.ZionWidgets.FuncFormBase import JPFunctionForm
-from Ui.Ui_FormOrderMob import Ui_Form
 from lib.ZionWidgets.Order import EditForm_Order
-
+from lib.ZionReport.OrderReportMob import Order_report_Mob
+from lib.JPPrintReport import JPPrintSectionType
 
 class JPFuncForm_Payment(JPFunctionForm):
     def __init__(self, MainForm):
@@ -56,11 +48,6 @@ class JPFuncForm_Payment(JPFunctionForm):
         super().setSQL(sql_1, sql_2)
         self.tableView.setColumnHidden(13, True)
 
-    # def but_click(self, name):
-    #     for n, fun in JPFuncForm_Payment.__dict__.items():
-    #         if n.upper() == 'BTN{}CLICKED'.format(name.upper()):
-    #             fun(self)
-
     def getCurrentCustomerID(self):
         index = self.tableView.selectionModel().currentIndex()
         if index.isValid():
@@ -79,3 +66,28 @@ class EditForm_Payment_Order(EditForm_Order):
         super().__init__(edit_mode, PKValue, flags)
         self.ui.label_Title_Chn.setText('付款书')
         self.ui.label_Title_Eng.setText('NOTA DE PAGAMENTO')
+
+    @pyqtSlot()
+    def on_butPrint_clicked(self):
+        rpt = Payment_report()
+        rpt.PrintCurrentReport(self.ui.fOrderID.text())
+
+class Payment_report(Order_report_Mob):
+    def __init__(self):
+        super().__init__()
+
+    def onFormat(self, SectionType, CurrentPage, RowDate=None):
+        if (SectionType == JPPrintSectionType.PageHeader and CurrentPage == 1):
+            return True
+
+    def PrintCurrentReport(self, OrderID: str):
+        self.init_data(OrderID)
+        self.init_ReportHeader_title(
+            title1="NOTA DE PAGAMENTO",
+            title2="(ESTE DOCUMENTO É DO USO INTERNO)")
+        self.init_ReportHeader()
+        self.init_ReportHeader_Individualization()
+        self.init_PageHeader()
+        self.init_Detail()
+        self.init_ReportFooter()
+        super().BeginPrint()NOTA DE PAGAMENTO
