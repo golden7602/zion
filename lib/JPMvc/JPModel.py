@@ -25,7 +25,7 @@ from lib.ZionPublc import JPPub
 class __JPTableViewModelBase(QAbstractTableModel):
     dataChanged = pyqtSignal(QModelIndex)
     firstHasDirty = pyqtSignal()
-
+    editNext = pyqtSignal(QModelIndex)
     def __init__(self, tabelFieldInfo: JPTabelFieldInfo = None):
         super().__init__()
         self.TabelFieldInfo = tabelFieldInfo
@@ -128,12 +128,21 @@ class __JPTableViewModelBase(QAbstractTableModel):
         # 给函数参数的值 是最后一行的数据list
         row_data = t_inof.getRowData(len(t_inof.RowsData) - 1)
         tempv = self.AfterSetDataBeforeInsterRowEvent(row_data, Index)
+
         if isinstance(tempv, bool):
             if tempv:
                 self.insertRows(self.rowCount())
         else:
             strErr = 'AfterSetDataBeforeInsterRowEvent函数的返回值必须为逻辑值！'
             raise TypeError(strErr)
+        # 回车向右
+        r, c = Index.row(), Index.column()
+        tmp = None
+        tmp = Index.sibling(r if r == self.rowCount() - 1 else r + 1,
+                            0 if self.columnCount() - 1 else c + 1)
+        if tmp.isValid():
+            self.editNext.emit(tmp)
+
         self.dataChanged[QModelIndex].emit(Index)
         return True
 
@@ -333,8 +342,9 @@ class JPFormModelMain(JPEditFormDataMode):
         if em != jpem.ReadOnly:
             tf.addRow()
         # 设置字段行来源
-        for item in self.__fieldsRowSource:
-            tf.setFieldsRowSource(*item)
+        if isinstance(self.__fieldsRowSource, (list, tuple)):
+            for item in self.__fieldsRowSource:
+                tf.setFieldsRowSource(*item)
         fld_dict = tf.getRowFieldsInfoAndDataDict(0)
         if fld_dict:
             for k, v in self.ObjectDict.items():
@@ -723,8 +733,7 @@ class JPFormModelMainSub(JPEditFormDataMode):
         self.tableView = tabelName
 
     def getSqls(self, pk_role: int = None):
-        if (self.mainModel._model.dirty is False
-                and self.subModel._model.dirty is False):
+        if (self.mainModel.dirty is False and self.subModel.dirty is False):
             raise ValueError("未输入数据或不存在未保存数据")
         sql_m = self.mainModel.getSqls()
         sql_s = self.subModel.getSqls()

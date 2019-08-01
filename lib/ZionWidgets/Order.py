@@ -3,10 +3,8 @@ from sys import path as jppath
 jppath.append(getcwd())
 
 from functools import reduce
-
-from PyQt5.QtCore import Qt, QModelIndex, pyqtSlot, pyqtSignal
-
-from PyQt5.QtWidgets import QMessageBox, QWidget, QDialog
+from PyQt5.QtCore import pyqtSlot
+from PyQt5.QtWidgets import QMessageBox
 from lib.JPPrintReport import JPPrintSectionType
 from lib.ZionPublc import JPPub
 from lib.ZionWidgets.FuncFormBase import JPFunctionForm
@@ -14,6 +12,7 @@ from Ui.Ui_FormOrderMob import Ui_Form
 from lib.JPMvc.JPModel import JPFormModelMainSub, JPEditFormDataMode
 from lib.JPDatabase.Database import JPDb
 from lib.ZionReport.OrderReportMob import Order_report_Mob
+from lib.JPMvc.JPEditDialog import PopEditForm
 
 
 class JPFuncForm_Order(JPFunctionForm):
@@ -51,12 +50,59 @@ class JPFuncForm_Order(JPFunctionForm):
         self.checkBox_2.setText('Submited')
         self.checkBox_1.setChecked(False)
         self.checkBox_2.setChecked(True)
-        super().setSQL(sql_1, sql_2)
+        super().setListFormSQL(sql_1, sql_2)
         self.tableView.setColumnHidden(13, True)
         self.fSubmited_column = 13
+        m_sql = """
+                SELECT fOrderID, fOrderDate, fVendedorID, fRequiredDeliveryDate
+                    , fCustomerID, fContato, fCelular, fTelefone, fAmount, fTax
+                    , fPayable, fDesconto, fNote
+                FROM t_order
+                WHERE fOrderID = '{}'
+                """
+        s_sql = """
+                SELECT fID, fOrderID, fQuant AS '数量Qtd',
+                    fProductName AS '名称Descrição',
+                    fLength AS '长Larg.', fWidth AS '宽Comp.',
+                    fPrice AS '单价P. Unitario', fAmount AS '金额Total'
+                FROM t_order_detail
+                WHERE fOrderID = '{}'
+                """
+        super().setEditFormSQL(m_sql, s_sql)
 
     def getEditFormClass(self):
         return EditForm_Order
+
+    @pyqtSlot()
+    def on_CmdSubmit_clicked(self):
+        cu_id = self.getCurrentSelectPKValue()
+        if not cu_id:
+            return
+        db = JPDb()
+        info = self.model.TabelFieldInfo
+        submitted = info.getOnlyData([
+            self.tableView.selectionModel().currentIndex().row(),
+            self.fSubmited_column
+        ])
+        if submitted == 1:
+            msg = '记录【{cu_id}】已经提交，不能重复提交!\nThe order [{cu_id}] '
+            msg = msg + 'has been submitted, can not be repeated submission!'
+            msg = msg.replace("{cu_id}", str(cu_id))
+            QMessageBox.warning(self, '提示', msg, QMessageBox.Ok,
+                                QMessageBox.Ok)
+            return
+        msg = '提交后订单将不能修改！确定继续提交记录【{cu_id}】吗？\n'
+        msg = msg + 'The order "{cu_id}" will not be modified after submission. '
+        msg = msg + 'Click OK to continue submitting?'
+        msg = msg.replace("{cu_id}", str(cu_id))
+        if QMessageBox.question(self, '确认', msg, QMessageBox.Ok,
+                                QMessageBox.Ok) == QMessageBox.Ok:
+            sql = "update {tn} set fSubmited=1 where {pk_n}='{pk_v}'"
+            sql = sql.format(tn=self.EditFormMainTableName,
+                             pk_n=self.EditFormPrimarykeyFieldName,
+                             pk_v=cu_id)
+            if db.executeTransaction(sql):
+                self.btnRefreshClick()
 
 
 # 继承模型，为了设置重载方法，必要要时也可以用动态绑定到函数
@@ -78,97 +124,57 @@ class myMainSubMode(JPFormModelMainSub):
             reduce(lambda x, y: x * y, lt[0:4]) * 100)
 
 
-class EditForm_Order(QDialog):
-    afterSaveData = pyqtSignal()
+class EditForm_Order(PopEditForm):
+    def __init__(self,
+                 mainSql,
+                 subSql=None,
+                 edit_mode=JPFormModelMainSub.ReadOnly,
+                 pkValue=None):
 
-    def __init__(self, edit_mode, PKValue=None, flags=Qt.WindowFlags()):
+        super().__init__(clsUi=Ui_Form,
+                         edit_mode=edit_mode,
+                         pkValue=pkValue,
+                         mainSql=mainSql,
+                         subSql=subSql)
+
+    def setSubFormFormula(self):
+        fla = "JPRound(JPRound({2}) * JPRound({4},2) * "
+        fla = fla + "JPRound({5},2) * JPRound({6},2),2)"
+        return 7, fla
+
+    def setSubFormColumnsHidden(self):
+        return 0, 1
+
+    def setSubFormColumnsReadOnly(self):
+        return 7
+
+    def setSubFormColumnWidths(self):
+        return 0, 0, 60, 300, 100, 100, 100, 100
+
+    def setMainFormFieldsRowSources(self):
         pub = JPPub()
-        super().__init__(pub.MainForm, flags=flags)
-        self.ui = Ui_Form()
-        self.ui.setupUi(self)
-        self.EditMode = edit_mode
-        self.PKValue = PKValue
-        self.tv = self.ui.tableView
-        self.ui.butSave.setEnabled(False)
-        curPK = PKValue if PKValue else ''
-        m_sql = """
-                SELECT fOrderID, fOrderDate, fVendedorID, fRequiredDeliveryDate
-                    , fCustomerID, fContato, fCelular, fTelefone, fAmount, fTax
-                    , fPayable, fDesconto, fNote
-                FROM t_order
-                WHERE fOrderID = '{}'
-                """.format(curPK)
-        s_sql = """
-                SELECT fID, fOrderID, fQuant AS '数量Qtd', 
-                    fProductName AS '名称Descrição', 
-                    fLength AS '长Larg.', fWidth AS '宽Comp.', 
-                    fPrice AS '单价P. Unitario', fAmount AS '金额Total'
-                FROM t_order_detail
-                WHERE fOrderID = '{}'    
-                """.format(curPK)
-        self.MS_Mod = myMainSubMode(self.ui, self.tv)
-        self.SubMod = self.MS_Mod.subModel
-        self.MainMod = self.MS_Mod.mainModel
-        self.MainMod.setFieldsRowSource([('fCustomerID',
-                                          pub.getCustomerList()),
-                                         ('fVendedorID', pub.getEnumList(10))])
-        self.MainMod.setTabelInfo(m_sql)
-        self.SubMod.setColumnsHidden(0, 1)
-        self.SubMod.setColumnWidths(0, 0, 60, 300, 100, 100, 100, 100)
-        self.SubMod.setColumnsReadOnly(7)
-        self.SubMod.setTabelInfo(s_sql)
-        self.SubMod.setFormula(7, (
-            "JPRound(JPRound({2}) * JPRound({4},2) * JPRound({5},2) * JPRound({6},2),2)"
-        ))
-        self.MS_Mod.firstHasDirty.connect(self.firstDirty)
-        self.MS_Mod.dataChanged[QModelIndex].connect(self.Cacu)
-        self.MS_Mod.dataChanged[QWidget].connect(self.Cacu)
-        self.ui.fCustomerID.currentIndexChanged.connect(
-            self.fCustomerID_currentIndexChanged)
-        self.MS_Mod.show(edit_mode)
+        return [('fCustomerID', pub.getCustomerList()),
+                ('fVendedorID', pub.getEnumList(10))]
 
-    def firstDirty(self):
-        self.ui.butSave.setEnabled(True)
+    def getMainSubMode(self):
+        return myMainSubMode
 
-    # 计算金额事件
-    def Cacu(self, *args):
-        self.MS_Mod.dataChanged[QModelIndex].disconnect(self.Cacu)
-        self.MS_Mod.dataChanged[QWidget].disconnect(self.Cacu)
+    def getPrintReport(self):
+        return Order_report
+
+    def afterDataChangedCalculat(self):
         if self.EditMode != JPEditFormDataMode.ReadOnly:
-            v_sum = self.SubMod._model.getColumnSum(7)
-            fDesconto = self.MainMod.getObjectValue("fDesconto")
+            v_sum = self.SubModle._model.getColumnSum(7)
+            fDesconto = self.MainModle.getObjectValue("fDesconto")
             fTax = (v_sum - fDesconto) * 0.17
             fPayable = v_sum - fDesconto + fTax
-            self.MainMod.setObjectValue('fAmount', v_sum)
-            self.MainMod.setObjectValue("fTax", fTax)
-            self.MainMod.setObjectValue("fPayable", fPayable)
-        self.MS_Mod.dataChanged[QWidget].connect(self.Cacu)
-        self.MS_Mod.dataChanged[QModelIndex].connect(self.Cacu)
+            self.MainModle.setObjectValue('fAmount', v_sum)
+            self.MainModle.setObjectValue("fTax", fTax)
+            self.MainModle.setObjectValue("fPayable", fPayable)
 
-    def fCustomerID_currentIndexChanged(self, r):
-        obj = self.ui.fCustomerID
-        row = obj.RowSource[r]
-        self.ui.fNUIT.setText(row[2])
-        self.ui.fCity.setText(row[3])
+    def afterSaveDate(self, data):
+        self.ui.fOrderID.setText(data)
 
-    @pyqtSlot()
-    def on_butSave_clicked(self):
-        try:
-            lst = self.MS_Mod.getSqls(1)
-            isOK, result = JPDb().executeTransaction(lst)
-            if isOK:
-                self.ui.fOrderID.setText(result)
-                self.ui.butSave.setEnabled(False)
-                self.MS_Mod.setEditState(False)
-                self.afterSaveData.emit()
-        except Exception as e:
-            msgBox = QMessageBox(QMessageBox.Critical, u'提示', str(e))
-            msgBox.exec_()
-
-    @pyqtSlot()
-    def on_butPrint_clicked(self):
-        rpt = Order_report()
-        rpt.PrintCurrentReport(self.ui.fOrderID.text())
 
 
 class Order_report(Order_report_Mob):
@@ -182,7 +188,7 @@ class Order_report(Order_report_Mob):
     def PrintCurrentReport(self, OrderID: str):
         self.init_data(OrderID)
         self.init_ReportHeader_title(
-            title1="NOTA DE PAGAMENTO",
+            title1=" NOTA DE ORDEM",
             title2="(ESTE DOCUMENTO É DO USO INTERNO)")
         self.init_ReportHeader()
         self.init_ReportHeader_Individualization()

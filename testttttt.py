@@ -1,18 +1,13 @@
-def a(role_id: int):
-        sql = '''
-        SELECT CONCAT(fPreFix,
-                if(fHasDateTime,
-                DATE_FORMAT(CURRENT_DATE(),
-                replace(replace(replace(replace(fDateFormat,
-                \'yyyy\',\'%Y\'),\'yy\',\'%y\'),\'mm\',\'%m\'),\'dd\',\'%d\')),\'\'),
-                LPAD(fCurrentValue+1, fLenght , 0)) into @PK
-        FROM systabelautokeyroles
-        WHERE fRoleID={r_id};\nUPDATE systabelautokeyroles 
-                SET fCurrentValue=fCurrentValue+1, fLastKey=@PK
-        WHERE fRoleID={r_id};'''.format(r_id=role_id)
-        return sql
-
-print(a(1))
+import re
+sql = '''
+        SELECT fOrderID, fOrderDate, fVendedorID, fRequiredDeliveryDate , fCustomerID, fContato, fCelular, fTelefone, fAmount, fTax , fPayable, fDesconto, fNote FROM t_order WHERE fOrderID = '';
+        '''
 
 
-JPPrintSectionType
+def getMainTableNameInfo(sql):
+    sql = re.sub(r'^\s', '', re.sub(r'\s+', ' ', re.sub(r'\n', '', sql)))
+    sel_p = r"SELECT\s+.*from\s(\S+)\s(as\s\S+){0,1}where\s(\S+)\s*=.*"
+    mt = re.match(sel_p, sql, flags=(re.I))
+    if mt:
+        return mt.groups()[0], mt.groups()[2]
+

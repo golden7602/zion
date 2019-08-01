@@ -15,16 +15,18 @@ from lib.JPMvc.JPModel import JPFormModelMainSub, JPTableViewModelReadOnly
 from lib.JPFunction import setButtonIcon
 from lib.JPDatabase.Database import JPDb
 from Ui.Ui_FuncFormMob import Ui_Form
+import re
 
 
 class JPFunctionForm(QWidget):
+
     def __init__(self, parent, flags=Qt.WindowFlags()):
         super().__init__(parent, flags=flags)
         # 把本窗体加入主窗体
         parent.addForm(self)
         self.MainForm = parent
-        self.DefauleParaSQL = ''
-        self.DefauleBaseSQL = ''
+        self.SQL_ListForm_Para = ''
+        self.SQL_ListForm_Base = ''
         self.backgroundWhenValueIsTrueFieldName = []
         self.ui = Ui_Form()
         self.ui.setupUi(self)
@@ -35,6 +37,11 @@ class JPFunctionForm(QWidget):
         self.tableView = self.ui.tableView
         self.__FormClass = None
         self.PrimarykeyFieldIndex = 0
+        self.__EditFormClass = self.getEditFormClass()
+        self.__EditForm = None
+        self.EditFormMainTableName = None
+        self.EditFormPrimarykeyFieldName = None
+        self.EditFormSubTableName = None
 
         # 以下为初始化部分
         self.ui.comboBox.addItems(['Today', 'Last Month', 'Last Year', 'All'])
@@ -43,17 +50,44 @@ class JPFunctionForm(QWidget):
         self.ui.comboBox.activated['int'].connect(self.btnRefreshClick)
         # 行交错颜色
         self.ui.tableView.setAlternatingRowColors(True)
+        self.SQL_ListForm_Para = None
+        self.SQL_ListForm_Base = None
 
-
-    def setSQL(self, sql_with_where, sql_base):
+    def setListFormSQL(self, sql_with_where, sql_base):
         '''
         setSQL(sql_without_para, where_string)\n
         sql_without_para: 不带Where子句的sql
         where_string： where子句，参数用{}表示
         '''
-        self.DefauleParaSQL = sql_with_where
-        self.DefauleBaseSQL = sql_base
+        self.SQL_ListForm_Para = sql_with_where
+        self.SQL_ListForm_Base = sql_base
         self.btnRefreshClick()
+
+    def __getTableNameInfo(self, sql, errType=1):
+        # 返回一个指定SQL语句的表名和条件字段名
+        sql = re.sub(r'^\s', '', re.sub(r'\s+', ' ', re.sub(r'\n', '', sql)))
+        sel_p = r"SELECT\s+.*from\s(\S+)\s(as\s\S+){0,1}where\s(\S+)\s*=.*"
+        mt = re.match(sel_p, sql, flags=(re.I))
+        if mt:
+            return mt.groups()[0], mt.groups()[2]
+        else:
+            errStr = "主窗体" if errType == 1 else "子窗体"
+            errStr = errStr + 'SQL语句格式有误,必须类似以下格式：\n'
+            errStr = errStr + "SELECT fieldsList from tab where fld={}\n"
+            errStr = errStr + '而当前设定语句为:\n'
+            errStr = errStr + sql
+            msgBox = QMessageBox(QMessageBox.Critical, u'提示', errStr)
+            msgBox.exec_()
+
+    def setEditFormSQL(self, sql_main: str, sql_sub: str = None):
+        if sql_main:
+            self.SQL_EditForm_Main = sql_main
+            a, b = self.__getTableNameInfo(sql_main)
+            self.EditFormMainTableName = a
+            self.EditFormPrimarykeyFieldName = b
+        if sql_sub:
+            self.SQL_EditForm_Sub = sql_sub
+            self.EditFormSubTableName = self.__getTableNameInfo(sql_sub)
 
     def getModelClass(self):
         '''此类可以重写，改写Model的行为,必须返回一个模型类
@@ -64,6 +98,8 @@ class JPFunctionForm(QWidget):
     def setFormClass(self, cls):
         self.__FormClass = cls
 
+    # def _locationRow(self, id)
+    #     datas=self.TabelFieldInfo.
     def getEditFormClass(self):
         if self.__FormClass is None:
             strErr = "没有设置JPFunctionForm的setFormClass属性，或重写getEditFormClass方法"
@@ -76,8 +112,7 @@ class JPFunctionForm(QWidget):
         return True
 
     def btnRefreshClick(self):
-        if self.DefauleParaSQL:
-            #self.ui.tableView.clear()
+        if self.SQL_ListForm_Para:
             self.ui.tableView.setSelectionMode(
                 QAbstractItemView.SingleSelection)
             ch1 = 1 if self.ui.checkBox_1.isChecked() else 0
@@ -92,7 +127,7 @@ class JPFunctionForm(QWidget):
                 3:
                 '=fOrderDate'
             }
-            sql = self.DefauleParaSQL.format(
+            sql = self.SQL_ListForm_Para.format(
                 ch1=ch1, ch2=ch2, date=cb[self.ui.comboBox.currentIndex()])
             info = JPQueryFieldInfo(sql)
             self.model = self.getModelClass()(self.ui.tableView, info)
@@ -115,25 +150,34 @@ class JPFunctionForm(QWidget):
 
     @pyqtSlot()
     def on_CmdNew_clicked(self):
-        form = self.getEditFormClass()(JPFormModelMainSub.New)
-        form.afterSaveData.connect(self.btnRefreshClick)
-        form.exec_()
+        self.__EditForm = None
+        f = self.__EditFormClass(self.SQL_EditForm_Main, self.SQL_EditForm_Sub,
+                                 JPFormModelMainSub.New)
+        self.__EditForm = f
+        self.__EditForm.afterSaveData.connect(self.btnRefreshClick)
+        self.__EditForm.exec_()
 
     @pyqtSlot()
     def on_CmdEdit_clicked(self):
         cu_id = self.getCurrentSelectPKValue()
         if not cu_id:
             return
-        form = self.getEditFormClass()(JPFormModelMainSub.Edit, cu_id)
-        form.exec_()
+        self.__EditForm = None
+        f = self.__EditFormClass(self.SQL_EditForm_Main, self.SQL_EditForm_Sub,
+                                 JPFormModelMainSub.Edit, cu_id)
+        self.__EditForm = f
+        self.__EditForm.exec_()
 
     @pyqtSlot()
     def on_CmdBrowse_clicked(self):
         cu_id = self.getCurrentSelectPKValue()
         if not cu_id:
             return
-        form = self.getEditFormClass()(JPFormModelMainSub.ReadOnly, cu_id)
-        form.exec_()
+        self.__EditForm = None
+        f = self.__EditFormClass(self.SQL_EditForm_Main, self.SQL_EditForm_Sub,
+                                 JPFormModelMainSub.ReadOnly, cu_id)
+        self.__EditForm = f
+        self.__EditForm.exec_()
 
     @pyqtSlot()
     def on_CmdRefresh_clicked(self):
@@ -151,39 +195,10 @@ class JPFunctionForm(QWidget):
                 db = JPDb()
                 info = self.model.TabelFieldInfo
                 sql = "delete from {tn} where {pk_n}='{pk_v}'"
-                sql = sql.format(tn=self.TableName,
-                                 pk_n=self.PrimarykeyFieldName,
+                sql = sql.format(tn=self.EditFormMainTableName,
+                                 pk_n=self.EditFormPrimarykeyFieldName,
                                  pk_v=cu_id)
                 if db.executeTransaction(sql):
                     del_i = (
                         self.tableView.selectionModel().currentIndex().row())
                     info.deleteRow(del_i)
-    @pyqtSlot()
-    def on_CmdSubmit_clicked(self):
-        cu_id = self.getCurrentSelectPKValue()
-        if not cu_id:
-            return
-        db = JPDb()
-        info = self.model.TabelFieldInfo
-        if info.getOnlyData([
-                self.tableView.selectionModel().currentIndex().row(),
-                self.fSubmited_column
-        ]) == 1:
-            msg = '记录【{cu_id}】已经提交，不能重复提交!\nThe order [{cu_id}] '
-            msg = msg + 'has been submitted, can not be repeated submission!'
-            msg = msg.format(cu_id=cu_id)
-            QMessageBox.warning(self, '提示', msg, QMessageBox.Ok,
-                                QMessageBox.Ok)
-            return
-        msg = '提交后订单将不能修改！确定继续提交记录【{cu_id}】吗？\n'
-        msg = msg + 'The order "{cu_id}" will not be modified after submission. '
-        msg = msg + 'Click OK to continue submitting?'.format(cu_id=cu_id)
-        if QMessageBox.question(self, '确认', msg, QMessageBox.Ok,
-                                QMessageBox.Ok) != QMessageBox.Ok:
-            return
-        sql = "update {tn} set fSubmited=1 where {pk_n}='{pk_v}'"
-        sql = sql.format(tn=self.TableName,
-                         pk_n=self.PrimarykeyFieldName,
-                         pk_v=cu_id)
-        if db.executeTransaction(sql):
-            self.btnRefreshClick()
