@@ -19,7 +19,6 @@ import re
 
 
 class JPFunctionForm(QWidget):
-
     def __init__(self, parent, flags=Qt.WindowFlags()):
         super().__init__(parent, flags=flags)
         # 把本窗体加入主窗体
@@ -139,6 +138,14 @@ class JPFunctionForm(QWidget):
         if index.isValid():
             return self.model.TabelFieldInfo.getOnlyData(
                 [index.row(), self.PrimarykeyFieldIndex])
+    # 定位到某一行
+    def _locationRow(self, id):
+        tab = self.model.TabelFieldInfo
+        c = self.PrimarykeyFieldIndex
+        for r in range(len(tab.DeleteRows)):
+            if tab.getOnlyData(r, c) == id:
+                index = self.model.createIndex(r, c)
+                self.ui.tableView.setCurrentIndex(index)
 
     @pyqtSlot()
     def on_CmdExportToExcel_clicked(self):
@@ -153,6 +160,7 @@ class JPFunctionForm(QWidget):
         self.__EditForm = None
         f = self.__EditFormClass(self.SQL_EditForm_Main, self.SQL_EditForm_Sub,
                                  JPFormModelMainSub.New)
+        f.setListForm(self)
         self.__EditForm = f
         self.__EditForm.afterSaveData.connect(self.btnRefreshClick)
         self.__EditForm.exec_()
@@ -165,6 +173,7 @@ class JPFunctionForm(QWidget):
         self.__EditForm = None
         f = self.__EditFormClass(self.SQL_EditForm_Main, self.SQL_EditForm_Sub,
                                  JPFormModelMainSub.Edit, cu_id)
+        f.setListForm(self)
         self.__EditForm = f
         self.__EditForm.exec_()
 
@@ -176,6 +185,7 @@ class JPFunctionForm(QWidget):
         self.__EditForm = None
         f = self.__EditFormClass(self.SQL_EditForm_Main, self.SQL_EditForm_Sub,
                                  JPFormModelMainSub.ReadOnly, cu_id)
+        f.setListForm(self)
         self.__EditForm = f
         self.__EditForm.exec_()
 

@@ -37,8 +37,9 @@ class PopEditForm(QDialog):
         self.MainModle.setFieldsRowSource(self.setMainFormFieldsRowSources())
         self.MainModle.setTabelInfo(self.mainSql)
 
+        self.subSql = subSql.format(self.curPK) if subSql else None
         if subSql:
-            self.subSql = subSql.format(self.curPK)
+
             self.SubModle = self.MainSubMolde.subModel
 
             def __getList(r):
@@ -123,6 +124,7 @@ class PopEditForm(QDialog):
 
     def __Cacu(self):
         md = self.MainSubMolde
+
         md.dataChanged[QModelIndex].disconnect(self.__Cacu)
         md.dataChanged[QWidget].disconnect(self.__Cacu)
         self.afterDataChangedCalculat()
@@ -152,7 +154,7 @@ class PopEditForm(QDialog):
                 self.ui.butPDF.setEnabled(True)
                 self.MainSubMolde.setEditState(False)
                 self.afterSaveData.emit(result)
-                self.__FunctionForm.__locationNew(self, id)
+                self.__FunctionForm._locationRow(id)
                 QMessageBox.information(self, '完成',
                                         '保存数据完成！\nSave data complete!',
                                         QMessageBox.Yes, QMessageBox.Yes)

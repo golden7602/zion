@@ -7,7 +7,7 @@ from PyQt5.QtCore import pyqtSlot
 from PyQt5.QtWidgets import QMessageBox
 from lib.JPPrintReport import JPPrintSectionType
 from lib.ZionPublc import JPPub
-from lib.ZionWidgets.FuncFormBase import JPFunctionForm
+from lib.JPMvc.JPFuncForm import JPFunctionForm
 from Ui.Ui_FormOrderMob import Ui_Form
 from lib.JPMvc.JPModel import JPFormModelMainSub, JPEditFormDataMode
 from lib.JPDatabase.Database import JPDb
@@ -97,11 +97,12 @@ class JPFuncForm_Order(JPFunctionForm):
         msg = msg.replace("{cu_id}", str(cu_id))
         if QMessageBox.question(self, '确认', msg, QMessageBox.Ok,
                                 QMessageBox.Ok) == QMessageBox.Ok:
-            sql = "update {tn} set fSubmited=1 where {pk_n}='{pk_v}'"
+            sql = "update {tn} set fSubmited=1 where {pk_n}='{pk_v}';"
+            sql1= "select '{pk_v}';"
             sql = sql.format(tn=self.EditFormMainTableName,
                              pk_n=self.EditFormPrimarykeyFieldName,
                              pk_v=cu_id)
-            if db.executeTransaction(sql):
+            if db.executeTransaction([sql,sql1.format(pk_v = cu_id)]):
                 self.btnRefreshClick()
 
 

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>880</width>
-    <height>429</height>
+    <height>434</height>
    </rect>
   </property>
   <property name="font">
@@ -842,7 +842,7 @@
         </size>
        </property>
        <property name="text">
-        <string>序号Numeracao:</string>
+        <string>起始号码Numeracao:</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -1263,6 +1263,9 @@
        <property name="spacing">
         <number>0</number>
        </property>
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
        <item>
         <widget class="QWidget" name="temp" native="true">
          <property name="sizePolicy">
@@ -1271,7 +1274,7 @@
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
-         <layout class="QGridLayout" name="gridLayout_2">
+         <layout class="QGridLayout" name="gridLayout_2" columnstretch="20,15" columnminimumwidth="30,0">
           <property name="sizeConstraint">
            <enum>QLayout::SetNoConstraint</enum>
           </property>
@@ -1533,6 +1536,12 @@
             </property>
             <property name="alignment">
              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+            <property name="margin">
+             <number>0</number>
+            </property>
+            <property name="indent">
+             <number>-1</number>
             </property>
            </widget>
           </item>
