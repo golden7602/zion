@@ -5,11 +5,12 @@
 # Created by: PyQt5 UI code generator 5.11.3
 #
 # WARNING! All changes made in this file will be lost!
+
 from os import getcwd
 from sys import path as jppath
 jppath.append(getcwd())
 from PyQt5 import QtCore, QtGui
-from lib.JPMvc import JPWidgets  as QtWidgets
+from lib.JPMvc import JPWidgets as QtWidgets
 
 class Ui_Form(object):
     def setupUi(self, Form):
@@ -25,14 +26,14 @@ class Ui_Form(object):
         self.verticalLayout_4.setObjectName("verticalLayout_4")
         self.horizontalLayout_6 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_6.setObjectName("horizontalLayout_6")
-        self.label_17 = QtWidgets.QLabel(Form)
-        self.label_17.setMinimumSize(QtCore.QSize(329, 60))
-        self.label_17.setMaximumSize(QtCore.QSize(329, 60))
-        self.label_17.setText("")
-        self.label_17.setPixmap(QtGui.QPixmap("../res/Zions_100.png"))
-        self.label_17.setScaledContents(True)
-        self.label_17.setObjectName("label_17")
-        self.horizontalLayout_6.addWidget(self.label_17)
+        self.label_logo = QtWidgets.QLabel(Form)
+        self.label_logo.setMinimumSize(QtCore.QSize(329, 60))
+        self.label_logo.setMaximumSize(QtCore.QSize(329, 60))
+        self.label_logo.setText("")
+        self.label_logo.setPixmap(QtGui.QPixmap("../res/Zions_100.png"))
+        self.label_logo.setScaledContents(True)
+        self.label_logo.setObjectName("label_logo")
+        self.horizontalLayout_6.addWidget(self.label_logo)
         spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_6.addItem(spacerItem)
         self.verticalLayout_3 = QtWidgets.QVBoxLayout()
@@ -406,6 +407,7 @@ class Ui_Form(object):
         self.verticalLayout_2.addWidget(self.temp)
         self.horizontalLayout_2.addLayout(self.verticalLayout_2)
         self.verticalLayout_4.addLayout(self.horizontalLayout_2)
+
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
 

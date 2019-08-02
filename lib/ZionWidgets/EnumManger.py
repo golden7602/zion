@@ -89,7 +89,7 @@ class Form_EnumManger(QWidget):
         opt2 = menu.addAction("Delete删除")
         action = menu.exec_(self.tab2.mapToGlobal(pos))
         if action == opt1:
-            self.mod2.insertRows(len(self.tabinfo2.RowsData))
+            self.mod2.insertRows(len(self.tabinfo2.DataRows))
             self.tab2.selectRow(self.mod2.rowCount() - 1)
             return
         elif action == opt2:

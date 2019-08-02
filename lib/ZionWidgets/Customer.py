@@ -45,7 +45,7 @@ class Form_Customer(QWidget):
         self.UI.tableView.setModel(self.mod)
         self.UI.tableView.resizeColumnsToContents()
         lst = [[item.Datas[1], item.Datas[0]]
-               for item in self.dataInfo.RowsData]
+               for item in self.dataInfo.DataRows]
         cbo.setEditable(True)
         for r in lst:
             cbo.addItem(r[0], r[1])

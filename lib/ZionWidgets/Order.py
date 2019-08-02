@@ -1,18 +1,20 @@
+from functools import reduce
 from os import getcwd
 from sys import path as jppath
 jppath.append(getcwd())
 
-from functools import reduce
 from PyQt5.QtCore import pyqtSlot
+from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QMessageBox
+
+from lib.JPDatabase.Database import JPDb
+from lib.JPMvc.JPEditDialog import PopEditForm
+from lib.JPMvc.JPFuncForm import JPFunctionForm
+from lib.JPMvc.JPModel import JPEditFormDataMode, JPFormModelMainSub
 from lib.JPPrintReport import JPPrintSectionType
 from lib.ZionPublc import JPPub
-from lib.JPMvc.JPFuncForm import JPFunctionForm
-from Ui.Ui_FormOrderMob import Ui_Form
-from lib.JPMvc.JPModel import JPFormModelMainSub, JPEditFormDataMode
-from lib.JPDatabase.Database import JPDb
 from lib.ZionReport.OrderReportMob import Order_report_Mob
-from lib.JPMvc.JPEditDialog import PopEditForm
+from Ui.Ui_FormOrderMob import Ui_Form
 
 
 class JPFuncForm_Order(JPFunctionForm):
@@ -98,11 +100,11 @@ class JPFuncForm_Order(JPFunctionForm):
         if QMessageBox.question(self, '确认', msg, QMessageBox.Ok,
                                 QMessageBox.Ok) == QMessageBox.Ok:
             sql = "update {tn} set fSubmited=1 where {pk_n}='{pk_v}';"
-            sql1= "select '{pk_v}';"
+            sql1 = "select '{pk_v}';"
             sql = sql.format(tn=self.EditFormMainTableName,
                              pk_n=self.EditFormPrimarykeyFieldName,
                              pk_v=cu_id)
-            if db.executeTransaction([sql,sql1.format(pk_v = cu_id)]):
+            if db.executeTransaction([sql, sql1.format(pk_v=cu_id)]):
                 self.btnRefreshClick()
 
 
@@ -137,6 +139,9 @@ class EditForm_Order(PopEditForm):
                          pkValue=pkValue,
                          mainSql=mainSql,
                          subSql=subSql)
+        self.setPkRole(1)
+        self.ui.label_logo.setPixmap(QPixmap(getcwd() +
+                                             "\\res\\Zions_100.png"))
 
     def setSubFormFormula(self):
         fla = "JPRound(JPRound({2}) * JPRound({4},2) * "
@@ -175,7 +180,6 @@ class EditForm_Order(PopEditForm):
 
     def afterSaveDate(self, data):
         self.ui.fOrderID.setText(data)
-
 
 
 class Order_report(Order_report_Mob):

@@ -79,13 +79,13 @@ class JPQueryFieldInfo(object):
         flds, data = db.getFeildsInfoAndData(sql)
         # self.__isMain = True
         self.Fields = flds
-        self.RowsData = [JPTabelRowData(row) for row in data]
+        self.DataRows = [JPTabelRowData(row) for row in data]
         self.FieldsDict = {fld.FieldName: fld for fld in flds}
         for i in range(len(self.Fields)):
             self.Fields[i]._index = i
 
     def __len__(self):
-        return len(self.RowsData)
+        return len(self.DataRows)
 
     # def setMainSubMode(mode: bool):
     #     self.__self.__isMain = mode
@@ -94,13 +94,13 @@ class JPQueryFieldInfo(object):
         """getOnlyData(index: [list, tuple, QModelIndex])
         根据指定的数据位置返回数据的值"""
         r, c = JPQueryFieldInfo.getRC(index)
-        return self.RowsData[r].Data(c)
+        return self.DataRows[r].Data(c)
 
     def getDispText(self, index: [list, tuple, QModelIndex]):
         """getDispText(index: [list, tuple, QModelIndex])
         根据指定的数据位置返回数据的显示文本"""
         r, c = JPQueryFieldInfo.getRC(index)
-        v = self.RowsData[r].Data(c)
+        v = self.DataRows[r].Data(c)
         rs = self.Fields[c].RowSource
         if not v:
             return ''
@@ -113,7 +113,7 @@ class JPQueryFieldInfo(object):
 
     def getRowData(self, row_num) -> list:
         """根据指定的行号返回一个列表,仅仅包含数据"""
-        return self.RowsData[row_num].Datas
+        return self.DataRows[row_num].Datas
 
     def getFieldsInfo(self):
         return self.Fields
@@ -122,7 +122,7 @@ class JPQueryFieldInfo(object):
         """getRowFieldsInfoAndData(row_num: int)
         根据指定的行号返回一个列表，包含所有FieldInfo对象，且有Value属性"""
         flds = deepcopy(self.Fields)
-        data = self.RowsData[row_num]
+        data = self.DataRows[row_num]
         for i, fld in flds:
             fld.Value = data[i]
         return flds
@@ -131,7 +131,7 @@ class JPQueryFieldInfo(object):
         """getRowValueDict(row_num: int)
         根据指定的行号返回一个字典，键是字段名，值为FieldInfo对象，且有Value属性"""
         flds = deepcopy(self.Fields)
-        data = self.RowsData[row_num].Datas
+        data = self.DataRows[row_num].Datas
         r = {}
         for i, item in enumerate(data):
             flds[i].Value = item
@@ -141,7 +141,7 @@ class JPQueryFieldInfo(object):
     def getRowValueDict(self, row_num: int) -> dict:
         """getRowValueDict(row_num: int)
         根据指定的行号返回一个字典，键是字段名，值为数据"""
-        data = self.RowsData[row_num].Datas
+        data = self.DataRows[row_num].Datas
         r = {}
         for i, item in enumerate(data):
             r[self.Fields[i].FieldName] = item
@@ -160,7 +160,7 @@ class JPQueryFieldInfo(object):
         """
         r, c = self.getRC(index)
         fld = deepcopy(self.Fields[c])
-        fld.value = self.RowsData[r][0][c]
+        fld.value = self.DataRows[r][0][c]
 
     def setFieldsRowSource(self, key, data: list):
         '''setFieldsRowSource(key, data:list)\n
@@ -214,15 +214,15 @@ class JPTabelFieldInfo(JPQueryFieldInfo):
         fld = self.Fields[c]
         conDict = fld.getConvertersDict()
         conver = conDict[fld.TypeCode]
-        self.RowsData[r].setData(c, conver(value))
+        self.DataRows[r].setData(c, conver(value))
 
     def addRow(self):
         '''增加一行数据，全为None'''
         newRow = JPTabelRowData(len(self.Fields))
         newRow._state = JPTabelRowData.New_None
-        self.RowsData.append(newRow)
+        self.DataRows.append(newRow)
 
     def deleteRow(self, row_num: int):
-        self.DeleteRows.append(self.RowsData[row_num])
-        del self.RowsData[row_num]
+        self.DeleteRows.append(self.DataRows[row_num])
+        del self.DataRows[row_num]
 

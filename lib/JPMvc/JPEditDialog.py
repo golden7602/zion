@@ -3,7 +3,7 @@ from sys import path as jppath
 jppath.append(getcwd())
 
 from PyQt5.QtWidgets import (QDialog, QWidget, QMessageBox, QMenu)
-from lib.JPMvc.JPModel import JPFormModelMainSub
+from lib.JPMvc.JPModel import JPFormModelMainSub, JPFormModelMain
 from PyQt5.QtCore import Qt, QModelIndex, pyqtSlot, pyqtSignal
 from lib.ZionPublc import JPPub
 from lib.JPDatabase.Database import JPDb
@@ -25,54 +25,65 @@ class PopEditForm(QDialog):
         self.ui = clsUi()
         self.ui.setupUi(self)
         self.EditMode = edit_mode
-        self.tv = self.ui.tableView
         if self.EditMode == JPFormModelMainSub.New:
             self.ui.butSave.setEnabled(False)
             self.ui.butPrint.setEnabled(False)
             self.ui.butPDF.setEnabled(False)
         self.curPK = pkValue if pkValue else ''
         self.mainSql = mainSql.format(self.curPK)
-        self.MainSubMolde = self.getMainSubMode()(self.ui, self.tv)
-        self.MainModle = self.MainSubMolde.mainModel
-        self.MainModle.setFieldsRowSource(self.setMainFormFieldsRowSources())
-        self.MainModle.setTabelInfo(self.mainSql)
-
         self.subSql = subSql.format(self.curPK) if subSql else None
+        self.__PKRole = None
         if subSql:
-
-            self.SubModle = self.MainSubMolde.subModel
-
-            def __getList(r):
-                if isinstance(r, list):
-                    return r
-                if isinstance(r, tuple):
-                    return list(r)
-                if r is None:
-                    return []
-                a = []
-                a.append(r)
-                return a
-
+            self.tv = self.ui.tableView
+            self.MainSubModle = self.getMainSubMode()(self.ui, self.tv)
+            self.MainModle = self.MainSubModle.mainModel
+            self.MainModle.setFieldsRowSource(
+                self.setMainFormFieldsRowSources())
+            self.MainModle.setTabelInfo(self.mainSql)
+            self.SubModle = self.MainSubModle.subModel
             f = self.setSubFormFormula()
             if f:
                 self.SubModle.setFormula(*f)
-            h = __getList(self.setSubFormColumnsHidden())
+            h = self.__getList(self.setSubFormColumnsHidden())
             if h:
                 self.SubModle.setColumnsHidden(*h)
-            r = __getList(self.setSubFormColumnsReadOnly())
+            r = self.__getList(self.setSubFormColumnsReadOnly())
             if r:
                 self.SubModle.setColumnsReadOnly(*r)
-            w = __getList(self.setSubFormColumnWidths())
+            w = self.__getList(self.setSubFormColumnWidths())
             if w:
                 self.SubModle.setColumnWidths(*w)
             self.SubModle.setTabelInfo(self.subSql)
             self.ui.tableView.setContextMenuPolicy(Qt.CustomContextMenu)
             self.ui.tableView.customContextMenuRequested.connect(
                 self.__right_menu)
-        self.MainSubMolde.firstHasDirty.connect(self.__firstDirty)
-        self.MainSubMolde.dataChanged[QModelIndex].connect(self.__Cacu)
-        self.MainSubMolde.dataChanged[QWidget].connect(self.__Cacu)
-        self.MainSubMolde.show(edit_mode)
+            self.MainSubModle.firstHasDirty.connect(self.__firstDirty)
+            self.MainSubModle.dataChanged[QModelIndex].connect(self.__Cacu)
+            self.MainSubModle.dataChanged[QWidget].connect(self.__Cacu)
+            self.MainSubModle.show(edit_mode)
+        else:
+            self.MainModle = self.getMainMode()(self.ui)
+            self.MainModle.setFieldsRowSource(
+                self.setMainFormFieldsRowSources())
+            self.MainModle.setTabelInfo(self.mainSql)
+            self.MainModle.EditMode = edit_mode
+            self.MainModle.firstHasDirty.connect(self.__firstDirty)
+            self.MainModle.dataChanged[QWidget].connect(self.__Cacu)
+            self.MainModle.readData()
+
+    def __getList(self, r):
+        if isinstance(r, list):
+            return r
+        if isinstance(r, tuple):
+            return list(r)
+        if r is None:
+            return []
+        a = []
+        a.append(r)
+        return a
+
+    def setPkRole(self, role: int):
+        self.__PKRole = role
 
     def __right_menu(self, pos):
         menu = QMenu()
@@ -82,7 +93,7 @@ class PopEditForm(QDialog):
         opt2 = menu.addAction("Delete删除")
         action = menu.exec_(tv.mapToGlobal(pos))
         if action == opt1:
-            mod.insertRows(len(mod.RowsData))
+            mod.insertRows(len(mod.DataRows))
             tv.selectRow(mod.rowCount() - 1)
             return
         elif action == opt2:
@@ -97,6 +108,10 @@ class PopEditForm(QDialog):
     def getMainSubMode(self) -> JPFormModelMainSub:
         """返回主窗体处理子类，必须继承自JPFormModelMainSub"""
         return JPFormModelMainSub
+
+    def getMainMode(self) -> JPFormModelMain:
+        """返回主窗体处理子类，必须继承自JPFormModelMain"""
+        return JPFormModelMain
 
     def getPrintReport(self) -> JPReport:
         """返回主窗体处理子类，必须继承自JPReport"""
@@ -123,13 +138,18 @@ class PopEditForm(QDialog):
         return
 
     def __Cacu(self):
-        md = self.MainSubMolde
-
-        md.dataChanged[QModelIndex].disconnect(self.__Cacu)
-        md.dataChanged[QWidget].disconnect(self.__Cacu)
-        self.afterDataChangedCalculat()
-        md.dataChanged[QWidget].connect(self.__Cacu)
-        md.dataChanged[QModelIndex].connect(self.__Cacu)
+        if self.subSql:
+            md = self.MainSubModle
+            md.dataChanged[QModelIndex].disconnect(self.__Cacu)
+            md.dataChanged[QWidget].disconnect(self.__Cacu)
+            self.afterDataChangedCalculat()
+            md.dataChanged[QWidget].connect(self.__Cacu)
+            md.dataChanged[QModelIndex].connect(self.__Cacu)
+        else:
+            md = self.MainModle
+            md.dataChanged[QWidget].disconnect(self.__Cacu)
+            self.afterDataChangedCalculat()
+            md.dataChanged[QWidget].connect(self.__Cacu)
 
     def afterSaveDate(self, data):
         """保存数据后执行该方法，一一般用于根据此参数修改窗口状态，请覆盖"""
@@ -145,16 +165,18 @@ class PopEditForm(QDialog):
     @pyqtSlot()
     def on_butSave_clicked(self):
         try:
-            lst = self.MainSubMolde.getSqls(1)
+            lst = self.MainSubModle.getSqls(
+                self.__PKRole) if self.subSql else self.MainModle.getSqls(
+                    self.__PKRole)
             isOK, result = JPDb().executeTransaction(lst)
             if isOK:
                 self.afterSaveDate(result)
                 self.ui.butSave.setEnabled(False)
                 self.ui.butPrint.setEnabled(True)
                 self.ui.butPDF.setEnabled(True)
-                self.MainSubMolde.setEditState(False)
+                self.MainSubModle.setEditState(False)
                 self.afterSaveData.emit(result)
-                self.__FunctionForm._locationRow(id)
+                self.__FunctionForm._locationRow(result)
                 QMessageBox.information(self, '完成',
                                         '保存数据完成！\nSave data complete!',
                                         QMessageBox.Yes, QMessageBox.Yes)

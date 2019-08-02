@@ -49,8 +49,8 @@ class JPFunctionForm(QWidget):
         self.ui.comboBox.activated['int'].connect(self.btnRefreshClick)
         # 行交错颜色
         self.ui.tableView.setAlternatingRowColors(True)
-        self.SQL_ListForm_Para = None
-        self.SQL_ListForm_Base = None
+        self.SQL_EditForm_Main = None
+        self.SQL_EditForm_Sub = None
 
     def setListFormSQL(self, sql_with_where, sql_base):
         '''
@@ -138,14 +138,17 @@ class JPFunctionForm(QWidget):
         if index.isValid():
             return self.model.TabelFieldInfo.getOnlyData(
                 [index.row(), self.PrimarykeyFieldIndex])
+
     # 定位到某一行
     def _locationRow(self, id):
         tab = self.model.TabelFieldInfo
         c = self.PrimarykeyFieldIndex
-        for r in range(len(tab.DeleteRows)):
-            if tab.getOnlyData(r, c) == id:
+        for r in range(len(tab.DataRows)):
+            print("{}={}".format(tab.getOnlyData([r, c]), id))
+            if tab.getOnlyData([r, c]) == id:
                 index = self.model.createIndex(r, c)
                 self.ui.tableView.setCurrentIndex(index)
+                return
 
     @pyqtSlot()
     def on_CmdExportToExcel_clicked(self):

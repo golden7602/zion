@@ -114,7 +114,7 @@ class Form_User(QWidget):
         a = user.currentUserRight()
         if self.checkDirty():
             self.saveRight(index2)
-        uid = self.dataInfo.RowsData[index1.row()].Data(0)
+        uid = self.dataInfo.DataRows[index1.row()].Data(0)
         sql = """
             SELECT u.fUsername, m.*, ord(ur.fHasRight) AS fHasRight
             FROM sysnavigationmenus m

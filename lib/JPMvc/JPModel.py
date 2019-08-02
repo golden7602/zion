@@ -6,6 +6,7 @@ from os import getcwd
 from sys import path as jppath
 jppath.append(getcwd())
 
+import re
 from PyQt5.QtCore import (QAbstractTableModel, QDate, QModelIndex, QObject, Qt,
                           QVariant, pyqtSignal)
 from PyQt5.QtGui import QColor
@@ -26,6 +27,7 @@ class __JPTableViewModelBase(QAbstractTableModel):
     dataChanged = pyqtSignal(QModelIndex)
     firstHasDirty = pyqtSignal()
     editNext = pyqtSignal(QModelIndex)
+
     def __init__(self, tabelFieldInfo: JPTabelFieldInfo = None):
         super().__init__()
         self.TabelFieldInfo = tabelFieldInfo
@@ -105,7 +107,7 @@ class __JPTableViewModelBase(QAbstractTableModel):
 
     def __formulaCacu(self, row_num: int):
         # 这个可能要重新写
-        rd = self.TabelFieldInfo.RowsData[row_num]
+        rd = self.TabelFieldInfo.DataRows[row_num]
         fms = [f for f in self.TabelFieldInfo.Fields if f.Formula]
         for fld in fms:
             try:
@@ -126,7 +128,7 @@ class __JPTableViewModelBase(QAbstractTableModel):
             self.__formulaCacu(Index.row())
         # 执行重载函数，判断行数据是否合法
         # 给函数参数的值 是最后一行的数据list
-        row_data = t_inof.getRowData(len(t_inof.RowsData) - 1)
+        row_data = t_inof.getRowData(len(t_inof.DataRows) - 1)
         tempv = self.AfterSetDataBeforeInsterRowEvent(row_data, Index)
 
         if isinstance(tempv, bool):
@@ -195,7 +197,7 @@ class __JPTableViewModelBase(QAbstractTableModel):
                 r, con = 0, lambda v: int(v.to_eng_string())
             if tp == JPFieldType.Float:
                 r, con = 0.0, lambda v: float(v.to_eng_string())
-            for i in range(len(self.TabelFieldInfo.RowsData)):
+            for i in range(len(self.TabelFieldInfo.DataRows)):
                 tempValue = rd([i, col])
                 tempValue = tempValue if tempValue else 0
                 r += tempValue
@@ -288,6 +290,7 @@ class JPFormModelMain(JPEditFormDataMode):
         self.__fieldsRowSource = None
         self.ObjectDict = {}
         self.__findJPObject(Ui)
+        self.__Formulas = []
 
     def __setdirty(self, state: bool = True):
         # 第一次存在脏数据时，发送一个信号
@@ -299,6 +302,31 @@ class JPFormModelMain(JPEditFormDataMode):
     def dirty(self) -> bool:
         """返回模型中是否有脏数据"""
         return self.__dirty
+
+    def setFormulas(self, *args):
+        """setFormulas(str1...)
+        设置计算公式，从个公式之间用逗号分开"""
+        self.__Formulas = args
+
+    def __cacuFormulas(self):
+        for fa in self.__Formulas:
+            mt = re.match(r"\{(\S+)\}=(.+)",
+                          re.sub(r'\s', '', fa),
+                          flags=(re.I))
+            try:
+                fLeft = mt.groups()[0]
+                fRight = mt.groups()[1]
+            except Exception:
+                raise ValueError("公式解析错误")
+            v = None
+            values = {k: v.Value() for k, v in self.ObjectDict.items()}
+            fa_v = fRight.format(**values)
+            try:
+                v = eval(fa_v)
+            except Exception:
+                pass
+            finally:
+                self.setObjectValue(fLeft, v)
 
     def __findJPObject(self, Ui):
         cls_tup = (JPWidgets.QLineEdit, JPWidgets.QDateEdit,
@@ -316,6 +344,7 @@ class JPFormModelMain(JPEditFormDataMode):
         self.__JPFormModelMainSub = mod
 
     def _emitDataChange(self, arg):
+        self.__cacuFormulas()
         self.dataChanged.emit(arg)
         self.__setdirty()
         if self.__JPFormModelMainSub:
@@ -323,7 +352,6 @@ class JPFormModelMain(JPEditFormDataMode):
 
     def setTabelInfo(self, sql: str):
         self.__sql = sql
-        #self.autoPkRole = auto_pk_role
 
     def setFieldsRowSource(self, lst: list):
         self.__fieldsRowSource = lst
@@ -349,7 +377,7 @@ class JPFormModelMain(JPEditFormDataMode):
         if fld_dict:
             for k, v in self.ObjectDict.items():
                 if k in fld_dict:
-                    v.setRowsData(tf.RowsData[0])
+                    v.setRowsData(tf.DataRows[0])
                     v.setFieldInfo(fld_dict[k])
                     v.setMainModel(self)
                     # 给输入控件指定查询的或增加的第一行数据
@@ -394,7 +422,7 @@ class JPFormModelMain(JPEditFormDataMode):
         appform = pb.MainForm
         nm_lst = []
         v_lst = []
-        ds = self.tableFieldsInfo.RowsData[0].Datas
+        ds = self.tableFieldsInfo.DataRows[0].Datas
         st = self.EditMode
         # 空值检查
         for fld in self.tableFieldsInfo.Fields:
@@ -413,7 +441,7 @@ class JPFormModelMain(JPEditFormDataMode):
 
         sql_i = 'INSERT INTO ' + TN + ' ({}) VALUES ({});\n'
         sql_u = 'UPDATE ' + TN + ' SET {} WHERE {}={};\n'
-        row_st = self.tableFieldsInfo.RowsData[0].State
+        row_st = self.tableFieldsInfo.DataRows[0].State
         if (row_st == JPTabelRowData.New_None
                 or row_st == JPTabelRowData.OriginalValue):
             return ''
@@ -601,7 +629,7 @@ class _JPFormModelSub(JPEditFormDataMode):
                 if fld.Auto_Increment or fld.IsPrimarykey:
                     continue
                 else:
-                    if self.tableFieldsInfo.RowsData[
+                    if self.tableFieldsInfo.DataRows[
                             r].State == JPTabelRowData.New_None:
                         continue
                     if self.tableFieldsInfo.getOnlyData([r, c]) is None:
@@ -620,7 +648,7 @@ class _JPFormModelSub(JPEditFormDataMode):
         sql_i = 'INSERT INTO ' + TN + ' ({}) VALUES ({});\n'
         sql_u = 'UPDATE ' + TN + ' SET {} WHERE {}={};\n'
         if self.EditMode == self.New:
-            for row in self.tableFieldsInfo.RowsData:
+            for row in self.tableFieldsInfo.DataRows:
                 fn_lst = []
                 v_lst = []
                 r_st = row.State
@@ -646,7 +674,7 @@ class _JPFormModelSub(JPEditFormDataMode):
                                              ','.join(v_lst)))
 
         elif self.EditMode == self.Edit:
-            for row in self.tableFieldsInfo.RowsData:
+            for row in self.tableFieldsInfo.DataRows:
                 fn_lst = []
                 v_lst = []
                 r_st = row.State

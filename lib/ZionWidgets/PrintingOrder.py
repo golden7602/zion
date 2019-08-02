@@ -1,22 +1,24 @@
+from functools import reduce
 from os import getcwd
 from sys import path as jppath
 jppath.append(getcwd())
 
-from functools import reduce
 from PyQt5.QtCore import pyqtSlot
-from PyQt5.QtWidgets import QMessageBox,QAction,QLineEdit
+from PyQt5.QtGui import QIcon, QIntValidator, QPixmap
+from PyQt5.QtWidgets import QAction, QLineEdit, QMessageBox
+
+from lib.JPDatabase.Database import JPDb
+from lib.JPDatabase.Query import JPTabelFieldInfo
+from lib.JPMvc.JPEditDialog import PopEditForm
+from lib.JPMvc.JPFuncForm import JPFunctionForm
+from lib.JPMvc.JPModel import JPEditFormDataMode, JPFormModelMainSub
 from lib.JPPrintReport import JPPrintSectionType
 from lib.ZionPublc import JPPub
-from lib.JPMvc.JPFuncForm import JPFunctionForm
-from Ui.Ui_FormPrintingOrder import Ui_Form
-from lib.JPMvc.JPModel import JPFormModelMainSub, JPEditFormDataMode
-from lib.JPDatabase.Database import JPDb
 from lib.ZionReport.OrderReportMob import Order_report_Mob
-from lib.JPMvc.JPEditDialog import PopEditForm
-from PyQt5.QtGui import QIntValidator,QIcon,QPixmap
+from Ui.Ui_FormPrintingOrder import Ui_Form
 
 
-class JPFuncForm_Order(JPFunctionForm):
+class JPFuncForm_PrintingOrder(JPFunctionForm):
     def __init__(self, MainForm):
         super().__init__(MainForm)
         sql_0 = """
@@ -63,14 +65,15 @@ class JPFuncForm_Order(JPFunctionForm):
         self.checkBox_1.setChecked(False)
         self.checkBox_2.setChecked(True)
         super().setListFormSQL(sql_1, sql_2)
-        self.tableView.setColumnHidden(13, True)
+        self.tableView.setColumnHidden(23, True)
+        self.tableView.setColumnHidden(24, True)
         self.fSubmited_column = 13
         m_sql = """
-                SELECT fOrderID, fEndereco, fCelular, fRequiredDeliveryDate, fContato
-                    , fTelefone, fVendedorID, fCustomerID, fOrderDate, fNUIT
-                    , fCity, fSucursal, fQuant, fNumerBegin, fNumerEnd
-                    , fPrice, fLogo, fEspecie, fAvista, fTamanho
-                    , fNrCopy, fPagePerVolumn, fNote, fAmount, fDesconto
+                SELECT fOrderID, fCelular, fRequiredDeliveryDate, fContato
+                    , fTelefone, fVendedorID, fCustomerID, fOrderDate
+                    , fSucursal, fQuant, fNumerBegin, fNumerEnd
+                    , fPrice, fLogo, fEspecieID, fAvistaID, fTamanhoID
+                    , fNrCopyID, fPagePerVolumn, fNote, fAmount, fDesconto
                     , fTax, fPayable
                 FROM t_order
                 WHERE fOrderID = '{}'
@@ -113,9 +116,9 @@ class JPFuncForm_Order(JPFunctionForm):
                 self.btnRefreshClick()
 
 
-class myMainSubMode(JPFormModelMainSub):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+# class myMainSubMode(JPFormModelMainSub):
+#     def __init__(self, *args, **kwargs):
+#         super().__init__(*args, **kwargs)
 
 
 class EditForm_PrintingOrder(PopEditForm):
@@ -129,36 +132,111 @@ class EditForm_PrintingOrder(PopEditForm):
                          pkValue=pkValue,
                          mainSql=mainSql,
                          subSql=subSql)
-        # 添加一个动作
-        self.SearchAction=QAction()
+        self.setPkRole(5)
+        self.ui.fAvistaID.BindingColumn = 2
+        self.ui.fVendedorID.BindingColumn = 2
+        self.ui.fEspecieID.BindingColumn = 2
+        self.ui.fTamanhoID.BindingColumn = 2
+        self.ui.fNrCopyID.BindingColumn = 2
+        self.ui.fAvistaID.BindingColumn = 2
+        self.NumTabelFieldInfo = None
+        pix = QPixmap(getcwd() + "\\res\\Zions_100.png")
+        self.ui.label_logo.setPixmap(pix)
+        self.ui.fNumerEnd.setEnabled(False)
+        # 添加一个动作,用于显示已经存在的同类单据号码
+        self.SearchAction = QAction()
         self.SearchAction.setIcon(QIcon(getcwd() + "\\res\\ico\\search.png"))
-        self.ui.fNumerBegin.addAction(SearchAction,QLineEdit.LeadingPosition)
+        self.ui.fNumerBegin.addAction(self.SearchAction,
+                                      QLineEdit.LeadingPosition)
+        #新单据状态
+        if edit_mode == JPFormModelMainSub.New:
+            self.ui.fOrderID.setEnabled(False)
+            self.ui.fCustomerID.setCurrentIndex(-1)
+            self.ui.fVendedorID.setCurrentIndex(-1)
+            self.ui.fEspecieID.setCurrentIndex(-1)
+            self.ui.fTamanhoID.setCurrentIndex(-1)
+            self.ui.fNrCopyID.setCurrentIndex(-1)
+            self.ui.fAvistaID.setCurrentIndex(-1)
+        self.ui.fCustomerID.currentIndexChanged[int].connect(self.cacuNum)
+        self.ui.fEspecieID.currentIndexChanged[int].connect(self.cacuNum)
+        self.ui.fAvistaID.currentIndexChanged[int].connect(self.cacuNum)
+        self.__noneNum()
         self.SearchAction.setEnabled(False)
-
+        self.MainModle.setFormulas(
+            '{fNumerEnd} = {fNumerBegin} + {fAvistaID} * {fQuant} * {fPagePerVolumn}-1',
+            '{fPayable} = {fAmount} - ({fAmount} - {fDesconto}) * 0.17 - {fDesconto}'
+        )
 
     def setMainFormFieldsRowSources(self):
         pub = JPPub()
         return [('fCustomerID', pub.getCustomerList()),
-                ('fVendedorID', pub.getEnumList(10))]
+                ('fVendedorID', pub.getEnumList(10)),
+                ('fEspecieID', pub.getEnumList(2)),
+                ('fAvistaID', pub.getEnumList(7)),
+                ('fTamanhoID', pub.getEnumList(8)),
+                ('fNrCopyID', pub.getEnumList(9))]
 
-    def getMainSubMode(self):
-        return myMainSubMode
+    def getMainMode(self):
+        return super().getMainMode()
 
     def getPrintReport(self):
         return Order_Printingreport
 
+    def __noneNum(self):
+        self.ui.fNumerBegin.setEnabled(False)
+        self.SearchAction.setEnabled(True)
+        self.ui.fNumerBegin.setText('')
+        self.ui.fNumerEnd.setText('')
+
+    def cacuNum(self):
+        # 没有选择类别，直接退出
+        if self.ui.fEspecieID.currentIndex() == -1:
+            self.__noneNum()
+            return
+        # 当选择了类别，且需要号码管理
+        if self.ui.fEspecieID.currentData()[2] == '1':
+            self.ui.fNumerBegin.setEnabled(True)
+            sql = '''
+                SELECT fOrderID AS OrderID, 
+                    fOrderDate as OrderDate,
+                    CAST(e.fTitle AS char(20)) AS Especie, 
+                    CAST(fNumerBegin AS SIGNED) AS NumerBegin, 
+                    CAST(fNumerEnd AS SIGNED) AS NumerEnd
+                FROM t_order o
+                    LEFT JOIN t_enumeration e ON o.fEspecieID = e.fItemID
+                WHERE fCustomerID ={}
+                    AND fEspecieID = {}
+                ORDER BY fNumerEnd DESC
+            '''
+            if self.ui.fCustomerID.currentIndex() == -1:
+                # 没有选择客户时，退出
+                self.ui.fNumerBegin.setText('')
+                self.ui.fNumerEnd.setText('')
+                return
+            else:
+                sql = sql.format(self.ui.fCustomerID.Value(),
+                                 self.ui.fEspecieID.Value())
+                tab = JPTabelFieldInfo(sql)
+                self.NumTabelFieldInfo = tab
+                # 选择了客户，当查询到有历史记录时
+                if len(tab.DataRows) > 0:
+                    self.SearchAction.setEnabled(True)
+                    self.ui.fNumerBegin.setText(
+                        str(tab.getOnlyData([0, 4]) + 1))
+                else:
+                    self.SearchAction.setEnabled(False)
+                    if not self.ui.fNumerBegin.text():
+                        self.ui.fNumerBegin.setText("1")
+                mod = self.MainModle
+                fNumerBegin = self.ui.fNumerBegin.Value()
+                mod.ObjectDict['fNumerBegin'].setValidator(
+                    QIntValidator(fNumerBegin, fNumerBegin + 100000000))
+        else:
+            self.__noneNum()
+
     def afterDataChangedCalculat(self):
-        # 计算起始号码，设定有效范围
-        mod=self.MainModle
-        if self.EditMode != JPEditFormDataMode.ReadOnly:
-            fAvista = mod.getObjectValue("fAvista")
-            fQuant = mod.getObjectValue("fQuant")
-            fPagePerVolumn = mod.getObjectValue("fPagePerVolumn")
-            v = fAvista * fQuant * fPagePerVolumn
-            mod.setObjectValue('fNumerBegin', v)
-            mod.ObjectDict['fNumerBegin'].setValidator(QIntValidator(v, v + 100000000))
-            b=mod.getObjectValue("fNumerBegin")
-            mod.ObjectDict['fNumerEnd'].setValidator(QIntValidator(b, b + 100000000))
+        self.cacuNum()
+        return
 
     def afterSaveDate(self, data):
         self.ui.fOrderID.setText(data)
@@ -175,7 +253,7 @@ class Order_Printingreport(Order_report_Mob):
     def PrintCurrentReport(self, OrderID: str):
         self.init_data(OrderID)
         self.init_ReportHeader_title(
-            title1=" CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCc",
+            title1="NOTA DE PAGAMENTO",
             title2="(ESTE DOCUMENTO É DO USO INTERNO)")
         self.init_ReportHeader()
         self.init_ReportHeader_Individualization()
