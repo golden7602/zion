@@ -310,9 +310,7 @@ class JPFormModelMain(JPEditFormDataMode):
 
     def __cacuFormulas(self):
         for fa in self.__Formulas:
-            mt = re.match(r"\{(\S+)\}=(.+)",
-                          re.sub(r'\s', '', fa),
-                          flags=(re.I))
+            mt = re.match(r"\{(\S+)\}\s*=(.+)", fa, flags=(re.I))
             try:
                 fLeft = mt.groups()[0]
                 fRight = mt.groups()[1]

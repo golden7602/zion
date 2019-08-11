@@ -67,9 +67,14 @@ class __JPWidgetBase(object):
     @abc.abstractmethod
     def getSqlValue(self):
         """返回字段值，可直接用于SQL语句中"""
+
     def setFieldInfo(self, fld: JPFieldType = None):
         """设置字段信息"""
         self.textChanged.connect(self._onValueChange)
+
+    def refreshValueNotRaiseEvent(self, value):
+        self._FieldInfo.Value = value
+        self.setFieldInfo(self._FieldInfo, False)
 
     @abc.abstractmethod
     def Value(self):
@@ -111,7 +116,10 @@ class QLineEdit(QLineEdit_, __JPWidgetBase):
                 va = QDoubleValidator()
                 va.setDecimals(fld.Scale)
                 self.setValidator(va)
-        super().setFieldInfo()
+        else:
+            self.setText('')
+        if raiseEvent:
+            super().setFieldInfo()
 
     def focusOutEvent(self, e):
         self.setText(JPGetDisplayText(self.Value()))
@@ -240,13 +248,13 @@ class QDateEdit(QDateEdit_, __JPWidgetBase):
         return "'{}'".format(JPDateConver(self.date(), str))
 
     def setFieldInfo(self, fld: JPFieldType, raiseEvent=True):
+        self._FieldInfo = fld
+        if not (self._FieldInfo.Value is None):
+            self.setDate(JPDateConver(self._FieldInfo.Value, datetime.date))
+        else:
+            self.setDate(QDate.currentDate())
         if raiseEvent:
             self.dateChanged[QDate].connect(self._onValueChange)
-        self._FieldInfo = fld
-        if self._FieldInfo.Value is None:
-            self.setDate(QDate.currentDate())
-            return
-        self.setDate(JPDateConver(self._FieldInfo.Value, datetime.date))
 
     def Value(self):
         return JPDateConver(self.date(), datetime.date)
@@ -271,7 +279,3 @@ class QCheckBox(QCheckBox_, __JPWidgetBase):
 
     def Value(self):
         return 1 if self.checkState() == Qt.Checked else 0
-
-
-
-   

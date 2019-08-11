@@ -162,10 +162,10 @@ class EditForm_PrintingOrder(PopEditForm):
         self.ui.fAvistaID.currentIndexChanged[int].connect(self.cacuNum)
         self.__noneNum()
         self.SearchAction.setEnabled(False)
-        self.MainModle.setFormulas(
-            '{fNumerEnd} = {fNumerBegin} + {fAvistaID} * {fQuant} * {fPagePerVolumn}-1',
-            '{fPayable} = {fAmount} - ({fAmount} - {fDesconto}) * 0.17 - {fDesconto}'
-        )
+        f1 = "{fNumerEnd} = {fNumerBegin} + {fAvistaID} * {fQuant} * {fPagePerVolumn} - 1"
+        f1 = f1 + " if all(({fNumerBegin},{fAvistaID}!=-1,{fQuant},{fPagePerVolumn} )) else None"
+        f2 = '{fPayable} = {fAmount} - ({fAmount} - {fDesconto}) * 0.17 - {fDesconto}'
+        self.MainModle.setFormulas(f1, f2)
 
     def setMainFormFieldsRowSources(self):
         pub = JPPub()
@@ -189,6 +189,7 @@ class EditForm_PrintingOrder(PopEditForm):
         self.ui.fNumerEnd.setText('')
 
     def cacuNum(self):
+        print("hhhh")
         # 没有选择类别，直接退出
         if self.ui.fEspecieID.currentIndex() == -1:
             self.__noneNum()
@@ -210,8 +211,8 @@ class EditForm_PrintingOrder(PopEditForm):
             '''
             if self.ui.fCustomerID.currentIndex() == -1:
                 # 没有选择客户时，退出
-                self.ui.fNumerBegin.setText('')
-                self.ui.fNumerEnd.setText('')
+                self.ui.fNumerBegin.refreshValueNotRaiseEvent('')
+                self.ui.fNumerEnd.refreshValueNotRaiseEvent('')
                 return
             else:
                 sql = sql.format(self.ui.fCustomerID.Value(),
@@ -220,17 +221,15 @@ class EditForm_PrintingOrder(PopEditForm):
                 self.NumTabelFieldInfo = tab
                 # 选择了客户，当查询到有历史记录时
                 if len(tab.DataRows) > 0:
-                    self.SearchAction.setEnabled(True)
-                    self.ui.fNumerBegin.setText(
-                        str(tab.getOnlyData([0, 4]) + 1))
+                    #self.SearchAction.setEnabled(True)
+                    self.MainModle.setObjectValue('fNumerBegin',tab.getOnlyData([0, 4]) + 1)
                 else:
-                    self.SearchAction.setEnabled(False)
-                    if not self.ui.fNumerBegin.text():
-                        self.ui.fNumerBegin.setText("1")
-                mod = self.MainModle
-                fNumerBegin = self.ui.fNumerBegin.Value()
-                mod.ObjectDict['fNumerBegin'].setValidator(
-                    QIntValidator(fNumerBegin, fNumerBegin + 100000000))
+                    #self.SearchAction.setEnabled(False)
+                    self.MainModle.setObjectValue('fNumerBegin',1)
+                # mod = self.MainModle
+                # fNumerBegin = self.ui.fNumerBegin.Value()
+                # mod.ObjectDict['fNumerBegin'].setValidator(
+                #     QIntValidator(fNumerBegin, fNumerBegin + 100000000))
         else:
             self.__noneNum()
 

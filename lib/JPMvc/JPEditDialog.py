@@ -165,16 +165,22 @@ class PopEditForm(QDialog):
     @pyqtSlot()
     def on_butSave_clicked(self):
         try:
-            lst = self.MainSubModle.getSqls(
-                self.__PKRole) if self.subSql else self.MainModle.getSqls(
-                    self.__PKRole)
+            # 判断是不是母子窗体
+            if self.subSql:
+                lst = self.MainSubModle.getSqls(self.__PKRole)
+            else:
+                lst = self.MainModle.getSqls(self.__PKRole)
+
             isOK, result = JPDb().executeTransaction(lst)
             if isOK:
                 self.afterSaveDate(result)
                 self.ui.butSave.setEnabled(False)
                 self.ui.butPrint.setEnabled(True)
                 self.ui.butPDF.setEnabled(True)
-                self.MainSubModle.setEditState(False)
+                if self.subSql:
+                    self.MainSubModle.setEditState(False)
+                else:
+                    self.MainModle.setEditState(False)
                 self.afterSaveData.emit(result)
                 self.__FunctionForm._locationRow(result)
                 QMessageBox.information(self, '完成',
@@ -186,4 +192,5 @@ class PopEditForm(QDialog):
 
     @pyqtSlot()
     def on_butPrint_clicked(self):
-        self.getPrintReport().PrintCurrentReport(self.ui.fOrderID.text())
+        rpt = self.getPrintReport()()
+        rpt.PrintCurrentReport(self.ui.fOrderID.text())
