@@ -5,6 +5,7 @@
 # Created by: PyQt5 UI code generator 5.11.3
 #
 # WARNING! All changes made in this file will be lost!
+
 from os import getcwd
 from sys import path as jppath
 jppath.append(getcwd())
@@ -145,6 +146,7 @@ class Ui_Form(object):
         self.gridLayout.setSpacing(3)
         self.gridLayout.setObjectName("gridLayout")
         self.fEndereco = QtWidgets.QLineEdit(Form)
+        self.fEndereco.setEnabled(False)
         self.fEndereco.setMinimumSize(QtCore.QSize(0, 25))
         self.fEndereco.setSizeIncrement(QtCore.QSize(0, 25))
         self.fEndereco.setPlaceholderText("")
@@ -244,6 +246,7 @@ class Ui_Form(object):
         self.fOrderDate.setObjectName("fOrderDate")
         self.gridLayout.addWidget(self.fOrderDate, 0, 2, 1, 1)
         self.fNUIT = QtWidgets.QLineEdit(Form)
+        self.fNUIT.setEnabled(False)
         self.fNUIT.setMinimumSize(QtCore.QSize(0, 25))
         self.fNUIT.setSizeIncrement(QtCore.QSize(0, 25))
         self.fNUIT.setObjectName("fNUIT")
@@ -253,6 +256,7 @@ class Ui_Form(object):
         self.label_8.setObjectName("label_8")
         self.gridLayout.addWidget(self.label_8, 1, 5, 1, 1)
         self.fCity = QtWidgets.QLineEdit(Form)
+        self.fCity.setEnabled(False)
         self.fCity.setMinimumSize(QtCore.QSize(0, 25))
         self.fCity.setSizeIncrement(QtCore.QSize(0, 25))
         self.fCity.setClearButtonEnabled(True)

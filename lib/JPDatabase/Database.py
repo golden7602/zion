@@ -147,6 +147,8 @@ class JPDb(object):
             con.commit()
             if cur._rows:
                 return True, cur._rows[0][0]
+            else:
+                return True, None
 
     def __getattr__(self, name):
         if name == '_JPDb__db_type':

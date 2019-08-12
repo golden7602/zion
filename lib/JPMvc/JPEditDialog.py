@@ -25,7 +25,8 @@ class PopEditForm(QDialog):
         self.ui = clsUi()
         self.ui.setupUi(self)
         self.EditMode = edit_mode
-        if self.EditMode == JPFormModelMainSub.New:
+        if (self.EditMode == JPFormModelMainSub.New
+                or self.EditMode == JPFormModelMainSub.Edit):
             self.ui.butSave.setEnabled(False)
             self.ui.butPrint.setEnabled(False)
             self.ui.butPDF.setEnabled(False)
@@ -170,7 +171,7 @@ class PopEditForm(QDialog):
                 lst = self.MainSubModle.getSqls(self.__PKRole)
             else:
                 lst = self.MainModle.getSqls(self.__PKRole)
-
+            print(lst)
             isOK, result = JPDb().executeTransaction(lst)
             if isOK:
                 self.afterSaveDate(result)

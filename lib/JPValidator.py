@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from PyQt5.QtGui import QIntValidator, QDoubleValidator, QRegExpValidator, QValidator
+from PyQt5.QtGui import (QIntValidator, QDoubleValidator, QRegExpValidator,
+                         QValidator)
 from PyQt5.QtCore import QRegExp
 
 
@@ -24,4 +25,12 @@ class JPDoubleValidator(QDoubleValidator):
         self.setDecimals(decima)
 
     def validate(self, vstr, pos):
-        return super().validate(vstr.replace(',', ''),pos)
+        return super().validate(vstr.replace(',', ''), pos)
+
+
+class JPIntValidator(QIntValidator):
+    def __init__(self):
+        super().__init__()
+
+    def validate(self, vstr, pos):
+        return super().validate(vstr.replace(',', ''), pos)

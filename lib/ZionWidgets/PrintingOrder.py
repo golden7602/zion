@@ -151,16 +151,14 @@ class EditForm_PrintingOrder(PopEditForm):
         #新单据状态
         if edit_mode == JPFormModelMainSub.New:
             self.ui.fOrderID.setEnabled(False)
-            self.ui.fCustomerID.setCurrentIndex(-1)
-            self.ui.fVendedorID.setCurrentIndex(-1)
-            self.ui.fEspecieID.setCurrentIndex(-1)
-            self.ui.fTamanhoID.setCurrentIndex(-1)
-            self.ui.fNrCopyID.setCurrentIndex(-1)
-            self.ui.fAvistaID.setCurrentIndex(-1)
+            self.MainModle._loadDdata = True
+            self.__noneNum()
+            self.MainModle._loadDdata = False
+
         self.ui.fCustomerID.currentIndexChanged[int].connect(self.cacuNum)
         self.ui.fEspecieID.currentIndexChanged[int].connect(self.cacuNum)
         self.ui.fAvistaID.currentIndexChanged[int].connect(self.cacuNum)
-        self.__noneNum()
+
         self.SearchAction.setEnabled(False)
         f1 = "{fNumerEnd} = {fNumerBegin} + {fAvistaID} * {fQuant} * {fPagePerVolumn} - 1"
         f1 = f1 + " if all(({fNumerBegin},{fAvistaID}!=-1,{fQuant},{fPagePerVolumn} )) else None"
@@ -189,7 +187,6 @@ class EditForm_PrintingOrder(PopEditForm):
         self.ui.fNumerEnd.setText('')
 
     def cacuNum(self):
-        print("hhhh")
         # 没有选择类别，直接退出
         if self.ui.fEspecieID.currentIndex() == -1:
             self.__noneNum()
@@ -205,8 +202,9 @@ class EditForm_PrintingOrder(PopEditForm):
                     CAST(fNumerEnd AS SIGNED) AS NumerEnd
                 FROM t_order o
                     LEFT JOIN t_enumeration e ON o.fEspecieID = e.fItemID
-                WHERE fCustomerID ={}
-                    AND fEspecieID = {}
+                WHERE fCustomerID ={fCustomerID}
+                    AND fEspecieID = {fEspecieID}
+                    {WhereID}
                 ORDER BY fNumerEnd DESC
             '''
             if self.ui.fCustomerID.currentIndex() == -1:
@@ -215,17 +213,22 @@ class EditForm_PrintingOrder(PopEditForm):
                 self.ui.fNumerEnd.refreshValueNotRaiseEvent('')
                 return
             else:
-                sql = sql.format(self.ui.fCustomerID.Value(),
-                                 self.ui.fEspecieID.Value())
+                WhereID = "AND fOrderID<>'{}'".format(
+                    self.curPK) if self.curPK else ''
+                sql = sql.format(fCustomerID=self.ui.fCustomerID.Value(),
+                                 fEspecieID=self.ui.fEspecieID.Value(),
+                                 WhereID=WhereID)
                 tab = JPTabelFieldInfo(sql)
                 self.NumTabelFieldInfo = tab
                 # 选择了客户，当查询到有历史记录时
                 if len(tab.DataRows) > 0:
-                    #self.SearchAction.setEnabled(True)
-                    self.MainModle.setObjectValue('fNumerBegin',tab.getOnlyData([0, 4]) + 1)
+                    self.SearchAction.setEnabled(True)
+                    tempV = tab.getOnlyData([0, 4])
+                    self.MainModle.setObjectValue('fNumerBegin',
+                                                  tempV + 1 if tempV else 1)
                 else:
-                    #self.SearchAction.setEnabled(False)
-                    self.MainModle.setObjectValue('fNumerBegin',1)
+                    self.SearchAction.setEnabled(False)
+                    self.MainModle.setObjectValue('fNumerBegin', 1)
                 # mod = self.MainModle
                 # fNumerBegin = self.ui.fNumerBegin.Value()
                 # mod.ObjectDict['fNumerBegin'].setValidator(

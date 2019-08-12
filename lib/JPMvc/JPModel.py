@@ -291,6 +291,8 @@ class JPFormModelMain(JPEditFormDataMode):
         self.ObjectDict = {}
         self.__findJPObject(Ui)
         self.__Formulas = []
+        self.__ReadOnlyFieldsName = []
+        self._loadDdata = None
 
     def __setdirty(self, state: bool = True):
         # 第一次存在脏数据时，发送一个信号
@@ -342,11 +344,14 @@ class JPFormModelMain(JPEditFormDataMode):
         self.__JPFormModelMainSub = mod
 
     def _emitDataChange(self, arg):
-        self.__cacuFormulas()
-        self.dataChanged.emit(arg)
-        self.__setdirty()
-        if self.__JPFormModelMainSub:
-            self.__JPFormModelMainSub._emitDataChange(arg)
+        # 只有在加载数据之后的修改才引发dataChanged
+        if self._loadDdata is False:
+            arg.refreshValueNotRaiseEvent()
+            self.__cacuFormulas()
+            self.dataChanged.emit(arg)
+            if self.__JPFormModelMainSub:
+                self.__JPFormModelMainSub._emitDataChange(arg)
+            self.__setdirty()
 
     def setTabelInfo(self, sql: str):
         self.__sql = sql
@@ -355,6 +360,7 @@ class JPFormModelMain(JPEditFormDataMode):
         self.__fieldsRowSource = lst
 
     def readData(self):
+        self._loadDdata = True
         em = self.EditMode
         jpem = JPEditFormDataMode
         if em == jpem.ReadOnly:
@@ -364,6 +370,13 @@ class JPFormModelMain(JPEditFormDataMode):
         if em == jpem.New:
             self.tableFieldsInfo = JPTabelFieldInfo(self.__sql, True)
         tf = self.tableFieldsInfo
+        # self.ObjectDict中删除主表中没有的字段
+        lst_obj = {k for k in self.ObjectDict.keys()}
+        lst_field = {k for k in tf.FieldsDict.keys()}
+        lst_difference = lst_obj - lst_field
+        for n in lst_difference:
+            del self.ObjectDict[n]
+
         # 如果是亲增加或修改模式，主表增加一行数据
         if em != jpem.ReadOnly:
             tf.addRow()
@@ -376,16 +389,21 @@ class JPFormModelMain(JPEditFormDataMode):
             for k, v in self.ObjectDict.items():
                 if k in fld_dict:
                     v.setRowsData(tf.DataRows[0])
-                    v.setFieldInfo(fld_dict[k])
                     v.setMainModel(self)
+                    v.setFieldInfo(fld_dict[k])
                     # 给输入控件指定查询的或增加的第一行数据
 
         # 设置编辑状态
         self.setEditState(self.EditMode != JPEditFormDataMode.ReadOnly)
+        self._loadDdata = False
 
-        #self.mainForm.show()
+    def setReadOnlyFields(self, fields: list):
+        self.__ReadOnlyFieldsName = fields
+
     def setEditState(self, can_edit: bool = False):
         for item in self.ObjectDict.values():
+            if item.objectName() in self.__ReadOnlyFieldsName:
+                continue
             if isinstance(item, JPWidgets.QLineEdit):
                 item.setReadOnly(not can_edit)
             if isinstance(item, JPWidgets.QDateEdit):
@@ -427,7 +445,7 @@ class JPFormModelMain(JPEditFormDataMode):
             if fld.IsPrimarykey or fld.Auto_Increment:
                 continue
             if fld.NotNull:
-                if ds[fld._index] is None:
+                if self.ObjectDict[fld.FieldName].getSqlValue() == 'Null':
                     raise ValueError(fld)
                     msg = '字段【{fn}】的值不能为空！\n'
                     msg = msg + 'Field [{fn}] cannot be empty!'.format(
@@ -453,7 +471,8 @@ class JPFormModelMain(JPEditFormDataMode):
                         v_lst.append('@PK')
                 else:
                     nm_lst.append(fld.FieldName)
-                    v_lst.append(fld.sqlValue(ds[fld._index]))
+                    v_lst.append(self.ObjectDict[fld.FieldName].getSqlValue())
+                    #v_lst.append(fld.sqlValue(ds[fld._index]))
             sqls.append(sql_i.format(",".join(nm_lst), ",".join(v_lst)))
             if pk_role:
                 newPKSQL = JPDb().NewPkSQL(pk_role)
@@ -466,7 +485,8 @@ class JPFormModelMain(JPEditFormDataMode):
                     r_pk_v = fld.sqlValue(ds[fld._index])
                 else:
                     nm_lst.append(fld.FieldName)
-                    v_lst.append(fld.sqlValue(ds[fld._index]))
+                    v_lst.append(self.ObjectDict[fld.FieldName].getSqlValue())
+                    #v_lst.append(fld.sqlValue(ds[fld._index]))
             temp = ['{}={}'.format(n, v) for n, v in zip(nm_lst, v_lst)]
             sqls.append(sql_u.format(",".join(temp), r_pk_name, r_pk_v))
             return sqls

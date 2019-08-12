@@ -10,14 +10,19 @@ import re
 #     if mt:
 #         return mt.groups()[0],C[2]
 
-f = '{aaa}= {bbbb}+{ccccc} * {dddddd}'
-f = re.sub(r'\s', '', f)
-mt = re.match("\{(\S+)\}=(.+)", re.sub(r'\s', '', f), flags=(re.I))
-try:
-    fLeft = mt.groups()[0]
-    fRight = mt.groups()[1]
-except Exception:
-    raise ValueError("公式解析错误")
-print(fLeft, fRight)
-a='{aa}0000{ab}'.format(aa=1,ab=1,c=3)
-print(a)
+# f = '{aaa}= {bbbb}+{ccccc} * {dddddd}'
+# f = re.sub(r'\s', '', f)
+# mt = re.match("\{(\S+)\}=(.+)", re.sub(r'\s', '', f), flags=(re.I))
+# try:
+#     fLeft = mt.groups()[0]
+#     fRight = mt.groups()[1]
+# except Exception:
+#     raise ValueError("公式解析错误")
+# print(fLeft, fRight)
+# a='{aa}0000{ab}'.format(aa=1,ab=1,c=3)
+# print(a)
+
+
+a=10
+for i in reversed(range(10)):
+    print(i)
