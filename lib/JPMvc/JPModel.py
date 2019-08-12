@@ -277,7 +277,7 @@ class JPEditFormDataMode(QObject):
 
 
 class JPFormModelMain(JPEditFormDataMode):
-    dataChanged = pyqtSignal([JPWidgets.QWidget])
+    #dataChanged = pyqtSignal([JPWidgets.QWidget])
     firstHasDirty = pyqtSignal()
 
     def __init__(self, Ui):
@@ -310,23 +310,7 @@ class JPFormModelMain(JPEditFormDataMode):
         设置计算公式，从个公式之间用逗号分开"""
         self.__Formulas = args
 
-    def __cacuFormulas(self):
-        for fa in self.__Formulas:
-            mt = re.match(r"\{(\S+)\}\s*=(.+)", fa, flags=(re.I))
-            try:
-                fLeft = mt.groups()[0]
-                fRight = mt.groups()[1]
-            except Exception:
-                raise ValueError("公式解析错误")
-            v = None
-            values = {k: v.Value() for k, v in self.ObjectDict.items()}
-            fa_v = fRight.format(**values)
-            try:
-                v = eval(fa_v)
-            except Exception:
-                pass
-            finally:
-                self.setObjectValue(fLeft, v)
+
 
     def __findJPObject(self, Ui):
         cls_tup = (JPWidgets.QLineEdit, JPWidgets.QDateEdit,
@@ -343,12 +327,31 @@ class JPFormModelMain(JPEditFormDataMode):
     def setFormModelMainSub(self, mod):
         self.__JPFormModelMainSub = mod
 
+    def onDateChangeEvent(self,obj):
+        return
+    def cacuFormula(self,Formula:str):
+        fa=Formula
+        mt = re.match(r"\{(\S+)\}\s*=(.+)", fa, flags=(re.I))
+        try:
+            fLeft = mt.groups()[0]
+            fRight = mt.groups()[1]
+        except Exception:
+            raise ValueError("公式解析错误")
+        v = None
+        values = {k: v.Value() for k, v in self.ObjectDict.items()}
+        fa_v = fRight.format(**values)
+        try:
+            v = eval(fa_v)
+        except Exception:
+            pass
+        finally:
+            self.setObjectValue(fLeft, v)
     def _emitDataChange(self, arg):
         # 只有在加载数据之后的修改才引发dataChanged
         if self._loadDdata is False:
             arg.refreshValueNotRaiseEvent()
-            self.__cacuFormulas()
-            self.dataChanged.emit(arg)
+            self.onDateChangeEvent(arg)
+            #self.dataChanged.emit(arg)
             if self.__JPFormModelMainSub:
                 self.__JPFormModelMainSub._emitDataChange(arg)
             self.__setdirty()

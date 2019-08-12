@@ -59,8 +59,8 @@ class PopEditForm(QDialog):
             self.ui.tableView.customContextMenuRequested.connect(
                 self.__right_menu)
             self.MainSubModle.firstHasDirty.connect(self.__firstDirty)
-            self.MainSubModle.dataChanged[QModelIndex].connect(self.__Cacu)
-            self.MainSubModle.dataChanged[QWidget].connect(self.__Cacu)
+            self.MainSubModle.dataChanged[QModelIndex].connect(self._onDataChange)
+            self.MainSubModle.dataChanged[QWidget].connect(self._onDataChange)
             self.MainSubModle.show(edit_mode)
         else:
             self.MainModle = self.getMainMode()(self.ui)
@@ -69,7 +69,7 @@ class PopEditForm(QDialog):
             self.MainModle.setTabelInfo(self.mainSql)
             self.MainModle.EditMode = edit_mode
             self.MainModle.firstHasDirty.connect(self.__firstDirty)
-            self.MainModle.dataChanged[QWidget].connect(self.__Cacu)
+            self.MainModle.dataChanged[QWidget].connect(self._onDataChange)
             self.MainModle.readData()
 
     def __getList(self, r):
@@ -134,23 +134,23 @@ class PopEditForm(QDialog):
     def setMainFormFieldsRowSources(self):
         return []
 
-    def afterDataChangedCalculat(self):
+    def afterDataChangedCalculat(self,obj):
         """数据变化后执行该方法，请覆盖"""
         return
 
-    def __Cacu(self):
+    def _onDataChange(self,obj):
         if self.subSql:
             md = self.MainSubModle
-            md.dataChanged[QModelIndex].disconnect(self.__Cacu)
-            md.dataChanged[QWidget].disconnect(self.__Cacu)
-            self.afterDataChangedCalculat()
-            md.dataChanged[QWidget].connect(self.__Cacu)
-            md.dataChanged[QModelIndex].connect(self.__Cacu)
+            md.dataChanged[QModelIndex].disconnect(self._onDataChange)
+            md.dataChanged[QWidget].disconnect(self._onDataChange)
+            self.afterDataChangedCalculat(obj)
+            md.dataChanged[QWidget].connect(self._onDataChange)
+            md.dataChanged[QModelIndex].connect(self._onDataChange)
         else:
             md = self.MainModle
-            md.dataChanged[QWidget].disconnect(self.__Cacu)
-            self.afterDataChangedCalculat()
-            md.dataChanged[QWidget].connect(self.__Cacu)
+            md.dataChanged[QWidget].disconnect(self._onDataChange)
+            self.afterDataChangedCalculat(obj)
+            md.dataChanged[QWidget].connect(self._onDataChange)
 
     def afterSaveDate(self, data):
         """保存数据后执行该方法，一一般用于根据此参数修改窗口状态，请覆盖"""
