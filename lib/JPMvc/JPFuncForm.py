@@ -16,7 +16,7 @@ from lib.JPFunction import setButtonIcon
 from lib.JPDatabase.Database import JPDb
 from Ui.Ui_FuncFormMob import Ui_Form
 import re
-
+import abc
 
 class JPFunctionForm(QWidget):
     def __init__(self, parent, flags=Qt.WindowFlags()):
@@ -89,22 +89,14 @@ class JPFunctionForm(QWidget):
             self.EditFormSubTableName = self.__getTableNameInfo(sql_sub)
 
     def getModelClass(self):
-        '''此类可以重写，改写Model的行为,必须返回一个模型类
+        '''此类可以重写，改写列表Model的行为,必须返回一个模型类
         重写时可以在重载方法中内部定义模型类并继承自已有模型类，将该类返回
         '''
         return JPTableViewModelReadOnly
 
-    def setFormClass(self, cls):
-        self.__FormClass = cls
-
-    # def _locationRow(self, id)
-    #     datas=self.TabelFieldInfo.
-    def getEditFormClass(self):
-        if self.__FormClass is None:
-            strErr = "没有设置JPFunctionForm的setFormClass属性，或重写getEditFormClass方法"
-            raise AttributeError(strErr)
-        else:
-            return self.__FormClass
+    @abc.abstractmethod
+    def getEditForm(self,):
+        """重载此方法，返回一个编辑窗体对象"""
 
     def beforeDeleteRow(self, delete_ID):
         '''删除行之前查检用方法，可重载'''

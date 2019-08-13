@@ -9,9 +9,9 @@ from PyQt5.QtWidgets import QAction, QLineEdit, QMessageBox
 
 from lib.JPDatabase.Database import JPDb
 from lib.JPDatabase.Query import JPTabelFieldInfo
-from lib.JPMvc.JPEditDialog import PopEditForm
-from lib.JPMvc.JPFuncForm import JPFunctionForm
-from lib.JPMvc.JPModel import JPEditFormDataMode, JPFormModelMainSub
+from lib.JPMvc.JPEditFormModel import JPFormModelMain
+from lib.JPMvc.JPFuncForm import JPFunctionForm, JPEditFormDataMode
+# from lib.JPMvc.JPModel import JPEditFormDataMode, JPFormModelMainSub
 from lib.JPPrintReport import JPPrintSectionType
 from lib.ZionPublc import JPPub
 from lib.ZionReport.OrderReportMob import Order_report_Mob
@@ -116,152 +116,159 @@ class JPFuncForm_PrintingOrder(JPFunctionForm):
                 self.btnRefreshClick()
 
 
+class EditForm_PrintingOrder(JPFormModelMain):
+    def __init__(self,
+                 Ui,
+                 sql,
+                 PKValue=None,
+                 EditMode=JPEditFormDataMode.ReadOnly):
+        super().__init__(Ui, sql, PKValue=PKValue, EditMode=EditMode)
+
+
 # class myMainSubMode(JPFormModelMainSub):
 #     def __init__(self, *args, **kwargs):
 #         super().__init__(*args, **kwargs)
 
+# class EditForm_PrintingOrder(JPEditQDialogMain):
+#     def __init__(self,
+#                  mainSql,
+#                  subSql=None,
+#                  edit_mode=JPFormModelMainSub.ReadOnly,
+#                  pkValue=None):
+#         super().__init__(clsUi=Ui_Form,
+#                          edit_mode=edit_mode,
+#                          pkValue=pkValue,
+#                          mainSql=mainSql,
+#                          subSql=subSql)
+#         self.setPkRole(5)
+#         self.ui.fAvistaID.BindingColumn = 2
+#         self.ui.fVendedorID.BindingColumn = 2
+#         self.ui.fEspecieID.BindingColumn = 2
+#         self.ui.fTamanhoID.BindingColumn = 2
+#         self.ui.fNrCopyID.BindingColumn = 2
+#         self.ui.fAvistaID.BindingColumn = 2
+#         self.NumTabelFieldInfo = None
+#         pix = QPixmap(getcwd() + "\\res\\Zions_100.png")
+#         self.ui.label_logo.setPixmap(pix)
+#         self.ui.fNumerEnd.setEnabled(False)
+#         # 添加一个动作,用于显示已经存在的同类单据号码
+#         self.SearchAction = QAction()
+#         self.SearchAction.setIcon(QIcon(getcwd() + "\\res\\ico\\search.png"))
+#         self.ui.fNumerBegin.addAction(self.SearchAction,
+#                                       QLineEdit.LeadingPosition)
+#         #新单据状态
+#         if edit_mode == JPFormModelMainSub.New:
+#             self.ui.fOrderID.setEnabled(False)
+#             self.MainModle._loadDdata = True
+#             self.__noneNum()
+#             self.MainModle._loadDdata = False
 
-class EditForm_PrintingOrder(PopEditForm):
-    def __init__(self,
-                 mainSql,
-                 subSql=None,
-                 edit_mode=JPFormModelMainSub.ReadOnly,
-                 pkValue=None):
-        super().__init__(clsUi=Ui_Form,
-                         edit_mode=edit_mode,
-                         pkValue=pkValue,
-                         mainSql=mainSql,
-                         subSql=subSql)
-        self.setPkRole(5)
-        self.ui.fAvistaID.BindingColumn = 2
-        self.ui.fVendedorID.BindingColumn = 2
-        self.ui.fEspecieID.BindingColumn = 2
-        self.ui.fTamanhoID.BindingColumn = 2
-        self.ui.fNrCopyID.BindingColumn = 2
-        self.ui.fAvistaID.BindingColumn = 2
-        self.NumTabelFieldInfo = None
-        pix = QPixmap(getcwd() + "\\res\\Zions_100.png")
-        self.ui.label_logo.setPixmap(pix)
-        self.ui.fNumerEnd.setEnabled(False)
-        # 添加一个动作,用于显示已经存在的同类单据号码
-        self.SearchAction = QAction()
-        self.SearchAction.setIcon(QIcon(getcwd() + "\\res\\ico\\search.png"))
-        self.ui.fNumerBegin.addAction(self.SearchAction,
-                                      QLineEdit.LeadingPosition)
-        #新单据状态
-        if edit_mode == JPFormModelMainSub.New:
-            self.ui.fOrderID.setEnabled(False)
-            self.MainModle._loadDdata = True
-            self.__noneNum()
-            self.MainModle._loadDdata = False
+#         self.ui.fCustomerID.currentIndexChanged[int].connect(self.cacuNum)
+#         self.ui.fEspecieID.currentIndexChanged[int].connect(self.cacuNum)
+#         self.ui.fAvistaID.currentIndexChanged[int].connect(self.cacuNum)
 
-        self.ui.fCustomerID.currentIndexChanged[int].connect(self.cacuNum)
-        self.ui.fEspecieID.currentIndexChanged[int].connect(self.cacuNum)
-        self.ui.fAvistaID.currentIndexChanged[int].connect(self.cacuNum)
+#         self.SearchAction.setEnabled(False)
+#         f1 = "{fNumerEnd} = {fNumerBegin} + {fAvistaID} * {fQuant} * {fPagePerVolumn} - 1"
+#         f1 = f1 + " if all(({fNumerBegin},{fAvistaID}!=-1,{fQuant},{fPagePerVolumn} )) else None"
+#         f2 = '{fPayable} = {fAmount} - ({fAmount} - {fDesconto}) * 0.17 - {fDesconto}'
+#         self.MainModle.setFormulas(f1, f2)
 
-        self.SearchAction.setEnabled(False)
-        f1 = "{fNumerEnd} = {fNumerBegin} + {fAvistaID} * {fQuant} * {fPagePerVolumn} - 1"
-        f1 = f1 + " if all(({fNumerBegin},{fAvistaID}!=-1,{fQuant},{fPagePerVolumn} )) else None"
-        f2 = '{fPayable} = {fAmount} - ({fAmount} - {fDesconto}) * 0.17 - {fDesconto}'
-        self.MainModle.setFormulas(f1, f2)
+#     def setMainFormFieldsRowSources(self):
+#         pub = JPPub()
+#         return [('fCustomerID', pub.getCustomerList()),
+#                 ('fVendedorID', pub.getEnumList(10)),
+#                 ('fEspecieID', pub.getEnumList(2)),
+#                 ('fAvistaID', pub.getEnumList(7)),
+#                 ('fTamanhoID', pub.getEnumList(8)),
+#                 ('fNrCopyID', pub.getEnumList(9))]
 
-    def setMainFormFieldsRowSources(self):
-        pub = JPPub()
-        return [('fCustomerID', pub.getCustomerList()),
-                ('fVendedorID', pub.getEnumList(10)),
-                ('fEspecieID', pub.getEnumList(2)),
-                ('fAvistaID', pub.getEnumList(7)),
-                ('fTamanhoID', pub.getEnumList(8)),
-                ('fNrCopyID', pub.getEnumList(9))]
+#     def getMainMode(self):
+#         return super().getMainMode()
 
-    def getMainMode(self):
-        return super().getMainMode()
+#     def getPrintReport(self):
+#         return Order_Printingreport
 
-    def getPrintReport(self):
-        return Order_Printingreport
+#     def __noneNum(self):
+#         self.ui.fNumerBegin.setEnabled(False)
+#         self.SearchAction.setEnabled(True)
+#         self.ui.fNumerBegin.setText('')
+#         self.ui.fNumerEnd.setText('')
 
-    def __noneNum(self):
-        self.ui.fNumerBegin.setEnabled(False)
-        self.SearchAction.setEnabled(True)
-        self.ui.fNumerBegin.setText('')
-        self.ui.fNumerEnd.setText('')
+#     def afterDataChangedCalculat(self,obj):
+#         if obj.objectName() in ("fCustomerID","fEspecieID","fAvistaID"):
+#             # 没有选择类别，直接退出
+#             if self.ui.fEspecieID.currentIndex() == -1:
+#                 self.__noneNum()
+#                 return
+#             # 当选择了类别，且需要号码管理
+#             if self.ui.fEspecieID.currentData()[2] == '1':
+#                 self.ui.fNumerBegin.setEnabled(True)
+#                 sql = '''
+#                     SELECT fOrderID AS OrderID,
+#                         fOrderDate as OrderDate,
+#                         CAST(e.fTitle AS char(20)) AS Especie,
+#                         CAST(fNumerBegin AS SIGNED) AS NumerBegin,
+#                         CAST(fNumerEnd AS SIGNED) AS NumerEnd
+#                     FROM t_order o
+#                         LEFT JOIN t_enumeration e ON o.fEspecieID = e.fItemID
+#                     WHERE fCustomerID ={fCustomerID}
+#                         AND fEspecieID = {fEspecieID}
+#                         {WhereID}
+#                     ORDER BY fNumerEnd DESC
+#                 '''
+#                 if self.ui.fCustomerID.currentIndex() == -1:
+#                     # 没有选择客户时，退出
+#                     self.ui.fNumerBegin.refreshValueNotRaiseEvent('')
+#                     self.ui.fNumerEnd.refreshValueNotRaiseEvent('')
+#                     return
+#                 else:
+#                     WhereID = "AND fOrderID<>'{}'".format(
+#                         self.curPK) if self.curPK else ''
+#                     sql = sql.format(fCustomerID=self.ui.fCustomerID.Value(),
+#                                     fEspecieID=self.ui.fEspecieID.Value(),
+#                                     WhereID=WhereID)
+#                     tab = JPTabelFieldInfo(sql)
+#                     self.NumTabelFieldInfo = tab
+#                     # 选择了客户，当查询到有历史记录时
+#                     if len(tab.DataRows) > 0:
+#                         self.SearchAction.setEnabled(True)
+#                         tempV = tab.getOnlyData([0, 4])
+#                         self.MainModle.setObjectValue('fNumerBegin',
+#                                                     tempV + 1 if tempV else 1)
+#                     else:
+#                         self.SearchAction.setEnabled(False)
+#                         self.MainModle.setObjectValue('fNumerBegin', 1)
+#                     # mod = self.MainModle
+#                     # fNumerBegin = self.ui.fNumerBegin.Value()
+#                     # mod.ObjectDict['fNumerBegin'].setValidator(
+#                     #     QIntValidator(fNumerBegin, fNumerBegin + 100000000))
+#             else:
+#                 self.__noneNum()
+#         if obj.objectName() in ("fQuant","fPrice"):
 
-    def afterDataChangedCalculat(self,obj):
-        if obj.objectName() in ("fCustomerID","fEspecieID","fAvistaID"):
-            # 没有选择类别，直接退出
-            if self.ui.fEspecieID.currentIndex() == -1:
-                self.__noneNum()
-                return
-            # 当选择了类别，且需要号码管理
-            if self.ui.fEspecieID.currentData()[2] == '1':
-                self.ui.fNumerBegin.setEnabled(True)
-                sql = '''
-                    SELECT fOrderID AS OrderID, 
-                        fOrderDate as OrderDate,
-                        CAST(e.fTitle AS char(20)) AS Especie, 
-                        CAST(fNumerBegin AS SIGNED) AS NumerBegin, 
-                        CAST(fNumerEnd AS SIGNED) AS NumerEnd
-                    FROM t_order o
-                        LEFT JOIN t_enumeration e ON o.fEspecieID = e.fItemID
-                    WHERE fCustomerID ={fCustomerID}
-                        AND fEspecieID = {fEspecieID}
-                        {WhereID}
-                    ORDER BY fNumerEnd DESC
-                '''
-                if self.ui.fCustomerID.currentIndex() == -1:
-                    # 没有选择客户时，退出
-                    self.ui.fNumerBegin.refreshValueNotRaiseEvent('')
-                    self.ui.fNumerEnd.refreshValueNotRaiseEvent('')
-                    return
-                else:
-                    WhereID = "AND fOrderID<>'{}'".format(
-                        self.curPK) if self.curPK else ''
-                    sql = sql.format(fCustomerID=self.ui.fCustomerID.Value(),
-                                    fEspecieID=self.ui.fEspecieID.Value(),
-                                    WhereID=WhereID)
-                    tab = JPTabelFieldInfo(sql)
-                    self.NumTabelFieldInfo = tab
-                    # 选择了客户，当查询到有历史记录时
-                    if len(tab.DataRows) > 0:
-                        self.SearchAction.setEnabled(True)
-                        tempV = tab.getOnlyData([0, 4])
-                        self.MainModle.setObjectValue('fNumerBegin',
-                                                    tempV + 1 if tempV else 1)
-                    else:
-                        self.SearchAction.setEnabled(False)
-                        self.MainModle.setObjectValue('fNumerBegin', 1)
-                    # mod = self.MainModle
-                    # fNumerBegin = self.ui.fNumerBegin.Value()
-                    # mod.ObjectDict['fNumerBegin'].setValidator(
-                    #     QIntValidator(fNumerBegin, fNumerBegin + 100000000))
-            else:
-                self.__noneNum()
-        if obj.objectName() in ("fQuant","fPrice"):
+#     # def afterDataChangedCalculat(self):
+#     #     self.cacuNum()
+#     #     return
 
-    # def afterDataChangedCalculat(self):
-    #     self.cacuNum()
-    #     return
+#     def afterSaveDate(self, data):
+#         self.ui.fOrderID.setText(data)
 
-    def afterSaveDate(self, data):
-        self.ui.fOrderID.setText(data)
+# class Order_Printingreport(Order_report_Mob):
+#     def __init__(self):
+#         super().__init__()
 
+#     def onFormat(self, SectionType, CurrentPage, RowDate=None):
+#         if (SectionType == JPPrintSectionType.PageHeader and CurrentPage == 1):
+#             return True
 
-class Order_Printingreport(Order_report_Mob):
-    def __init__(self):
-        super().__init__()
-
-    def onFormat(self, SectionType, CurrentPage, RowDate=None):
-        if (SectionType == JPPrintSectionType.PageHeader and CurrentPage == 1):
-            return True
-
-    def PrintCurrentReport(self, OrderID: str):
-        self.init_data(OrderID)
-        self.init_ReportHeader_title(
-            title1="NOTA DE PAGAMENTO",
-            title2="(ESTE DOCUMENTO É DO USO INTERNO)")
-        self.init_ReportHeader()
-        self.init_ReportHeader_Individualization()
-        self.init_PageHeader()
-        self.init_Detail()
-        self.init_ReportFooter()
-        super().BeginPrint()
+#     def PrintCurrentReport(self, OrderID: str):
+#         self.init_data(OrderID)
+#         self.init_ReportHeader_title(
+#             title1="NOTA DE PAGAMENTO",
+#             title2="(ESTE DOCUMENTO É DO USO INTERNO)")
+#         self.init_ReportHeader()
+#         self.init_ReportHeader_Individualization()
+#         self.init_PageHeader()
+#         self.init_Detail()
+#         self.init_ReportFooter()
+#         super().BeginPrint()

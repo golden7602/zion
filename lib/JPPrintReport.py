@@ -11,8 +11,6 @@ from PyQt5.QtGui import (QColor, QFont, QFontMetrics, QPainter, QPixmap,
                          QTransform)
 from PyQt5.QtPrintSupport import QPrinter, QPrintPreviewDialog
 
-# from .lib.globalVar import PrintFunctionRunTime
-
 
 class JPPrintSectionType(IntEnum):
     """本类为节类型的枚举"""
@@ -131,7 +129,7 @@ class _jpPrintPageField(_jpPrintItem):
             return self.FormatString.format(
                 Page=_jpPrintSection.Report._CurrentPage,
                 Pages=_jpPrintSection.Report.PageCount)
-        except Exception as e:
+        except Exception:
             return 'ForamtString Error'
 
 
@@ -343,7 +341,6 @@ class _SectionAutoPaging(_jpPrintSection):
         self._SectionOffset = 0
         self._CurPageOffset = rpt._SectionPrintBeginY
         if rpt.onFormat(self.SectionType, rpt._CurrentPage) or len(self) == 0:
-            #if self.OnFormat(self) or len(self) == 0:
             return
         lastItem = None
         for item in self.Items:
@@ -398,7 +395,6 @@ class _jpSectionDetail(_jpPrintSection):
         rpt = self.Report
         curSecH = self.SectionHeight
         if rpt.onFormat(self.SectionType, rpt._CurrentPage) or len(self) == 0:
-            #if self.OnFormat(self) or len(self) == 0:
             return
         # 判断一下能否同时容纳主体节、页面页眉、页面页脚，不能容纳则抛出错误
 
@@ -409,7 +405,6 @@ class _jpSectionDetail(_jpPrintSection):
             for row in sec_data:
                 self._CurrentPrintRowData = row
                 if rpt.onFormat(self.SectionType, rpt._CurrentPage, row):
-                    #if self.OnFormat(self, row):
                     continue
                 # 判断页面剩余空间能否容纳一个节高度及页脚高度，不能则分页
                 if rpt.PageValidHeight < (rpt._SectionPrintBeginY + curSecH +
@@ -429,7 +424,6 @@ class _jpSectionPageHeader(_jpPrintSection):
     def Print(self, painter):
         rpt = self.Report
         if rpt.onFormat(self.SectionType, rpt._CurrentPage) or len(self) == 0:
-            #if self.OnFormat(self) or len(self) == 0:
             return
         # 判断当前页面剩余空间能否容纳本节，如不能则引发错误
         if rpt.PageValidHeight < (rpt._SectionPrintBeginY +
@@ -450,7 +444,6 @@ class _jpSectionPageFooter(_jpPrintSection):
     def Print(self, painter):
         rpt = self.Report
         if rpt.onFormat(self.SectionType, rpt._CurrentPage) or len(self) == 0:
-            #if self.OnFormat(self) or len(self) == 0:
             return
         # 判断当前页面剩余空间能否容纳本节，如不能则引发错误
         if rpt.PageValidHeight < (rpt._SectionPrintBeginY +
@@ -794,7 +787,6 @@ class JPReport(object):
         self.__Errors = []
         self.__Printer: QPrinter = None
         self.__PageHeight = None
-        #self._FormatTimes = 0
         self.__Calculated = False
         self.__Reseted = False
         self.__SectionPrintBeginY = 0
@@ -890,7 +882,6 @@ class JPReport(object):
         if self.__Reseted is False:
             self.PageCount = 0
         self._SectionPrintBeginY = 0
-        #self._FormatTimes = 0
         self.__Printer = Printer
         if self.__Reseted is False:
             self.__Printer.setPaperSize(self.PaperSize)

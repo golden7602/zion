@@ -8,7 +8,7 @@ from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QMessageBox
 
 from lib.JPDatabase.Database import JPDb
-from lib.JPMvc.JPEditDialog import PopEditForm
+from lib.JPMvc.JPEditDialogMain import 
 from lib.JPMvc.JPFuncForm import JPFunctionForm
 from lib.JPMvc.JPModel import JPEditFormDataMode, JPFormModelMainSub
 from lib.JPPrintReport import JPPrintSectionType
@@ -127,77 +127,77 @@ class myMainSubMode(JPFormModelMainSub):
             reduce(lambda x, y: x * y, lt[0:4]) * 100)
 
 
-class EditForm_Order(PopEditForm):
-    def __init__(self,
-                 mainSql,
-                 subSql=None,
-                 edit_mode=JPFormModelMainSub.ReadOnly,
-                 pkValue=None):
+# class EditForm_Order(PopEditForm):
+#     def __init__(self,
+#                  mainSql,
+#                  subSql=None,
+#                  edit_mode=JPFormModelMainSub.ReadOnly,
+#                  pkValue=None):
 
-        super().__init__(clsUi=Ui_Form,
-                         edit_mode=edit_mode,
-                         pkValue=pkValue,
-                         mainSql=mainSql,
-                         subSql=subSql)
-        self.setPkRole(1)
-        self.ui.label_logo.setPixmap(QPixmap(getcwd() +
-                                             "\\res\\Zions_100.png"))
+#         super().__init__(clsUi=Ui_Form,
+#                          edit_mode=edit_mode,
+#                          pkValue=pkValue,
+#                          mainSql=mainSql,
+#                          subSql=subSql)
+#         self.setPkRole(1)
+#         self.ui.label_logo.setPixmap(QPixmap(getcwd() +
+#                                              "\\res\\Zions_100.png"))
 
-    def setSubFormFormula(self):
-        fla = "JPRound(JPRound({2}) * JPRound({4},2) * "
-        fla = fla + "JPRound({5},2) * JPRound({6},2),2)"
-        return 7, fla
+#     def setSubFormFormula(self):
+#         fla = "JPRound(JPRound({2}) * JPRound({4},2) * "
+#         fla = fla + "JPRound({5},2) * JPRound({6},2),2)"
+#         return 7, fla
 
-    def setSubFormColumnsHidden(self):
-        return 0, 1
+#     def setSubFormColumnsHidden(self):
+#         return 0, 1
 
-    def setSubFormColumnsReadOnly(self):
-        return 7
+#     def setSubFormColumnsReadOnly(self):
+#         return 7
 
-    def setSubFormColumnWidths(self):
-        return 0, 0, 60, 300, 100, 100, 100, 100
+#     def setSubFormColumnWidths(self):
+#         return 0, 0, 60, 300, 100, 100, 100, 100
 
-    def setMainFormFieldsRowSources(self):
-        pub = JPPub()
-        return [('fCustomerID', pub.getCustomerList()),
-                ('fVendedorID', pub.getEnumList(10))]
+#     def setMainFormFieldsRowSources(self):
+#         pub = JPPub()
+#         return [('fCustomerID', pub.getCustomerList()),
+#                 ('fVendedorID', pub.getEnumList(10))]
 
-    def getMainSubMode(self):
-        return myMainSubMode
+#     def getMainSubMode(self):
+#         return myMainSubMode
 
-    def getPrintReport(self):
-        return Order_report
+#     def getPrintReport(self):
+#         return Order_report
 
-    def afterDataChangedCalculat(self):
-        if self.EditMode != JPEditFormDataMode.ReadOnly:
-            v_sum = self.SubModle._model.getColumnSum(7)
-            fDesconto = self.MainModle.getObjectValue("fDesconto")
-            fTax = (v_sum - fDesconto) * 0.17
-            fPayable = v_sum - fDesconto + fTax
-            self.MainModle.setObjectValue('fAmount', v_sum)
-            self.MainModle.setObjectValue("fTax", fTax)
-            self.MainModle.setObjectValue("fPayable", fPayable)
+#     def afterDataChangedCalculat(self):
+#         if self.EditMode != JPEditFormDataMode.ReadOnly:
+#             v_sum = self.SubModle._model.getColumnSum(7)
+#             fDesconto = self.MainModle.getObjectValue("fDesconto")
+#             fTax = (v_sum - fDesconto) * 0.17
+#             fPayable = v_sum - fDesconto + fTax
+#             self.MainModle.setObjectValue('fAmount', v_sum)
+#             self.MainModle.setObjectValue("fTax", fTax)
+#             self.MainModle.setObjectValue("fPayable", fPayable)
 
-    def afterSaveDate(self, data):
-        self.ui.fOrderID.setText(data)
+#     def afterSaveDate(self, data):
+#         self.ui.fOrderID.setText(data)
 
 
-class Order_report(Order_report_Mob):
-    def __init__(self):
-        super().__init__()
+# class Order_report(Order_report_Mob):
+#     def __init__(self):
+#         super().__init__()
 
-    def onFormat(self, SectionType, CurrentPage, RowDate=None):
-        if (SectionType == JPPrintSectionType.PageHeader and CurrentPage == 1):
-            return True
+#     def onFormat(self, SectionType, CurrentPage, RowDate=None):
+#         if (SectionType == JPPrintSectionType.PageHeader and CurrentPage == 1):
+#             return True
 
-    def PrintCurrentReport(self, OrderID: str):
-        self.init_data(OrderID)
-        self.init_ReportHeader_title(
-            title1=" NOTA DE ORDEM",
-            title2="(ESTE DOCUMENTO É DO USO INTERNO)")
-        self.init_ReportHeader()
-        self.init_ReportHeader_Individualization()
-        self.init_PageHeader()
-        self.init_Detail()
-        self.init_ReportFooter()
-        super().BeginPrint()
+#     def PrintCurrentReport(self, OrderID: str):
+#         self.init_data(OrderID)
+#         self.init_ReportHeader_title(
+#             title1=" NOTA DE ORDEM",
+#             title2="(ESTE DOCUMENTO É DO USO INTERNO)")
+#         self.init_ReportHeader()
+#         self.init_ReportHeader_Individualization()
+#         self.init_PageHeader()
+#         self.init_Detail()
+#         self.init_ReportFooter()
+#         super().BeginPrint()

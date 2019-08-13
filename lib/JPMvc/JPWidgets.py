@@ -57,25 +57,18 @@ class __JPWidgetBase(QObject):
         super().__init__(*args)
         self._FieldInfo: JPFieldType = None
         self.MainModel = None
-        self.RowsDatal = None
-        # self._changeMethod = None
+        self.RowsData = None
 
-    # def setChangeMethod(self, methon):
-    #     self._changeMethod = methon
-    #     self._changeMethod.connect(self._onValueChange)
-    #     if self.objectName() == 'fEspecieID':
-    #         pass
-
-    def _onValueChange(self):
-        self.RowsDatal.setData(self._FieldInfo._index, self.Value())
+    def _onValueChange(self, value):
+        self.RowsData.setData(self._FieldInfo._index, self.Value())
         if self.MainModel:
-            self.MainModel._emitDataChange(self)
+            self.MainModel._emitDataChange(self, value)
 
     def setMainModel(self, QWidget: QWidget_):
         self.MainModel = QWidget
 
     def setRowsData(self, rd: JPTabelRowData):
-        self.RowsDatal = rd
+        self.RowsData = rd
 
     @property
     def FieldInfo(self):
@@ -105,20 +98,19 @@ class __JPWidgetBase(QObject):
     #     if bz:
     #         self._changeMethod.connect(self._onValueChange)
 
-    def refreshValueNotRaiseEvent(self, *value):
-        if value:
-            self._FieldInfo.Value = value
-        self.setFieldInfo(self._FieldInfo, False)
-
     @abc.abstractmethod
     def Value(self):
         pass
+
+    def refreshValueNotRaiseEvent(self, *value):
+        if value:
+            self._FieldInfo.Value = value
 
 
 class QLineEdit(QLineEdit_, __JPWidgetBase):
     def __init__(self, parent):
         super().__init__(parent)
-        #self.textChanged[str].connect(self._onValueChange)
+        self.textChanged[str].connect(self.refreshValueNotRaiseEvent)
 
     def getSqlValue(self) -> str:
         t = self.text()
@@ -126,6 +118,19 @@ class QLineEdit(QLineEdit_, __JPWidgetBase):
             return self.getNullValue()
         else:
             return "'{}'".format(t.replace(',', ''))
+
+    def refreshValueNotRaiseEvent(self,
+                                  v: str,
+                                  changeDisplayText: bool = False):
+        tp = self._FieldInfo.TypeCode
+        if tp == JPFieldType.Int:
+            self._FieldInfo.Value = int(v.replace(',', '')) if v else 0
+        elif tp == JPFieldType.Float:
+            self._FieldInfo.Value = float(v.replace(',', '')) if v else 0.0
+        else:
+            self._FieldInfo.Value = v
+        if changeDisplayText:
+            self.__setDisplayText()
 
     def Value(self):
         # 这里是为了处理在主窗体中使用了一些主数据库中没有的字段时
@@ -143,28 +148,39 @@ class QLineEdit(QLineEdit_, __JPWidgetBase):
 
     def setFieldInfo(self, fld: JPFieldType, raiseEvent=True):
         self._FieldInfo = fld
-        # if (raiseEvent is False or self.MainModel._loadDdata):
-        #     self.textChanged[str].disconnect(self._onValueChange)
-        if fld.Value:
-            self.setText(JPGetDisplayText(fld.Value))
-            if fld.TypeCode == JPFieldType.Int:
-                pass
-                #self.setValidator(_JPIntValidator())
-            if fld.TypeCode == JPFieldType.Float:
-                va = _JPDoubleValidator()
-                va.setDecimals(fld.Scale)
-                #self.setValidator(va)
+        self.__setDisplayText()
+
+    def __setDisplayText(self):
+        v=self._FieldInfo.Value
+        if v:
+            self.setText(JPGetDisplayText(v))
         else:
             self.setText('')
-        # self.textChanged[str].connect(self._onValueChange)
+
+    def setDoubleValidator(self, v_Min, v_Max, Decimals: int = 2):
+        Validator = QDoubleValidator()
+        Validator.setDecimals(Decimals)
+        Validator.setTop(float(v_Max))
+        Validator.setBottom(float(v_Min))
+        self.setValidator(Validator)
+
+    def setIntValidator(self, v_Min: int, v_Max: int):
+        Validator = QIntValidator()
+        Validator.setTop(v_Max)
+        Validator.setBottom(v_Min)
+        self.setValidator(Validator)
+
     def focusInEvent(self, e):
-        if self._FieldInfo.TypeCode in (JPFieldType.Int, JPFieldType.Float)
-            t=self.text()
+        if self._FieldInfo.TypeCode in (JPFieldType.Int, JPFieldType.Float):
+            t = self.text()
+            self.textChanged[str].disconnect(self.refreshValueNotRaiseEvent)
             self.setText(t.replace(',', ''))
-        QLineEdit_.focusInEvent(self,e)
+            self.textChanged[str].connect(self.refreshValueNotRaiseEvent)
+        QLineEdit_.focusInEvent(self, e)
+
     def focusOutEvent(self, e):
-        self.setText(JPGetDisplayText(self.Value()))
-        self._onValueChange()
+        self.__setDisplayText()
+        super()._onValueChange(self._FieldInfo.Value)
         QLineEdit_.focusOutEvent(self, e)
 
 
