@@ -3,8 +3,8 @@ from os import getcwd
 from sys import path as jppath
 jppath.append(getcwd())
 
-from PyQt5.QtCore import pyqtSlot
-from PyQt5.QtGui import QIcon, QIntValidator, QPixmap
+from PyQt5.QtCore import pyqtSlot, Qt
+from PyQt5.QtGui import QIcon, QIntValidator, QPixmap, QKeyEvent
 from PyQt5.QtWidgets import QAction, QLineEdit, QMessageBox
 
 from lib.JPDatabase.Database import JPDb
@@ -13,9 +13,10 @@ from lib.JPMvc.JPEditFormModel import JPFormModelMain
 from lib.JPMvc.JPFuncForm import JPFunctionForm, JPEditFormDataMode
 # from lib.JPMvc.JPModel import JPEditFormDataMode, JPFormModelMainSub
 from lib.JPPrintReport import JPPrintSectionType
-from lib.ZionPublc import JPPub
-from lib.ZionReport.OrderReportMob import Order_report_Mob
+from lib.ZionPublc import JPPub, JPUser
+from lib.ZionReport.PrintingOrderReportMob import PrintOrder_report_Mob
 from Ui.Ui_FormPrintingOrder import Ui_Form
+from lib.JPFunction import JPRound
 
 
 class JPFuncForm_PrintingOrder(JPFunctionForm):
@@ -80,8 +81,18 @@ class JPFuncForm_PrintingOrder(JPFunctionForm):
                 """
         super().setEditFormSQL(m_sql)
 
-    def getEditFormClass(self):
-        return EditForm_PrintingOrder
+    # def getEditForm(self):
+    #     return EditForm_PrintingOrder
+
+    def getEditForm(self,
+                    sql_main=None,
+                    edit_mode=None,
+                    sql_sub=None,
+                    PKValue=None):
+        return EditForm_PrintingOrder(sql_main=sql_main,
+                                      edit_mode=edit_mode,
+                                      sql_sub=sql_sub,
+                                      PKValue=PKValue)
 
     @pyqtSlot()
     def on_CmdSubmit_clicked(self):
@@ -117,12 +128,137 @@ class JPFuncForm_PrintingOrder(JPFunctionForm):
 
 
 class EditForm_PrintingOrder(JPFormModelMain):
-    def __init__(self,
-                 Ui,
-                 sql,
-                 PKValue=None,
-                 EditMode=JPEditFormDataMode.ReadOnly):
-        super().__init__(Ui, sql, PKValue=PKValue, EditMode=EditMode)
+    def __init__(self, sql_main, sql_sub=None, edit_mode=None, PKValue=None):
+        super().__init__(Ui_Form(),
+                         sql_main,
+                         PKValue=PKValue,
+                         edit_mode=edit_mode)
+        pix = QPixmap(getcwd() + "\\res\\Zions_100.png")
+        self.ui.label_logo.setPixmap(pix)
+
+        def __onTaxKeyPress(KeyEvent: QKeyEvent):
+            if (KeyEvent.modifiers() == Qt.AltModifier
+                    and KeyEvent.key() == Qt.Key_Delete):
+                self.ObjectDict['fTax'].refreshValueRaiseEvent(None,True)
+
+        self.ui.fTax.keyPressEvent = __onTaxKeyPress
+        self.readData()
+        if self.isNewMode:
+            self.ObjectDict['fVendedorID'].refreshValueNotRaiseEvent(
+                JPUser().currentUserID())
+
+    def onGetFieldsRowSources(self):
+        pub = JPPub()
+        u_lst = [[item[1], item[0]] for item in JPUser().getAllUserList()]
+        return [('fCustomerID', pub.getCustomerList(), 1),
+                ('fVendedorID', u_lst, 1),
+                ('fEspecieID', pub.getEnumList(2), 1),
+                ('fAvistaID', pub.getEnumList(7), 1),
+                ('fTamanhoID', pub.getEnumList(8), 1),
+                ('fNrCopyID', pub.getEnumList(9), 1)]
+
+    def onGetPrintReport(self):
+        return PrintOrder_report_Mob()
+
+    def onGetReadOnlyFields(self):
+        return ["fNumerEnd", "fVendedorID", 'fAmount', 'fPayable', 'fTax']
+
+    def afterSaveDate(self, data):
+        self.ObjectDict['fOrderID'].refreshValueNotRaiseEvent(data)
+
+    def onDateChangeEvent(self, obj, value):
+        nm = obj.objectName()
+        if nm in ('fCustomerID', 'fEspecieID'):
+            self.__refreshBeginNum()
+        if nm in ('fAvistaID', 'fQuant', 'fPagePerVolumn'):
+            self.__refreshEndNum()
+        if nm == 'fNumerBegin':
+            v = obj.Value()
+            self.ObjectDict['fNumerEnd'].setIntValidator(v + 1, v + 1000000)
+            self.__refreshEndNum()
+        if nm in ('fQuant', 'fPrice', 'fDesconto', "fTax"):
+            fQuant = self.ObjectDict['fQuant'].Value()
+            fPrice = self.ObjectDict['fPrice'].Value()
+            temp_fDesconto = self.ObjectDict['fDesconto'].Value()
+            fDesconto = temp_fDesconto if temp_fDesconto else 0
+            fAmount = (fQuant * fPrice if all((fQuant, fPrice)) else None)
+            self.ObjectDict['fAmount'].refreshValueNotRaiseEvent(fAmount, True)
+            if fAmount is None:
+                self.ObjectDict['fTax'].refreshValueNotRaiseEvent(None, True)
+                self.ObjectDict['fPayable'].refreshValueNotRaiseEvent(
+                    None, True)
+                return
+            if nm == "fTax":
+                temp_fTax = self.ObjectDict['fTax'].Value()
+                fTax = temp_fTax if temp_fTax else 0
+            else:
+                fTax = JPRound((fAmount - fDesconto) * 0.17) if fAmount else 0
+            self.ObjectDict['fTax'].refreshValueNotRaiseEvent(fTax, True)
+            fPayable = fAmount + fTax - fDesconto
+            self.ObjectDict['fPayable'].refreshValueNotRaiseEvent(
+                fPayable, True)
+
+    def __refreshEndNum(self):
+        temp_fAvistaID = self.ui.fAvistaID.currentData()
+        fNumerBegin = self.ObjectDict['fNumerBegin'].Value()
+        fAvistaID = int(temp_fAvistaID[2]) if temp_fAvistaID else None
+        fQuant = self.ObjectDict['fQuant'].Value()
+        fPagePerVolumn = self.ObjectDict['fPagePerVolumn'].Value()
+        if all((fAvistaID, fQuant, fPagePerVolumn)):
+            fNumerEnd = fNumerBegin + fAvistaID * fQuant * fPagePerVolumn - 1
+        else:
+            fNumerEnd = fNumerBegin
+        self.ObjectDict['fNumerEnd'].refreshValueNotRaiseEvent(fNumerEnd, True)
+
+    def __refreshBeginNum(self):
+        obj_begin = self.ObjectDict['fNumerBegin']
+        obj_end = self.ObjectDict['fNumerEnd']
+
+        def clearNum():
+            obj_begin.refreshValueNotRaiseEvent(None, True)
+            obj_end.refreshValueNotRaiseEvent(None, True)
+            obj_begin.setReadOnly(True)
+            self.ui.listPrintingOrder.clear()
+
+        # 如果没有选择客户或单据管理标志不为1时，清空单据信息并退出
+        temp = (self.ui.fEspecieID.currentIndex() == -1
+                or self.ui.fCustomerID.currentIndex() == -1)
+        if temp:
+            clearNum()
+            return
+        if self.ui.fEspecieID.currentData()[2] != '1':
+            clearNum()
+            return
+
+        self.ui.fNumerBegin.setEnabled(True)
+        new_beginNum = self.__getHistoryOrderMaxNum()
+        obj_begin.refreshValueNotRaiseEvent(new_beginNum + 1, True)
+        obj_begin.setReadOnly(False)
+        obj_begin.setIntValidator(new_beginNum, 999999999999)
+        # 引发一次事件
+        obj_begin._onValueChange(new_beginNum)
+
+    def __getHistoryOrderMaxNum(self):
+        sql = '''
+                SELECT fOrderID AS OrderID,
+                    fOrderDate as OrderDate,
+                    CAST(e.fTitle AS char(20)) AS Especie,
+                    CAST(fNumerBegin AS SIGNED) AS NumerBegin,
+                    CAST(fNumerEnd AS SIGNED) AS NumerEnd
+                FROM t_order o
+                    LEFT JOIN t_enumeration e ON o.fEspecieID = e.fItemID
+                WHERE fCustomerID ={fCustomerID}
+                    AND fEspecieID = {fEspecieID}
+                    {WhereID}
+                ORDER BY fNumerEnd DESC
+            '''
+        ID = self.ObjectDict['fOrderID'].Value()
+        WhereID = "AND fOrderID<>'{}'".format(ID) if ID else ''
+        tab = JPTabelFieldInfo(
+            sql.format(fCustomerID=self.ui.fCustomerID.Value(),
+                       fEspecieID=self.ui.fEspecieID.Value(),
+                       WhereID=WhereID))
+        return tab.getOnlyData([0, 4]) if len(tab.DataRows) > 0 else 0
 
 
 # class myMainSubMode(JPFormModelMainSub):
@@ -134,10 +270,10 @@ class EditForm_PrintingOrder(JPFormModelMain):
 #                  mainSql,
 #                  subSql=None,
 #                  edit_mode=JPFormModelMainSub.ReadOnly,
-#                  pkValue=None):
+#                  PKValue=None):
 #         super().__init__(clsUi=Ui_Form,
 #                          edit_mode=edit_mode,
-#                          pkValue=pkValue,
+#                          PKValue=PKValue,
 #                          mainSql=mainSql,
 #                          subSql=subSql)
 #         self.setPkRole(5)
@@ -253,22 +389,23 @@ class EditForm_PrintingOrder(JPFormModelMain):
 #     def afterSaveDate(self, data):
 #         self.ui.fOrderID.setText(data)
 
-# class Order_Printingreport(Order_report_Mob):
-#     def __init__(self):
-#         super().__init__()
 
-#     def onFormat(self, SectionType, CurrentPage, RowDate=None):
-#         if (SectionType == JPPrintSectionType.PageHeader and CurrentPage == 1):
-#             return True
+class Order_Printingreport(PrintOrder_report_Mob):
+    def __init__(self):
+        super().__init__()
 
-#     def PrintCurrentReport(self, OrderID: str):
-#         self.init_data(OrderID)
-#         self.init_ReportHeader_title(
-#             title1="NOTA DE PAGAMENTO",
-#             title2="(ESTE DOCUMENTO É DO USO INTERNO)")
-#         self.init_ReportHeader()
-#         self.init_ReportHeader_Individualization()
-#         self.init_PageHeader()
-#         self.init_Detail()
-#         self.init_ReportFooter()
-#         super().BeginPrint()
+    def onFormat(self, SectionType, CurrentPage, RowDate=None):
+        if (SectionType == JPPrintSectionType.PageHeader and CurrentPage == 1):
+            return True
+
+    def PrintCurrentReport(self, OrderID: str):
+        self.init_data(OrderID)
+        self.init_ReportHeader_title(
+            title1="NOTA DE PAGAMENTO",
+            title2="(ESTE DOCUMENTO É DO USO INTERNO)")
+        self.init_ReportHeader()
+        self.init_ReportHeader_Individualization()
+        self.init_PageHeader()
+        self.init_Detail()
+        self.init_ReportFooter()
+        super().BeginPrint()

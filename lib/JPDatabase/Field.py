@@ -44,6 +44,7 @@ class JPFieldInfo(JPFieldType):
         self.DefaultValue = None
         self.Comment = None
         self.RowSource = None
+        self.BindingColumn = None
         self.Formula = None
 
     @property
@@ -113,7 +114,7 @@ class JPMySQLFieldInfo(JPFieldInfo):
                 return float(x.to_eng_string())
             if isinstance(x, (float, int, str)):
                 return float(x)
-            
+
         def v_date(x):
             if isinstance(x, QDate):
                 return x

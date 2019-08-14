@@ -57,18 +57,18 @@ class __JPWidgetBase(QObject):
         super().__init__(*args)
         self._FieldInfo: JPFieldType = None
         self.MainModel = None
-        self.RowsData = None
+        #self.RowsData = None
 
     def _onValueChange(self, value):
-        self.RowsData.setData(self._FieldInfo._index, self.Value())
+        #self.RowsData.setData(self._FieldInfo._index, self.Value())
         if self.MainModel:
             self.MainModel._emitDataChange(self, value)
 
     def setMainModel(self, QWidget: QWidget_):
         self.MainModel = QWidget
 
-    def setRowsData(self, rd: JPTabelRowData):
-        self.RowsData = rd
+    # def setRowsData(self, rd: JPTabelRowData):
+    #     self.RowsData = rd
 
     @property
     def FieldInfo(self):
@@ -88,16 +88,6 @@ class __JPWidgetBase(QObject):
     def setFieldInfo(self, fld: JPFieldType = None, raiseEvent=True):
         pass
 
-    # def setFieldInfo(self, fld: JPFieldType = None, raiseEvent=True):
-    #     """设置字段信息"""
-    #     bz = (raiseEvent is False or self.MainModel._loadDdata)
-    #     if bz:
-    #         print(self.objectName())
-    #         self._changeMethod.disconnect(self._onValueChange)
-    #     self._setFieldInfo(fld, raiseEvent)
-    #     if bz:
-    #         self._changeMethod.connect(self._onValueChange)
-
     @abc.abstractmethod
     def Value(self):
         pass
@@ -105,6 +95,14 @@ class __JPWidgetBase(QObject):
     def refreshValueNotRaiseEvent(self, *value):
         if value:
             self._FieldInfo.Value = value
+
+    def setReadOnly(self, state=True):
+        if isinstance(self, (QLineEdit_, QTextEdit_, QDateEdit_)):
+            self.setReadOnly(state)
+        elif isinstance(self, QComboBox_):
+            self.setEnabled(not state)
+        elif isinstance(self, QCheckBox_):
+            self.setCheckable(not state)
 
 
 class QLineEdit(QLineEdit_, __JPWidgetBase):
@@ -119,18 +117,21 @@ class QLineEdit(QLineEdit_, __JPWidgetBase):
         else:
             return "'{}'".format(t.replace(',', ''))
 
-    def refreshValueNotRaiseEvent(self,
-                                  v: str,
-                                  changeDisplayText: bool = False):
+    def refreshValueNotRaiseEvent(self, v, changeDisplayText: bool = False):
         tp = self._FieldInfo.TypeCode
         if tp == JPFieldType.Int:
-            self._FieldInfo.Value = int(v.replace(',', '')) if v else 0
+            self._FieldInfo.Value = int(str(v).replace(',', '')) if v else 0
         elif tp == JPFieldType.Float:
-            self._FieldInfo.Value = float(v.replace(',', '')) if v else 0.0
+            self._FieldInfo.Value = float(str(v).replace(',',
+                                                         '')) if v else 0.0
         else:
             self._FieldInfo.Value = v
         if changeDisplayText:
             self.__setDisplayText()
+
+    def refreshValueRaiseEvent(self, v, changeDisplayText: bool = False):
+        self.refreshValueNotRaiseEvent(v, changeDisplayText)
+        super()._onValueChange(self._FieldInfo.Value)
 
     def Value(self):
         # 这里是为了处理在主窗体中使用了一些主数据库中没有的字段时
@@ -148,10 +149,13 @@ class QLineEdit(QLineEdit_, __JPWidgetBase):
 
     def setFieldInfo(self, fld: JPFieldType, raiseEvent=True):
         self._FieldInfo = fld
-        self.__setDisplayText()
+        # 设置编辑状态
+        self.setReadOnly(self.MainModel.isReadOnlyMode)
+        if not self.MainModel.isNewMode:
+            self.__setDisplayText()
 
     def __setDisplayText(self):
-        v=self._FieldInfo.Value
+        v = self._FieldInfo.Value
         if v:
             self.setText(JPGetDisplayText(v))
         else:
@@ -187,7 +191,7 @@ class QLineEdit(QLineEdit_, __JPWidgetBase):
 class QTextEdit(QTextEdit_, __JPWidgetBase):
     def __init__(self, parent):
         super().__init__(parent)
-        self.textChanged.connect(self._onValueChange)
+        self.textChanged.connect(self.refreshValueNotRaiseEvent)
 
     def getSqlValue(self) -> str:
         t = self.toPlainText()
@@ -196,21 +200,35 @@ class QTextEdit(QTextEdit_, __JPWidgetBase):
         return t
 
     def setFieldInfo(self, fld: JPFieldType, raiseEvent=True):
-        if (raiseEvent is False or self.MainModel._loadDdata):
-            self.textChanged.disconnect(self._onValueChange)
         self._FieldInfo = fld
-        self.setPlainText(fld.Value)
-        self.textChanged.connect(self._onValueChange)
+        # 设置编辑状态
+        self.setReadOnly(self.MainModel.isReadOnlyMode)
+        if not self.MainModel.isNewMode:
+            self.setPlainText(fld.Value)
 
     def Value(self):
-        return self.toPlainText()
+        return self._FieldInfo.Value
+
+    def refreshValueNotRaiseEvent(self, *Value):
+        if Value:
+            self._FieldInfo.Value = Value[0]
+        else:
+            self._FieldInfo.Value = self.toPlainText()
+
+    def refreshValueRaiseEvent(self, *Value):
+        self.refreshValueNotRaiseEvent(Value)
+        super()._onValueChange(self._FieldInfo.Value)
+
+    def focusOutEvent(self, e):
+        super()._onValueChange(self._FieldInfo.Value)
+        QTextEdit_.focusOutEvent(self, e)
 
 
 class QComboBox(QComboBox_, __JPWidgetBase):
     def __init__(self, parent):
         super().__init__(parent)
         self.setEditable(True)
-        self.BindingColumn = 1
+        self.BindingData = []
         self.currentIndexChanged[int].connect(self._onValueChange)
 
     def getSqlValue(self) -> str:
@@ -218,7 +236,7 @@ class QComboBox(QComboBox_, __JPWidgetBase):
             raise JPExceptionFieldNull("字段【{}】的枚举数据源不能为空！".format(
                 self._FieldInfo.FieldName))
         if self.currentData():
-            tempV = self.currentData()[self.BindingColumn]
+            tempV = self.currentData()[self.__BindingColumn]
             if tempV:
                 return "'{}'".format(tempV)
             else:
@@ -226,52 +244,64 @@ class QComboBox(QComboBox_, __JPWidgetBase):
         else:
             return self.getNullValue()
 
-    def Value(self):
-        if self.currentData():
-            return self.currentData()[self.BindingColumn]
+    def _onValueChange(self, index):
+        self._FieldInfo.Value = self.BindingData[index]
+        super()._onValueChange(self._FieldInfo.Value)
 
-    def setEnumValue(self, value):
+    def Value(self):
+        return self._FieldInfo.Value
+
+    def __setCurrentData(self, value):
         if value is None:
             self.setCurrentIndex(-1)
-            return
-        for i, row in enumerate(self._FieldInfo.RowSource):
-            if row[self.BindingColumn] == value:
+            return -1
+        for i, data in enumerate(self.BindingData):
+            if data == value:
+                self._FieldInfo.Value = data
                 self.setCurrentIndex(i)
-                self.setCurrentText(row[0])
-                return
+                return i
+
+    def refreshValueNotRaiseEvent(self, value):
+        self.currentIndexChanged[int].disconnect(self._onValueChange)
+        self.__setCurrentData(value)
+        self.currentIndexChanged[int].connect(self._onValueChange)
+
+    def refreshValueRaiseEvent(self, value):
+        i = self.__setCurrentData(value)
+        super()._onValueChange(i)
 
     @property
     def RowSource(self) -> list:
         return self._FieldInfo.RowSource
 
     def setFieldInfo(self, fld: JPFieldType, raiseEvent=True):
-        if (raiseEvent is False or self.MainModel._loadDdata):
-            self.currentIndexChanged[int].disconnect(self._onValueChange)
+        self.currentIndexChanged[int].disconnect(self._onValueChange)
         self._FieldInfo = fld
-        rs = self._FieldInfo.RowSource
-
-        if rs:
-            qcom = QCompleter([str(r[0]) for r in rs])
+        if self._FieldInfo.RowSource:
+            qcom = QCompleter([str(r[0]) for r in self._FieldInfo.RowSource])
             qcom.setCaseSensitivity(Qt.CaseInsensitive)
             qcom.setCompletionMode(QCompleter.PopupCompletion)
             qcom.setFilterMode(Qt.MatchContains)
             self.setCompleter(qcom)
-            if self.count() == 0:
-                for r in rs:
-                    self.addItem(str(r[0]), r)
-            self.setEnumValue(fld.Value)
+            for r in self._FieldInfo.RowSource:
+                self.addItem(str(r[0]), r)
+        c = self._FieldInfo.BindingColumn
+        self.BindingData = [row[c] for row in self._FieldInfo.RowSource]
+        # 设置编辑状态
+        self.setEnabled(not self.MainModel.isReadOnlyMode)
+        self.__setCurrentData(fld.Value)
         self.currentIndexChanged[int].connect(self._onValueChange)
 
-    def focusOutEvent(self, e):
-        t = self.currentText()
-        if not t or (t not in [item[0] for item in self._FieldInfo.RowSource]):
-            self.setCurrentIndex(-1)
-            self.lineEdit().setText('')
-        QComboBox_.focusOutEvent(self, e)
+    # def focusOutEvent(self, e):
+    #     t = self.currentText()
+    #     if not t or (t not in [item[0] for item in self._FieldInfo.RowSource]):
+    #         self.setCurrentIndex(-1)
+    #         self.lineEdit().setText('')
+    #     QComboBox_.focusOutEvent(self, e)
 
-    def focusInEvent(self, e):
-        self.lineEdit().selectAll()
-        QComboBox_.focusInEvent(self, e)
+    # def focusInEvent(self, e):
+    #     self.lineEdit().selectAll()
+    #     QComboBox_.focusInEvent(self, e)
 
     def keyPressEvent(self, event):
         QComboBox_.keyPressEvent(self, event)
@@ -281,20 +311,33 @@ class QComboBox(QComboBox_, __JPWidgetBase):
 class QDateEdit(QDateEdit_, __JPWidgetBase):
     def __init__(self, parent):
         super().__init__(parent)
+        self.__RaiseEvent = False
         self.dateChanged.connect(self._onValueChange)
 
     def getSqlValue(self) -> str:
         return "'{}'".format(JPDateConver(self.date(), str))
 
+    def _onValueChange(self):
+        self._FieldInfo.Value = JPDateConver(self.date(), datetime.date)
+        if self.__RaiseEvent:
+            super()._onValueChange(self._FieldInfo.Value)
+
+    def refreshValueNotRaiseEvent(self, value):
+        self.__RaiseEvent = False
+        value = value if value else QDate(1900, 1, 1)
+        self._FieldInfo.Value = JPDateConver(value, datetime.date)
+        self.setDate(JPDateConver(self._FieldInfo.Value, QDate))
+        self.__RaiseEvent = True
+
+    def refreshValueRaiseEvent(self, value):
+        self.refreshValueNotRaiseEvent(value)
+        super()._onValueChange(self._FieldInfo.Value)
+
     def setFieldInfo(self, fld: JPFieldType, raiseEvent=True):
-        if (raiseEvent is False or self.MainModel._loadDdata):
-            self.dateChanged.disconnect(self._onValueChange)
         self._FieldInfo = fld
-        if not (self._FieldInfo.Value is None):
-            self.setDate(JPDateConver(self._FieldInfo.Value, datetime.date))
-        else:
-            self.setDate(QDate.currentDate())
-        self.dateChanged.connect(self._onValueChange)
+        # 设置编辑状态
+        self.setReadOnly(self.MainModel.isReadOnlyMode)
+        self.refreshValueNotRaiseEvent(fld.Value)
 
     def Value(self):
         return JPDateConver(self.date(), datetime.date)
@@ -303,7 +346,7 @@ class QDateEdit(QDateEdit_, __JPWidgetBase):
 class QCheckBox(QCheckBox_, __JPWidgetBase):
     def __init__(self, parent):
         super().__init__(parent)
-        self._FieldInfo: JPFieldType = None
+        self.__RaiseEvent = False
         self.stateChanged[int].connect(self._onValueChange)
 
     def getSqlValue(self) -> str:
@@ -311,13 +354,29 @@ class QCheckBox(QCheckBox_, __JPWidgetBase):
             return 'Null'
         return '1' if self.checkState() is True else '0'
 
+    def _onValueChange(self):
+        self._FieldInfo.Value = self.checkState()
+        if self.__RaiseEvent:
+            super()._onValueChange(self._FieldInfo.Value)
+
+    def refreshValueNotRaiseEvent(self, value):
+        self.__RaiseEvent = False
+        if value is None:
+            v = True if value else False
+            self._FieldInfo.Value = v
+            self.setChecked(v)
+        self.__RaiseEvent = True
+
+    def refreshValueRaiseEvent(self, value):
+        self.refreshValueNotRaiseEvent(value)
+        super()._onValueChange(self._FieldInfo.Value)
+
     def setFieldInfo(self, fld: JPFieldType, raiseEvent=True):
-        if (raiseEvent is False or self.MainModel._loadDdata):
-            self.stateChanged[int].disconnect(self._onValueChange)
         self._FieldInfo = fld
-        v = True if self._FieldInfo.Value else False
-        self.setChecked(v)
-        self.stateChanged[int].connect(self._onValueChange)
+        self.refreshValueNotRaiseEvent(self._FieldInfo.Value)
+        # 设置编辑状态
+        self.setCheckable(not self.MainModel.isReadOnlyMode)
+        self.refreshValueNotRaiseEvent(fld.Value)
 
     def Value(self):
         return 1 if self.checkState() == Qt.Checked else 0

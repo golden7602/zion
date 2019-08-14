@@ -127,7 +127,7 @@ class JPQueryFieldInfo(object):
             fld.Value = data[i]
         return flds
 
-    def getRowFieldsInfoAndDataDict(self, row_num: int) -> dict:
+    def getRowFieldsInfoDict(self, row_num: int) -> dict:
         """getRowValueDict(row_num: int)
         根据指定的行号返回一个字典，键是字段名，值为FieldInfo对象，且有Value属性"""
         flds = deepcopy(self.Fields)
@@ -162,22 +162,25 @@ class JPQueryFieldInfo(object):
         fld = deepcopy(self.Fields[c])
         fld.value = self.DataRows[r][0][c]
 
-    def setFieldsRowSource(self, key, data: list):
+    def setFieldsRowSource(self, key, data: list, binding_column: int = 1):
         '''setFieldsRowSource(key, data:list)\n
             key可以是序号或字段名
         '''
         if isinstance(key, str):
             self.FieldsDict[key].RowSource = data
+            self.FieldsDict[key].BindingColumn = binding_column
         if isinstance(key, int):
             self.Fields[key].RowSource = data
+            self.Fields[key].BindingColumn = binding_column
+
 
 
 class JPTabelFieldInfo(JPQueryFieldInfo):
     def __init__(self, sql: str, noData: bool = False):
-        db = JPDb()
         '''根据一个Sql或表名返回一个JPTabelFieldInfo对象\n
         JPTabelFieldInfo(sql:str, noData:bool=False)
         '''
+        db = JPDb()
         self.PrimarykeyFieldName = None
         self.PrimarykeyFieldIndex = None
         self.TableName = None
@@ -225,4 +228,3 @@ class JPTabelFieldInfo(JPQueryFieldInfo):
     def deleteRow(self, row_num: int):
         self.DeleteRows.append(self.DataRows[row_num])
         del self.DataRows[row_num]
-

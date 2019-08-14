@@ -132,11 +132,11 @@ class myMainSubMode(JPFormModelMainSub):
 #                  mainSql,
 #                  subSql=None,
 #                  edit_mode=JPFormModelMainSub.ReadOnly,
-#                  pkValue=None):
+#                  PKValue=None):
 
 #         super().__init__(clsUi=Ui_Form,
 #                          edit_mode=edit_mode,
-#                          pkValue=pkValue,
+#                          PKValue=PKValue,
 #                          mainSql=mainSql,
 #                          subSql=subSql)
 #         self.setPkRole(1)

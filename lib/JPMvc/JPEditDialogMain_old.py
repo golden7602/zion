@@ -16,7 +16,7 @@ class JPEditDialogMain(QDialog):
     def __init__(self,
                  clsUi=None,
                  edit_mode: JPEditFormDataMode = JPEditFormDataMode.ReadOnly,
-                 pkValue=None,
+                 PKValue=None,
                  mainSql=None,
                  flags=Qt.WindowFlags()):
         pub = JPPub()
@@ -28,7 +28,7 @@ class JPEditDialogMain(QDialog):
             self.ui.butSave.setEnabled(False)
             self.ui.butPrint.setEnabled(False)
             self.ui.butPDF.setEnabled(False)
-        self.curPK = pkValue if pkValue else ''
+        self.curPK = PKValue if PKValue else ''
         self.mainSql = mainSql.format(self.curPK)
         self.__PKRole = None
         # if subSql:

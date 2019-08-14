@@ -11,12 +11,14 @@ from PyQt5.QtWidgets import (QAbstractItemView, QCheckBox, QComboBox,
                              QMessageBox)
 from PyQt5.QtCore import QCoreApplication, QSize, Qt, pyqtSlot
 from lib.JPDatabase.Query import JPQueryFieldInfo
-from lib.JPMvc.JPModel import JPFormModelMainSub, JPTableViewModelReadOnly
+from lib.JPMvc.JPModel import JPTableViewModelReadOnly
+from lib.JPMvc.JPEditFormModel import JPEditFormDataMode
 from lib.JPFunction import setButtonIcon
 from lib.JPDatabase.Database import JPDb
 from Ui.Ui_FuncFormMob import Ui_Form
 import re
 import abc
+
 
 class JPFunctionForm(QWidget):
     def __init__(self, parent, flags=Qt.WindowFlags()):
@@ -36,7 +38,6 @@ class JPFunctionForm(QWidget):
         self.tableView = self.ui.tableView
         self.__FormClass = None
         self.PrimarykeyFieldIndex = 0
-        self.__EditFormClass = self.getEditFormClass()
         self.__EditForm = None
         self.EditFormMainTableName = None
         self.EditFormPrimarykeyFieldName = None
@@ -95,14 +96,17 @@ class JPFunctionForm(QWidget):
         return JPTableViewModelReadOnly
 
     @abc.abstractmethod
-    def getEditForm(self,):
+    def getEditForm(self,
+                    sql_main=None,
+                    edit_mode=None,
+                    sql_sub=None,
+                    PKValue=None):
         """重载此方法，返回一个编辑窗体对象"""
-
     def beforeDeleteRow(self, delete_ID):
         '''删除行之前查检用方法，可重载'''
         return True
 
-    def btnRefreshClick(self):
+    def btnRefreshClick(self, ID=None):
         if self.SQL_ListForm_Para:
             self.ui.tableView.setSelectionMode(
                 QAbstractItemView.SingleSelection)
@@ -124,6 +128,8 @@ class JPFunctionForm(QWidget):
             self.model = self.getModelClass()(self.ui.tableView, info)
             self.ui.tableView.setModel(self.model)
             self.ui.tableView.resizeColumnsToContents()
+            if ID:
+                self._locationRow(ID)
 
     def getCurrentSelectPKValue(self):
         index = self.tableView.selectionModel().currentIndex()
@@ -153,10 +159,11 @@ class JPFunctionForm(QWidget):
     @pyqtSlot()
     def on_CmdNew_clicked(self):
         self.__EditForm = None
-        f = self.__EditFormClass(self.SQL_EditForm_Main, self.SQL_EditForm_Sub,
-                                 JPFormModelMainSub.New)
-        f.setListForm(self)
-        self.__EditForm = f
+        self.__EditForm = self.getEditForm(sql_main=self.SQL_EditForm_Main,
+                                           sql_sub=self.SQL_EditForm_Sub,
+                                           edit_mode=JPEditFormDataMode.New,
+                                           PKValue=None)
+        self.__EditForm.setListForm(self)
         self.__EditForm.afterSaveData.connect(self.btnRefreshClick)
         self.__EditForm.exec_()
 
@@ -166,10 +173,11 @@ class JPFunctionForm(QWidget):
         if not cu_id:
             return
         self.__EditForm = None
-        f = self.__EditFormClass(self.SQL_EditForm_Main, self.SQL_EditForm_Sub,
-                                 JPFormModelMainSub.Edit, cu_id)
-        f.setListForm(self)
-        self.__EditForm = f
+        self.__EditForm = self.getEditForm(sql_main=self.SQL_EditForm_Main,
+                                           sql_sub=self.SQL_EditForm_Sub,
+                                           edit_mode=JPEditFormDataMode.Edit,
+                                           PKValue=cu_id)
+        self.__EditForm.setListForm(self)
         self.__EditForm.exec_()
 
     @pyqtSlot()
@@ -178,10 +186,12 @@ class JPFunctionForm(QWidget):
         if not cu_id:
             return
         self.__EditForm = None
-        f = self.__EditFormClass(self.SQL_EditForm_Main, self.SQL_EditForm_Sub,
-                                 JPFormModelMainSub.ReadOnly, cu_id)
-        f.setListForm(self)
-        self.__EditForm = f
+        self.__EditForm = self.getEditForm(
+            sql_main=self.SQL_EditForm_Main,
+            sql_sub=self.SQL_EditForm_Sub,
+            edit_mode=JPEditFormDataMode.ReadOnly,
+            PKValue=cu_id)
+        self.__EditForm.setListForm(self)
         self.__EditForm.exec_()
 
     @pyqtSlot()

@@ -16,7 +16,7 @@ class PopEditForm(QDialog):
     def __init__(self,
                  clsUi=None,
                  edit_mode: JPFormModelMainSub = JPFormModelMainSub.ReadOnly,
-                 pkValue=None,
+                 PKValue=None,
                  mainSql=None,
                  subSql=None,
                  flags=Qt.WindowFlags()):
@@ -30,7 +30,7 @@ class PopEditForm(QDialog):
             self.ui.butSave.setEnabled(False)
             self.ui.butPrint.setEnabled(False)
             self.ui.butPDF.setEnabled(False)
-        self.curPK = pkValue if pkValue else ''
+        self.curPK = PKValue if PKValue else ''
         self.mainSql = mainSql.format(self.curPK)
         self.subSql = subSql.format(self.curPK) if subSql else None
         self.__PKRole = None
@@ -106,6 +106,9 @@ class PopEditForm(QDialog):
     def setListForm(self, FunctionForm):
         self.__FunctionForm = FunctionForm
 
+    def setMainFormFieldsRowSources(self):
+        return []
+
     def getMainSubMode(self) -> JPFormModelMainSub:
         """返回主窗体处理子类，必须继承自JPFormModelMainSub"""
         return JPFormModelMainSub
@@ -131,8 +134,6 @@ class PopEditForm(QDialog):
     def setSubFormColumnWidths(self):
         return []
 
-    def setMainFormFieldsRowSources(self):
-        return []
 
     def afterDataChangedCalculat(self,obj):
         """数据变化后执行该方法，请覆盖"""
