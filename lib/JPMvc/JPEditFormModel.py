@@ -157,7 +157,7 @@ class JPFormModelMain(QDialog):
         if fld_dict:
             for k, v in self.ObjectDict.items():
                 if k in fld_dict:
-                    # v.setRowsData(tf.DataRows[0])
+                    v.setRowsData(tf.DataRows[0])
                     v.setMainModel(self)
                     v.setFieldInfo(fld_dict[k])
         # 设置只读字段
@@ -216,7 +216,7 @@ class JPFormModelMain(QDialog):
         if (row_st == JPTabelRowData.New_None
                 or row_st == JPTabelRowData.OriginalValue):
             return ''
-        if st == self.New:
+        if st == JPEditFormDataMode.New:
             for fld in self.tableFieldsInfo.Fields:
                 if fld.IsPrimarykey:
                     if fld.Auto_Increment:
@@ -232,7 +232,7 @@ class JPFormModelMain(QDialog):
                 newPKSQL = JPDb().NewPkSQL(pk_role)
                 sqls = newPKSQL[0:2] + sqls + newPKSQL[2:]
             return sqls
-        if st == self.Edit:
+        if st == JPEditFormDataMode.Edit:
             for fld in self.tableFieldsInfo.Fields:
                 if fld.IsPrimarykey:
                     r_pk_name = fld.FieldName
@@ -259,7 +259,7 @@ class JPFormModelMain(QDialog):
                 self.ui.butSave.setEnabled(False)
                 self.ui.butPrint.setEnabled(True)
                 self.ui.butPDF.setEnabled(True)
-                self.MainModle.setEditState(False)
+                #self.MainModle.setEditState(False)
                 self.afterSaveData.emit(result)
                 QMessageBox.information(self, '完成',
                                         '保存数据完成！\nSave data complete!',
@@ -449,7 +449,7 @@ if 1 == 1:
     #         TN = self.tableFieldsInfo.TableName
     #         sql_i = 'INSERT INTO ' + TN + ' ({}) VALUES ({});\n'
     #         sql_u = 'UPDATE ' + TN + ' SET {} WHERE {}={};\n'
-    #         if self.EditMode == self.New:
+    #         if self.EditMode == JPEditFormDataMode.New:
     #             for row in self.tableFieldsInfo.DataRows:
     #                 fn_lst = []
     #                 v_lst = []
@@ -475,7 +475,7 @@ if 1 == 1:
     #                     sqls.append(sql_i.format(','.join(fn_lst),
     #                                              ','.join(v_lst)))
 
-    #         elif self.EditMode == self.Edit:
+    #         elif self.EditMode == JPEditFormDataMode.Edit:
     #             for row in self.tableFieldsInfo.DataRows:
     #                 fn_lst = []
     #                 v_lst = []

@@ -11,7 +11,6 @@ from lib.JPDatabase.Database import JPDb
 from lib.JPDatabase.Query import JPTabelFieldInfo
 from lib.JPMvc.JPEditFormModel import JPFormModelMain
 from lib.JPMvc.JPFuncForm import JPFunctionForm, JPEditFormDataMode
-# from lib.JPMvc.JPModel import JPEditFormDataMode, JPFormModelMainSub
 from lib.JPPrintReport import JPPrintSectionType
 from lib.ZionPublc import JPPub, JPUser
 from lib.ZionReport.PrintingOrderReportMob import PrintOrder_report_Mob
@@ -135,11 +134,17 @@ class EditForm_PrintingOrder(JPFormModelMain):
                          edit_mode=edit_mode)
         pix = QPixmap(getcwd() + "\\res\\Zions_100.png")
         self.ui.label_logo.setPixmap(pix)
+        self.setPkRole(5)
+        self.cacuTax = True
 
         def __onTaxKeyPress(KeyEvent: QKeyEvent):
             if (KeyEvent.modifiers() == Qt.AltModifier
                     and KeyEvent.key() == Qt.Key_Delete):
-                self.ObjectDict['fTax'].refreshValueRaiseEvent(None,True)
+                self.ObjectDict['fTax'].refreshValueRaiseEvent(None, True)
+                self.cacuTax = False
+            elif (KeyEvent.modifiers() == Qt.AltModifier
+                  and KeyEvent.key() == Qt.Key_T):
+                self.cacuTax = True
 
         self.ui.fTax.keyPressEvent = __onTaxKeyPress
         self.readData()
@@ -161,7 +166,7 @@ class EditForm_PrintingOrder(JPFormModelMain):
         return PrintOrder_report_Mob()
 
     def onGetReadOnlyFields(self):
-        return ["fNumerEnd", "fVendedorID", 'fAmount', 'fPayable', 'fTax']
+        return ['fOrderID',"fNumerEnd", "fVendedorID", 'fAmount', 'fPayable', 'fTax']
 
     def afterSaveDate(self, data):
         self.ObjectDict['fOrderID'].refreshValueNotRaiseEvent(data)
@@ -193,7 +198,10 @@ class EditForm_PrintingOrder(JPFormModelMain):
                 fTax = temp_fTax if temp_fTax else 0
             else:
                 fTax = JPRound((fAmount - fDesconto) * 0.17) if fAmount else 0
-            self.ObjectDict['fTax'].refreshValueNotRaiseEvent(fTax, True)
+            if self.cacuTax:
+                self.ObjectDict['fTax'].refreshValueNotRaiseEvent(fTax, True)
+            else:
+                fTax=0
             fPayable = fAmount + fTax - fDesconto
             self.ObjectDict['fPayable'].refreshValueNotRaiseEvent(
                 fPayable, True)
@@ -217,7 +225,7 @@ class EditForm_PrintingOrder(JPFormModelMain):
         def clearNum():
             obj_begin.refreshValueNotRaiseEvent(None, True)
             obj_end.refreshValueNotRaiseEvent(None, True)
-            obj_begin.setReadOnly(True)
+            #obj_begin.setReadOnly(True)
             self.ui.listPrintingOrder.clear()
 
         # 如果没有选择客户或单据管理标志不为1时，清空单据信息并退出
@@ -233,8 +241,8 @@ class EditForm_PrintingOrder(JPFormModelMain):
         self.ui.fNumerBegin.setEnabled(True)
         new_beginNum = self.__getHistoryOrderMaxNum()
         obj_begin.refreshValueNotRaiseEvent(new_beginNum + 1, True)
-        obj_begin.setReadOnly(False)
-        obj_begin.setIntValidator(new_beginNum, 999999999999)
+        #obj_begin.setReadOnly(False)
+        obj_begin.setIntValidator(new_beginNum+1, 999999999999)
         # 引发一次事件
         obj_begin._onValueChange(new_beginNum)
 

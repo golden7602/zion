@@ -57,18 +57,18 @@ class __JPWidgetBase(QObject):
         super().__init__(*args)
         self._FieldInfo: JPFieldType = None
         self.MainModel = None
-        #self.RowsData = None
+        self.RowsData = None
 
     def _onValueChange(self, value):
-        #self.RowsData.setData(self._FieldInfo._index, self.Value())
+        self.RowsData.setData(self._FieldInfo._index, self.Value())
         if self.MainModel:
             self.MainModel._emitDataChange(self, value)
 
     def setMainModel(self, QWidget: QWidget_):
         self.MainModel = QWidget
 
-    # def setRowsData(self, rd: JPTabelRowData):
-    #     self.RowsData = rd
+    def setRowsData(self, rd: JPTabelRowData):
+        self.RowsData = rd
 
     @property
     def FieldInfo(self):
@@ -153,6 +153,10 @@ class QLineEdit(QLineEdit_, __JPWidgetBase):
         self.setReadOnly(self.MainModel.isReadOnlyMode)
         if not self.MainModel.isNewMode:
             self.__setDisplayText()
+        if self._FieldInfo.TypeCode==JPFieldType.Int:
+            self.setValidator(QIntValidator())
+        if self._FieldInfo.TypeCode==JPFieldType.Float:
+            self.setValidator(QDoubleValidator())
 
     def __setDisplayText(self):
         v = self._FieldInfo.Value
@@ -169,9 +173,7 @@ class QLineEdit(QLineEdit_, __JPWidgetBase):
         self.setValidator(Validator)
 
     def setIntValidator(self, v_Min: int, v_Max: int):
-        Validator = QIntValidator()
-        Validator.setTop(v_Max)
-        Validator.setBottom(v_Min)
+        Validator = QIntValidator(v_Min,v_Max)
         self.setValidator(Validator)
 
     def focusInEvent(self, e):
@@ -227,7 +229,7 @@ class QTextEdit(QTextEdit_, __JPWidgetBase):
 class QComboBox(QComboBox_, __JPWidgetBase):
     def __init__(self, parent):
         super().__init__(parent)
-        self.setEditable(True)
+        self.setEditable(False)
         self.BindingData = []
         self.currentIndexChanged[int].connect(self._onValueChange)
 
@@ -236,7 +238,7 @@ class QComboBox(QComboBox_, __JPWidgetBase):
             raise JPExceptionFieldNull("字段【{}】的枚举数据源不能为空！".format(
                 self._FieldInfo.FieldName))
         if self.currentData():
-            tempV = self.currentData()[self.__BindingColumn]
+            tempV = self.BindingData[self.currentIndex()]
             if tempV:
                 return "'{}'".format(tempV)
             else:
@@ -292,20 +294,10 @@ class QComboBox(QComboBox_, __JPWidgetBase):
         self.__setCurrentData(fld.Value)
         self.currentIndexChanged[int].connect(self._onValueChange)
 
-    # def focusOutEvent(self, e):
-    #     t = self.currentText()
-    #     if not t or (t not in [item[0] for item in self._FieldInfo.RowSource]):
-    #         self.setCurrentIndex(-1)
-    #         self.lineEdit().setText('')
-    #     QComboBox_.focusOutEvent(self, e)
+    # def keyPressEvent(self, event):
+    #     return
+    #     QComboBox_.keyPressEvent(self, event)
 
-    # def focusInEvent(self, e):
-    #     self.lineEdit().selectAll()
-    #     QComboBox_.focusInEvent(self, e)
-
-    def keyPressEvent(self, event):
-        QComboBox_.keyPressEvent(self, event)
-        # self.setEditText(self.currentText().upper())
 
 
 class QDateEdit(QDateEdit_, __JPWidgetBase):
@@ -324,7 +316,7 @@ class QDateEdit(QDateEdit_, __JPWidgetBase):
 
     def refreshValueNotRaiseEvent(self, value):
         self.__RaiseEvent = False
-        value = value if value else QDate(1900, 1, 1)
+        value = value if value else QDate.currentDate()
         self._FieldInfo.Value = JPDateConver(value, datetime.date)
         self.setDate(JPDateConver(self._FieldInfo.Value, QDate))
         self.__RaiseEvent = True
