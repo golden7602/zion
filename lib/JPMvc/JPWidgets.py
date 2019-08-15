@@ -295,6 +295,8 @@ class QComboBox(QComboBox_, __JPWidgetBase):
             for r in self._FieldInfo.RowSource:
                 self.addItem(str(r[0]), r)
         c = self._FieldInfo.BindingColumn
+        if self._FieldInfo.RowSource is None:
+            raise AttributeError("窗体字段【{}】没有设置行来源数据".format(self.objectName()))
         self.BindingData = [row[c] for row in self._FieldInfo.RowSource]
         # 设置编辑状态
         self.setEnabled(not self.MainModel.isReadOnlyMode)

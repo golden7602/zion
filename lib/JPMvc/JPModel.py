@@ -24,7 +24,7 @@ from lib.ZionPublc import JPPub
 
 
 class __JPTableViewModelBase(QAbstractTableModel):
-    dataChanged = pyqtSignal(QModelIndex)
+    dataChanged = pyqtSignal(QModelIndex, object)
     firstHasDirty = pyqtSignal()
     editNext = pyqtSignal(QModelIndex)
 
@@ -145,7 +145,7 @@ class __JPTableViewModelBase(QAbstractTableModel):
         if tmp.isValid():
             self.editNext.emit(tmp)
 
-        self.dataChanged[QModelIndex].emit(Index)
+        self.dataChanged[QModelIndex].emit(Index, Any)
         return True
 
     def AfterSetDataBeforeInsterRowEvent(self, row_data,

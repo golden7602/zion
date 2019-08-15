@@ -34,7 +34,7 @@ class JPFormModelMain(QDialog):
 
     def __init__(self,
                  Ui,
-                 main_sql: str = None,
+                 sql_main: str = None,
                  PKValue=None,
                  edit_mode=JPEditFormDataMode.ReadOnly,
                  flags=Qt.WindowFlags()):
@@ -42,7 +42,7 @@ class JPFormModelMain(QDialog):
         super().__init__(parent=pub.MainForm, flags=flags)
         self.ui = Ui
         self.ui.setupUi(self)
-        self.mainSQL = main_sql
+        self.mainSQL = sql_main
         self.PKRole = None
         self.__dirty = False
         self.__Formulas = []
@@ -152,7 +152,7 @@ class JPFormModelMain(QDialog):
         temp = self.onGetFieldsRowSources()
         if isinstance(temp, (list, tuple)):
             for item in temp:
-                tf.setFieldsRowSource(*item)
+                tf.onGetFieldsRowSource(*item)
         fld_dict = tf.getRowFieldsInfoDict(0)
         if fld_dict:
             for k, v in self.ObjectDict.items():
@@ -160,12 +160,24 @@ class JPFormModelMain(QDialog):
                     v.setRowsData(tf.DataRows[0])
                     v.setMainModel(self)
                     v.setFieldInfo(fld_dict[k])
+
+        if self.EditMode == JPEditFormDataMode.ReadOnly:
+            self.setEditState(False)
+        else:
+            self.__setReadOnlyFields()
+
+    def __setReadOnlyFields(self):
         # 设置只读字段
         self.__ReadOnlyFieldsName = self.onGetReadOnlyFields()
         for n in self.__ReadOnlyFieldsName:
             self.ObjectDict[n].setReadOnly(True)
 
-    def onGetReadOnlyFields(self, fields: list):
+    def setEditState(self, can_edit: bool = False):
+        for obj in self.ObjectDict.values():
+            obj.setReadOnly(can_edit)
+        self.__setReadOnlyFields()
+
+    def onGetReadOnlyFields(self):
         return []
 
     def onGetFieldsRowSources(self) -> list:
@@ -277,25 +289,34 @@ class JPFormModelMain(QDialog):
 class JPFormModelMainHasSub(JPFormModelMain):
     def __init__(self,
                  Ui,
-                 main_sql=None,
+                 sql_main=None,
                  PKValue=None,
-                 sub_sql=None,
+                 sql_sub=None,
                  edit_mode=JPEditFormDataMode.ReadOnly,
                  flags=Qt.WindowFlags()):
         super().__init__(Ui,
-                         main_sql=main_sql,
+                         sql_main=sql_main,
                          PKValue=PKValue,
                          edit_mode=edit_mode,
                          flags=flags)
-        self.subSQL = sub_sql
+        self.subSQL = sql_sub
+        self.__formulas = []
 
-    def setSQL(self, main_sql, sub_sql):
-        super().setSQL(main_sql)
-        self.subSQL = sub_sql
+    def setSQL(self, sql_main, sql_sub):
+        super().setSQL(sql_main)
+        self.subSQL = sql_sub
 
     def readData(self, subTableView: QTableView):
         super().readData()
         self.__readSubData(subTableView)
+
+    def setEditState(self, can_edit: bool = False):
+        super().setEditState(can_edit)
+        st = {
+            True: QAbstractItemView.AllEditTriggers,
+            False: QAbstractItemView.NoEditTriggers
+        }
+        self.__tableView.setEditTriggers(st[can_edit])
 
     def getSqls(self, pk_role=None):
 
@@ -436,39 +457,50 @@ class JPFormModelMainHasSub(JPFormModelMain):
             raise ValueError("没有指定子窗体的编辑模式！")
         # 建立子窗体模型
         self.tableFieldsInfo = JPTabelFieldInfo(
-            self.__sql,
+            self.subSQL,
             True if self.EditMode == JPEditFormDataMode.New else None)
         if self.EditMode == JPEditFormDataMode.New and len(
                 self.tableFieldsInfo.DeleteRows) == 0:
             self.tableFieldsInfo.addRow()
         if self.EditMode == JPEditFormDataMode.ReadOnly:
-            self._model = JPTableViewModelReadOnly(subTableView,
-                                                   self.tableFieldsInfo)
+            self.SubModel = JPTableViewModelReadOnly(subTableView,
+                                                     self.tableFieldsInfo)
         if self.EditMode in [JPEditFormDataMode.Edit, JPEditFormDataMode.New]:
-            self._model = JPTableViewModelEditForm(subTableView,
-                                                   self.tableFieldsInfo)
-        self.__tableView.setModel(self._model)
-        self._model.dataChanged.connect(self._emitDataChange)
+            self.SubModel = JPTableViewModelEditForm(subTableView,
+                                                     self.tableFieldsInfo)
+        self.__tableView.setModel(self.SubModel)
+        self.SubModel.dataChanged.connect(self._emitDataChange)
         # 设置子窗体可编辑状态
         self.setEditState(self.EditMode != JPEditFormDataMode.ReadOnly)
         # 设置子窗体的输入委托控件及格式等
         tv = self.__tableView
-        self._model.setColumnsDetegate()
+        self.__readOnlyColumns = self.onGetReadOnlyColumns()
+        self.SubModel.setColumnsDetegate()
         for col in self.__readOnlyColumns:
             tv.setItemDelegateForColumn(col, myDe.JPDelegate_ReadOnly(tv))
+        self.__hideColumns = self.onGetHiddenColumns()
         for col in self.__hideColumns:
             tv.setColumnHidden(col, True)
+        self.__columnWidths = self.onGetColumnWidths()
         for i, w in enumerate(self.__columnWidths):
             subTableView.setColumnWidth(i, w)
-        for field_key, data in self.__fieldsRowSource:
-            self._model.TabelFieldInfo.setFieldsRowSource(field_key, data)
+        self.__columnsRowSources = self.onGetColumnRowSources()
+        for field_key, data, bind_col in self.__columnsRowSources:
+            self.SubModel.TabelFieldInfo.Fields[
+                field_key].BindingColumn = bind_col
+            self.SubModel.TabelFieldInfo.onGetFieldsRowSource(field_key, data)
         # 设置字段计算公式
         for i, f in self.__formulas:
-            self._model.TabelFieldInfo.Fields[i].Formula = f
+            self.SubModel.TabelFieldInfo.Fields[i].Formula = f
+        self.SubModel.AfterSetDataBeforeInsterRowEvent = self.AfterSetDataBeforeInsterRowEvent
+        self.subModel.dataChanged.connect(self._emitDataChange)
+
+    def getColumnSum(self, col: int):
+        return self.SubModle.getColumnSum(col)
 
     def setFormula(self, key: [int, str], formula: str):
         """
-        设置计算公式 {字段名}代表一个值
+        设置子表计算公式 {字段名}代表一个值
         本公式也用于增加新行前的检查，也用于列间的运算
         key为列号或字段名;formula格式示例如下：
         {7}=(JPRound({1},2) + NV({2},float))/2
@@ -480,18 +512,25 @@ class JPFormModelMainHasSub(JPFormModelMain):
         """
         self.__formulas.append((key, formula))
 
-    def setFieldsRowSource(self, *args):
-        self.__fieldsRowSource = args
+    def onGetColumnRowSources(self, *args):
+        return []
 
-    def setColumnsHidden(self, *args: int):
+    def onGetHiddenColumns(self, ):
         """设置隐藏列的列号，如有多个列，请设置一个列表"""
-        self.__hideColumns = args
+        return []
 
-    def setColumnWidths(self, *args: int):
-        self.__columnWidths = args
+    def onGetColumnWidths(self, ):
+        return []
 
-    def setColumnsReadOnly(self, *args: int):
-        self.__readOnlyColumns = args
+    def onGetReadOnlyColumns(self):
+        return []
+
+    def AfterSetDataBeforeInsterRowEvent(self, row_data,
+                                         Index: QModelIndex) -> True:
+        '''子窗体更新数据后,执行此事件，可重载，返回值必须为逻辑值
+        不重载时，默认不增加行，返回True时增加行
+        '''
+        return False
 
 
 if 1 == 1:
@@ -579,7 +618,7 @@ if 1 == 1:
     #         for i, w in enumerate(self.__columnWidths):
     #             subTableView.setColumnWidth(i, w)
     #         for field_key, data in self.__fieldsRowSource:
-    #             self._model.TabelFieldInfo.setFieldsRowSource(field_key, data)
+    #             self._model.TabelFieldInfo.onGetFieldsRowSource(field_key, data)
     #         # 设置字段计算公式
     #         for i, f in self.__formulas:
     #             self._model.TabelFieldInfo.Fields[i].Formula = f
@@ -605,17 +644,17 @@ if 1 == 1:
     #         """
     #         self.__formulas.append((key, formula))
 
-    #     def setFieldsRowSource(self, *args):
+    #     def onGetFieldsRowSource(self, *args):
     #         self.__fieldsRowSource = args
 
-    #     def setColumnsHidden(self, *args: int):
+    #     def onGetHiddenColumns(self, *args: int):
     #         """设置隐藏列的列号，如有多个列，请设置一个列表"""
     #         self.__hideColumns = args
 
-    #     def setColumnWidths(self, *args: int):
+    #     def onGetColumnWidths(self, *args: int):
     #         self.__columnWidths = args
 
-    #     def setColumnsReadOnly(self, *args: int):
+    #     def onGetReadOnlyColumns(self, *args: int):
     #         self.__readOnlyColumns = args
 
     #     def getSqls(self):

@@ -95,7 +95,7 @@ if __name__ == "__main__":
     data, flds = db.getRecordsAndFieldInfoTuple(
         "select * from t_order limit 10")
     myModel = JPTableModelEditForm(ui.tableView, data, flds)
-    myModel.setFieldsRowSource("fCustomerID", customers, "fSubmitID", users,
+    myModel.onGetFieldsRowSource("fCustomerID", customers, "fSubmitID", users,
                                "fReviewerID", users, "fConfirmID", users,
                                "fDelivererID", users, "fCancelID", users,
                                "fEspecieID", fEspecieID, "fEntryID", users)

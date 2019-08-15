@@ -81,11 +81,7 @@ class JPFuncForm_PrintingOrder(JPFunctionForm):
                 """
         super().setEditFormSQL(m_sql)
 
-    def getEditForm(self,
-                    sql_main=None,
-                    edit_mode=None,
-                    sql_sub=None,
-                    PKValue=None):
+    def getEditForm(self, sql_main, edit_mode, sql_sub, PKValue):
         return EditForm_PrintingOrder(sql_main=sql_main,
                                       edit_mode=edit_mode,
                                       sql_sub=sql_sub,
@@ -162,23 +158,22 @@ class EditForm_PrintingOrder(JPFormModelMain):
                 FROM t_order o
                     LEFT JOIN t_enumeration e ON o.fEspecieID = e.fItemID
             '''
-
-        def __onTaxKeyPress(KeyEvent: QKeyEvent):
-            if (KeyEvent.modifiers() == Qt.AltModifier
-                    and KeyEvent.key() == Qt.Key_Delete):
-                self.ObjectDict['fTax'].refreshValueRaiseEvent(None, True)
-                self.cacuTax = False
-            elif (KeyEvent.modifiers() == Qt.AltModifier
-                  and KeyEvent.key() == Qt.Key_T):
-                self.cacuTax = True
-
-        self.ui.fTax.keyPressEvent = __onTaxKeyPress
+        self.ui.fTax.keyPressEvent = self.__onTaxKeyPress
         self.readData()
         if self.isNewMode:
             self.ObjectDict['fEntryID'].refreshValueNotRaiseEvent(
                 JPUser().currentUserID())
         if self.EditMode != JPEditFormDataMode.New:
             self.__refreshBeginNum()
+
+    def __onTaxKeyPress(self, KeyEvent: QKeyEvent):
+        if (KeyEvent.modifiers() == Qt.AltModifier
+                and KeyEvent.key() == Qt.Key_Delete):
+            self.ObjectDict['fTax'].refreshValueRaiseEvent(None, True)
+            self.cacuTax = False
+        elif (KeyEvent.modifiers() == Qt.AltModifier
+                and KeyEvent.key() == Qt.Key_T):
+            self.cacuTax = True
 
     def onGetFieldsRowSources(self):
         pub = JPPub()

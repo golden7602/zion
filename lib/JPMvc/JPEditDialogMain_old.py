@@ -34,7 +34,7 @@ class JPEditDialogMain(QDialog):
         # if subSql:
         #     self.tv = self.ui.tableView
         #     self.MainModle = self.MainSubModle.mainModel
-        #     self.MainModle.setFieldsRowSource(
+        #     self.MainModle.onGetFieldsRowSource(
         #         self.setMainFormFieldsRowSources())
         #     self.MainModle.setTabelInfo(self.mainSql)
         #     f = self.setSubFormFormula()
@@ -42,13 +42,13 @@ class JPEditDialogMain(QDialog):
         #         self.SubModle.setFormula(*f)
         #     h = self.__getList(self.setSubFormColumnsHidden())
         #     if h:
-        #         self.SubModle.setColumnsHidden(*h)
+        #         self.SubModle.onGetHiddenColumns(*h)
         #     r = self.__getList(self.setSubFormColumnsReadOnly())
         #     if r:
-        #         self.SubModle.setColumnsReadOnly(*r)
+        #         self.SubModle.onGetReadOnlyColumns(*r)
         #     w = self.__getList(self.setSubFormColumnWidths())
         #     if w:
-        #         self.SubModle.setColumnWidths(*w)
+        #         self.SubModle.onGetColumnWidths(*w)
         #     self.SubModle.setTabelInfo(self.subSql)
         #     self.ui.tableView.setContextMenuPolicy(Qt.CustomContextMenu)
         #     self.ui.tableView.customContextMenuRequested.connect(
@@ -60,7 +60,7 @@ class JPEditDialogMain(QDialog):
         #     self.MainSubModle.show(edit_mode)
         # else:
         self.MainModle = self.getMainMode()(self.ui)
-        self.MainModle.setFieldsRowSource(
+        self.MainModle.onGetFieldsRowSource(
             self.setMainFormFieldsRowSources())
         self.MainModle.setTabelInfo(self.mainSql)
         self.MainModle.EditMode = edit_mode

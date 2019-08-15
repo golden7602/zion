@@ -13,12 +13,10 @@
 
 
 -- 导出 myorder_python 的数据库结构
-DROP DATABASE IF EXISTS `myorder_python`;
 CREATE DATABASE IF NOT EXISTS `myorder_python` /*!40100 DEFAULT CHARACTER SET utf8 */;
 USE `myorder_python`;
 
 -- 导出  表 myorder_python.syslanguage 结构
-DROP TABLE IF EXISTS `syslanguage`;
 CREATE TABLE IF NOT EXISTS `syslanguage` (
   `fID` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
   `fParentId` int(11) NOT NULL DEFAULT '0' COMMENT '上级编号',
@@ -34,7 +32,7 @@ CREATE TABLE IF NOT EXISTS `syslanguage` (
   PRIMARY KEY (`fID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1006477 DEFAULT CHARSET=utf8;
 
--- 正在导出表  myorder_python.syslanguage 的数据：~925 rows (大约)
+-- 正在导出表  myorder_python.syslanguage 的数据：~660 rows (大约)
 DELETE FROM `syslanguage`;
 /*!40000 ALTER TABLE `syslanguage` DISABLE KEYS */;
 INSERT INTO `syslanguage` (`fID`, `fParentId`, `fObjectName`, `fCaption`, `fFontSize`, `fFontName`, `fIndex`, `fLanguage1`, `fLanguage2`, `fType`, `TS`) VALUES
@@ -854,7 +852,6 @@ INSERT INTO `syslanguage` (`fID`, `fParentId`, `fObjectName`, `fCaption`, `fFont
 /*!40000 ALTER TABLE `syslanguage` ENABLE KEYS */;
 
 -- 导出  表 myorder_python.sysnavigationmenus 结构
-DROP TABLE IF EXISTS `sysnavigationmenus`;
 CREATE TABLE IF NOT EXISTS `sysnavigationmenus` (
   `fNMID` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
   `fDispIndex` int(11) DEFAULT NULL COMMENT '显示顺序',
@@ -967,7 +964,6 @@ INSERT INTO `sysnavigationmenus` (`fNMID`, `fDispIndex`, `fParentId`, `fEnabled`
 /*!40000 ALTER TABLE `sysnavigationmenus` ENABLE KEYS */;
 
 -- 导出  表 myorder_python.syssql 结构
-DROP TABLE IF EXISTS `syssql`;
 CREATE TABLE IF NOT EXISTS `syssql` (
   `ID` int(11) DEFAULT NULL,
   `UseFor` varchar(50) DEFAULT NULL,
@@ -1020,7 +1016,6 @@ INSERT INTO `syssql` (`ID`, `UseFor`, `Description`, `ObjectName`, `ControlName`
 /*!40000 ALTER TABLE `syssql` ENABLE KEYS */;
 
 -- 导出  表 myorder_python.systabelautokeyroles 结构
-DROP TABLE IF EXISTS `systabelautokeyroles`;
 CREATE TABLE IF NOT EXISTS `systabelautokeyroles` (
   `fRoleID` tinyint(4) NOT NULL AUTO_INCREMENT COMMENT '编号',
   `fRoleName` varchar(50) NOT NULL COMMENT '名称',
@@ -1046,12 +1041,11 @@ INSERT INTO `systabelautokeyroles` (`fRoleID`, `fRoleName`, `fTabelName`, `fFiel
 	(2, 'InkjetPrintingGuide_ID', 't_InkjetPrintingGuide', 'InkjetPrintingGuide_ID', b'1', 'PG', 0000000000, 6, '0', 'yyyy-mmdd', '2019-04-18 12:37:08'),
 	(3, 'Attachment', 't_InkjetPrintingGuide_Map', 'MapName', b'1', 'ATT', 0000000000, 10, '', 'yyyymmdd', '2019-04-18 12:37:08'),
 	(4, 'PrintingQuoteID', 't_quotation', 'fQuoteID', b'1', 'QP', 0000000004, 6, 'QP2019-0508000004', 'yyyy-mmdd', '2019-05-08 17:38:45'),
-	(5, 'PrintingOderID', 't_order', 'fOrderID', b'1', 'TP', 0000000011, 6, 'TP2019-0812000011', 'yyyy-mmdd', '2019-08-12 12:30:53'),
+	(5, 'PrintingOderID', 't_order', 'fOrderID', b'1', 'TP', 0000000013, 6, 'TP2019-0815000013', 'yyyy-mmdd', '2019-08-15 12:24:09'),
 	(6, 'OrderQuoteID', 't_Quotation', 'fQuoteID', b'1', 'QS', 0000000004, 6, 'QS2019-0508000004', 'yyyy-mmdd', '2019-05-08 18:00:51');
 /*!40000 ALTER TABLE `systabelautokeyroles` ENABLE KEYS */;
 
 -- 导出  表 myorder_python.sysuserright 结构
-DROP TABLE IF EXISTS `sysuserright`;
 CREATE TABLE IF NOT EXISTS `sysuserright` (
   `fID` smallint(6) NOT NULL AUTO_INCREMENT COMMENT '编号',
   `fRightID` smallint(6) NOT NULL COMMENT '权限编号',
@@ -1318,7 +1312,6 @@ INSERT INTO `sysuserright` (`fID`, `fRightID`, `fUserID`, `fHasRight`, `TS`) VAL
 /*!40000 ALTER TABLE `sysuserright` ENABLE KEYS */;
 
 -- 导出  表 myorder_python.sysusers 结构
-DROP TABLE IF EXISTS `sysusers`;
 CREATE TABLE IF NOT EXISTS `sysusers` (
   `fUserID` int(11) NOT NULL AUTO_INCREMENT,
   `fOnline` bit(1) NOT NULL DEFAULT b'0',
@@ -1356,7 +1349,6 @@ INSERT INTO `sysusers` (`fUserID`, `fOnline`, `fEnabled`, `fDepartment`, `fUsern
 /*!40000 ALTER TABLE `sysusers` ENABLE KEYS */;
 
 -- 导出  表 myorder_python.t_customer 结构
-DROP TABLE IF EXISTS `t_customer`;
 CREATE TABLE IF NOT EXISTS `t_customer` (
   `fCustomerID` int(11) NOT NULL AUTO_INCREMENT,
   `fCustomerName` varchar(50) NOT NULL COMMENT '客户名',
@@ -1380,7 +1372,7 @@ DELETE FROM `t_customer`;
 /*!40000 ALTER TABLE `t_customer` DISABLE KEYS */;
 INSERT INTO `t_customer` (`fCustomerID`, `fCustomerName`, `fNUIT`, `fCity`, `fContato`, `fAreaCode`, `fCelular`, `fTelefone`, `fEndereco`, `fEmail`, `fWeb`, `fFax`, `TS`) VALUES
 	(1, '-----', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-07-11 19:51:45'),
-	(2, '693', '12345', '马普托 MAPUTO', 'lianxiren', NULL, '849138244', NULL, 'dizhi', NULL, NULL, NULL, '2019-05-08 17:06:47'),
+	(2, '693', '12345', '马普托 MAPUTO', 'lianxiren', NULL, '849138244', '1234', 'dizhi', NULL, NULL, NULL, '2019-08-15 15:37:53'),
 	(3, '8346 DESIGNER', NULL, '马普托 MAPUTO', NULL, NULL, '843909163', NULL, NULL, NULL, NULL, NULL, '2019-04-26 20:22:59'),
 	(4, '8384DEZIGN', NULL, '马普托 MAPUTO', NULL, NULL, '846440003', NULL, NULL, NULL, NULL, NULL, '2019-04-26 20:22:59'),
 	(5, '8386 DESIGNER', NULL, '马普托 MAPUTO', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-04-26 20:22:59'),
@@ -1557,7 +1549,6 @@ INSERT INTO `t_customer` (`fCustomerID`, `fCustomerName`, `fNUIT`, `fCity`, `fCo
 /*!40000 ALTER TABLE `t_customer` ENABLE KEYS */;
 
 -- 导出  表 myorder_python.t_enumeration 结构
-DROP TABLE IF EXISTS `t_enumeration`;
 CREATE TABLE IF NOT EXISTS `t_enumeration` (
   `fItemID` int(11) NOT NULL AUTO_INCREMENT COMMENT '选项编号',
   `fTypeID` int(11) NOT NULL,
@@ -1673,7 +1664,6 @@ INSERT INTO `t_enumeration` (`fItemID`, `fTypeID`, `fTitle`, `fSpare1`, `fSpare2
 /*!40000 ALTER TABLE `t_enumeration` ENABLE KEYS */;
 
 -- 导出  表 myorder_python.t_enumeration_type 结构
-DROP TABLE IF EXISTS `t_enumeration_type`;
 CREATE TABLE IF NOT EXISTS `t_enumeration_type` (
   `fTypeID` int(11) NOT NULL AUTO_INCREMENT,
   `fTypeName` varchar(20) NOT NULL,
@@ -1700,7 +1690,6 @@ INSERT INTO `t_enumeration_type` (`fTypeID`, `fTypeName`, `fNote`, `TS`) VALUES
 /*!40000 ALTER TABLE `t_enumeration_type` ENABLE KEYS */;
 
 -- 导出  表 myorder_python.t_order 结构
-DROP TABLE IF EXISTS `t_order`;
 CREATE TABLE IF NOT EXISTS `t_order` (
   `fOrderID` char(20) NOT NULL COMMENT '订单号',
   `fPrice` decimal(10,0) DEFAULT NULL COMMENT '单价_印刷',
@@ -1747,7 +1736,7 @@ CREATE TABLE IF NOT EXISTS `t_order` (
   KEY `iOrderDate` (`fOrderDate`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- 正在导出表  myorder_python.t_order 的数据：~481 rows (大约)
+-- 正在导出表  myorder_python.t_order 的数据：~476 rows (大约)
 DELETE FROM `t_order`;
 /*!40000 ALTER TABLE `t_order` DISABLE KEYS */;
 INSERT INTO `t_order` (`fOrderID`, `fPrice`, `fCustomerID`, `fOrderDate`, `fEspecieID`, `fRequiredDeliveryDate`, `fCategoryID`, `fBrandMateriaID`, `fAmount`, `fTax`, `fPayable`, `fDesconto`, `fColorID`, `fEntryID`, `fSubmited`, `fSubmitID`, `fReviewed`, `fReviewerID`, `fConfirmed`, `fConfirmID`, `fDelivered`, `fDelivererID`, `fCanceled`, `fCancelID`, `fDeliveryDate`, `fNumerBegin`, `fQuant`, `fPagePerVolumn`, `fNumerEnd`, `fAvistaID`, `fTamanhoID`, `fSucursal`, `fLogo`, `fVendedorID`, `fNrCopyID`, `fContato`, `fCelular`, `fTelefone`, `fNote`, `TS`) VALUES
@@ -2220,13 +2209,14 @@ INSERT INTO `t_order` (`fOrderID`, `fPrice`, `fCustomerID`, `fOrderDate`, `fEspe
 	('TP2019-0507000003', 33, 7, '2019-05-14', NULL, '2019-05-08', NULL, NULL, 99.00, 16.83, 115.83, NULL, NULL, NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, NULL, NULL, 3, 50, NULL, NULL, NULL, NULL, b'0', NULL, NULL, NULL, NULL, NULL, NULL, '2019-05-07 15:46:23'),
 	('TP2019-0508000004', 8, 9, '2019-05-08', NULL, '2019-05-14', NULL, NULL, 24.00, 4.08, 28.08, NULL, NULL, NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, NULL, NULL, 3, 25, NULL, NULL, NULL, NULL, b'1', NULL, NULL, 'e', NULL, NULL, NULL, '2019-05-08 08:35:03'),
 	('TP2019-0508000005', 4, 9, '2019-05-15', NULL, '2019-05-15', NULL, NULL, 16.00, 2.72, 18.72, NULL, NULL, NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, NULL, NULL, 4, 50, NULL, NULL, NULL, NULL, b'0', NULL, NULL, '阿什福的', NULL, '4445', NULL, '2019-05-08 08:48:10'),
-	('TP2019-0508000006', 4, 2, '2019-05-08', 64, '2019-05-09', NULL, NULL, 12.00, 2.04, 14.04, NULL, NULL, NULL, b'1', NULL, b'0', NULL, b'1', 35, b'0', NULL, b'0', NULL, NULL, NULL, 3, 25, 299, 79, 83, NULL, b'0', 90, 87, 'lianxiren44444', NULL, NULL, NULL, '2019-05-08 17:25:10'),
+	('TP2019-0508000006', 4, 2, '2019-05-08', 64, '2019-05-09', NULL, NULL, 12.00, 2.04, 14.04, NULL, NULL, NULL, b'1', NULL, b'0', NULL, b'1', 35, b'0', NULL, b'0', NULL, NULL, NULL, 3, 25, 300, 79, 83, NULL, b'0', 90, 87, 'lianxiren44444', NULL, NULL, NULL, '2019-08-14 21:34:55'),
 	('TP2019-0802000007', NULL, 3, '2019-08-02', 1, '2019-08-02', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, NULL, 1, 12, 34, 408, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '主我挺产产播放说法', '2019-08-12 12:30:09'),
-	('TP2019-0812000011', NULL, 2, '2019-08-12', 1, '2019-08-12', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, NULL, 5001, 100, 25, 5200, 1, NULL, b'0', b'0', NULL, 1, '12', NULL, NULL, NULL, '2019-08-12 18:34:51');
+	('TP2019-0812000011', NULL, 2, '2019-08-12', 1, '2019-08-12', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, NULL, 5001, 100, 25, 5200, 1, NULL, b'0', b'0', NULL, 1, '12', NULL, NULL, NULL, '2019-08-12 18:34:51'),
+	('TP2019-0815000012', 23, 2, '2019-08-15', 64, '2019-08-15', NULL, NULL, 46.00, 8.00, 54.00, NULL, NULL, NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, NULL, 301, 2, 1, 302, 78, 82, b'0', b'0', 32, 86, NULL, NULL, NULL, NULL, '2019-08-15 08:11:30'),
+	('TP2019-0815000013', 1, 2, '2019-08-15', 64, '2019-08-15', NULL, NULL, 11.00, 2.00, 13.00, NULL, NULL, NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, NULL, 303, 11, 12, 566, 79, NULL, b'0', b'0', NULL, NULL, NULL, NULL, NULL, NULL, '2019-08-15 12:24:09');
 /*!40000 ALTER TABLE `t_order` ENABLE KEYS */;
 
 -- 导出  表 myorder_python.t_order_detail 结构
-DROP TABLE IF EXISTS `t_order_detail`;
 CREATE TABLE IF NOT EXISTS `t_order_detail` (
   `fID` int(11) NOT NULL AUTO_INCREMENT,
   `fOrderID` char(20) DEFAULT NULL,
@@ -2240,7 +2230,7 @@ CREATE TABLE IF NOT EXISTS `t_order_detail` (
   PRIMARY KEY (`fID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=730 DEFAULT CHARSET=utf8;
 
--- 正在导出表  myorder_python.t_order_detail 的数据：~808 rows (大约)
+-- 正在导出表  myorder_python.t_order_detail 的数据：~845 rows (大约)
 DELETE FROM `t_order_detail`;
 /*!40000 ALTER TABLE `t_order_detail` DISABLE KEYS */;
 INSERT INTO `t_order_detail` (`fID`, `fOrderID`, `fQuant`, `fProductName`, `fLength`, `fWidth`, `fPrice`, `fAmount`, `TS`) VALUES
@@ -2976,7 +2966,6 @@ INSERT INTO `t_order_detail` (`fID`, `fOrderID`, `fQuant`, `fProductName`, `fLen
 /*!40000 ALTER TABLE `t_order_detail` ENABLE KEYS */;
 
 -- 导出  表 myorder_python.t_quotation 结构
-DROP TABLE IF EXISTS `t_quotation`;
 CREATE TABLE IF NOT EXISTS `t_quotation` (
   `fOrderID` char(20) NOT NULL COMMENT '订单号',
   `fPrice` decimal(10,0) DEFAULT NULL COMMENT '单价_印刷',
@@ -3030,7 +3019,6 @@ INSERT INTO `t_quotation` (`fOrderID`, `fPrice`, `fCustomerID`, `fOrderDate`, `f
 /*!40000 ALTER TABLE `t_quotation` ENABLE KEYS */;
 
 -- 导出  表 myorder_python.t_quotation_detail 结构
-DROP TABLE IF EXISTS `t_quotation_detail`;
 CREATE TABLE IF NOT EXISTS `t_quotation_detail` (
   `fID` int(11) NOT NULL AUTO_INCREMENT,
   `fOrderID` varchar(50) DEFAULT NULL,
@@ -3055,7 +3043,6 @@ INSERT INTO `t_quotation_detail` (`fID`, `fOrderID`, `fQuant`, `fProductName`, `
 /*!40000 ALTER TABLE `t_quotation_detail` ENABLE KEYS */;
 
 -- 导出  表 myorder_python.t_receivables 结构
-DROP TABLE IF EXISTS `t_receivables`;
 CREATE TABLE IF NOT EXISTS `t_receivables` (
   `fID` int(11) NOT NULL AUTO_INCREMENT,
   `fCustomerID` int(11) NOT NULL,
@@ -3496,7 +3483,6 @@ INSERT INTO `t_receivables` (`fID`, `fCustomerID`, `fPaymentMethodID`, `fReceipt
 /*!40000 ALTER TABLE `t_receivables` ENABLE KEYS */;
 
 -- 导出  视图 myorder_python.v_enumeration 结构
-DROP VIEW IF EXISTS `v_enumeration`;
 -- 创建临时表以解决视图依赖性错误
 CREATE TABLE `v_enumeration` (
 	`fTypeID` INT(11) NOT NULL,
@@ -3509,7 +3495,6 @@ CREATE TABLE `v_enumeration` (
 ) ENGINE=MyISAM;
 
 -- 导出  视图 myorder_python.v_order 结构
-DROP VIEW IF EXISTS `v_order`;
 -- 创建临时表以解决视图依赖性错误
 CREATE TABLE `v_order` (
 	`fOrderID` CHAR(20) NOT NULL COMMENT '订单号' COLLATE 'utf8_general_ci',
@@ -3576,7 +3561,6 @@ CREATE TABLE `v_order` (
 ) ENGINE=MyISAM;
 
 -- 导出  视图 myorder_python.v_quotation 结构
-DROP VIEW IF EXISTS `v_quotation`;
 -- 创建临时表以解决视图依赖性错误
 CREATE TABLE `v_quotation` (
 	`fOrderID` CHAR(20) NOT NULL COMMENT '订单号' COLLATE 'utf8_general_ci',
@@ -3632,7 +3616,6 @@ CREATE TABLE `v_quotation` (
 ) ENGINE=MyISAM;
 
 -- 导出  视图 myorder_python.v_receivables 结构
-DROP VIEW IF EXISTS `v_receivables`;
 -- 创建临时表以解决视图依赖性错误
 CREATE TABLE `v_receivables` (
 	`fID` INT(11) NOT NULL,
@@ -3644,13 +3627,11 @@ CREATE TABLE `v_receivables` (
 ) ENGINE=MyISAM;
 
 -- 导出  视图 myorder_python.v_enumeration 结构
-DROP VIEW IF EXISTS `v_enumeration`;
 -- 移除临时表并创建最终视图结构
 DROP TABLE IF EXISTS `v_enumeration`;
 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_enumeration` AS select t.fTypeID,t.fTypeName,e.fItemID,e.fTitle,e.fSpare1,e.fSpare2,e.fNote from t_enumeration_type as t left join t_enumeration as e on t.fTypeID=e.fTypeID ;
 
 -- 导出  视图 myorder_python.v_order 结构
-DROP VIEW IF EXISTS `v_order`;
 -- 移除临时表并创建最终视图结构
 DROP TABLE IF EXISTS `v_order`;
 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_order` AS select o.fOrderID,
@@ -3729,7 +3710,6 @@ left join t_enumeration as e_fVendedorID on o.fVendedorID=e_fVendedorID.fItemID
 left join t_enumeration as e_fNrCopyID on o.fNrCopyID=e_fNrCopyID.fItemID ;
 
 -- 导出  视图 myorder_python.v_quotation 结构
-DROP VIEW IF EXISTS `v_quotation`;
 -- 移除临时表并创建最终视图结构
 DROP TABLE IF EXISTS `v_quotation`;
 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_quotation` AS select o.*,c.fCustomerName,c.fNUIT,c.fCity,c.fEndereco,
@@ -3761,7 +3741,6 @@ left join t_enumeration as e_fVendedorID on o.fVendedorID=e_fVendedorID.fItemID
 left join t_enumeration as e_fNrCopyID on o.fNrCopyID=e_fNrCopyID.fItemID ;
 
 -- 导出  视图 myorder_python.v_receivables 结构
-DROP VIEW IF EXISTS `v_receivables`;
 -- 移除临时表并创建最终视图结构
 DROP TABLE IF EXISTS `v_receivables`;
 CREATE ALGORITHM=TEMPTABLE DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_receivables` AS select r.fID,r.fCustomerID,c.fCustomerName ,fReceiptDate,fAmountCollected,u.fUsername as fPayee from  t_receivables as r
