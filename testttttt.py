@@ -23,6 +23,13 @@ import re
 # print(a)
 
 
-a=10
-for i in reversed(range(10)):
-    print(i)
+def aa(v):
+    v=str(v)
+    mt = re.match("^-?[1-9]\d*$", v, flags=(re.I))
+    if mt:
+        return True
+
+
+print(aa('--123'))
+print(aa(123123.00))
+print(2<=3<=5)

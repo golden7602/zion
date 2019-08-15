@@ -8,7 +8,7 @@ from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QMessageBox
 
 from lib.JPDatabase.Database import JPDb
-from lib.JPMvc.JPEditDialogMain import 
+# from lib.JPMvc.JPEditDialogMain import 
 from lib.JPMvc.JPFuncForm import JPFunctionForm
 from lib.JPMvc.JPModel import JPEditFormDataMode, JPFormModelMainSub
 from lib.JPPrintReport import JPPrintSectionType

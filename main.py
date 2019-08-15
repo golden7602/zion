@@ -5,8 +5,7 @@ from sys import path as jppath, argv, exit as sys_exit
 jppath.append(getcwd())
 
 from PyQt5.QtWidgets import (QApplication, QHBoxLayout, QMainWindow,
-                             QTreeWidgetItem, QWidget,
-                             QPushButton)
+                             QTreeWidgetItem, QWidget, QPushButton)
 from PyQt5.QtGui import QIcon, QPixmap
 from lib.ZionPublc import JPPub, JPUser
 from Ui import Ui_mainform
@@ -16,7 +15,6 @@ from lib.ZionWidgets.Background import Form_Background
 from Ui.Ui_FormUserLogin import Ui_Dialog
 from lib.JPFunction import setButtonIconByName, setButtonIcon
 from PyQt5.QtCore import QThread, QMetaObject, Qt
-
 
 
 def loadTreeview(treeWidget, items):

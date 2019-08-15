@@ -174,7 +174,6 @@ class JPQueryFieldInfo(object):
             self.Fields[key].BindingColumn = binding_column
 
 
-
 class JPTabelFieldInfo(JPQueryFieldInfo):
     def __init__(self, sql: str, noData: bool = False):
         '''根据一个Sql或表名返回一个JPTabelFieldInfo对象\n

@@ -19,7 +19,8 @@ from lib.JPDatabase.Database import JPDb
 from lib.JPDatabase.Field import JPFieldType
 from lib.JPDatabase.Query import JPTabelRowData
 from lib.JPFunction import JPBooleanString, JPDateConver, JPGetDisplayText
-from PyQt5.QtGui import (QDoubleValidator, QIntValidator)
+from PyQt5.QtGui import (QValidator, QDoubleValidator, QIntValidator)
+import re
 
 
 def __getattr__(name):
@@ -35,12 +36,19 @@ class _JPDoubleValidator(QDoubleValidator):
         return super().validate(vstr.replace(',', ''), pos)
 
 
-class _JPIntValidator(QIntValidator):
-    def __init__(self):
+class _JPIntValidator(QValidator):
+    def __init__(self, v1, v2):
         super().__init__()
+        self.min = v1
+        self.max = v2
 
     def validate(self, vstr, pos):
-        return super().validate(vstr.replace(',', ''), pos)
+        str0 = vstr.replace(',', '')
+        mt = re.match(r"^-?[1-9]\d*$", str0, flags=(re.I))
+        if mt:
+            if self.min <= int(str0) <= self.max:
+                return QValidator.Acceptable, vstr, pos
+        return QValidator.Invalid, vstr, pos
 
 
 class JPExceptionFieldNull(Exception):
@@ -153,10 +161,10 @@ class QLineEdit(QLineEdit_, __JPWidgetBase):
         self.setReadOnly(self.MainModel.isReadOnlyMode)
         if not self.MainModel.isNewMode:
             self.__setDisplayText()
-        if self._FieldInfo.TypeCode==JPFieldType.Int:
-            self.setValidator(QIntValidator())
-        if self._FieldInfo.TypeCode==JPFieldType.Float:
-            self.setValidator(QDoubleValidator())
+        # if self._FieldInfo.TypeCode == JPFieldType.Int:
+        #     self.setValidator(_JPIntValidator())
+        # if self._FieldInfo.TypeCode == JPFieldType.Float:
+        #     self.setValidator(_JPDoubleValidator())
 
     def __setDisplayText(self):
         v = self._FieldInfo.Value
@@ -166,14 +174,13 @@ class QLineEdit(QLineEdit_, __JPWidgetBase):
             self.setText('')
 
     def setDoubleValidator(self, v_Min, v_Max, Decimals: int = 2):
-        Validator = QDoubleValidator()
+        Validator = _JPDoubleValidator()
+        Validator.setRange(float(v_Min), float(v_Max))
         Validator.setDecimals(Decimals)
-        Validator.setTop(float(v_Max))
-        Validator.setBottom(float(v_Min))
         self.setValidator(Validator)
 
     def setIntValidator(self, v_Min: int, v_Max: int):
-        Validator = QIntValidator(v_Min,v_Max)
+        Validator = _JPIntValidator(v_Min, v_Max)
         self.setValidator(Validator)
 
     def focusInEvent(self, e):
@@ -297,7 +304,6 @@ class QComboBox(QComboBox_, __JPWidgetBase):
     # def keyPressEvent(self, event):
     #     return
     #     QComboBox_.keyPressEvent(self, event)
-
 
 
 class QDateEdit(QDateEdit_, __JPWidgetBase):
