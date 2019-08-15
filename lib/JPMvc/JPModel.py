@@ -145,7 +145,7 @@ class __JPTableViewModelBase(QAbstractTableModel):
         if tmp.isValid():
             self.editNext.emit(tmp)
 
-        self.dataChanged[QModelIndex].emit(Index, Any)
+        self.dataChanged[QModelIndex,object].emit(Index, Any)
         return True
 
     def AfterSetDataBeforeInsterRowEvent(self, row_data,

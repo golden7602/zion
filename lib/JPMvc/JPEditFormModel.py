@@ -8,7 +8,7 @@ jppath.append(getcwd())
 from PyQt5.QtCore import (QDate, QModelIndex, QObject, QVariant, Qt, pyqtSlot,
                           pyqtSignal)
 from PyQt5.QtWidgets import (QAbstractItemView, QMessageBox, QTableView,
-                             QDialog)
+                             QDialog, QMenu)
 from lib.JPMvc import JPWidgets
 import lib.JPMvc.JPDelegate as myDe
 from lib.JPDatabase.Database import JPDb
@@ -49,6 +49,7 @@ class JPFormModelMain(QDialog):
         self.__ReadOnlyFieldsName = []
         self._loadDdata = None
         self.__ObjectDict = {}
+        self.__formulas = []
         self.EditMode = edit_mode
         self.PKValue = PKValue
 
@@ -101,7 +102,6 @@ class JPFormModelMain(QDialog):
     def setFormulas(self, *args):
         """setFormulas(str1...)
         设置计算公式，从个公式之间用逗号分开"""
-        self.__Formulas = args
 
     def onDateChangeEvent(self, obj, value):
         """窗体数据变更事件，obj是变更的控件"""
@@ -164,6 +164,7 @@ class JPFormModelMain(QDialog):
         if self.EditMode == JPEditFormDataMode.ReadOnly:
             self.setEditState(False)
         else:
+            self.setEditState(True)
             self.__setReadOnlyFields()
 
     def __setReadOnlyFields(self):
@@ -174,7 +175,7 @@ class JPFormModelMain(QDialog):
 
     def setEditState(self, can_edit: bool = False):
         for obj in self.ObjectDict.values():
-            obj.setReadOnly(can_edit)
+            obj.setReadOnly(not can_edit)
         self.__setReadOnlyFields()
 
     def onGetReadOnlyFields(self):
@@ -300,15 +301,14 @@ class JPFormModelMainHasSub(JPFormModelMain):
                          edit_mode=edit_mode,
                          flags=flags)
         self.subSQL = sql_sub
-        self.__formulas = []
 
     def setSQL(self, sql_main, sql_sub):
         super().setSQL(sql_main)
         self.subSQL = sql_sub
 
-    def readData(self, subTableView: QTableView):
+    def readData(self):
         super().readData()
-        self.__readSubData(subTableView)
+        self.__readSubData()
 
     def setEditState(self, can_edit: bool = False):
         super().setEditState(can_edit)
@@ -316,7 +316,7 @@ class JPFormModelMainHasSub(JPFormModelMain):
             True: QAbstractItemView.AllEditTriggers,
             False: QAbstractItemView.NoEditTriggers
         }
-        self.__tableView.setEditTriggers(st[can_edit])
+        self.ui.tableView.setEditTriggers(st[can_edit])
 
     def getSqls(self, pk_role=None):
 
@@ -451,8 +451,8 @@ class JPFormModelMainHasSub(JPFormModelMain):
                                          sub_pk_value))
         return sqls
 
-    def __readSubData(self, subTableView: QTableView):
-        self.__tableView = subTableView
+    def __readSubData(self):
+        tv = self.ui.tableView
         if self.EditMode is None:
             raise ValueError("没有指定子窗体的编辑模式！")
         # 建立子窗体模型
@@ -463,17 +463,15 @@ class JPFormModelMainHasSub(JPFormModelMain):
                 self.tableFieldsInfo.DeleteRows) == 0:
             self.tableFieldsInfo.addRow()
         if self.EditMode == JPEditFormDataMode.ReadOnly:
-            self.SubModel = JPTableViewModelReadOnly(subTableView,
-                                                     self.tableFieldsInfo)
+            self.SubModel = JPTableViewModelReadOnly(tv, self.tableFieldsInfo)
         if self.EditMode in [JPEditFormDataMode.Edit, JPEditFormDataMode.New]:
-            self.SubModel = JPTableViewModelEditForm(subTableView,
-                                                     self.tableFieldsInfo)
-        self.__tableView.setModel(self.SubModel)
+            self.SubModel = JPTableViewModelEditForm(tv, self.tableFieldsInfo)
+        tv.setModel(self.SubModel)
         self.SubModel.dataChanged.connect(self._emitDataChange)
         # 设置子窗体可编辑状态
         self.setEditState(self.EditMode != JPEditFormDataMode.ReadOnly)
         # 设置子窗体的输入委托控件及格式等
-        tv = self.__tableView
+
         self.__readOnlyColumns = self.onGetReadOnlyColumns()
         self.SubModel.setColumnsDetegate()
         for col in self.__readOnlyColumns:
@@ -483,34 +481,40 @@ class JPFormModelMainHasSub(JPFormModelMain):
             tv.setColumnHidden(col, True)
         self.__columnWidths = self.onGetColumnWidths()
         for i, w in enumerate(self.__columnWidths):
-            subTableView.setColumnWidth(i, w)
+            tv.setColumnWidth(i, w)
         self.__columnsRowSources = self.onGetColumnRowSources()
         for field_key, data, bind_col in self.__columnsRowSources:
             self.SubModel.TabelFieldInfo.Fields[
                 field_key].BindingColumn = bind_col
             self.SubModel.TabelFieldInfo.onGetFieldsRowSource(field_key, data)
         # 设置字段计算公式
-        for i, f in self.__formulas:
+        for i, f in self.onGetColumnFormulas():
             self.SubModel.TabelFieldInfo.Fields[i].Formula = f
         self.SubModel.AfterSetDataBeforeInsterRowEvent = self.AfterSetDataBeforeInsterRowEvent
-        self.subModel.dataChanged.connect(self._emitDataChange)
+        # 添加右键菜单
+        if self.EditMode!=JPEditFormDataMode.ReadOnly:
+            tv.setContextMenuPolicy(Qt.CustomContextMenu)
+            tv.customContextMenuRequested.connect(self.__right_menu)
+
+    def __right_menu(self, pos):
+        menu = QMenu()
+        tv = self.ui.tableView
+        mod = self.SubModel
+        opt1 = menu.addAction("AddNew增加")
+        opt2 = menu.addAction("Delete删除")
+        action = menu.exec_(tv.mapToGlobal(pos))
+        if action == opt1:
+            mod.insertRows(len(mod.DataRows))
+            tv.selectRow(mod.rowCount() - 1)
+            return
+        elif action == opt2:
+            mod.removeRows(tv.selectionModel().currentIndex().row())
+            return
+        else:
+            return
 
     def getColumnSum(self, col: int):
-        return self.SubModle.getColumnSum(col)
-
-    def setFormula(self, key: [int, str], formula: str):
-        """
-        设置子表计算公式 {字段名}代表一个值
-        本公式也用于增加新行前的检查，也用于列间的运算
-        key为列号或字段名;formula格式示例如下：
-        {7}=(JPRound({1},2) + NV({2},float))/2
-        列2的值转换成浮点数与列3的值转换成浮点数和的一半
-        等号左边为目标字段值，右边为公式，遵照python语法
-        如果可以保证公式右边字段值不包含0，也可以不使用NV函数
-        NV函数为一个自定义函数，用于防止None值并转换成指定类型
-        JPRound函数为一个自定义函数,四舍五入
-        """
-        self.__formulas.append((key, formula))
+        return self.SubModel.getColumnSum(col)
 
     def onGetColumnRowSources(self, *args):
         return []
@@ -523,6 +527,20 @@ class JPFormModelMainHasSub(JPFormModelMain):
         return []
 
     def onGetReadOnlyColumns(self):
+        return []
+
+    def onGetColumnFormulas(self):
+        """
+        设置子表计算公式 {字段名}代表一个值
+        本公式也用于增加新行前的检查，也用于列间的运算
+        key为列号或字段名;formula格式示例如下：
+        {7}=(JPRound({1},2) + NV({2},float))/2
+        列2的值转换成浮点数与列3的值转换成浮点数和的一半
+        等号左边为目标字段值，右边为公式，遵照python语法
+        如果可以保证公式右边字段值不包含0，也可以不使用NV函数
+        NV函数为一个自定义函数，用于防止None值并转换成指定类型
+        JPRound函数为一个自定义函数,四舍五入
+        """
         return []
 
     def AfterSetDataBeforeInsterRowEvent(self, row_data,

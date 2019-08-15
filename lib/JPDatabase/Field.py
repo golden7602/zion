@@ -128,7 +128,8 @@ class JPMySQLFieldInfo(JPFieldInfo):
                 return ord(x)
         def v_int(x):
             if isinstance(x,str):
-                return int(x)
+                if len(x)>0:
+                    return int(x)
             return x
         return {
             JPFieldInfo.Int: v_int,

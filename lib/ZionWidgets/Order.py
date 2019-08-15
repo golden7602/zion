@@ -150,15 +150,28 @@ class EditForm_Order(JPFormModelMainHasSub):
         self.ui.label_logo.setPixmap(QPixmap(getcwd() +
                                              "\\res\\Zions_100.png"))
         self.ui.fTax.keyPressEvent = self.__onTaxKeyPress
-        self.readData(self.ui.tableView)
+        self.readData()
         if self.isNewMode:
             self.ObjectDict['fEntryID'].refreshValueNotRaiseEvent(
                 JPUser().currentUserID())
         if self.EditMode != JPEditFormDataMode.New:
             self.__refreshBeginNum()
+
+    def __customerIDChanged(self):
+        sql = '''select fCelular, fContato, fTelefone 
+            from t_customer where fCustomerID={}'''
+        sql = sql.format(self.ui.fCustomerID.Value())
+        tab = JPQueryFieldInfo(sql)
+        self.ui.fCelular.refreshValueNotRaiseEvent(tab.getOnlyData([0, 0]),
+                                                   True)
+        self.ui.fContato.refreshValueNotRaiseEvent(tab.getOnlyData([0, 1]),
+                                                   True)
+        self.ui.fTelefone.refreshValueNotRaiseEvent(tab.getOnlyData([0, 2]),
+                                                    True)
+    def onGetColumnFormulas(self):
         fla = "JPRound(JPRound({2}) * JPRound({4},2) * "
         fla = fla + "JPRound({5},2) * JPRound({6},2),2)"
-        self.setFormula(7, fla)
+        return [(7, fla)]
 
     def __onTaxKeyPress(self, KeyEvent):
         if (KeyEvent.modifiers() == Qt.AltModifier
@@ -192,29 +205,35 @@ class EditForm_Order(JPFormModelMainHasSub):
         return Order_report
 
     def onDateChangeEvent(self, obj, value):
+        fAmount = None
+        temp_fDesconto = self.ui.fDesconto.Value()
+        fDesconto = temp_fDesconto if temp_fDesconto else 0
         if (self.EditMode != JPEditFormDataMode.ReadOnly
                 and isinstance(obj, QModelIndex)):
-            if obj.column() == 7:
-                fAmount = self.getColumnSum(7)
-                temp_fDesconto = self.ui.fDesconto.Value()
-                fDesconto = temp_fDesconto if temp_fDesconto else 0
-                self.ui.fAmount.refreshValueNotRaiseEvent(fAmount, True)
-                if fAmount is None:
-                    self.ui.fTax.refreshValueNotRaiseEvent(None, True)
-                    self.ui.fPayable.refreshValueNotRaiseEvent(None, True)
-                    return
-
+            fAmount = self.getColumnSum(7)
+            self.ui.fAmount.refreshValueNotRaiseEvent(fAmount, True)
+            if fAmount is None:
+                self.ui.fTax.refreshValueNotRaiseEvent(None, True)
+                self.ui.fPayable.refreshValueNotRaiseEvent(None, True)
+                return
+        fTax = None
         if not isinstance(obj, QModelIndex):
+            if obj.objectName() == "fCustomerID":
+                if self.ui.fCustomerID.currentIndex() != -1:
+                    self.__customerIDChanged()
             if obj.objectName() == "fTax":
                 temp_fTax = self.ui.fTax.Value()
                 fTax = temp_fTax if temp_fTax else 0
             else:
                 fTax = JPRound((fAmount - fDesconto) * 0.17) if fAmount else 0
+        else:
+            fTax = JPRound((fAmount - fDesconto) * 0.17) if fAmount else 0
         if self.cacuTax:
-            self.self.ui.fTax.refreshValueNotRaiseEvent(fTax, True)
+            self.ui.fTax.refreshValueNotRaiseEvent(fTax, True)
         else:
             fTax = 0
-        fPayable = fAmount + fTax - fDesconto
+        fPayable = fAmount + fTax - fDesconto if all(
+            (fAmount, fTax, fDesconto)) else None
         self.ui.fPayable.refreshValueNotRaiseEvent(fPayable, True)
 
     def afterSaveDate(self, data):

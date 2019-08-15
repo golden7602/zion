@@ -161,7 +161,7 @@ class EditForm_PrintingOrder(JPFormModelMain):
         self.ui.fTax.keyPressEvent = self.__onTaxKeyPress
         self.readData()
         if self.isNewMode:
-            self.ObjectDict['fEntryID'].refreshValueNotRaiseEvent(
+            self.ui.fEntryID.refreshValueNotRaiseEvent(
                 JPUser().currentUserID())
         if self.EditMode != JPEditFormDataMode.New:
             self.__refreshBeginNum()
@@ -169,7 +169,7 @@ class EditForm_PrintingOrder(JPFormModelMain):
     def __onTaxKeyPress(self, KeyEvent: QKeyEvent):
         if (KeyEvent.modifiers() == Qt.AltModifier
                 and KeyEvent.key() == Qt.Key_Delete):
-            self.ObjectDict['fTax'].refreshValueRaiseEvent(None, True)
+            self.ui.fTax.refreshValueRaiseEvent(None, True)
             self.cacuTax = False
         elif (KeyEvent.modifiers() == Qt.AltModifier
                 and KeyEvent.key() == Qt.Key_T):
@@ -194,7 +194,7 @@ class EditForm_PrintingOrder(JPFormModelMain):
         ]
 
     def afterSaveDate(self, data):
-        self.ObjectDict['fOrderID'].refreshValueNotRaiseEvent(data)
+        self.ui.fOrderID.refreshValueNotRaiseEvent(data)
 
     def __customerIDChanged(self):
         sql = '''select fCelular, fContato, fTelefone 
@@ -219,48 +219,48 @@ class EditForm_PrintingOrder(JPFormModelMain):
             self.__refreshEndNum()
         if nm == 'fNumerBegin':
             v = obj.Value()
-            self.ObjectDict['fNumerEnd'].setIntValidator(v + 1, v + 1000000)
+            self.ui.fNumerEnd.setIntValidator(v + 1, v + 1000000)
             self.__refreshEndNum()
         if nm in ('fQuant', 'fPrice', 'fDesconto', "fTax"):
-            fQuant = self.ObjectDict['fQuant'].Value()
-            fPrice = self.ObjectDict['fPrice'].Value()
-            temp_fDesconto = self.ObjectDict['fDesconto'].Value()
+            fQuant = self.ui.fQuant.Value()
+            fPrice = self.ui.fPrice.Value()
+            temp_fDesconto = self.ui.fDesconto.Value()
             fDesconto = temp_fDesconto if temp_fDesconto else 0
             fAmount = (fQuant * fPrice if all((fQuant, fPrice)) else None)
-            self.ObjectDict['fAmount'].refreshValueNotRaiseEvent(fAmount, True)
+            self.ui.fAmount.refreshValueNotRaiseEvent(fAmount, True)
             if fAmount is None:
-                self.ObjectDict['fTax'].refreshValueNotRaiseEvent(None, True)
-                self.ObjectDict['fPayable'].refreshValueNotRaiseEvent(
+                self.ui.fTax.refreshValueNotRaiseEvent(None, True)
+                self.ui.fPayable.refreshValueNotRaiseEvent(
                     None, True)
                 return
             if nm == "fTax":
-                temp_fTax = self.ObjectDict['fTax'].Value()
+                temp_fTax = self.ui.fTax.Value()
                 fTax = temp_fTax if temp_fTax else 0
             else:
                 fTax = JPRound((fAmount - fDesconto) * 0.17) if fAmount else 0
             if self.cacuTax:
-                self.ObjectDict['fTax'].refreshValueNotRaiseEvent(fTax, True)
+                self.ui.fTax.refreshValueNotRaiseEvent(fTax, True)
             else:
                 fTax = 0
             fPayable = fAmount + fTax - fDesconto
-            self.ObjectDict['fPayable'].refreshValueNotRaiseEvent(
+            self.ui.fPayable.refreshValueNotRaiseEvent(
                 fPayable, True)
 
     def __refreshEndNum(self):
         temp_fAvistaID = self.ui.fAvistaID.currentData()
-        fNumerBegin = self.ObjectDict['fNumerBegin'].Value()
+        fNumerBegin = self.ui.fNumerBegin.Value()
         fAvistaID = int(temp_fAvistaID[2]) if temp_fAvistaID else None
-        fQuant = self.ObjectDict['fQuant'].Value()
-        fPagePerVolumn = self.ObjectDict['fPagePerVolumn'].Value()
+        fQuant = self.ui.fQuant.Value()
+        fPagePerVolumn = self.ui.fPagePerVolumn.Value()
         if all((fAvistaID, fQuant, fPagePerVolumn)):
             fNumerEnd = fNumerBegin + fAvistaID * fQuant * fPagePerVolumn - 1
         else:
             fNumerEnd = fNumerBegin
-        self.ObjectDict['fNumerEnd'].refreshValueNotRaiseEvent(fNumerEnd, True)
+        self.ui.fNumerEnd.refreshValueNotRaiseEvent(fNumerEnd, True)
 
     def __refreshBeginNum(self):
-        obj_begin = self.ObjectDict['fNumerBegin']
-        obj_end = self.ObjectDict['fNumerEnd']
+        obj_begin = self.ui.fNumerBegin
+        obj_end = self.ui.fNumerEnd
 
         def clearNum():
             obj_begin.refreshValueNotRaiseEvent(None, True)
@@ -301,7 +301,7 @@ class EditForm_PrintingOrder(JPFormModelMain):
                     {WhereID}
                 ORDER BY fNumerEnd DESC
             '''
-        ID = self.ObjectDict['fOrderID'].Value()
+        ID = self.ui.fOrderID.Value()
         WhereID = "AND fOrderID<>'{}'".format(ID) if ID else ''
         tab = JPQueryFieldInfo(
             sql.format(fCustomerID=self.ui.fCustomerID.Value(),
