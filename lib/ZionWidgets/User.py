@@ -4,15 +4,16 @@ jppath.append(getcwd())
 
 from Ui.Ui_FormUser import Ui_Form
 from PyQt5.QtWidgets import (QMessageBox, QWidget, QTreeWidgetItem,
-                             QTreeWidgetItemIterator)
+                             QTreeWidgetItemIterator, QPushButton)
 from PyQt5.QtCore import (QDate, pyqtSlot, QThread, Qt, QAbstractItemModel,
-                          QModelIndex)
+                          QModelIndex, QMetaObject)
 from lib.JPDatabase.Query import JPTabelFieldInfo
 from lib.JPDatabase.Database import JPDb
 from PyQt5.QtGui import QIcon
 from lib.JPMvc.JPModel import JPTableViewModelEditForm
 from lib.JPFunction import JPDateConver
 from lib.ZionPublc import JPUser
+from lib.JPFunction import setButtonIcon
 
 
 def loadTreeview(treeWidget, items, hasCommandButton=False):
@@ -71,7 +72,7 @@ class Form_User(QWidget):
         self.ui.setupUi(self)
         mainform.addForm(self)
         tr = self.ui.treeWidget
-        tb = self.ui.tableView
+        # tb = self.ui.tableView
         tr.setColumnCount(2)
         tr.setHeaderLabels(["权限分配 Permission Assignment", "Right"])
         tr.setColumnWidth(0, 300)
@@ -90,7 +91,7 @@ class Form_User(QWidget):
                 from  sysusers 
             where  fUserID > 1
         """
-        tr = self.ui.treeWidget
+        # tr = self.ui.treeWidget
         tb = self.ui.tableView
         self.dataInfo = JPTabelFieldInfo(self.SQL)
         self.mod = JPTableViewModelEditForm(tb, self.dataInfo)
@@ -110,8 +111,8 @@ class Form_User(QWidget):
         self.ui.treeWidget.dirty = True
 
     def on_tableView_currentChanged(self, index1, index2):
-        user = JPUser()
-        a = user.currentUserRight()
+        # user = JPUser()
+        # a = user.currentUserRight()
         if self.checkDirty():
             self.saveRight(index2)
         uid = self.dataInfo.DataRows[index1.row()].Data(0)
@@ -160,12 +161,20 @@ class Form_User(QWidget):
         else:
             return True
 
+    def addButtons(self, btnNames: list):
+        for item in btnNames:
+            btn = QPushButton(item['fMenuText'])
+            btn.setObjectName(item['fObjectName'])
+            setButtonIcon(btn)
+            btn.setEnabled(item['fHasRight'])
+            self.ui.horizontalLayout_Button.addWidget(btn)
+        QMetaObject.connectSlotsByName(self)
+
     @pyqtSlot()
     def on_CmdNew_clicked(self):
         db = JPDb()
-        db.executeTransaction(
-            "insert into sysusers (fUsername,fPassword) Values ('New User','1234') "
-        )
+        sql = "insert into sysusers (fUsername,fPassword) Values ('New User','1234')"
+        db.executeTransaction(sql)
         self.refreshTable()
 
     @pyqtSlot()
@@ -177,8 +186,9 @@ class Form_User(QWidget):
         if QMessageBox.question(self, '提示', "确认要删除此用户？",
                                 (QMessageBox.Yes | QMessageBox.No),
                                 QMessageBox.Yes) == QMessageBox.Yes:
-            return JPDb().executeTransaction(sql.format(uid))
-            self.mod.removeRow(r.row())
+            JPDb().executeTransaction(sql.format(uid))
+            self.mod.removeRow(
+                self.tableView.selectionModel().currentIndex().row())
 
     @pyqtSlot()
     def on_CmdEdit_clicked(self):

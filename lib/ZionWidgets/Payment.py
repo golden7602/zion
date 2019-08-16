@@ -2,9 +2,10 @@ from os import getcwd
 from sys import path as jppath
 jppath.append(getcwd())
 
-from PyQt5.QtCore import pyqtSlot, Qt
-from lib.ZionWidgets.FuncFormBase import JPFunctionForm
+from PyQt5.QtCore import pyqtSlot, Qt, QModelIndex
+from lib.JPMvc.JPFuncForm import JPFunctionForm
 from lib.ZionWidgets.Order import EditForm_Order
+from lib.ZionWidgets.PrintingOrder import EditForm_PrintingOrder
 from lib.ZionReport.OrderReportMob import Order_report_Mob
 from lib.JPPrintReport import JPPrintSectionType
 
@@ -45,59 +46,66 @@ class JPFuncForm_Payment(JPFunctionForm):
         self.checkBox_2.setText('Confirmed')
         self.checkBox_1.setChecked(False)
         self.checkBox_2.setChecked(True)
-        super().setSQL(sql_1, sql_2)
         self.tableView.setColumnHidden(13, True)
-        self.ui.tableView.activated.connect(self.__rowChange)
+        self.CP_m_sql = """
+                SELECT fOrderID, fOrderDate, fVendedorID, fRequiredDeliveryDate
+                    , fCustomerID, fContato, fCelular, fTelefone, fAmount, fTax
+                    , fPayable, fDesconto, fNote,fEntryID,fSucursal
+                FROM t_order
+                WHERE fOrderID = '{}'
+                """
+        self.CP_s_sql = """
+                SELECT fID, fOrderID, fQuant AS '数量Qtd',
+                    fProductName AS '名称Descrição',
+                    fLength AS '长Larg.', fWidth AS '宽Comp.',
+                    fPrice AS '单价P. Unitario', fAmount AS '金额Total'
+                FROM t_order_detail
+                WHERE fOrderID = '{}'
+                """
+        self.TP_m_sql = """
+            SELECT fOrderID, fCelular, fRequiredDeliveryDate, fContato
+                , fTelefone, fVendedorID, fCustomerID, fOrderDate
+                , fSucursal, fQuant, fNumerBegin, fNumerEnd
+                , fPrice, fLogo, fEspecieID, fAvistaID, fTamanhoID
+                , fNrCopyID, fPagePerVolumn, fNote, fAmount, fDesconto
+                , fTax, fPayable,fEntryID
+            FROM t_order
+            WHERE fOrderID = '{}'
+            """
 
-    def __rowChange(self):
+    def onGetEditFormSQL_CP(self):
+        return self.CP_m_sql, self.CP_s_sql
+
+    def onGetEditFormSQL_TP(self):
+        return self.TP_m_sql, None
+
+    def onCurrentRowChanged(self, QModelIndex1, QModelIndex2):
         cur_tp = self.getCurrentSelectPKValue()[0:2]
         if cur_tp == 'CP':
-            m_sql = """
-                    SELECT fOrderID, fOrderDate, fVendedorID, fRequiredDeliveryDate
-                        , fCustomerID, fContato, fCelular, fTelefone, fAmount, fTax
-                        , fPayable, fDesconto, fNote
-                    FROM t_order
-                    WHERE fOrderID = '{}'
-                    """
-            s_sql = """
-                    SELECT fID, fOrderID, fQuant AS '数量Qtd',
-                        fProductName AS '名称Descrição',
-                        fLength AS '长Larg.', fWidth AS '宽Comp.',
-                        fPrice AS '单价P. Unitario', fAmount AS '金额Total'
-                    FROM t_order_detail
-                    WHERE fOrderID = '{}'
-                    """
-            super().setEditFormSQL(m_sql, s_sql)
+            self.onGetEditFormSQL = self.onGetEditFormSQL_CP
         if cur_tp == 'TP':
-            raise ValueError("请修改SQL")
-            m_sql = """
-                    SELECT fOrderID, fOrderDate, fVendedorID, fRequiredDeliveryDate
-                        , fCustomerID, fContato, fCelular, fTelefone, fAmount, fTax
-                        , fPayable, fDesconto, fNote
-                    FROM t_order
-                    WHERE fOrderID = '{}'
-                    """
-            s_sql = """
-                    SELECT fID, fOrderID, fQuant AS '数量Qtd',
-                        fProductName AS '名称Descrição',
-                        fLength AS '长Larg.', fWidth AS '宽Comp.',
-                        fPrice AS '单价P. Unitario', fAmount AS '金额Total'
-                    FROM t_order_detail
-                    WHERE fOrderID = '{}'
-                    """
-            super().setEditFormSQL(m_sql, s_sql)
+            self.onGetEditFormSQL = self.onGetEditFormSQL_TP
 
-    def getEditFormClass(self):
+    def getEditForm(self, sql_main, edit_mode, sql_sub, PKValue):
         cur_tp = self.getCurrentSelectPKValue()[0:2]
         if cur_tp == 'CP':
-            return EditForm_Payment_Order
+            return Edit_CP(sql_main=sql_main,
+                           edit_mode=edit_mode,
+                           sql_sub=sql_sub,
+                           PKValue=PKValue)
         if cur_tp == 'TP':
-            return
+            return Edit_TP(sql_main=sql_main,
+                           edit_mode=edit_mode,
+                           sql_sub=sql_sub,
+                           PKValue=PKValue)
 
 
-class EditForm_Payment_Order(EditForm_Order):
-    def __init__(self, edit_mode, PKValue=None, flags=Qt.WindowFlags()):
-        super().__init__(edit_mode, PKValue, flags)
+class Edit_CP(EditForm_Order):
+    def __init__(self, sql_main, sql_sub=None, edit_mode=None, PKValue=None):
+        super().__init__(sql_main=sql_main,
+                         edit_mode=edit_mode,
+                         sql_sub=sql_sub,
+                         PKValue=PKValue)
         self.ui.label_Title_Chn.setText('付款书')
         self.ui.label_Title_Eng.setText('NOTA DE PAGAMENTO')
 
@@ -105,6 +113,16 @@ class EditForm_Payment_Order(EditForm_Order):
     def on_butPrint_clicked(self):
         rpt = Payment_report()
         rpt.PrintCurrentReport(self.ui.fOrderID.text())
+
+
+class Edit_TP(EditForm_PrintingOrder):
+    def __init__(self, sql_main, PKValue=None, sql_sub=None, edit_mode=None):
+        super().__init__(sql_main=sql_main,
+                         edit_mode=edit_mode,
+                         sql_sub=sql_sub,
+                         PKValue=PKValue)
+        self.ui.label_Title_Chn.setText('付款书')
+        self.ui.label_Title_Eng.setText('NOTA DE PAGAMENTO')
 
 
 class Payment_report(Order_report_Mob):

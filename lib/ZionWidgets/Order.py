@@ -8,6 +8,7 @@ from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QMessageBox
 
 from lib.JPDatabase.Database import JPDb
+from lib.JPDatabase.Query import JPQueryFieldInfo
 from lib.JPMvc.JPEditFormModel import JPFormModelMainHasSub, JPEditFormDataMode
 from lib.JPMvc.JPFuncForm import JPFunctionForm
 #from lib.JPMvc.JPModel import JPEditFormDataMode, JPFormModelMainSub
@@ -57,10 +58,12 @@ class JPFuncForm_Order(JPFunctionForm):
         super().setListFormSQL(sql_1, sql_2)
         self.tableView.setColumnHidden(13, True)
         self.fSubmited_column = 13
+        
+    def onGetEditFormSQL(self):
         m_sql = """
                 SELECT fOrderID, fOrderDate, fVendedorID, fRequiredDeliveryDate
                     , fCustomerID, fContato, fCelular, fTelefone, fAmount, fTax
-                    , fPayable, fDesconto, fNote,fEntryID
+                    , fPayable, fDesconto, fNote,fEntryID,fSucursal
                 FROM t_order
                 WHERE fOrderID = '{}'
                 """
@@ -72,7 +75,7 @@ class JPFuncForm_Order(JPFunctionForm):
                 FROM t_order_detail
                 WHERE fOrderID = '{}'
                 """
-        super().setEditFormSQL(m_sql, s_sql)
+        return m_sql, s_sql
 
     def getEditForm(self, sql_main, edit_mode, sql_sub, PKValue):
         return EditForm_Order(sql_main=sql_main,
@@ -113,25 +116,6 @@ class JPFuncForm_Order(JPFunctionForm):
                 self.btnRefreshClick()
 
 
-# #继承模型，为了设置重载方法，必要要时也可以用动态绑定到函数
-# class myMainSubMode(JPFormModelMainSub):
-#     def __init__(self, *args, **kwargs):
-#         super().__init__(*args, **kwargs)
-
-#     def subModel_AfterSetDataBeforeInsterRowEvent(self, row_data, Index):
-#         if row_data is None:
-#             return False
-#         if row_data[7] is None:
-#             return False
-#         data = row_data
-#         if data[7] == 0:
-#             return False
-#         lt = [data[2], data[4], data[5], data[6], data[7]]
-#         lt = [float(str(i)) if i else 0 for i in lt]
-#         return int(lt[4] * 100) == int(
-#             reduce(lambda x, y: x * y, lt[0:4]) * 100)
-
-
 class EditForm_Order(JPFormModelMainHasSub):
     def __init__(self,
                  sql_main=None,
@@ -154,11 +138,9 @@ class EditForm_Order(JPFormModelMainHasSub):
         if self.isNewMode:
             self.ObjectDict['fEntryID'].refreshValueNotRaiseEvent(
                 JPUser().currentUserID())
-        if self.EditMode != JPEditFormDataMode.New:
-            self.__refreshBeginNum()
 
     def __customerIDChanged(self):
-        sql = '''select fCelular, fContato, fTelefone 
+        sql = '''select fCelular, fContato, fTelefone ,fNUIT,fEndereco,fCity
             from t_customer where fCustomerID={}'''
         sql = sql.format(self.ui.fCustomerID.Value())
         tab = JPQueryFieldInfo(sql)
@@ -168,6 +150,10 @@ class EditForm_Order(JPFormModelMainHasSub):
                                                    True)
         self.ui.fTelefone.refreshValueNotRaiseEvent(tab.getOnlyData([0, 2]),
                                                     True)
+        self.ui.fNUIT.setText(tab.getOnlyData([0, 3]))
+        self.ui.fEndereco.setText(tab.getOnlyData([0, 4]))
+        self.ui.fCity.setText(tab.getOnlyData([0, 5]))
+
     def onGetColumnFormulas(self):
         fla = "JPRound(JPRound({2}) * JPRound({4},2) * "
         fla = fla + "JPRound({5},2) * JPRound({6},2),2)"
@@ -176,11 +162,12 @@ class EditForm_Order(JPFormModelMainHasSub):
     def __onTaxKeyPress(self, KeyEvent):
         if (KeyEvent.modifiers() == Qt.AltModifier
                 and KeyEvent.key() == Qt.Key_Delete):
-            self.ObjectDict['fTax'].refreshValueRaiseEvent(None, True)
             self.cacuTax = False
+            self.ObjectDict['fTax'].refreshValueRaiseEvent(None, True)
         elif (KeyEvent.modifiers() == Qt.AltModifier
               and KeyEvent.key() == Qt.Key_T):
             self.cacuTax = True
+            self.ObjectDict['fTax'].refreshValueRaiseEvent(None, True)
 
     def onGetHiddenColumns(self):
         return [0, 1]
@@ -199,47 +186,47 @@ class EditForm_Order(JPFormModelMainHasSub):
                 ('fEntryID', u_lst, 1)]
 
     def onGetReadOnlyFields(self):
-        return ['fOrderID', "fEntryID", 'fAmount', 'fPayable', 'fTax']
+        return ["fEntryID", 'fAmount', 'fPayable', 'fTax']
 
-    def getPrintReport(self):
-        return Order_report
+    def onGetDisableFields(self):
+        return ['fOrderID', 'fCity', 'fNUIT', "fEntryID", 'fEndereco']
+
 
     def onDateChangeEvent(self, obj, value):
-        fAmount = None
-        temp_fDesconto = self.ui.fDesconto.Value()
-        fDesconto = temp_fDesconto if temp_fDesconto else 0
-        if (self.EditMode != JPEditFormDataMode.ReadOnly
-                and isinstance(obj, QModelIndex)):
-            fAmount = self.getColumnSum(7)
-            self.ui.fAmount.refreshValueNotRaiseEvent(fAmount, True)
-            if fAmount is None:
-                self.ui.fTax.refreshValueNotRaiseEvent(None, True)
-                self.ui.fPayable.refreshValueNotRaiseEvent(None, True)
-                return
-        fTax = None
+
         if not isinstance(obj, QModelIndex):
             if obj.objectName() == "fCustomerID":
                 if self.ui.fCustomerID.currentIndex() != -1:
                     self.__customerIDChanged()
-            if obj.objectName() == "fTax":
-                temp_fTax = self.ui.fTax.Value()
-                fTax = temp_fTax if temp_fTax else 0
-            else:
-                fTax = JPRound((fAmount - fDesconto) * 0.17) if fAmount else 0
+                    return
+
+        fAmount = None
+        temp_fDesconto = self.ui.fDesconto.Value()
+        fDesconto = temp_fDesconto if temp_fDesconto else 0
+        fAmount = self.getColumnSum(7)
+        if fAmount is None:
+            self.ui.fAmount.refreshValueNotRaiseEvent(None, True)
+            self.ui.fTax.refreshValueNotRaiseEvent(None, True)
+            self.ui.fPayable.refreshValueNotRaiseEvent(None, True)
+            return
         else:
-            fTax = JPRound((fAmount - fDesconto) * 0.17) if fAmount else 0
+            self.ui.fAmount.refreshValueNotRaiseEvent(fAmount, True)
+
+        fTax = 0.0
         if self.cacuTax:
+            fTax = JPRound((fAmount - fDesconto) * 0.17, 2)
             self.ui.fTax.refreshValueNotRaiseEvent(fTax, True)
         else:
-            fTax = 0
-        fPayable = fAmount + fTax - fDesconto if all(
-            (fAmount, fTax, fDesconto)) else None
+            fTax = self.ui.fTax.Value()
+
+        fPayable = fAmount + fTax - fDesconto
         self.ui.fPayable.refreshValueNotRaiseEvent(fPayable, True)
 
     def afterSaveDate(self, data):
-        self.ui.fOrderID.setText(data)
+        self.ui.fOrderID.refreshValueNotRaiseEvent(data, True)
 
     def AfterSetDataBeforeInsterRowEvent(self, row_data, Index):
+        # 用于判断可否有加行
         if row_data is None:
             return False
         if row_data[7] is None:
@@ -251,6 +238,11 @@ class EditForm_Order(JPFormModelMainHasSub):
         lt = [float(str(i)) if i else 0 for i in lt]
         return int(lt[4] * 100) == int(
             reduce(lambda x, y: x * y, lt[0:4]) * 100)
+
+    @pyqtSlot()
+    def on_butPrint_clicked(self):
+        rpt = Order_report()
+        rpt.PrintCurrentReport(self.ui.fOrderID.Value())
 
 
 class Order_report(Order_report_Mob):

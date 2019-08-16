@@ -9,7 +9,7 @@ from PyQt5.QtWidgets import (QAbstractItemView, QCheckBox, QComboBox,
                              QHBoxLayout, QLabel, QSizePolicy, QSpacerItem,
                              QTableView, QVBoxLayout, QWidget, QPushButton,
                              QMessageBox)
-from PyQt5.QtCore import QCoreApplication, QSize, Qt, pyqtSlot
+from PyQt5.QtCore import QCoreApplication, QSize, Qt, pyqtSlot, QModelIndex,pyqtSignal
 from lib.JPDatabase.Query import JPQueryFieldInfo
 from lib.JPMvc.JPModel import JPTableViewModelReadOnly
 from lib.JPMvc.JPEditFormModel import JPEditFormDataMode
@@ -21,6 +21,8 @@ import abc
 
 
 class JPFunctionForm(QWidget):
+    currentRowChanged = pyqtSignal(QModelIndex, QModelIndex)
+
     def __init__(self, parent, flags=Qt.WindowFlags()):
         super().__init__(parent, flags=flags)
         # 把本窗体加入主窗体
@@ -79,15 +81,22 @@ class JPFunctionForm(QWidget):
             msgBox = QMessageBox(QMessageBox.Critical, u'提示', errStr)
             msgBox.exec_()
 
-    def setEditFormSQL(self, sql_main: str, sql_sub: str = None):
+    def _onGetEditFormSQL(self):
+        sql_main, sql_sub = self.onGetEditFormSQL()
         if sql_main:
             self.SQL_EditForm_Main = sql_main
             a, b = self.__getTableNameInfo(sql_main)
             self.EditFormMainTableName = a
             self.EditFormPrimarykeyFieldName = b
+        else:
+            raise ValueError("必须指定主窗体SQL语句")
         if sql_sub:
             self.SQL_EditForm_Sub = sql_sub
             self.EditFormSubTableName = self.__getTableNameInfo(sql_sub)
+
+    def onGetEditFormSQL(self):
+        """指定编辑窗体语句，返回两个参数，第一个是主表SQL，第二个是子表SQL，可省略"""
+        return None, None
 
     def getModelClass(self):
         '''此类可以重写，改写列表Model的行为,必须返回一个模型类
@@ -127,9 +136,16 @@ class JPFunctionForm(QWidget):
             info = JPQueryFieldInfo(sql)
             self.model = self.getModelClass()(self.ui.tableView, info)
             self.ui.tableView.setModel(self.model)
+            self.ui.tableView.selectionModel(
+            ).currentRowChanged[QModelIndex, QModelIndex].connect(
+                self.onCurrentRowChanged)
             self.ui.tableView.resizeColumnsToContents()
             if ID:
                 self._locationRow(ID)
+
+    def onCurrentRowChanged(self,QModelIndex1, QModelIndex2):
+        """当前行改变事件"""
+        return
 
     def getCurrentSelectPKValue(self):
         index = self.tableView.selectionModel().currentIndex()

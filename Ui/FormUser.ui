@@ -85,7 +85,7 @@
        <number>0</number>
       </property>
       <item>
-       <layout class="QHBoxLayout" name="Layout_Button"/>
+       <layout class="QHBoxLayout" name="horizontalLayout_Button"/>
       </item>
       <item>
        <spacer name="horizontalSpacer">

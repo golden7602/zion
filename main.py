@@ -139,12 +139,14 @@ class JPMainWindow(QMainWindow):
         elif self.menu_id == 72:
             from lib.ZionWidgets.PrintingOrder import JPFuncForm_PrintingOrder
             JPFuncForm_PrintingOrder(self)
-        elif self.menu_id == 73:
+        elif self.menu_id == 73:  # customer
             from lib.ZionWidgets.Customer import Form_Customer
-            Form_Customer(self)
-        elif self.menu_id == 13:
+            frm = Form_Customer(self)
+            frm.addButtons(self.btns)
+        elif self.menu_id == 13:  # user
             from lib.ZionWidgets.User import Form_User
-            Form_User(self)
+            frm = Form_User(self)
+            frm.addButtons(self.btns)
         elif self.menu_id == 15:
             from lib.ZionWidgets.Complete import JPFuncForm_Complete
             JPFuncForm_Complete(self)

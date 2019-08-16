@@ -11,7 +11,7 @@ from PyQt5.QtPrintSupport import QPrinter
 
 from lib.JPPrintReport import JPPrintSectionType, JPReport
 from lib.ZionPublc import JPPub
-from lib.ZionWidgets.FuncFormBase import JPFunctionForm
+from lib.JPMvc.JPFuncForm import JPFunctionForm
 
 
 class JPFuncForm_Adjustment(JPFunctionForm):

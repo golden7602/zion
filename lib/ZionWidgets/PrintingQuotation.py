@@ -11,14 +11,14 @@ from PyQt5.QtPrintSupport import QPrinter
 
 from lib.JPPrintReport import JPPrintSectionType, JPReport
 from lib.ZionPublc import JPPub
-from lib.ZionWidgets.FuncFormBase import JPFunctionForm
+from lib.JPMvc.JPFuncForm import JPFunctionForm
 
 
 # class JPFuncForm_PrintingQuotation(JPFunctionForm):
 #     def __init__(self, MainForm):
 #         super().__init__(MainForm)
 #         sql_1 = """
-#                 select 
+#                 select
 #                     fOrderID as `报价单号fOrderID`,
 #                     fOrderDate as `报价单日期fOrderDate`,
 #                     fCustomerName as `客户名Cliente`,
@@ -36,13 +36,13 @@ from lib.ZionWidgets.FuncFormBase import JPFunctionForm
 #                     fTelefone as `电话Telefone`,
 #                     fConfirmed as `已确认Confirmed`,
 #                     fCustomerID as `客户编号CustomerID`
-#                 from v_quotation 
+#                 from v_quotation
 #                 where  left(fOrderID,2)='QP'
-#                 and fCanceled = 0 
+#                 and fCanceled = 0
 #                 and fOrderDate{date}
 #                 order by  fOrderID DESC"""
 #         sql_2 = """
-#                 select 
+#                 select
 #                     fOrderID as `报价单号fOrderID`,
 #                     fOrderDate as `报价单日期fOrderDate`,
 #                     fCustomerName as `客户名Cliente`,
@@ -60,9 +60,9 @@ from lib.ZionWidgets.FuncFormBase import JPFunctionForm
 #                     fTelefone as `电话Telefone`,
 #                     fConfirmed as `已确认Confirmed`,
 #                     fCustomerID as `客户编号CustomerID`
-#                 from v_quotation 
+#                 from v_quotation
 #                 where  left(fOrderID,2)='QP'
-#                 and fCanceled = 0 
+#                 and fCanceled = 0
 #                 order by  fOrderID DESC"""
 #         self.backgroundWhenValueIsTrueFieldName = ['fSubmited']
 #         self.checkBox_1.setHidden(True)

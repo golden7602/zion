@@ -1,11 +1,26 @@
 # -*- coding: utf-8 -*-
 
 
-# 原名  JPExceptionFieldNull
-class FieldNullError(Exception): 
+class JPExceptionFieldNull(Exception):
     def __init__(self, obj, msg=None):
-        self.Message = obj if isinstance(obj,
-                                         str) else "字段的【{}】值不能为空值！".format(msg)
+        """主表字段为空"""
 
+        self.object = obj
+        errstr = '字段【{fn}】的值不能为空！\n'
+        errstr = errstr + 'Field [{fn}] cannot be empty!'
+        self.Message = errstr.format(obj.objectName())
+
+    def __str__(self):
+        return self.Message
+
+
+class JPExceptionRowDataNull(Exception):
+    def __init__(self, row_and_columnname, msg=None):
+        """子表字段为空"""
+        errstr = '第{row}行【{fn}】字段的值不能为空！\n'
+        errstr = errstr + 'Row {row} field [{fn}] cannot be empty!'
+        self.Row = row_and_columnname[0]
+        self.Message = errstr.format(row=row_and_columnname[0],
+                                     fn=row_and_columnname[1])
     def __str__(self):
         return self.Message

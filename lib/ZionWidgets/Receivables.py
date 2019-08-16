@@ -154,6 +154,3 @@ class Form_Receivables(Ui_Form):
     @pyqtSlot()
     def on_SelectDate_dateChanged(self, *args):
         print(args)
-
-    def mmm(self, *args):
-        print(*args)

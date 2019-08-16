@@ -31,7 +31,7 @@ class Form_Customer(QWidget):
                 fFax as `传真Fax` 
             from  t_customer 
         """
-        
+
         self.on_CMDREFRESH_clicked()
 
     def on_CMDREFRESH_clicked(self):
@@ -59,9 +59,9 @@ class Form_Customer(QWidget):
 
     def addButtons(self, btnNames: list):
         for item in btnNames:
-            btn = QPushButton(item[0])
-            btn.setObjectName(item[2].upper())
-            print(item[2].upper())
+            btn = QPushButton(item['fMenuText'])
+            btn.setObjectName(item['fObjectName'])
             setButtonIcon(btn)
+            btn.setEnabled(item['fHasRight'])
             self.UI.horizontalLayout_Button.addWidget(btn)
         QMetaObject.connectSlotsByName(self)

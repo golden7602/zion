@@ -69,6 +69,8 @@ class JPFuncForm_PrintingOrder(JPFunctionForm):
         self.tableView.setColumnHidden(23, True)
         self.tableView.setColumnHidden(24, True)
         self.fSubmited_column = 13
+
+    def onGetEditFormSQL(self):
         m_sql = """
                 SELECT fOrderID, fCelular, fRequiredDeliveryDate, fContato
                     , fTelefone, fVendedorID, fCustomerID, fOrderDate
@@ -79,7 +81,7 @@ class JPFuncForm_PrintingOrder(JPFunctionForm):
                 FROM t_order
                 WHERE fOrderID = '{}'
                 """
-        super().setEditFormSQL(m_sql)
+        return m_sql, None
 
     def getEditForm(self, sql_main, edit_mode, sql_sub, PKValue):
         return EditForm_PrintingOrder(sql_main=sql_main,
@@ -172,7 +174,7 @@ class EditForm_PrintingOrder(JPFormModelMain):
             self.ui.fTax.refreshValueRaiseEvent(None, True)
             self.cacuTax = False
         elif (KeyEvent.modifiers() == Qt.AltModifier
-                and KeyEvent.key() == Qt.Key_T):
+              and KeyEvent.key() == Qt.Key_T):
             self.cacuTax = True
 
     def onGetFieldsRowSources(self):
@@ -190,11 +192,11 @@ class EditForm_PrintingOrder(JPFormModelMain):
 
     def onGetReadOnlyFields(self):
         return [
-            'fOrderID', "fNumerEnd", "fEntryID", 'fAmount', 'fPayable', 'fTax'
+            'fOrderID', "fNumerEnd", "fEntryID", 'fAmount', 'fPayable', 'fNUIT'
         ]
 
     def afterSaveDate(self, data):
-        self.ui.fOrderID.refreshValueNotRaiseEvent(data)
+        self.ui.fOrderID.refreshValueNotRaiseEvent(data,True)
 
     def __customerIDChanged(self):
         sql = '''select fCelular, fContato, fTelefone 
@@ -230,8 +232,7 @@ class EditForm_PrintingOrder(JPFormModelMain):
             self.ui.fAmount.refreshValueNotRaiseEvent(fAmount, True)
             if fAmount is None:
                 self.ui.fTax.refreshValueNotRaiseEvent(None, True)
-                self.ui.fPayable.refreshValueNotRaiseEvent(
-                    None, True)
+                self.ui.fPayable.refreshValueNotRaiseEvent(None, True)
                 return
             if nm == "fTax":
                 temp_fTax = self.ui.fTax.Value()
@@ -243,8 +244,7 @@ class EditForm_PrintingOrder(JPFormModelMain):
             else:
                 fTax = 0
             fPayable = fAmount + fTax - fDesconto
-            self.ui.fPayable.refreshValueNotRaiseEvent(
-                fPayable, True)
+            self.ui.fPayable.refreshValueNotRaiseEvent(fPayable, True)
 
     def __refreshEndNum(self):
         temp_fAvistaID = self.ui.fAvistaID.currentData()
@@ -311,6 +311,11 @@ class EditForm_PrintingOrder(JPFormModelMain):
         self.ui.listPrintingOrder.setModel(mod)
         self.ui.listPrintingOrder.resizeColumnsToContents()
         return tab.getOnlyData([0, 4]) if len(tab.DataRows) > 0 else 0
+
+    @pyqtSlot()
+    def on_butPrint_clicked(self):
+        rpt = Order_Printingreport()
+        rpt.PrintCurrentReport(self.ui.fOrderID.Value())
 
 
 class Order_Printingreport(PrintOrder_report_Mob):

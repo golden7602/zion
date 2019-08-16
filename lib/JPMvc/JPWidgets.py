@@ -22,6 +22,8 @@ from lib.JPFunction import JPBooleanString, JPDateConver, JPGetDisplayText
 from PyQt5.QtGui import (QValidator, QDoubleValidator, QIntValidator)
 import re
 
+from lib.JPException import JPExceptionFieldNull
+
 
 def __getattr__(name):
     return QtWidgets_.__dict__[name]
@@ -51,15 +53,6 @@ class _JPIntValidator(QValidator):
         return QValidator.Invalid, vstr, pos
 
 
-class JPExceptionFieldNull(Exception):
-    def __init__(self, obj, msg=None):
-        self.Message = obj if isinstance(obj,
-                                         str) else "字段的【{}】值不能为空值！".format(msg)
-
-    def __str__(self):
-        return self.Message
-
-
 class __JPWidgetBase(QObject):
     def __init__(self, *args):
         super().__init__(*args)
@@ -80,26 +73,29 @@ class __JPWidgetBase(QObject):
 
     @property
     def FieldInfo(self):
-        errsre="窗体字段【{}】的FieldInfo属性为None，可能是窗体SQl查询语句中没有包含此字段！"
+        errStr = "窗体字段【{}】的FieldInfo属性为None，可能是窗体SQl查询语句中没有包含此字段！"
         if self.__FieldInfo is None:
-            raise AttributeError(
-                errStr.format(
-                    self.objectName()))
+            raise AttributeError(errStr.format(self.objectName()))
         return self.__FieldInfo
+
     @FieldInfo.setter
-    def FieldInfo(self,fld):
-        self.__FieldInfo=fld
+    def FieldInfo(self, fld):
+        self.__FieldInfo = fld
+
     def getNullValue(self):
-        if self.FieldInfo.NotNull is False:
-            return 'Null'
+        # 检查空值
+        fld = self.FieldInfo
+        if fld.IsPrimarykey or fld.Auto_Increment:
+            return
         else:
-            raise JPExceptionFieldNull(
-                self, "字段的【{}】值不能为空值！".format(self.FieldInfo.FieldName))
+            if self.FieldInfo.NotNull is False:
+                return 'Null'
+            else:
+                raise JPExceptionFieldNull(self)
 
     @abc.abstractmethod
     def getSqlValue(self):
         """返回字段值，可直接用于SQL语句中"""
-
     @abc.abstractmethod
     def setFieldInfo(self, fld: JPFieldType = None, raiseEvent=True):
         pass
@@ -134,16 +130,21 @@ class QLineEdit(QLineEdit_, __JPWidgetBase):
             return "'{}'".format(t.replace(',', ''))
 
     def refreshValueNotRaiseEvent(self, v, changeDisplayText: bool = False):
-        tp = self.FieldInfo.TypeCode
-        if tp == JPFieldType.Int:
-            self.FieldInfo.Value = int(str(v).replace(',', '')) if v else 0
-        elif tp == JPFieldType.Float:
-            self.FieldInfo.Value = float(str(v).replace(',',
-                                                         '')) if v else 0.0
+        try:
+            tp = self.FieldInfo.TypeCode
+        except AttributeError as e:
+            print('【{}】字段FieldInfo属性出错'.format(self.objectName()) + '\n' +
+                  str(e))
         else:
-            self.FieldInfo.Value = v
-        if changeDisplayText:
-            self.__setDisplayText()
+            if tp == JPFieldType.Int:
+                self.FieldInfo.Value = int(str(v).replace(',', '')) if v else 0
+            elif tp == JPFieldType.Float:
+                self.FieldInfo.Value = float(str(v).replace(',',
+                                                            '')) if v else 0.0
+            else:
+                self.FieldInfo.Value = v
+            if changeDisplayText:
+                self.__setDisplayText()
 
     def refreshValueRaiseEvent(self, v, changeDisplayText: bool = False):
         self.refreshValueNotRaiseEvent(v, changeDisplayText)
@@ -192,12 +193,16 @@ class QLineEdit(QLineEdit_, __JPWidgetBase):
         self.setValidator(Validator)
 
     def focusInEvent(self, e):
-        if self.FieldInfo.TypeCode in (JPFieldType.Int, JPFieldType.Float):
-            t = self.text()
-            self.textChanged[str].disconnect(self.refreshValueNotRaiseEvent)
-            self.setText(t.replace(',', ''))
-            self.textChanged[str].connect(self.refreshValueNotRaiseEvent)
-        QLineEdit_.focusInEvent(self, e)
+        # 如果此对象没有被赋值字段信息
+        try:
+            if self.FieldInfo.TypeCode in (JPFieldType.Int, JPFieldType.Float):
+                t = self.text()
+                self.textChanged[str].disconnect(self.refreshValueNotRaiseEvent)
+                self.setText(t.replace(',', ''))
+                self.textChanged[str].connect(self.refreshValueNotRaiseEvent)
+        finally:
+            QLineEdit_.focusInEvent(self, e)
+
 
     def focusOutEvent(self, e):
         self.__setDisplayText()
@@ -214,7 +219,7 @@ class QTextEdit(QTextEdit_, __JPWidgetBase):
         t = self.toPlainText()
         if t is None or len(t) == 0:
             return self.getNullValue()
-        return t
+        return "'{}'".format(t)
 
     def setFieldInfo(self, fld: JPFieldType, raiseEvent=True):
         self.FieldInfo = fld
@@ -250,8 +255,7 @@ class QComboBox(QComboBox_, __JPWidgetBase):
 
     def getSqlValue(self) -> str:
         if self.count() == 0:
-            raise JPExceptionFieldNull("字段【{}】的枚举数据源不能为空！".format(
-                self.FieldInfo.FieldName))
+            return self.getNullValue()
         if self.currentData():
             tempV = self.BindingData[self.currentIndex()]
             if tempV:
@@ -359,7 +363,7 @@ class QCheckBox(QCheckBox_, __JPWidgetBase):
 
     def getSqlValue(self) -> str:
         if self.checkState() is None:
-            return 'Null'
+            return self.getNullValue()
         return '1' if self.checkState() is True else '0'
 
     def _onValueChange(self):
@@ -369,10 +373,10 @@ class QCheckBox(QCheckBox_, __JPWidgetBase):
 
     def refreshValueNotRaiseEvent(self, value):
         self.__RaiseEvent = False
-        if value is None:
-            v = True if value else False
-            self.FieldInfo.Value = v
-            self.setChecked(v)
+        v = 1 if value else 0
+        self.FieldInfo.Value = v
+        c = True if value else False
+        self.setChecked(c)
         self.__RaiseEvent = True
 
     def refreshValueRaiseEvent(self, value):
@@ -383,7 +387,7 @@ class QCheckBox(QCheckBox_, __JPWidgetBase):
         self.FieldInfo = fld
         self.refreshValueNotRaiseEvent(self.FieldInfo.Value)
         # 设置编辑状态
-        self.setCheckable(not self.MainModel.isReadOnlyMode)
+        self.setEnabled(not self.MainModel.isReadOnlyMode)
         self.refreshValueNotRaiseEvent(fld.Value)
 
     def Value(self):
