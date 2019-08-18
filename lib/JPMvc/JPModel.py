@@ -23,7 +23,7 @@ from lib.JPMvc import JPWidgets
 from lib.ZionPublc import JPPub
 
 
-class __JPTableViewModelBase(QAbstractTableModel):
+class JPTableViewModelBase(QAbstractTableModel):
     dataChanged = pyqtSignal(QModelIndex, object)
     firstHasDirty = pyqtSignal()
     editNext = pyqtSignal(QModelIndex)
@@ -243,7 +243,7 @@ class __JPTableViewModelBase(QAbstractTableModel):
                 tw.setItemDelegateForColumn(col, de)
 
 
-class JPTableViewModelReadOnly(__JPTableViewModelBase):
+class JPTableViewModelReadOnly(JPTableViewModelBase):
     def __init__(self, tableView, tabelFieldInfo: JPTabelFieldInfo):
         ''' 
         建立一个只读型模型，仅仅用于展示内容，不可编辑\n
@@ -255,7 +255,7 @@ class JPTableViewModelReadOnly(__JPTableViewModelBase):
         self.tableView.setEditTriggers(QAbstractItemView.NoEditTriggers)
 
 
-class JPTableViewModelEditForm(__JPTableViewModelBase):
+class JPTableViewModelEditForm(JPTableViewModelBase):
     def __init__(self, tableView, tabelFieldInfo: JPTabelFieldInfo):
         ''' 
         建立一个可编辑模型\n

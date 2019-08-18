@@ -5,7 +5,7 @@ from sys import path as jppath, argv, exit as sys_exit
 jppath.append(getcwd())
 
 from PyQt5.QtWidgets import (QApplication, QHBoxLayout, QMainWindow,
-                             QTreeWidgetItem, QWidget, QPushButton)
+                             QTreeWidgetItem, QWidget, QPushButton,QLabel,QProgressBar)
 from PyQt5.QtGui import QIcon, QPixmap
 from lib.ZionPublc import JPPub, JPUser
 from Ui import Ui_mainform
@@ -84,11 +84,11 @@ class JPMainWindow(QMainWindow):
         self.ui.label_FunPath.setText('')
         self.ui.treeWidget.setHeaderHidden(True)
 
-        # MW.Label = QLabel("")
-        # MW.ProgressBar = QProgressBar()
-        # MW.statusBar().addPermanentWidget(MW.Label)
-        # MW.statusBar().addPermanentWidget(MW.ProgressBar)
-        # MW.ProgressBar.hide()
+        self.Label = QLabel("")
+        self.ProgressBar = QProgressBar()
+        self.statusBar().addPermanentWidget(self.Label)
+        self.statusBar().addPermanentWidget(self.ProgressBar)
+        self.ProgressBar.hide()
 
         def treeViewItemClicked(item, i):
             self.ui.label_FunPath.setText(item.FullPath)
@@ -163,6 +163,7 @@ class JPMainWindow(QMainWindow):
             Form_Background(self)
 
         return
+ 
 
 
 if __name__ == "__main__":

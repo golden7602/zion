@@ -59,7 +59,6 @@ class JPFuncForm_Order(JPFunctionForm):
         self.tableView.setColumnHidden(13, True)
         self.fSubmited_column = 13
         
-    def onGetEditFormSQL(self):
         m_sql = """
                 SELECT fOrderID, fOrderDate, fVendedorID, fRequiredDeliveryDate
                     , fCustomerID, fContato, fCelular, fTelefone, fAmount, fTax
@@ -75,7 +74,7 @@ class JPFuncForm_Order(JPFunctionForm):
                 FROM t_order_detail
                 WHERE fOrderID = '{}'
                 """
-        return m_sql, s_sql
+        self.setEditFormSQL(m_sql,s_sql)
 
     def getEditForm(self, sql_main, edit_mode, sql_sub, PKValue):
         return EditForm_Order(sql_main=sql_main,

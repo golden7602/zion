@@ -69,8 +69,6 @@ class JPFuncForm_PrintingOrder(JPFunctionForm):
         self.tableView.setColumnHidden(23, True)
         self.tableView.setColumnHidden(24, True)
         self.fSubmited_column = 13
-
-    def onGetEditFormSQL(self):
         m_sql = """
                 SELECT fOrderID, fCelular, fRequiredDeliveryDate, fContato
                     , fTelefone, fVendedorID, fCustomerID, fOrderDate
@@ -81,7 +79,7 @@ class JPFuncForm_PrintingOrder(JPFunctionForm):
                 FROM t_order
                 WHERE fOrderID = '{}'
                 """
-        return m_sql, None
+        self.setEditFormSQL(m_sql,None) 
 
     def getEditForm(self, sql_main, edit_mode, sql_sub, PKValue):
         return EditForm_PrintingOrder(sql_main=sql_main,
@@ -298,6 +296,7 @@ class EditForm_PrintingOrder(JPFormModelMain):
         sql = self.__historyOrderSQL + '''
                 WHERE fCustomerID ={fCustomerID}
                     AND fEspecieID = {fEspecieID}
+                    AND fConfirmed='1'
                     {WhereID}
                 ORDER BY fNumerEnd DESC
             '''
@@ -316,6 +315,7 @@ class EditForm_PrintingOrder(JPFormModelMain):
     def on_butPrint_clicked(self):
         rpt = Order_Printingreport()
         rpt.PrintCurrentReport(self.ui.fOrderID.Value())
+
 
 
 class Order_Printingreport(PrintOrder_report_Mob):

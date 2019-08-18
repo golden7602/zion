@@ -12,6 +12,8 @@ from PyQt5.QtPrintSupport import QPrinter
 from lib.JPPrintReport import JPPrintSectionType, JPReport
 from lib.ZionPublc import JPPub
 from lib.JPMvc.JPFuncForm import JPFunctionForm
+from lib.ZionWidgets.Order import EditForm_Order
+from lib.ZionPublc import JPDb
 
 
 class JPFuncForm_Quotation(JPFunctionForm):
@@ -67,32 +69,73 @@ class JPFuncForm_Quotation(JPFunctionForm):
         self.backgroundWhenValueIsTrueFieldName = ['fSubmited']
         self.checkBox_1.setHidden(True)
         self.checkBox_2.setHidden(True)
-        super().setSQL(sql_1, sql_2)
+        super().setListFormSQL(sql_1, sql_2)
         self.tableView.setColumnHidden(13, True)
+        m_sql = """
+                SELECT fOrderID, fOrderDate, fVendedorID, fRequiredDeliveryDate
+                    , fCustomerID, fContato, fCelular, fTelefone, fAmount, fTax
+                    , fPayable, fDesconto, fNote,fEntryID,fSucursal
+                FROM t_quotation
+                WHERE fOrderID = '{}'
+                """
+        s_sql = """
+                SELECT fID, fOrderID, fQuant AS '数量Qtd',
+                    fProductName AS '名称Descrição',
+                    fLength AS '长Larg.', fWidth AS '宽Comp.',
+                    fPrice AS '单价P. Unitario', fAmount AS '金额Total'
+                FROM t_quotation_detail
+                WHERE fOrderID = '{}'
+                """
+        self.setEditFormSQL(m_sql, s_sql)
 
-    def but_click(self, name):
-        for n, fun in JPFuncForm_Order.__dict__.items():
-            if n.upper() == 'BTN{}CLICKED'.format(name.upper()):
-                fun(self)
-
-    def getCurrentCustomerID(self):
-        index = self.tableView.selectionModel().currentIndex()
-        if index.isValid():
-            return self.model.TabelFieldInfo.getOnlyData([index.row(), 0])
+    def getEditForm(self, sql_main, edit_mode, sql_sub, PKValue):
+        return Edit_Order_Quotation(sql_main=sql_main,
+                                    edit_mode=edit_mode,
+                                    sql_sub=sql_sub,
+                                    PKValue=PKValue)
 
     @pyqtSlot()
-    def on_CMDEXPORTTOEXCEL_clicked(self):
-        print('单击了CMDEXPORTTOEXCEL按钮')
+    def on_CmdOrder_clicked(self):
+        cu_id = self.getCurrentSelectPKValue()
+        newPKSQL = JPDb().NewPkSQL(self.PKRole)
+        sql = [
+            """
+        INSERT INTO t_order (fOrderID, fOrderDate, fVendedorID
+            , fRequiredDeliveryDate, fCustomerID
+            , fContato, fCelular, fTelefone, fAmount, fTax
+            , fPayable, fDesconto, fNote, fEntryID, fSucursal)
+        SELECT '@PK', fOrderDate, fVendedorID
+            , fRequiredDeliveryDate, fCustomerID
+            , fContato, fCelular, fTelefone, fAmount, fTax
+            , fPayable, fDesconto, fNote, fEntryID, fSucursal
+        FROM t_quotation
+        WHERE fOrderID = '{fOrderID}'""".format(cu_id),
+        """
+        INSERT INTO t_order_detail (fOrderID, fQuant, fProductName
+            , fLength, fWidth, fPrice, fAmount)
+        SELECT '@PK', fQuant, fProductName, fLength, fWidth
+            , fPrice, fAmount
+        FROM t_quotation_detail
+        WHERE fOrderID = '{fOrderID}'""".format(cu_id)
+        ]
+        sql = newPKSQL[0:2] + sql + newPKSQL[2:]
+        try:
+            isOK, result = JPDb().executeTransaction(sql)
+            if isOK:
+                info = '已经根据报价单生成了订单【{id}】，请修改此订单信息!\n'
+                info = info + 'The order [{id}] has been generated according '
+                info = info + 'to the quotation. Please modify the order information.'
+                QMessageBox.information(self, info.format(result),
+                                        QMessageBox.Yes, QMessageBox.Yes)
+        except Exception as e:
+            msgBox = QMessageBox(QMessageBox.Critical, u'提示', str(e))
+            msgBox.exec_()
 
-    @pyqtSlot()
-    def on_CMDNEW_clicked(self):
-        print("CMDNEW被下")
-        #showEditForm_Order(self.MainForm, JPFormModelMainSub.New)
 
-    @pyqtSlot()
-    def on_CMDBROWSE_clicked(self):
-        cu_id = self.getCurrentCustomerID()
-        if not cu_id:
-            return
-        #showEditForm_Order(self.MainForm, JPFormModelMainSub.ReadOnly, cu_id)
-        print("CMDBROWSE被下", cu_id)
+class Edit_Order_Quotation(EditForm_Order):
+    def __init__(self, sql_main, sql_sub=None, edit_mode=None, PKValue=None):
+        super().__init__(sql_main,
+                         sql_sub=sql_sub,
+                         edit_mode=edit_mode,
+                         PKValue=PKValue)
+        self.setPkRole(6)

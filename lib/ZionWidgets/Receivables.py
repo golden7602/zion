@@ -4,21 +4,26 @@ jppath.append(getcwd())
 
 from Ui.Ui_FormReceivables import Ui_Form
 from PyQt5.QtWidgets import QDialog, QMessageBox, QWidget
-from PyQt5.QtCore import QDate, QMetaObject, pyqtSlot
+from PyQt5.QtCore import QDate, QMetaObject, pyqtSlot, Qt
 from lib.JPDatabase.Query import JPQueryFieldInfo
 from lib.JPMvc.JPModel import JPTableViewModelReadOnly
 from lib.JPFunction import JPDateConver, findButtonAndSetIcon
+from lib.JPMvc.JPEditFormModel import JPFormModelMain, JPEditFormDataMode
+from Ui.Ui_FormReceivableEdit import Ui_Form as Edit_ui
+from PyQt5.QtGui import QPixmap
+from lib.ZionPublc import JPPub, JPUser
+from lib.JPMvc import JPWidgets
 
 
-class Form_Receivables(Ui_Form):
+class Form_Receivables(QWidget):
     def __init__(self, mainform):
         super().__init__()
-        self.Widget = QWidget()
-        self.setupUi(self.Widget)
-        findButtonAndSetIcon(self.Widget)
-        self.SelectDate.setDate(QDate.currentDate())
-        #QMetaObject.connectSlotsByName(self.Widget)
-        mainform.addForm(self.Widget)
+        self.ui = Ui_Form()
+        self.ui.setupUi(self)
+        findButtonAndSetIcon(self)
+        self.ui.SelectDate.setDate(QDate.currentDate())
+        # QMetaObject.connectSlotsByName(self)
+        mainform.addForm(self)
         self.SQLCustomerArrearsList = """
             select c.fCustomerID,
                 c.fCustomerName as `客户名Cliente`,
@@ -132,7 +137,6 @@ class Form_Receivables(Ui_Form):
             order by 
             fID DESC
         """
-
         self.QinfoCurrentDayRec = JPQueryFieldInfo(
             self.SQLCurrentDayRec.format(dateString='1900-01-01'))
         self.QinfoCustomerRecorder = JPQueryFieldInfo(
@@ -140,17 +144,100 @@ class Form_Receivables(Ui_Form):
         self.QinfoCustomerArrearsList = JPQueryFieldInfo(
             self.SQLCustomerArrearsList.format(CustomerID=-1))
         self.modCurrentDayRec = JPTableViewModelReadOnly(
-            self.tabCurrentDayRec, self.QinfoCurrentDayRec)
+            self.ui.tabCurrentDayRec, self.QinfoCurrentDayRec)
         self.modCustomerRecorder = JPTableViewModelReadOnly(
-            self.tabCustomerRecorder, self.QinfoCustomerRecorder)
+            self.ui.tabCustomerRecorder, self.QinfoCustomerRecorder)
         self.modCustomerArrearsList = JPTableViewModelReadOnly(
-            self.tabCustomerArrearsList, self.QinfoCustomerArrearsList)
-        self.tabCurrentDayRec.setModel(self.modCurrentDayRec)
-        self.tabCustomerRecorder.setModel(self.modCustomerRecorder)
-        self.tabCustomerArrearsList.setModel(self.modCustomerArrearsList)
-
-        self.SelectDate.dateChanged.connect(self.mmm)
+            self.ui.tabCustomerArrearsList, self.QinfoCustomerArrearsList)
+        self.ui.tabCurrentDayRec.setModel(self.modCurrentDayRec)
+        self.ui.tabCustomerRecorder.setModel(self.modCustomerRecorder)
+        self.ui.tabCustomerArrearsList.setModel(self.modCustomerArrearsList)
+        self.ui.SelectDate.dateChanged.connect(self.dateChanged)
 
     @pyqtSlot()
     def on_SelectDate_dateChanged(self, *args):
-        print(args)
+        return
+
+    @pyqtSlot()
+    def on_butRecibido_clicked(self):
+        frm = RecibidoEdit()
+        frm.exec_()
+
+    def dateChanged(self, s_date):
+        print(s_date)
+
+
+class RecibidoEdit(JPFormModelMain):
+    def __init__(self):
+        m_sql = '''select fID,fCustomerID,fPaymentMethodID,
+                fReceiptDate,fAmountCollected,fPayeeID,fNote 
+                from t_receivables
+                where fID='{}'
+                '''
+        super().__init__(Edit_ui(),
+                         sql_main=m_sql,
+                         PKValue=None,
+                         edit_mode=JPEditFormDataMode.New,
+                         flags=Qt.WindowFlags())
+        pix = QPixmap(getcwd() + "\\res\\Zions_100.png")
+        self.ui.label_logo.setPixmap(pix)
+        self.readData()
+
+    def onGetFieldsRowSources(self):
+        pub = JPPub()
+        u_lst = [[item[1], item[0]] for item in JPUser().getAllUserList()]
+        return [('fCustomerID', pub.getCustomerList(), 1),
+                ('fPaymentMethodID', pub.getEnumList(3), 1),
+                ('fPayeeID', u_lst, 1)]
+
+    def onGetPrintReport(self):
+        return  #PrintOrder_report_Mob()
+
+    # def onGetReadOnlyFields(self):
+    #     return [
+    #         'fAmountPayable', 'fAmountPaid', 'fArrears', 'fSucursal',
+    #         'fTelefone', 'fCelular', "fEntryID", "fEndereco", 'fCity', 'fNUIT'
+    #     ]
+    def onGetDisableFields(self):
+        return [
+            'fNUIT', 'fCity', 'fEndereco', 'fCelular', 'fContato', 'fTelefone',
+            'fAmountPayable', 'fAmountPaid','fArrears'
+        ]
+    def onDateChangeEvent(self, obj, value):
+        nm = obj.objectName()
+        if nm == 'fCustomerID':
+            self.__customerIDChanged()
+
+    def __customerIDChanged(self):
+        sql = '''
+            SELECT fNUIT, fCity, fEndereco, fCelular, fContato
+                , fTelefone, Q0.fAmountPayable  , Q1.fAmountPaid,
+                Q0.fAmountPayable-Q1.fAmountPaid as fArrears
+            FROM t_customer c
+                LEFT JOIN (
+                    SELECT fCustomerID, SUM(fPayable) AS fAmountPayable
+                    FROM t_order
+                    WHERE fCustomerID = {CustomerID}
+                        AND fConfirmed = 1
+                ) Q0
+                ON c.fCustomerID = Q0.fCustomerID
+                LEFT JOIN (
+                    SELECT fCustomerID, SUM(fAmountCollected) AS fAmountPaid
+                    FROM t_receivables
+                    WHERE fCustomerID = {CustomerID}
+                ) Q1
+                ON c.fCustomerID = Q1.fCustomerID
+            WHERE c.fCustomerID = {CustomerID}
+        '''
+        sql = sql.format(CustomerID=self.ui.fCustomerID.Value())
+        tab = JPQueryFieldInfo(sql)
+        obj_name = [
+            'fNUIT', 'fCity', 'fEndereco', 'fCelular', 'fContato', 'fTelefone',
+            'fAmountPayable', 'fAmountPaid','fArrears'
+        ]
+        tup = (JPWidgets.QLineEdit, JPWidgets.QDateEdit, JPWidgets.QComboBox,
+               JPWidgets.QTextEdit, JPWidgets.QCheckBox)
+        for i, nm in enumerate(obj_name):
+            obj = self.findChild(tup, nm)
+            if obj:
+                obj.refreshValueNotRaiseEvent(tab.getOnlyData([0, i]), True)

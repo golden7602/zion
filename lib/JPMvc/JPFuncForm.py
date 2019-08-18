@@ -9,13 +9,14 @@ from PyQt5.QtWidgets import (QAbstractItemView, QCheckBox, QComboBox,
                              QHBoxLayout, QLabel, QSizePolicy, QSpacerItem,
                              QTableView, QVBoxLayout, QWidget, QPushButton,
                              QMessageBox)
-from PyQt5.QtCore import QCoreApplication, QSize, Qt, pyqtSlot, QModelIndex,pyqtSignal
+from PyQt5.QtCore import QCoreApplication, QSize, Qt, pyqtSlot, QModelIndex, pyqtSignal
 from lib.JPDatabase.Query import JPQueryFieldInfo
 from lib.JPMvc.JPModel import JPTableViewModelReadOnly
 from lib.JPMvc.JPEditFormModel import JPEditFormDataMode
 from lib.JPFunction import setButtonIcon
 from lib.JPDatabase.Database import JPDb
 from Ui.Ui_FuncFormMob import Ui_Form
+from lib.JPExcel.JPExportToExcel import clsExportToExcelFromJPTabelFieldInfo
 import re
 import abc
 
@@ -94,6 +95,18 @@ class JPFunctionForm(QWidget):
             self.SQL_EditForm_Sub = sql_sub
             self.EditFormSubTableName = self.__getTableNameInfo(sql_sub)
 
+    def setEditFormSQL(self, sql_main, sql_sub):
+        if sql_main:
+            self.SQL_EditForm_Main = sql_main
+            a, b = self.__getTableNameInfo(sql_main)
+            self.EditFormMainTableName = a
+            self.EditFormPrimarykeyFieldName = b
+        else:
+            raise ValueError("必须指定主窗体SQL语句")
+        if sql_sub:
+            self.SQL_EditForm_Sub = sql_sub
+            self.EditFormSubTableName = self.__getTableNameInfo(sql_sub)
+
     def onGetEditFormSQL(self):
         """指定编辑窗体语句，返回两个参数，第一个是主表SQL，第二个是子表SQL，可省略"""
         return None, None
@@ -111,6 +124,8 @@ class JPFunctionForm(QWidget):
                     sql_sub=None,
                     PKValue=None):
         """重载此方法，返回一个编辑窗体对象"""
+        raise ("没有重载getEditForm方法")
+
     def beforeDeleteRow(self, delete_ID):
         '''删除行之前查检用方法，可重载'''
         return True
@@ -134,6 +149,8 @@ class JPFunctionForm(QWidget):
             sql = self.SQL_ListForm_Para.format(
                 ch1=ch1, ch2=ch2, date=cb[self.ui.comboBox.currentIndex()])
             info = JPQueryFieldInfo(sql)
+            self.currentSQL=sql
+            print(sql)
             self.model = self.getModelClass()(self.ui.tableView, info)
             self.ui.tableView.setModel(self.model)
             self.ui.tableView.selectionModel(
@@ -143,7 +160,7 @@ class JPFunctionForm(QWidget):
             if ID:
                 self._locationRow(ID)
 
-    def onCurrentRowChanged(self,QModelIndex1, QModelIndex2):
+    def onCurrentRowChanged(self, QModelIndex1, QModelIndex2):
         """当前行改变事件"""
         return
 
@@ -158,7 +175,6 @@ class JPFunctionForm(QWidget):
         tab = self.model.TabelFieldInfo
         c = self.PrimarykeyFieldIndex
         for r in range(len(tab.DataRows)):
-            print("{}={}".format(tab.getOnlyData([r, c]), id))
             if tab.getOnlyData([r, c]) == id:
                 index = self.model.createIndex(r, c)
                 self.ui.tableView.setCurrentIndex(index)
@@ -166,7 +182,26 @@ class JPFunctionForm(QWidget):
 
     @pyqtSlot()
     def on_CmdExportToExcel_clicked(self):
-        print("父类的 CMDEXPORTTOEXCEL 请重新写")
+        class mycls(clsExportToExcelFromJPTabelFieldInfo):
+            def __init__(self, QueryFieldInfo, MainForm):
+                super().__init__(QueryFieldInfo, MainForm)
+            def getSubQueryFieldInfo(self):
+                sql="""
+                SELECT fQuant AS '数量Qtd',
+                    fProductName AS '名称Descrição',
+                    fLength AS '长Larg.', 
+                    fWidth AS '宽Comp.',
+                    fPrice AS '单价P. Unitario', 
+                    fAmount AS '金额Total'
+                FROM t_order_detail
+                WHERE fOrderID IN (
+                    SELECT 订单号码OrderID FROM ({cur_sql}) Q)"""
+                sql=sql.format(cur_sql=self.currentSQL)
+                tab=JPQueryFieldInfo(sql)
+                return tab
+        e = mycls(self.model.TabelFieldInfo, self.MainForm)
+        e.currentSQL=self.currentSQL
+        e.run()
 
     @pyqtSlot()
     def on_CmdSearch_clicked(self):

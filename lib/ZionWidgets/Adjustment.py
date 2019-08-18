@@ -11,10 +11,10 @@ from PyQt5.QtPrintSupport import QPrinter
 
 from lib.JPPrintReport import JPPrintSectionType, JPReport
 from lib.ZionPublc import JPPub
-from lib.JPMvc.JPFuncForm import JPFunctionForm
+from lib.ZionWidgets.ZionFunc import ZionFuncForm
 
 
-class JPFuncForm_Adjustment(JPFunctionForm):
+class JPFuncForm_Adjustment(ZionFuncForm):
     def __init__(self, MainForm):
         super().__init__(MainForm)
         sql_1 = """
@@ -66,32 +66,32 @@ class JPFuncForm_Adjustment(JPFunctionForm):
         self.checkBox_2.setText('Cancelled')
         self.checkBox_1.setChecked(True)
         self.checkBox_2.setChecked(False)
-        super().setSQL(sql_1, sql_2)
+        self.setListFormSQL(sql_1,sql_2)
         self.tableView.setColumnHidden(13, True)
 
-    def but_click(self, name):
-        for n, fun in JPFuncForm_Complete.__dict__.items():
-            if n.upper() == 'BTN{}CLICKED'.format(name.upper()):
-                fun(self)
+    # def but_click(self, name):
+    #     for n, fun in JPFuncForm_Complete.__dict__.items():
+    #         if n.upper() == 'BTN{}CLICKED'.format(name.upper()):
+    #             fun(self)
 
-    def getCurrentCustomerID(self):
-        index = self.tableView.selectionModel().currentIndex()
-        if index.isValid():
-            return self.model.TabelFieldInfo.getOnlyData([index.row(), 0])
+    # def getCurrentCustomerID(self):
+    #     index = self.tableView.selectionModel().currentIndex()
+    #     if index.isValid():
+    #         return self.model.TabelFieldInfo.getOnlyData([index.row(), 0])
 
-    @pyqtSlot()
-    def on_CMDEXPORTTOEXCEL_clicked(self):
-        print('单击了CMDEXPORTTOEXCEL按钮')
+    # @pyqtSlot()
+    # def on_CMDEXPORTTOEXCEL_clicked(self):
+    #     print('单击了CMDEXPORTTOEXCEL按钮')
 
-    @pyqtSlot()
-    def on_CMDNEW_clicked(self):
-        print("CMDNEW被下")
-        #showEditForm_Order(self.MainForm, JPFormModelMainSub.New)
+    # @pyqtSlot()
+    # def on_CMDNEW_clicked(self):
+    #     print("CMDNEW被下")
+    #     #showEditForm_Order(self.MainForm, JPFormModelMainSub.New)
 
-    @pyqtSlot()
-    def on_CMDBROWSE_clicked(self):
-        cu_id = self.getCurrentCustomerID()
-        if not cu_id:
-            return
-        #showEditForm_Order(self.MainForm, JPFormModelMainSub.ReadOnly, cu_id)
-        print("CMDBROWSE被下", cu_id)
+    # @pyqtSlot()
+    # def on_CMDBROWSE_clicked(self):
+    #     cu_id = self.getCurrentCustomerID()
+    #     if not cu_id:
+    #         return
+    #     #showEditForm_Order(self.MainForm, JPFormModelMainSub.ReadOnly, cu_id)
+    #     print("CMDBROWSE被下", cu_id)
