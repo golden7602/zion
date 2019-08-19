@@ -159,7 +159,7 @@ class JPFormModelMain(QDialog):
         temp = self.onGetFieldsRowSources()
         if isinstance(temp, (list, tuple)):
             for item in temp:
-                tf.onGetFieldsRowSource(*item)
+                tf.setFieldsRowSource(*item)
         fld_dict = tf.getRowFieldsInfoDict(0)
         if fld_dict:
             for k, v in self.ObjectDict.items():
@@ -412,7 +412,7 @@ class JPFormModelMainHasSub(JPFormModelMain):
         self.__columnsRowSources = self.onGetColumnRowSources()
         for field_key, data, bind_col in self.__columnsRowSources:
             smd.TabelFieldInfo.Fields[field_key].BindingColumn = bind_col
-            smd.TabelFieldInfo.onGetFieldsRowSource(field_key, data)
+            smd.TabelFieldInfo.setFieldsRowSource(field_key, data)
         # 设置字段计算公式
         for i, f in self.onGetColumnFormulas():
             smd.TabelFieldInfo.Fields[i].Formula = f

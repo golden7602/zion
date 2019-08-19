@@ -149,7 +149,7 @@ class JPFunctionForm(QWidget):
             sql = self.SQL_ListForm_Para.format(
                 ch1=ch1, ch2=ch2, date=cb[self.ui.comboBox.currentIndex()])
             info = JPQueryFieldInfo(sql)
-            self.currentSQL=sql
+            self.currentSQL = sql
             print(sql)
             self.model = self.getModelClass()(self.ui.tableView, info)
             self.ui.tableView.setModel(self.model)
@@ -170,6 +170,11 @@ class JPFunctionForm(QWidget):
             return self.model.TabelFieldInfo.getOnlyData(
                 [index.row(), self.PrimarykeyFieldIndex])
 
+    def getCurrentColumnValue(self, col):
+        index = self.tableView.selectionModel().currentIndex()
+        if index.isValid():
+            return self.model.TabelFieldInfo.getOnlyData([index.row(), col])
+
     # 定位到某一行
     def _locationRow(self, id):
         tab = self.model.TabelFieldInfo
@@ -185,8 +190,9 @@ class JPFunctionForm(QWidget):
         class mycls(clsExportToExcelFromJPTabelFieldInfo):
             def __init__(self, QueryFieldInfo, MainForm):
                 super().__init__(QueryFieldInfo, MainForm)
+
             def getSubQueryFieldInfo(self):
-                sql="""
+                sql = """
                 SELECT fQuant AS '数量Qtd',
                     fProductName AS '名称Descrição',
                     fLength AS '长Larg.', 
@@ -196,11 +202,12 @@ class JPFunctionForm(QWidget):
                 FROM t_order_detail
                 WHERE fOrderID IN (
                     SELECT 订单号码OrderID FROM ({cur_sql}) Q)"""
-                sql=sql.format(cur_sql=self.currentSQL)
-                tab=JPQueryFieldInfo(sql)
+                sql = sql.format(cur_sql=self.currentSQL)
+                tab = JPQueryFieldInfo(sql)
                 return tab
+
         e = mycls(self.model.TabelFieldInfo, self.MainForm)
-        e.currentSQL=self.currentSQL
+        e.currentSQL = self.currentSQL
         e.run()
 
     @pyqtSlot()

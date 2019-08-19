@@ -4,7 +4,7 @@ jppath.append(getcwd())
 
 from Ui.Ui_FormReceivables import Ui_Form
 from PyQt5.QtWidgets import QDialog, QMessageBox, QWidget
-from PyQt5.QtCore import QDate, QMetaObject, pyqtSlot, Qt
+from PyQt5.QtCore import QDate, QMetaObject, pyqtSlot, Qt, QModelIndex
 from lib.JPDatabase.Query import JPQueryFieldInfo
 from lib.JPMvc.JPModel import JPTableViewModelReadOnly
 from lib.JPFunction import JPDateConver, findButtonAndSetIcon
@@ -21,8 +21,6 @@ class Form_Receivables(QWidget):
         self.ui = Ui_Form()
         self.ui.setupUi(self)
         findButtonAndSetIcon(self)
-        self.ui.SelectDate.setDate(QDate.currentDate())
-        # QMetaObject.connectSlotsByName(self)
         mainform.addForm(self)
         self.SQLCustomerArrearsList = """
             select c.fCustomerID,
@@ -137,22 +135,9 @@ class Form_Receivables(QWidget):
             order by 
             fID DESC
         """
-        self.QinfoCurrentDayRec = JPQueryFieldInfo(
-            self.SQLCurrentDayRec.format(dateString='1900-01-01'))
-        self.QinfoCustomerRecorder = JPQueryFieldInfo(
-            self.SQLCustomerRecorder.format(CustomerID=-1))
-        self.QinfoCustomerArrearsList = JPQueryFieldInfo(
-            self.SQLCustomerArrearsList.format(CustomerID=-1))
-        self.modCurrentDayRec = JPTableViewModelReadOnly(
-            self.ui.tabCurrentDayRec, self.QinfoCurrentDayRec)
-        self.modCustomerRecorder = JPTableViewModelReadOnly(
-            self.ui.tabCustomerRecorder, self.QinfoCustomerRecorder)
-        self.modCustomerArrearsList = JPTableViewModelReadOnly(
-            self.ui.tabCustomerArrearsList, self.QinfoCustomerArrearsList)
-        self.ui.tabCurrentDayRec.setModel(self.modCurrentDayRec)
-        self.ui.tabCustomerRecorder.setModel(self.modCustomerRecorder)
-        self.ui.tabCustomerArrearsList.setModel(self.modCustomerArrearsList)
         self.ui.SelectDate.dateChanged.connect(self.dateChanged)
+        self.ui.SelectDate.setDate(QDate.currentDate())
+        self.currentCustomerChanged()
 
     @pyqtSlot()
     def on_SelectDate_dateChanged(self, *args):
@@ -161,10 +146,38 @@ class Form_Receivables(QWidget):
     @pyqtSlot()
     def on_butRecibido_clicked(self):
         frm = RecibidoEdit()
+        frm.ListForm = self
         frm.exec_()
 
     def dateChanged(self, s_date):
-        print(s_date)
+        str_date = JPDateConver(self.ui.SelectDate.date(), str)
+        self.QinfoCurrentDayRec = JPQueryFieldInfo(
+            self.SQLCurrentDayRec.format(dateString=str_date))
+        self.modCurrentDayRec = JPTableViewModelReadOnly(
+            self.ui.tabCurrentDayRec, self.QinfoCurrentDayRec)
+        self.ui.tabCurrentDayRec.setModel(self.modCurrentDayRec)
+        self.ui.tabCurrentDayRec.selectionModel(
+        ).currentRowChanged[QModelIndex, QModelIndex].connect(
+            self.currentCustomerChanged)
+        self.currentCustomerChanged()
+
+    def currentCustomerChanged(self):
+        id = -1
+        index = self.ui.tabCurrentDayRec.selectionModel().currentIndex()
+        if index.isValid():
+            id = self.modCurrentDayRec.TabelFieldInfo.getOnlyData(
+                [index.row(), 1])
+        self.QinfoCustomerRecorder = JPQueryFieldInfo(
+            self.SQLCustomerRecorder.format(CustomerID=id))
+        self.QinfoCustomerArrearsList = JPQueryFieldInfo(
+            self.SQLCustomerArrearsList.format(CustomerID=id))
+        self.modCustomerRecorder = JPTableViewModelReadOnly(
+            self.ui.tabCustomerRecorder, self.QinfoCustomerRecorder)
+        self.modCustomerArrearsList = JPTableViewModelReadOnly(
+            self.ui.tabCustomerArrearsList, self.QinfoCustomerArrearsList)
+        self.ui.tabCurrentDayRec.setModel(self.modCurrentDayRec)
+        self.ui.tabCustomerRecorder.setModel(self.modCustomerRecorder)
+        self.ui.tabCustomerArrearsList.setModel(self.modCustomerArrearsList)
 
 
 class RecibidoEdit(JPFormModelMain):
@@ -181,6 +194,7 @@ class RecibidoEdit(JPFormModelMain):
                          flags=Qt.WindowFlags())
         pix = QPixmap(getcwd() + "\\res\\Zions_100.png")
         self.ui.label_logo.setPixmap(pix)
+        self.ui.fID.hide()
         self.readData()
 
     def onGetFieldsRowSources(self):
@@ -201,8 +215,9 @@ class RecibidoEdit(JPFormModelMain):
     def onGetDisableFields(self):
         return [
             'fNUIT', 'fCity', 'fEndereco', 'fCelular', 'fContato', 'fTelefone',
-            'fAmountPayable', 'fAmountPaid','fArrears'
+            'fAmountPayable', 'fAmountPaid', 'fArrears'
         ]
+
     def onDateChangeEvent(self, obj, value):
         nm = obj.objectName()
         if nm == 'fCustomerID':
@@ -212,7 +227,7 @@ class RecibidoEdit(JPFormModelMain):
         sql = '''
             SELECT fNUIT, fCity, fEndereco, fCelular, fContato
                 , fTelefone, Q0.fAmountPayable  , Q1.fAmountPaid,
-                Q0.fAmountPayable-Q1.fAmountPaid as fArrears
+                Q0.fAmountPayable-Q1.fAmountPaid as fArrears,-1 as fPaymentMethodID
             FROM t_customer c
                 LEFT JOIN (
                     SELECT fCustomerID, SUM(fPayable) AS fAmountPayable
@@ -233,11 +248,21 @@ class RecibidoEdit(JPFormModelMain):
         tab = JPQueryFieldInfo(sql)
         obj_name = [
             'fNUIT', 'fCity', 'fEndereco', 'fCelular', 'fContato', 'fTelefone',
-            'fAmountPayable', 'fAmountPaid','fArrears'
+            'fAmountPayable', 'fAmountPaid', 'fArrears'
         ]
         tup = (JPWidgets.QLineEdit, JPWidgets.QDateEdit, JPWidgets.QComboBox,
                JPWidgets.QTextEdit, JPWidgets.QCheckBox)
+        fld_dict = tab.getRowFieldsInfoDict(0)
         for i, nm in enumerate(obj_name):
             obj = self.findChild(tup, nm)
             if obj:
+                obj.setRowsData(tab.DataRows[0])
+                obj.setMainModel(self)
+                obj.setFieldInfo(fld_dict[nm])
                 obj.refreshValueNotRaiseEvent(tab.getOnlyData([0, i]), True)
+
+    def afterSaveDate(self, data):
+        self.ui.butSave.setEnabled(False)
+        self.ui.butPrint.setEnabled(False)
+        self.ui.butPDF.setEnabled(False)
+        self.ListForm.dateChanged()

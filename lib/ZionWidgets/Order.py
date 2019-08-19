@@ -58,7 +58,7 @@ class JPFuncForm_Order(JPFunctionForm):
         super().setListFormSQL(sql_1, sql_2)
         self.tableView.setColumnHidden(13, True)
         self.fSubmited_column = 13
-        
+
         m_sql = """
                 SELECT fOrderID, fOrderDate, fVendedorID, fRequiredDeliveryDate
                     , fCustomerID, fContato, fCelular, fTelefone, fAmount, fTax
@@ -74,7 +74,7 @@ class JPFuncForm_Order(JPFunctionForm):
                 FROM t_order_detail
                 WHERE fOrderID = '{}'
                 """
-        self.setEditFormSQL(m_sql,s_sql)
+        self.setEditFormSQL(m_sql, s_sql)
 
     def getEditForm(self, sql_main, edit_mode, sql_sub, PKValue):
         return EditForm_Order(sql_main=sql_main,
@@ -189,7 +189,6 @@ class EditForm_Order(JPFormModelMainHasSub):
 
     def onGetDisableFields(self):
         return ['fOrderID', 'fCity', 'fNUIT', "fEntryID", 'fEndereco']
-
 
     def onDateChangeEvent(self, obj, value):
 

@@ -551,7 +551,7 @@
       </widget>
      </item>
      <item row="4" column="2">
-      <widget class="QComboBox" name="fPaymentMethod"/>
+      <widget class="QComboBox" name="fPaymentMethodID"/>
      </item>
      <item row="3" column="3">
       <widget class="QLabel" name="label_14">
@@ -618,28 +618,6 @@
      </item>
      <item row="0" column="2">
       <widget class="QComboBox" name="fCustomerID"/>
-     </item>
-     <item row="2" column="0">
-      <widget class="QLabel" name="label_11">
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="sizeIncrement">
-        <size>
-         <width>0</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>联系人Contato:</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
      </item>
      <item row="3" column="6">
       <widget class="QLineEdit" name="fArrears">
@@ -797,9 +775,6 @@
         <bool>true</bool>
        </property>
       </widget>
-     </item>
-     <item row="2" column="2">
-      <widget class="QComboBox" name="fEntryID"/>
      </item>
     </layout>
    </item>

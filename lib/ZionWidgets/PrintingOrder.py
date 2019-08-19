@@ -79,7 +79,7 @@ class JPFuncForm_PrintingOrder(JPFunctionForm):
                 FROM t_order
                 WHERE fOrderID = '{}'
                 """
-        self.setEditFormSQL(m_sql,None) 
+        self.setEditFormSQL(m_sql, None)
 
     def getEditForm(self, sql_main, edit_mode, sql_sub, PKValue):
         return EditForm_PrintingOrder(sql_main=sql_main,
@@ -194,7 +194,7 @@ class EditForm_PrintingOrder(JPFormModelMain):
         ]
 
     def afterSaveDate(self, data):
-        self.ui.fOrderID.refreshValueNotRaiseEvent(data,True)
+        self.ui.fOrderID.refreshValueNotRaiseEvent(data, True)
 
     def __customerIDChanged(self):
         sql = '''select fCelular, fContato, fTelefone 
@@ -315,7 +315,6 @@ class EditForm_PrintingOrder(JPFormModelMain):
     def on_butPrint_clicked(self):
         rpt = Order_Printingreport()
         rpt.PrintCurrentReport(self.ui.fOrderID.Value())
-
 
 
 class Order_Printingreport(PrintOrder_report_Mob):

@@ -219,6 +219,12 @@
              <height>500</height>
             </size>
            </property>
+           <property name="selectionMode">
+            <enum>QAbstractItemView::SingleSelection</enum>
+           </property>
+           <property name="selectionBehavior">
+            <enum>QAbstractItemView::SelectRows</enum>
+           </property>
            <attribute name="verticalHeaderDefaultSectionSize">
             <number>25</number>
            </attribute>
@@ -297,6 +303,12 @@
                <height>0</height>
               </size>
              </property>
+             <property name="selectionMode">
+              <enum>QAbstractItemView::SingleSelection</enum>
+             </property>
+             <property name="selectionBehavior">
+              <enum>QAbstractItemView::SelectRows</enum>
+             </property>
              <attribute name="verticalHeaderDefaultSectionSize">
               <number>25</number>
              </attribute>
@@ -335,6 +347,12 @@
                <width>100</width>
                <height>0</height>
               </size>
+             </property>
+             <property name="selectionMode">
+              <enum>QAbstractItemView::SingleSelection</enum>
+             </property>
+             <property name="selectionBehavior">
+              <enum>QAbstractItemView::SelectRows</enum>
              </property>
              <attribute name="verticalHeaderDefaultSectionSize">
               <number>25</number>

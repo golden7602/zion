@@ -198,7 +198,7 @@ class PrintOrder_report_Mob(JPReport):
                    115,
                    160,
                    20,
-                   "fSucursal",
+                   "fSucursal1",
                    Font=self.font_YaHei_8,
                    AlignmentFlag=Qt.AlignLeft,
                    FormatString="Sucursal:{}")
@@ -515,16 +515,25 @@ class PrintOrder_report_Mob(JPReport):
                    Font=self.font_YaHei_8)
         RF.AddItem(1, 540, 125, 100, 0, '')
         RF.AddItem(1,
-                   0,
+                   10,
                    140,
-                   100,
+                   180,
                    20,
-                   '销售Vendedor:',
+                   '客户签名Assinatura do cliente:',
                    Bolder=False,
-                   AlignmentFlag=Qt.AlignRight,
+                   AlignmentFlag=Qt.AlignLeft,
                    Font=self.font_YaHei_8)
-
-        RF.AddItem(1, 100, 155, 100, 0, '')
+        RF.AddItem(1, 170, 155, 100, 0, '')
+        RF.AddItem(1,
+                   390,
+                   140,
+                   180,
+                   20,
+                   '联系电话Número de contato:',
+                   Bolder=False,
+                   AlignmentFlag=Qt.AlignLeft,
+                   Font=self.font_YaHei_8)
+        RF.AddItem(1, 540, 155, 100, 0, '')
         self.PageFooter.AddItem(4,
                                 10,
                                 0,
@@ -547,10 +556,7 @@ class PrintOrder_report_Mob(JPReport):
                                 Font=self.font_YaHei_8)
 
     def init_data(self, OrderID: str):
-        SQL = "select o.*, d.fQuant,d.fProductName,d.fLength,d.fWidth,\
-            d.fPrice,d.fAmount as fAmountDetail from  v_order as o right join t_order_detail \
-                    as d on o.fOrderID=d.fOrderID  where d.fOrderID='{}'"
-
+        SQL = "SELECT o.* FROM v_order o  WHERE o.fOrderID ='{}'"
         db = JPDb()
         data = db.getDict(SQL.format(OrderID))
         data.sort(key=lambda x: (x['fCustomerName'], x['fCity'], x['fAmount']

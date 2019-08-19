@@ -5,7 +5,8 @@ from sys import path as jppath, argv, exit as sys_exit
 jppath.append(getcwd())
 
 from PyQt5.QtWidgets import (QApplication, QHBoxLayout, QMainWindow,
-                             QTreeWidgetItem, QWidget, QPushButton,QLabel,QProgressBar)
+                             QTreeWidgetItem, QWidget, QPushButton, QLabel,
+                             QProgressBar)
 from PyQt5.QtGui import QIcon, QPixmap
 from lib.ZionPublc import JPPub, JPUser
 from Ui import Ui_mainform
@@ -127,7 +128,7 @@ class JPMainWindow(QMainWindow):
         elif self.menu_id == 9:
             from lib.ZionWidgets.Payment import JPFuncForm_Payment
             JPFuncForm_Payment(self)
-        elif self.menu_id == 22:
+        elif self.menu_id == 22: # 
             from lib.ZionReport.Report_Day import Form_Repoet_Day
             Form_Repoet_Day(self)
         elif self.menu_id == 10:
@@ -163,7 +164,6 @@ class JPMainWindow(QMainWindow):
             Form_Background(self)
 
         return
- 
 
 
 if __name__ == "__main__":

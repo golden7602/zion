@@ -10,9 +10,10 @@ from PyQt5.QtWidgets import QDialog, QMessageBox, QWidget
 from PyQt5.QtPrintSupport import QPrinter
 
 from lib.JPPrintReport import JPPrintSectionType, JPReport
-from lib.ZionPublc import JPPub
+from lib.ZionPublc import JPPub, JPDb
 from lib.JPMvc.JPFuncForm import JPFunctionForm
 from lib.ZionWidgets.PrintingOrder import EditForm_PrintingOrder
+from lib.ZionReport.PrintingOrderReportMob import PrintOrder_report_Mob
 
 
 class JPFuncForm_PrintingQuotation(JPFunctionForm):
@@ -131,11 +132,27 @@ class Edit_PrintingQuotation(EditForm_PrintingOrder):
                          PKValue=PKValue)
         self.setPkRole(4)
 
+    @pyqtSlot()
+    def on_butPrint_clicked(self):
+        rpt = Order_Printingreport()
+        rpt.PrintCurrentReport(self.ui.fOrderID.Value())
 
-# SELECT fOrderID, fEndereco, fCelular, fRequiredDeliveryDate, fContato
-# 	, fTelefone, fVendedorID, fCustomerID, fOrderDate, fNUIT
-# 	, fCity, fSucursal, fQuant, fNumerBegin, fNumerEnd
-# 	, fPrice, fLogo, fEspecie, fAvista, fTamanho
-# 	, fNrCopy, fPagePerVolumn, fNote, fAmount, fDesconto
-# 	, fTax, fPayable
-# FROM t_order
+
+class Order_Printingreport(PrintOrder_report_Mob):
+    def __init__(self):
+        super().__init__()
+
+    def onFormat(self, SectionType, CurrentPage, RowDate=None):
+        if (SectionType == JPPrintSectionType.PageHeader and CurrentPage == 1):
+            return True
+
+    def PrintCurrentReport(self, OrderID: str):
+        self.init_data(OrderID)
+        self.init_ReportHeader_title(
+            title1="Cotação", title2="(ESTE DOCUMENTO É DO USO INTERNO)")
+        self.init_ReportHeader()
+        self.init_ReportHeader_Individualization()
+        self.init_PageHeader()
+        self.init_Detail()
+        self.init_ReportFooter()
+        super().BeginPrint()

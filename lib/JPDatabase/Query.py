@@ -162,8 +162,8 @@ class JPQueryFieldInfo(object):
         fld = deepcopy(self.Fields[c])
         fld.value = self.DataRows[r][0][c]
 
-    def onGetFieldsRowSource(self, key, data: list, binding_column: int = 1):
-        '''onGetFieldsRowSource(key, data:list)\n
+    def setFieldsRowSource(self, key, data: list, binding_column: int = 1):
+        '''setFieldsRowSource(key, data:list)\n
             key可以是序号或字段名
         '''
         if isinstance(key, str):

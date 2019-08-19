@@ -2,7 +2,6 @@ from os import getcwd
 from sys import path as jppath
 jppath.append(getcwd())
 
-
 from PyQt5.QtPrintSupport import QPrinter
 from lib.JPPrintReport import JPPrintSectionType, JPReport
 from PyQt5.QtGui import QColor, QFont, QPainter, QPixmap
@@ -126,7 +125,7 @@ class Order_report_Mob(JPReport):
                    20,
                    "fCustomerName",
                    Font=self.font_YaHei_8,
-                   AlignmentFlag=Qt.AlignLeft|Qt.AlignVCenter)
+                   AlignmentFlag=Qt.AlignLeft | Qt.AlignVCenter)
         RH.AddItem(1,
                    400,
                    75,
@@ -142,7 +141,7 @@ class Order_report_Mob(JPReport):
                    20,
                    "fVendedor",
                    Font=self.font_YaHei_8,
-                   AlignmentFlag=Qt.AlignLeft|Qt.AlignVCenter)
+                   AlignmentFlag=Qt.AlignLeft | Qt.AlignVCenter)
         # 第3行
         RH.AddItem(1,
                    0,
@@ -159,7 +158,7 @@ class Order_report_Mob(JPReport):
                    20,
                    "fNUIT",
                    Font=self.font_YaHei_8,
-                   AlignmentFlag=Qt.AlignLeft|Qt.AlignVCenter)
+                   AlignmentFlag=Qt.AlignLeft | Qt.AlignVCenter)
         RH.AddItem(1,
                    400,
                    95,
@@ -175,7 +174,7 @@ class Order_report_Mob(JPReport):
                    20,
                    "fCity",
                    Font=self.font_YaHei_8,
-                   AlignmentFlag=Qt.AlignLeft|Qt.AlignVCenter)
+                   AlignmentFlag=Qt.AlignLeft | Qt.AlignVCenter)
         # 第4行
         RH.AddItem(1,
                    0,
@@ -192,7 +191,7 @@ class Order_report_Mob(JPReport):
                    20,
                    "fEndereco",
                    Font=self.font_YaHei_8,
-                   AlignmentFlag=Qt.AlignLeft|Qt.AlignVCenter)
+                   AlignmentFlag=Qt.AlignLeft | Qt.AlignVCenter)
         RH.AddItem(3,
                    490,
                    115,
@@ -218,7 +217,7 @@ class Order_report_Mob(JPReport):
                    20,
                    "fContato",
                    Font=self.font_YaHei_8,
-                   AlignmentFlag=Qt.AlignLeft|Qt.AlignVCenter)
+                   AlignmentFlag=Qt.AlignLeft | Qt.AlignVCenter)
         RH.AddItem(1,
                    180,
                    135,
@@ -234,7 +233,7 @@ class Order_report_Mob(JPReport):
                    20,
                    "fCelular",
                    Font=self.font_YaHei_8,
-                   AlignmentFlag=Qt.AlignLeft|Qt.AlignVCenter)
+                   AlignmentFlag=Qt.AlignLeft | Qt.AlignVCenter)
         RH.AddItem(1,
                    400,
                    135,
@@ -250,7 +249,7 @@ class Order_report_Mob(JPReport):
                    20,
                    "fTelefone",
                    Font=self.font_YaHei_8,
-                   AlignmentFlag=Qt.AlignLeft|Qt.AlignVCenter)
+                   AlignmentFlag=Qt.AlignLeft | Qt.AlignVCenter)
         # 联次信息
         tempItem = RH.AddItem(1,
                               655,
@@ -472,17 +471,16 @@ class Order_report_Mob(JPReport):
                    FormatString='{:,.2f}',
                    AlignmentFlag=Qt.AlignRight,
                    Font=self.font_YaHei_8)
-        RF.AddItem(
-            3,
-            0,
-            0,
-            390,
-            100,
-            "fNote",
-            FormatString='Note:Esta cotação é válida por 7 dias.\n{}',
-            Bolder=False,
-            AlignmentFlag=(Qt.AlignLeft | Qt.TextWordWrap),
-            Font=self.font_YaHei_8)
+        RF.AddItem(3,
+                   0,
+                   0,
+                   390,
+                   100,
+                   "fNote",
+                   FormatString='Note:Esta cotação é válida por 7 dias.\n{}',
+                   Bolder=False,
+                   AlignmentFlag=(Qt.AlignLeft | Qt.TextWordWrap),
+                   Font=self.font_YaHei_8)
         # 签字部分
         RF.AddItem(1,
                    0,
@@ -565,10 +563,3 @@ class Order_report_Mob(JPReport):
         data.sort(key=lambda x: (x['fCustomerName'], x['fCity'], x['fAmount']
                                  is None, x['fAmount']))
         self.DataSource = data
-
-
-
-
-
-
-

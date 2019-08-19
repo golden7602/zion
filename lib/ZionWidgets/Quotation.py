@@ -14,6 +14,7 @@ from lib.ZionPublc import JPPub
 from lib.JPMvc.JPFuncForm import JPFunctionForm
 from lib.ZionWidgets.Order import EditForm_Order
 from lib.ZionPublc import JPDb
+from lib.ZionReport.OrderReportMob import Order_report_Mob
 
 
 class JPFuncForm_Quotation(JPFunctionForm):
@@ -109,8 +110,7 @@ class JPFuncForm_Quotation(JPFunctionForm):
             , fContato, fCelular, fTelefone, fAmount, fTax
             , fPayable, fDesconto, fNote, fEntryID, fSucursal
         FROM t_quotation
-        WHERE fOrderID = '{fOrderID}'""".format(cu_id),
-        """
+        WHERE fOrderID = '{fOrderID}'""".format(cu_id), """
         INSERT INTO t_order_detail (fOrderID, fQuant, fProductName
             , fLength, fWidth, fPrice, fAmount)
         SELECT '@PK', fQuant, fProductName, fLength, fWidth
@@ -139,3 +139,28 @@ class Edit_Order_Quotation(EditForm_Order):
                          edit_mode=edit_mode,
                          PKValue=PKValue)
         self.setPkRole(6)
+
+    @pyqtSlot()
+    def on_butPrint_clicked(self):
+        rpt = Order_report()
+        rpt.PrintCurrentReport(self.ui.fOrderID.Value())
+
+
+class Order_report(Order_report_Mob):
+    def __init__(self):
+        super().__init__()
+
+    def onFormat(self, SectionType, CurrentPage, RowDate=None):
+        if (SectionType == JPPrintSectionType.PageHeader and CurrentPage == 1):
+            return True
+
+    def PrintCurrentReport(self, OrderID: str):
+        self.init_data(OrderID)
+        self.init_ReportHeader_title(
+            title1="Cotação", title2="(ESTE DOCUMENTO É DO USO INTERNO)")
+        self.init_ReportHeader()
+        self.init_ReportHeader_Individualization()
+        self.init_PageHeader()
+        self.init_Detail()
+        self.init_ReportFooter()
+        super().BeginPrint()

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'c:\Users\win10\Desktop\Zion\zion\Ui\FormReceivableEdit.ui'
+# Form implementation generated from reading ui file 'e:\Zion\Ui\FormReceivableEdit.ui'
 #
 # Created by: PyQt5 UI code generator 5.11.3
 #
@@ -11,6 +11,7 @@ from sys import path as jppath
 jppath.append(getcwd())
 from PyQt5 import QtCore, QtGui
 from lib.JPMvc import JPWidgets as QtWidgets
+
 
 class Ui_Form(object):
     def setupUi(self, Form):
@@ -188,9 +189,9 @@ class Ui_Form(object):
         self.fCity.setClearButtonEnabled(True)
         self.fCity.setObjectName("fCity")
         self.gridLayout.addWidget(self.fCity, 0, 6, 1, 1)
-        self.fPaymentMethod = QtWidgets.QComboBox(Form)
-        self.fPaymentMethod.setObjectName("fPaymentMethod")
-        self.gridLayout.addWidget(self.fPaymentMethod, 4, 2, 1, 1)
+        self.fPaymentMethodID = QtWidgets.QComboBox(Form)
+        self.fPaymentMethodID.setObjectName("fPaymentMethodID")
+        self.gridLayout.addWidget(self.fPaymentMethodID, 4, 2, 1, 1)
         self.label_14 = QtWidgets.QLabel(Form)
         self.label_14.setMinimumSize(QtCore.QSize(0, 25))
         self.label_14.setSizeIncrement(QtCore.QSize(0, 25))
@@ -212,12 +213,6 @@ class Ui_Form(object):
         self.fCustomerID = QtWidgets.QComboBox(Form)
         self.fCustomerID.setObjectName("fCustomerID")
         self.gridLayout.addWidget(self.fCustomerID, 0, 2, 1, 1)
-        self.label_11 = QtWidgets.QLabel(Form)
-        self.label_11.setMinimumSize(QtCore.QSize(0, 25))
-        self.label_11.setSizeIncrement(QtCore.QSize(0, 25))
-        self.label_11.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
-        self.label_11.setObjectName("label_11")
-        self.gridLayout.addWidget(self.label_11, 2, 0, 1, 1)
         self.fArrears = QtWidgets.QLineEdit(Form)
         self.fArrears.setMinimumSize(QtCore.QSize(0, 25))
         self.fArrears.setSizeIncrement(QtCore.QSize(0, 25))
@@ -270,9 +265,6 @@ class Ui_Form(object):
         self.fNUIT.setReadOnly(True)
         self.fNUIT.setObjectName("fNUIT")
         self.gridLayout.addWidget(self.fNUIT, 0, 4, 1, 1)
-        self.fEntryID = QtWidgets.QComboBox(Form)
-        self.fEntryID.setObjectName("fEntryID")
-        self.gridLayout.addWidget(self.fEntryID, 2, 2, 1, 1)
         self.verticalLayout_2.addLayout(self.gridLayout)
         self.verticalLayout = QtWidgets.QVBoxLayout()
         self.verticalLayout.setContentsMargins(-1, 10, -1, 10)
@@ -338,7 +330,6 @@ class Ui_Form(object):
         self.label_15.setText(_translate("Form", "欠款金额Arrears:"))
         self.label_14.setText(_translate("Form", "已付金额Amount Paid:"))
         self.label_7.setText(_translate("Form", "税号NUIT:"))
-        self.label_11.setText(_translate("Form", "联系人Contato:"))
         self.label_20.setText(_translate("Form", "金额Amount:"))
         self.label_10.setText(_translate("Form", "手机Celular:"))
         self.label_8.setText(_translate("Form", "城市City:"))
@@ -357,4 +348,3 @@ if __name__ == "__main__":
     ui.setupUi(Form)
     Form.show()
     sys.exit(app.exec_())
-
