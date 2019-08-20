@@ -220,7 +220,7 @@ class EditForm_Order(JPFormModelMainHasSub):
         fPayable = fAmount + fTax - fDesconto
         self.ui.fPayable.refreshValueNotRaiseEvent(fPayable, True)
 
-    def afterSaveDate(self, data):
+    def afterSaveData(self, data):
         self.ui.fOrderID.refreshValueNotRaiseEvent(data, True)
 
     def AfterSetDataBeforeInsterRowEvent(self, row_data, Index):

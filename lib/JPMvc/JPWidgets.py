@@ -96,6 +96,7 @@ class __JPWidgetBase(QObject):
     @abc.abstractmethod
     def getSqlValue(self):
         """返回字段值，可直接用于SQL语句中"""
+
     @abc.abstractmethod
     def setFieldInfo(self, fld: JPFieldType = None, raiseEvent=True):
         pass
@@ -120,14 +121,18 @@ class __JPWidgetBase(QObject):
 class QLineEdit(QLineEdit_, __JPWidgetBase):
     def __init__(self, parent):
         super().__init__(parent)
+        self.passWordConver = None
         self.textChanged[str].connect(self.refreshValueNotRaiseEvent)
 
     def getSqlValue(self) -> str:
         t = self.text()
+        if self.passWordConver:
+            return "'{}'".format(self.passWordConver(t))
         if t is None or len(t) == 0:
             return self.getNullValue()
-        else:
+        if self.FieldInfo.TypeCode in (JPFieldType.Int,JPFieldType.Float):
             return "'{}'".format(t.replace(',', ''))
+        return t
 
     def refreshValueNotRaiseEvent(self, v, changeDisplayText: bool = False):
         try:
@@ -197,12 +202,12 @@ class QLineEdit(QLineEdit_, __JPWidgetBase):
         try:
             if self.FieldInfo.TypeCode in (JPFieldType.Int, JPFieldType.Float):
                 t = self.text()
-                self.textChanged[str].disconnect(self.refreshValueNotRaiseEvent)
+                self.textChanged[str].disconnect(
+                    self.refreshValueNotRaiseEvent)
                 self.setText(t.replace(',', ''))
                 self.textChanged[str].connect(self.refreshValueNotRaiseEvent)
         finally:
             QLineEdit_.focusInEvent(self, e)
-
 
     def focusOutEvent(self, e):
         self.__setDisplayText()
@@ -364,7 +369,7 @@ class QCheckBox(QCheckBox_, __JPWidgetBase):
     def getSqlValue(self) -> str:
         if self.checkState() is None:
             return self.getNullValue()
-        return '1' if self.checkState() is True else '0'
+        return '1' if self.checkState()==2 else '0'
 
     def _onValueChange(self):
         self.FieldInfo.Value = self.checkState()

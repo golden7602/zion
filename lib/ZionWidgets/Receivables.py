@@ -261,7 +261,7 @@ class RecibidoEdit(JPFormModelMain):
                 obj.setFieldInfo(fld_dict[nm])
                 obj.refreshValueNotRaiseEvent(tab.getOnlyData([0, i]), True)
 
-    def afterSaveDate(self, data):
+    def afterSaveData(self, data):
         self.ui.butSave.setEnabled(False)
         self.ui.butPrint.setEnabled(False)
         self.ui.butPDF.setEnabled(False)

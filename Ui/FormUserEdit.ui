@@ -226,7 +226,7 @@
       </widget>
      </item>
      <item row="3" column="1">
-      <widget class="QLineEdit" name="fAreaCode">
+      <widget class="QLineEdit" name="fDepartment">
        <property name="minimumSize">
         <size>
          <width>0</width>
@@ -333,7 +333,7 @@
       </widget>
      </item>
      <item row="5" column="1">
-      <widget class="QLineEdit" name="fWeb">
+      <widget class="QLineEdit" name="fNotes">
        <property name="minimumSize">
         <size>
          <width>0</width>
@@ -362,7 +362,7 @@
       </widget>
      </item>
      <item row="4" column="1">
-      <widget class="QLineEdit" name="fTelefone">
+      <widget class="QLineEdit" name="fPassword">
        <property name="minimumSize">
         <size>
          <width>0</width>
@@ -374,6 +374,9 @@
          <width>0</width>
          <height>25</height>
         </size>
+       </property>
+       <property name="echoMode">
+        <enum>QLineEdit::Password</enum>
        </property>
        <property name="clearButtonEnabled">
         <bool>true</bool>
@@ -434,7 +437,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="butPrint_2">
+      <widget class="QPushButton" name="butPrint">
        <property name="text">
         <string>PushButton</string>
        </property>
@@ -458,7 +461,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="butPrint">
+      <widget class="QPushButton" name="butCancel">
        <property name="text">
         <string>Cancel</string>
        </property>
@@ -495,7 +498,24 @@
   </layout>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>butCancel</sender>
+   <signal>clicked()</signal>
+   <receiver>Form</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>612</x>
+     <y>317</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>655</x>
+     <y>289</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
  <slots>
   <slot>ReCalc()</slot>
  </slots>

@@ -238,7 +238,7 @@ class JPFormModelMain(QDialog):
             lst = self.getSqls(self.PKRole)
             isOK, result = JPDb().executeTransaction(lst)
             if isOK:
-                self.afterSaveDate(result)
+                self.afterSaveData(result)
                 self.ui.butSave.setEnabled(False)
                 self.ui.butPrint.setEnabled(True)
                 self.ui.butPDF.setEnabled(True)
@@ -601,7 +601,7 @@ class JPFormModelMainHasSub(JPFormModelMain):
             lst = self.getSqls(self.PKRole)
             isOK, result = JPDb().executeTransaction(lst)
             if isOK:
-                self.afterSaveDate(result)
+                self.afterSaveData(result)
                 self.ui.butSave.setEnabled(False)
                 self.ui.butPrint.setEnabled(True)
                 self.ui.butPDF.setEnabled(True)

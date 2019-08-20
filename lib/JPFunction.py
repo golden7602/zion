@@ -279,8 +279,3 @@ def readQss(style):  # Use: win.setStyleSheet(readQss(qssStyle))
         return f.read()
 
 
-# print(JPGetDisplayText(5456123465))
-# print(JPGetDisplayText(float(875648266)))
-# print(JPGetDisplayText(None))
-# print(JPGetDisplayText('dfsgsdfg'))
-# print(JPGetDisplayText(bytes('0')))
