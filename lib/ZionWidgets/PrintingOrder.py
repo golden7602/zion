@@ -55,11 +55,11 @@ class JPFuncForm_PrintingOrder(JPFunctionForm):
                         AND (fSubmited={ch1}
                         OR fSubmited={ch2})
                         AND fOrderDate{date}
-                ORDER BY  forderID DESC"""
+                ORDER BY  fOrderID DESC"""
         sql_2 = sql_0 + """
                 WHERE fCanceled=0
                         AND left(fOrderID,2)='TP'
-                ORDER BY  forderID DESC"""
+                ORDER BY  fOrderID DESC"""
         self.backgroundWhenValueIsTrueFieldName = ['fSubmited']
         self.checkBox_1.setText('UnSubmited')
         self.checkBox_2.setText('Submited')

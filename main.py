@@ -128,7 +128,7 @@ class JPMainWindow(QMainWindow):
         elif self.menu_id == 9:
             from lib.ZionWidgets.Payment import JPFuncForm_Payment
             JPFuncForm_Payment(self)
-        elif self.menu_id == 22: # 
+        elif self.menu_id == 22: #
             from lib.ZionReport.Report_Day import Form_Repoet_Day
             Form_Repoet_Day(self)
         elif self.menu_id == 10:

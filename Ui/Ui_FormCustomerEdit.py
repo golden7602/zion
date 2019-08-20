@@ -6,7 +6,12 @@
 #
 # WARNING! All changes made in this file will be lost!
 
-from PyQt5 import QtCore, QtGui, QtWidgets
+from os import getcwd
+from sys import path as jppath
+jppath.append(getcwd())
+from PyQt5 import QtCore, QtGui
+from lib.JPMvc import JPWidgets as QtWidgets
+
 
 class Ui_Form(object):
     def setupUi(self, Form):
@@ -24,14 +29,14 @@ class Ui_Form(object):
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_2.setContentsMargins(-1, -1, -1, 10)
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
-        self.label_17 = QtWidgets.QLabel(Form)
-        self.label_17.setMinimumSize(QtCore.QSize(329, 60))
-        self.label_17.setMaximumSize(QtCore.QSize(329, 60))
-        self.label_17.setText("")
-        self.label_17.setPixmap(QtGui.QPixmap("../res/Zions_100.png"))
-        self.label_17.setScaledContents(True)
-        self.label_17.setObjectName("label_17")
-        self.horizontalLayout_2.addWidget(self.label_17)
+        self.label_logo = QtWidgets.QLabel(Form)
+        self.label_logo.setMinimumSize(QtCore.QSize(329, 60))
+        self.label_logo.setMaximumSize(QtCore.QSize(329, 60))
+        self.label_logo.setText("")
+        self.label_logo.setPixmap(QtGui.QPixmap("../res/Zions_100.png"))
+        self.label_logo.setScaledContents(True)
+        self.label_logo.setObjectName("label_logo")
+        self.horizontalLayout_2.addWidget(self.label_logo)
         self.verticalLayout = QtWidgets.QVBoxLayout()
         self.verticalLayout.setSpacing(0)
         self.verticalLayout.setObjectName("verticalLayout")
@@ -218,6 +223,12 @@ class Ui_Form(object):
         self.horizontalLayout.setObjectName("horizontalLayout")
         spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout.addItem(spacerItem)
+        self.butPDF = QtWidgets.QPushButton(Form)
+        self.butPDF.setObjectName("butPDF")
+        self.horizontalLayout.addWidget(self.butPDF)
+        self.butPrint_2 = QtWidgets.QPushButton(Form)
+        self.butPrint_2.setObjectName("butPrint_2")
+        self.horizontalLayout.addWidget(self.butPrint_2)
         self.butSave = QtWidgets.QPushButton(Form)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap("../res/ico/save.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
@@ -256,6 +267,8 @@ class Ui_Form(object):
         self.label_15.setText(_translate("Form", "网址Web:"))
         self.label_12.setText(_translate("Form", "电话Tel:"))
         self.label_16.setText(_translate("Form", "传真Fax:"))
+        self.butPDF.setText(_translate("Form", "PushButton"))
+        self.butPrint_2.setText(_translate("Form", "PushButton"))
         self.butSave.setText(_translate("Form", "Save"))
         self.butPrint.setText(_translate("Form", "Cancel"))
 
@@ -268,4 +281,3 @@ if __name__ == "__main__":
     ui.setupUi(Form)
     Form.show()
     sys.exit(app.exec_())
-

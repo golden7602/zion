@@ -9,7 +9,8 @@ from PyQt5.QtWidgets import (QAbstractItemView, QCheckBox, QComboBox,
                              QHBoxLayout, QLabel, QSizePolicy, QSpacerItem,
                              QTableView, QVBoxLayout, QWidget, QPushButton,
                              QMessageBox)
-from PyQt5.QtCore import QCoreApplication, QSize, Qt, pyqtSlot, QModelIndex, pyqtSignal
+from PyQt5.QtCore import (QCoreApplication, QSize, Qt, pyqtSlot, QModelIndex,
+                          pyqtSignal)
 from lib.JPDatabase.Query import JPQueryFieldInfo
 from lib.JPMvc.JPModel import JPTableViewModelReadOnly
 from lib.JPMvc.JPEditFormModel import JPEditFormDataMode
@@ -236,6 +237,7 @@ class JPFunctionForm(QWidget):
                                            edit_mode=JPEditFormDataMode.Edit,
                                            PKValue=cu_id)
         self.__EditForm.setListForm(self)
+        self.__EditForm.afterSaveData.connect(self.btnRefreshClick)
         self.__EditForm.exec_()
 
     @pyqtSlot()
