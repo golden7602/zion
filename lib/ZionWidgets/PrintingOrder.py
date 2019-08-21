@@ -193,7 +193,7 @@ class EditForm_PrintingOrder(JPFormModelMain):
             'fOrderID', "fNumerEnd", "fEntryID", 'fAmount', 'fPayable', 'fNUIT'
         ]
 
-    def afterSaveData(self, data):
+    def onAfterSaveData(self, data):
         self.ui.fOrderID.refreshValueNotRaiseEvent(data, True)
 
     def __customerIDChanged(self):

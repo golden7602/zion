@@ -3,7 +3,7 @@
 from os import getcwd
 from sys import path as jppath, argv, exit as sys_exit
 jppath.append(getcwd())
-
+import PyQt5.sip
 from PyQt5.QtWidgets import (QApplication, QHBoxLayout, QMainWindow,
                              QTreeWidgetItem, QWidget, QPushButton, QLabel,
                              QProgressBar)
@@ -28,7 +28,7 @@ def loadTreeview(treeWidget, items):
             root.FullPath = "Function"
             self.root = root
             self.items = items
-            self.icopath = getcwd() + "\\res\\ico\\"
+            self.icopath = getcwd() +  "\\res\\ico\\"
 
         def addItems(self, parent, items):
             for r in items:

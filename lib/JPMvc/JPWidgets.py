@@ -60,6 +60,13 @@ class __JPWidgetBase(QObject):
         self.MainModel = None
         self.RowsData = None
 
+    def setRedStyleSheet(self):
+        s = """
+        border-width: 2px;
+        border-style: solid;
+        border-color: rgb(255, 0, 0);"""
+        self.setStyleSheet(s)
+
     def _onValueChange(self, value):
         self.RowsData.setData(self.FieldInfo._index, self.Value())
         if self.MainModel:
@@ -91,12 +98,13 @@ class __JPWidgetBase(QObject):
             if self.FieldInfo.NotNull is False:
                 return 'Null'
             else:
-                raise JPExceptionFieldNull(self)
+                t = fld.Title if fld.Title else fld.FieldName
+                self.setRedStyleSheet()
+                raise JPExceptionFieldNull(t)
 
     @abc.abstractmethod
     def getSqlValue(self):
         """返回字段值，可直接用于SQL语句中"""
-
     @abc.abstractmethod
     def setFieldInfo(self, fld: JPFieldType = None, raiseEvent=True):
         pass
@@ -130,9 +138,10 @@ class QLineEdit(QLineEdit_, __JPWidgetBase):
             return "'{}'".format(self.passWordConver(t))
         if t is None or len(t) == 0:
             return self.getNullValue()
-        if self.FieldInfo.TypeCode in (JPFieldType.Int,JPFieldType.Float):
+        self.setStyleSheet('')
+        if self.FieldInfo.TypeCode in (JPFieldType.Int, JPFieldType.Float):
             return "'{}'".format(t.replace(',', ''))
-        return t
+        return "'{}'".format(t)
 
     def refreshValueNotRaiseEvent(self, v, changeDisplayText: bool = False):
         try:
@@ -206,6 +215,9 @@ class QLineEdit(QLineEdit_, __JPWidgetBase):
                     self.refreshValueNotRaiseEvent)
                 self.setText(t.replace(',', ''))
                 self.textChanged[str].connect(self.refreshValueNotRaiseEvent)
+        except Exception:
+            print(self.objectName())
+            print(Exception)
         finally:
             QLineEdit_.focusInEvent(self, e)
 
@@ -224,6 +236,7 @@ class QTextEdit(QTextEdit_, __JPWidgetBase):
         t = self.toPlainText()
         if t is None or len(t) == 0:
             return self.getNullValue()
+        self.setStyleSheet('')
         return "'{}'".format(t)
 
     def setFieldInfo(self, fld: JPFieldType, raiseEvent=True):
@@ -264,6 +277,7 @@ class QComboBox(QComboBox_, __JPWidgetBase):
         if self.currentData():
             tempV = self.BindingData[self.currentIndex()]
             if tempV:
+                self.setStyleSheet('')
                 return "'{}'".format(tempV)
             else:
                 return self.getNullValue()
@@ -313,7 +327,9 @@ class QComboBox(QComboBox_, __JPWidgetBase):
                 self.addItem(str(r[0]), r)
         c = self.FieldInfo.BindingColumn
         if self.FieldInfo.RowSource is None:
-            raise AttributeError("窗体字段【{}】没有设置行来源数据".format(self.objectName()))
+            txt = "窗体字段【{}】没有设置行来源数据,"
+            txt = txt + "如果本字段是输入字段，请修改字段控件类型为LineEdit"
+            raise AttributeError(txt.format(self.objectName()))
         self.BindingData = [row[c] for row in self.FieldInfo.RowSource]
         # 设置编辑状态
         self.setEnabled(not self.MainModel.isReadOnlyMode)
@@ -369,7 +385,8 @@ class QCheckBox(QCheckBox_, __JPWidgetBase):
     def getSqlValue(self) -> str:
         if self.checkState() is None:
             return self.getNullValue()
-        return '1' if self.checkState()==2 else '0'
+        self.setStyleSheet('')
+        return '1' if self.checkState() == 2 else '0'
 
     def _onValueChange(self):
         self.FieldInfo.Value = self.checkState()

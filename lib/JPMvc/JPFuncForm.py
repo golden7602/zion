@@ -17,7 +17,7 @@ from lib.JPMvc.JPEditFormModel import JPEditFormDataMode
 from lib.JPFunction import setButtonIcon
 from lib.JPDatabase.Database import JPDb
 from Ui.Ui_FuncFormMob import Ui_Form
-from lib.JPExcel.JPExportToExcel import clsExportToExcelFromJPTabelFieldInfo
+from lib.JPExcel.JPExportToExcel import clsExportToExcelFromTableWidget
 import re
 import abc
 
@@ -188,28 +188,8 @@ class JPFunctionForm(QWidget):
 
     @pyqtSlot()
     def on_CmdExportToExcel_clicked(self):
-        class mycls(clsExportToExcelFromJPTabelFieldInfo):
-            def __init__(self, QueryFieldInfo, MainForm):
-                super().__init__(QueryFieldInfo, MainForm)
-
-            def getSubQueryFieldInfo(self):
-                sql = """
-                SELECT fQuant AS '数量Qtd',
-                    fProductName AS '名称Descrição',
-                    fLength AS '长Larg.', 
-                    fWidth AS '宽Comp.',
-                    fPrice AS '单价P. Unitario', 
-                    fAmount AS '金额Total'
-                FROM t_order_detail
-                WHERE fOrderID IN (
-                    SELECT 订单号码OrderID FROM ({cur_sql}) Q)"""
-                sql = sql.format(cur_sql=self.currentSQL)
-                tab = JPQueryFieldInfo(sql)
-                return tab
-
-        e = mycls(self.model.TabelFieldInfo, self.MainForm)
-        e.currentSQL = self.currentSQL
-        e.run()
+        exp = clsExportToExcelFromTableWidget(self.ui.tableView, self.MainForm)
+        exp.run()
 
     @pyqtSlot()
     def on_CmdSearch_clicked(self):
@@ -231,28 +211,29 @@ class JPFunctionForm(QWidget):
         cu_id = self.getCurrentSelectPKValue()
         if not cu_id:
             return
+        frm = self.getEditForm(sql_main=self.SQL_EditForm_Main,
+                               sql_sub=self.SQL_EditForm_Sub,
+                               edit_mode=JPEditFormDataMode.Edit,
+                               PKValue=cu_id)
+        frm.setListForm(self)
+        frm.afterSaveData.connect(self.btnRefreshClick)
         self.__EditForm = None
-        self.__EditForm = self.getEditForm(sql_main=self.SQL_EditForm_Main,
-                                           sql_sub=self.SQL_EditForm_Sub,
-                                           edit_mode=JPEditFormDataMode.Edit,
-                                           PKValue=cu_id)
-        self.__EditForm.setListForm(self)
-        self.__EditForm.afterSaveData.connect(self.btnRefreshClick)
-        self.__EditForm.exec_()
+        self.__EditForm = frm
+        frm.exec_()
 
     @pyqtSlot()
     def on_CmdBrowse_clicked(self):
         cu_id = self.getCurrentSelectPKValue()
         if not cu_id:
             return
+        frm = self.getEditForm(sql_main=self.SQL_EditForm_Main,
+                               sql_sub=self.SQL_EditForm_Sub,
+                               edit_mode=JPEditFormDataMode.ReadOnly,
+                               PKValue=cu_id)
+        frm.setListForm(self)
         self.__EditForm = None
-        self.__EditForm = self.getEditForm(
-            sql_main=self.SQL_EditForm_Main,
-            sql_sub=self.SQL_EditForm_Sub,
-            edit_mode=JPEditFormDataMode.ReadOnly,
-            PKValue=cu_id)
-        self.__EditForm.setListForm(self)
-        self.__EditForm.exec_()
+        self.__EditForm = frm
+        frm.exec_()
 
     @pyqtSlot()
     def on_CmdRefresh_clicked(self):

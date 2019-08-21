@@ -2,8 +2,7 @@ from os import getcwd
 from sys import path as jppath
 jppath.append(getcwd())
 
-
-from PyQt5.QtCore import QDate, QMetaObject, pyqtSlot
+from PyQt5.QtCore import QDate, QMetaObject, pyqtSlot, Qt
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QMessageBox, QPushButton, QWidget
 
@@ -14,13 +13,14 @@ from lib.JPMvc.JPModel import JPTableViewModelEditForm
 from lib.ZionPublc import JPDb
 from Ui.Ui_FormCustomer import Ui_Form as Ui_Form_List
 from Ui.Ui_FormCustomerEdit import Ui_Form as Ui_Form_Edit
+from lib.JPDatabase.Query import JPQueryFieldInfo
 
 
 class Form_Customer(QWidget):
     def __init__(self, mainform):
         super().__init__()
-        self.UI = Ui_Form_List()
-        self.UI.setupUi(self)
+        self.ui = Ui_Form_List()
+        self.ui.setupUi(self)
         mainform.addForm(self)
         self.SQL = """
             select 
@@ -37,31 +37,58 @@ class Form_Customer(QWidget):
                 fFax as `传真Fax` 
             from  t_customer 
         """
-        self.SQL_EditForm_Main=self.SQL + " where fCustomerID={}"
+        medit_sql = """
+            select 
+            fCustomerID as `ID`, 
+            fCustomerName as `客户名称Cliente`, 
+            fNUIT as `税号NUIT`, 
+            fCity,
+            fContato,
+            fCelular,
+            fTelefone, 
+            fEmail,
+            fWeb,
+            fEndereco,
+            fFax, 
+            fAreaCode
+            from  t_customer
+            where fCustomerID={} 
+            order by fCustomerName"""
+        self.SQL_EditForm_Main = medit_sql
         self.refreshTable()
+        self.refreshCombobox()
 
-    def refreshTable(self):
-        cbo = self.UI.comboBox
+    def refreshCombobox(self):
+        sql = """select fCustomerID,fCustomerName
+                from  t_customer order by fCustomerName"""
+        tab = JPTabelFieldInfo(sql)
+        cbo = self.ui.comboBox
         cbo.DisabledEvent = True
-        sql = self.SQL if (
-            cbo.currentIndex() == -1
-        ) else self.SQL + " where fCustomerID={}".format(cbo.currentIndex())
-        self.dataInfo = JPTabelFieldInfo(sql)
-        self.mod = JPTableViewModelEditForm(self.UI.tableView, self.dataInfo)
-        self.UI.tableView.setModel(self.mod)
-        self.UI.tableView.resizeColumnsToContents()
-        lst = [[item.Datas[1], item.Datas[0]]
-               for item in self.dataInfo.DataRows]
+        cbo.clear()
+        lst = [[item.Datas[1], item.Datas[0]] for item in tab.DataRows]
         cbo.setEditable(True)
+        cbo.clear()
         for r in lst:
             cbo.addItem(r[0], r[1])
         cbo.setCurrentIndex(-1)
         cbo.DisabledEvent = False
 
+    def refreshTable(self):
+        cbo = self.ui.comboBox
+        tv = self.ui.tableView
+        cid = cbo.currentIndex()
+        so = "order by fCustomerName"
+        sw = "where fCustomerID={}"
+        sql = self.SQL + so if (cid == -1) else (self.SQL + sw).format(cid)
+        self.dataInfo = JPTabelFieldInfo(sql)
+        self.mod = JPTableViewModelEditForm(tv, self.dataInfo)
+        tv.setModel(self.mod)
+        tv.resizeColumnsToContents()
+
     def on_comboBox_currentIndexChanged(self, index):
-        if self.UI.comboBox.DisabledEvent:
+        if self.ui.comboBox.DisabledEvent:
             return
-        self.on_CMDREFRESH_clicked()
+        self.refreshTable()
 
     def addButtons(self, btnNames: list):
         for item in btnNames:
@@ -69,7 +96,7 @@ class Form_Customer(QWidget):
             btn.setObjectName(item['fObjectName'])
             setButtonIcon(btn)
             btn.setEnabled(item['fHasRight'])
-            self.UI.horizontalLayout_Button.addWidget(btn)
+            self.ui.horizontalLayout_Button.addWidget(btn)
         QMetaObject.connectSlotsByName(self)
 
     def getEditForm(self, sql_main, edit_mode, sql_sub, PKValue):
@@ -110,16 +137,35 @@ class Form_Customer(QWidget):
 
     @pyqtSlot()
     def on_CmdDelete_clicked(self):
-        uid = self.getCurrentUID()
+        uid = self.getCurrentSelectPKValue()
         if uid is None:
             return
-        sql = "update sysusers set fEnabled=0 where fUserID={}"
-        if QMessageBox.question(self, '提示', "确认要删除此用户？",
+        sql0 = """
+            SELECT fCustomerID
+            FROM (
+                SELECT fCustomerID
+                FROM v_order
+                UNION ALL
+                SELECT fCustomerID
+                FROM v_quotation
+            ) Q
+            WHERE Q.fCustomerID = {}
+            LIMIT 1"""
+        tab = JPQueryFieldInfo(sql0.format(uid))
+        if len(tab):
+            txt = '该客户已经存在订单，无法删除!\n'
+            txt = txt + "The customer already has an order and can not delete it!"
+            QMessageBox.warning(self, '提示', txt, QMessageBox.Cancel,
+                                QMessageBox.Cancel)
+            return
+        del_txt = '确认要删除此客户？\n'
+        del_txt = del_txt + 'Are you sure you want to delete this customer?'
+        sql = "DELETE FROM t_customer WHERE fCustomerID = {}"
+        if QMessageBox.question(self, '提示', del_txt,
                                 (QMessageBox.Yes | QMessageBox.No),
                                 QMessageBox.Yes) == QMessageBox.Yes:
             JPDb().executeTransaction(sql.format(uid))
-            self.mod.removeRow(
-                self.ui.tableView.selectionModel().currentIndex().row())
+            self.refreshTable()
 
 
 class EditForm_User(JPFormModelMain):

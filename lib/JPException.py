@@ -2,13 +2,12 @@
 
 
 class JPExceptionFieldNull(Exception):
-    def __init__(self, obj, msg=None):
+    def __init__(self, objname):
         """主表字段为空"""
 
-        self.object = obj
         errstr = '字段【{fn}】的值不能为空！\n'
         errstr = errstr + 'Field [{fn}] cannot be empty!'
-        self.Message = errstr.format(obj.objectName())
+        self.Message = errstr.format(fn=objname)
 
     def __str__(self):
         return self.Message
@@ -22,5 +21,6 @@ class JPExceptionRowDataNull(Exception):
         self.Row = row_and_columnname[0]
         self.Message = errstr.format(row=row_and_columnname[0],
                                      fn=row_and_columnname[1])
+
     def __str__(self):
         return self.Message

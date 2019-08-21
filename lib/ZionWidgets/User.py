@@ -2,7 +2,7 @@ from os import getcwd
 from sys import path as jppath
 jppath.append(getcwd())
 
-from PyQt5.QtCore import (QMetaObject, Qt, pyqtSlot)
+from PyQt5.QtCore import (QMetaObject, Qt, pyqtSlot, QThread)
 from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtWidgets import (QMessageBox, QPushButton, QTreeWidgetItem,
                              QTreeWidgetItemIterator, QWidget)
@@ -42,7 +42,7 @@ class Form_User(QWidget):
                 from  sysusers
             where  fUserID > 1
         """
-        tr = self.ui.treeWidget
+
         tb = self.ui.tableView
         self.dataInfo = JPTabelFieldInfo(self.SQL)
         self.mod = JPTableViewModelEditForm(tb, self.dataInfo)
@@ -51,8 +51,12 @@ class Form_User(QWidget):
         tb.selectionModel().currentChanged.connect(
             self.on_tableView_currentChanged)
         self.SQL_EditForm_Main = """
-            select fUserID ,fUsername ,fNickname ,fDepartment,'' as fPassword,
-                fNotes, fEnabled
+                select fUserID as `编号 ID`,
+                fUsername as `用户名Name` ,
+                fNickname as `昵称Nickname`,
+                fDepartment as `部门Department`,
+                '' as fPassword,
+                fNotes as `备注Note` , fEnabled
                 from sysusers  WHERE fUserID = '{}'"""
 
     def checkDirty(self):
@@ -148,15 +152,16 @@ class Form_User(QWidget):
 
     @pyqtSlot()
     def on_CmdNew_clicked(self):
+        frm = self.getEditForm(sql_main=self.SQL_EditForm_Main,
+                               sql_sub=None,
+                               edit_mode=JPEditFormDataMode.New,
+                               PKValue=None)
+        frm.ui.fEnabled.refreshValueNotRaiseEvent(2)
+        frm.setListForm(self)
+        frm.afterSaveData.connect(self.refreshTable)
         self.__EditForm = None
-
-        self.__EditForm = self.getEditForm(sql_main=self.SQL_EditForm_Main,
-                                           sql_sub=None,
-                                           edit_mode=JPEditFormDataMode.New,
-                                           PKValue=None)
-        self.__EditForm.setListForm(self)
-        self.__EditForm.afterSaveData.connect(self.refreshTable)
-        self.__EditForm.exec_()
+        self.__EditForm = frm
+        frm.exec_()
 
     @pyqtSlot()
     def on_CmdEdit_clicked(self):
@@ -253,17 +258,17 @@ class EditForm_User(JPFormModelMain):
     def onFirstHasDirty(self):
         self.ui.butSave.setEnabled(True)
 
-    @pyqtSlot()
-    def on_butSave_clicked(self):
-        try:
-            lst = self.getSqls(self.PKRole)
-            isOK, result = JPDb().executeTransaction(lst)
-            if isOK:
-                self.ui.butSave.setEnabled(False)
-                self.afterSaveData.emit(result)
-                QMessageBox.information(self, '完成',
-                                        '保存数据完成！\nSave data complete!',
-                                        QMessageBox.Yes, QMessageBox.Yes)
-        except Exception as e:
-            msgBox = QMessageBox(QMessageBox.Critical, u'提示', str(e))
-            msgBox.exec_()
+    # @pyqtSlot()
+    # def on_butSave_clicked(self):
+    #     try:
+    #         lst = self.getSqls(self.PKRole)
+    #         isOK, result = JPDb().executeTransaction(lst)
+    #         if isOK:
+    #             self.ui.butSave.setEnabled(False)
+    #             self.afterSaveData.emit(result)
+    #             QMessageBox.information(self, '完成',
+    #                                     '保存数据完成！\nSave data complete!',
+    #                                     QMessageBox.Yes, QMessageBox.Yes)
+    #     except Exception as e:
+    #         msgBox = QMessageBox(QMessageBox.Critical, u'提示', str(e))
+    #         msgBox.exec_()

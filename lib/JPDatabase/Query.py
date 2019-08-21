@@ -186,14 +186,14 @@ class JPTabelFieldInfo(JPQueryFieldInfo):
         self.DeleteRows = []
 
         sql = re.sub(r'^\s', '', re.sub(r'\s+', ' ', re.sub(r'\n', '', sql)))
-        sel_p = r"SELECT\s+.*from\s(\S+)\s"
-        mt = re.match(sel_p, sql, flags=(re.I))
+        sel_p = r"^SELECT\s+.*from\s(\S+)[$|\s].*"
+        mt = re.match(sel_p, sql, flags=(re.I | re.M))
         self.TableName = mt.groups()[0] if mt else sql
         s_filter = db.getOnlyStrcFilter()
         if noData:
             # 找出不包含条件的SQL语句
-            p_s = r"(SELECT\s+.*from\s(\S+)\s(as\s\S+)*)"
-            mt1 = re.match(p_s, sql, flags=(re.I))
+            p_s = r"^(SELECT\s+.*from\s(\S+)[$|\s](as\s\S+)*)"
+            mt1 = re.match(p_s, sql, flags=(re.I | re.M))
             sql = mt1.groups(
             )[0] + " " + s_filter if mt else 'Select * from {} {}'.format(
                 self.TableName, s_filter) if mt else sql

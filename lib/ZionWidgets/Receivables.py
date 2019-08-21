@@ -176,8 +176,11 @@ class Form_Receivables(QWidget):
         self.modCustomerArrearsList = JPTableViewModelReadOnly(
             self.ui.tabCustomerArrearsList, self.QinfoCustomerArrearsList)
         self.ui.tabCurrentDayRec.setModel(self.modCurrentDayRec)
+        self.ui.tabCurrentDayRec.resizeColumnsToContents()
         self.ui.tabCustomerRecorder.setModel(self.modCustomerRecorder)
+        self.ui.tabCustomerRecorder.resizeColumnsToContents()
         self.ui.tabCustomerArrearsList.setModel(self.modCustomerArrearsList)
+        self.ui.tabCustomerArrearsList.resizeColumnsToContents()
 
 
 class RecibidoEdit(JPFormModelMain):
@@ -261,7 +264,7 @@ class RecibidoEdit(JPFormModelMain):
                 obj.setFieldInfo(fld_dict[nm])
                 obj.refreshValueNotRaiseEvent(tab.getOnlyData([0, i]), True)
 
-    def afterSaveData(self, data):
+    def onAfterSaveData(self, data):
         self.ui.butSave.setEnabled(False)
         self.ui.butPrint.setEnabled(False)
         self.ui.butPDF.setEnabled(False)

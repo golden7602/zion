@@ -23,14 +23,11 @@ import re
 # print(a)
 
 
-def aa(v):
-    v=str(v)
-    mt = re.match("^-?[1-9]\d*$", v, flags=(re.I))
-    if mt:
-        return True
 
 
-print(aa('--123'))
-print(aa(123123.00))
-print(2<=3<=5)
-
+sql = "SELECT fItemID, fTypeID, fTitle AS 'text条目文本', fSpare1 AS 'Value1值1', fSpare2 AS 'Value2值2', fNote AS 'Note说明' FROM t_enumeration as uu WHERE fTypeID = -1 "
+sql = re.sub(r'^\s', '', re.sub(r'\s+', ' ', re.sub(r'\n', '', sql)))
+sel_p = r"^SELECT\s+.*from\s(\S+)[$|\s].*"
+sel_p = r"^(SELECT\s+.*from\s(\S+)[$|\s](as\s\S+)*)"
+mt = re.match(sel_p, sql, flags=(re.I | re.M))
+print(mt.groups()[0])

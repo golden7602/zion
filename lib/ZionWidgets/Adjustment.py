@@ -10,7 +10,7 @@ from PyQt5.QtWidgets import QDialog, QMessageBox, QWidget
 from PyQt5.QtPrintSupport import QPrinter
 
 from lib.JPPrintReport import JPPrintSectionType, JPReport
-from lib.ZionPublc import JPPub
+from lib.ZionPublc import JPPub, JPDb
 from lib.ZionWidgets.ZionFunc import ZionFuncForm
 
 
@@ -66,8 +66,27 @@ class JPFuncForm_Adjustment(ZionFuncForm):
         self.checkBox_2.setText('Cancelled')
         self.checkBox_1.setChecked(True)
         self.checkBox_2.setChecked(False)
-        self.setListFormSQL(sql_1,sql_2)
+        self.setListFormSQL(sql_1, sql_2)
         self.tableView.setColumnHidden(13, True)
+
+    @pyqtSlot()
+    def on_CmdCancel_clicked(self):
+        cu_id = self.getCurrentSelectPKValue()
+        sql = "update t_order set fCanceled=1 where fOrderID='{pk}'"
+        db = JPDb()
+        sql = sql.format(pk=cu_id)
+        msg = '您确认要作废此订单？\n'
+        msg = msg + "Are you sure you want to cancel this order?"
+        msg = msg.format(pk=cu_id)
+        if QMessageBox.question(JPPub().MainForm, '确认', msg,
+                                QMessageBox.Yes | QMessageBox.No,
+                                QMessageBox.Yes) == QMessageBox.Yes:
+            db.executeTransaction(sql)
+            self.btnRefreshClick()
+
+    @pyqtSlot()
+    def on_CmdAdjustment_clicked(self):
+        super().on_CmdEdit_clicked()
 
     # def but_click(self, name):
     #     for n, fun in JPFuncForm_Complete.__dict__.items():

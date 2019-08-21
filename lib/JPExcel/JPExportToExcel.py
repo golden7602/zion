@@ -19,7 +19,7 @@ class clsExportToExcelFromTableWidget(object):
         fileName_choose, filetype = QFileDialog.getSaveFileName(
             self.MainForm,
             "Export To Excel File Name",
-            os.getcwd(),  # 起始路径
+            getcwd(),  # 起始路径
             "Excel Files (*.xls)")
         if not fileName_choose:
             return
@@ -82,6 +82,8 @@ class clsExportToExcelFromJPTabelFieldInfo(object):
     def __init__(self, QueryFieldInfo, MainForm):
         self.QueryFieldInfo = QueryFieldInfo
         self.MainForm = MainForm
+        self.linkMainTableFieldIndex = 0
+        self.linkSubTableFieldIndex = 0
 
     def run(self):
         fileName_choose, filetype = QFileDialog.getSaveFileName(
@@ -147,8 +149,7 @@ class clsExportToExcelFromJPTabelFieldInfo(object):
             i = 0
             row = 0
             for sub_j in range(sub_cols):
-                sheet.write(0, cols + sub_j, subTab.Fields[sub_j].Title,
-                            style)
+                sheet.write(0, cols + sub_j, subTab.Fields[sub_j].Title, style)
             while i < len(tab):
                 for j in range(0, cols):
                     try:
@@ -156,10 +157,15 @@ class clsExportToExcelFromJPTabelFieldInfo(object):
                     except Exception:
                         pass
                     sheet.write(row + 1, j, tab.getDispText((row, j)), style1)
+                sub_rec = [
+                    r.Datas for r in subTab.DataRows
+                    if r.Datas[self.linkMainTableFieldIndex] == tab.Datas[row][
+                        self.linkMainTableFieldIndex]
+                ]
                 for sub_i in range(len(subTab)):
                     for sub_j in range(sub_cols):
                         print(sub_i, sub_j)
-                        sheet.write(row +1 + sub_i, cols + sub_j,
+                        sheet.write(row + 1 + sub_i, cols + sub_j,
                                     tab.getDispText((sub_i, sub_j)), style1)
             try:
                 self.MainForm.Label.setText('')

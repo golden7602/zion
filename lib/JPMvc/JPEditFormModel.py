@@ -232,13 +232,17 @@ class JPFormModelMain(QDialog):
         """返回主窗体处理子类，必须继承自JPReport"""
         pass
 
+    def onAfterSaveData(self,data):
+        """保存数据后执行，请覆盖"""
+        return
+
     @pyqtSlot()
     def on_butSave_clicked(self):
         try:
             lst = self.getSqls(self.PKRole)
             isOK, result = JPDb().executeTransaction(lst)
             if isOK:
-                self.afterSaveData(result)
+                self.onAfterSaveData(result)
                 self.ui.butSave.setEnabled(False)
                 self.ui.butPrint.setEnabled(True)
                 self.ui.butPDF.setEnabled(True)
@@ -601,7 +605,7 @@ class JPFormModelMainHasSub(JPFormModelMain):
             lst = self.getSqls(self.PKRole)
             isOK, result = JPDb().executeTransaction(lst)
             if isOK:
-                self.afterSaveData(result)
+                self.onAfterSaveData(result)
                 self.ui.butSave.setEnabled(False)
                 self.ui.butPrint.setEnabled(True)
                 self.ui.butPDF.setEnabled(True)

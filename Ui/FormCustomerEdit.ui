@@ -148,25 +148,6 @@
    </item>
    <item>
     <layout class="QGridLayout" name="gridLayout">
-     <item row="1" column="3">
-      <widget class="QComboBox" name="fCity">
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="sizeIncrement">
-        <size>
-         <width>0</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="clearButtonEnabled" stdset="0">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
      <item row="1" column="2">
       <widget class="QLabel" name="label_5">
        <property name="minimumSize">
@@ -619,6 +600,16 @@
        </property>
       </widget>
      </item>
+     <item row="1" column="3">
+      <widget class="QLineEdit" name="fCity">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>25</height>
+        </size>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
    <item>
@@ -651,7 +642,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="butPrint_2">
+      <widget class="QPushButton" name="butPrint">
        <property name="text">
         <string>PushButton</string>
        </property>
@@ -675,7 +666,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="butPrint">
+      <widget class="QPushButton" name="butCancel">
        <property name="text">
         <string>Cancel</string>
        </property>

@@ -17,6 +17,7 @@ from lib.ZionPublc import JPPub, JPUser
 from lib.ZionReport.OrderReportMob import Order_report_Mob
 from Ui.Ui_FormOrderMob import Ui_Form
 from lib.JPFunction import JPRound
+from lib.JPExcel.JPExportToExcel import clsExportToExcelFromJPTabelFieldInfo
 
 
 class JPFuncForm_Order(JPFunctionForm):
@@ -81,6 +82,31 @@ class JPFuncForm_Order(JPFunctionForm):
                               edit_mode=edit_mode,
                               sql_sub=sql_sub,
                               PKValue=PKValue)
+
+    def on_CmdExportToExcel_clicked(self):
+        class mycls(clsExportToExcelFromJPTabelFieldInfo):
+            def __init__(self, QueryFieldInfo, MainForm):
+                super().__init__(QueryFieldInfo, MainForm)
+
+            def getSubQueryFieldInfo(self):
+                sql = """
+                SELECT fOrderID,
+                    fQuant AS '数量Qtd',
+                    fProductName AS '名称Descrição',
+                    fLength AS '长Larg.', 
+                    fWidth AS '宽Comp.',
+                    fPrice AS '单价P. Unitario', 
+                    fAmount AS '金额Total'
+                FROM t_order_detail
+                WHERE fOrderID IN (
+                    SELECT 订单号码OrderID FROM ({cur_sql}) Q)"""
+                sql = sql.format(cur_sql=self.currentSQL)
+                tab = JPQueryFieldInfo(sql)
+                return tab
+
+        e = mycls(self.model.TabelFieldInfo, self.MainForm)
+        e.currentSQL = self.currentSQL
+        e.run()
 
     @pyqtSlot()
     def on_CmdSubmit_clicked(self):
@@ -220,7 +246,7 @@ class EditForm_Order(JPFormModelMainHasSub):
         fPayable = fAmount + fTax - fDesconto
         self.ui.fPayable.refreshValueNotRaiseEvent(fPayable, True)
 
-    def afterSaveData(self, data):
+    def onAfterSaveData(self, data):
         self.ui.fOrderID.refreshValueNotRaiseEvent(data, True)
 
     def AfterSetDataBeforeInsterRowEvent(self, row_data, Index):

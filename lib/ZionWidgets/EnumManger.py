@@ -4,12 +4,15 @@ from sys import path as jppath
 jppath.append(getcwd())
 
 from PyQt5.QtGui import QIcon, QPixmap
-from PyQt5.QtWidgets import (QWidget, QAbstractItemView, QMenu, QAction)
-from PyQt5.QtCore import Qt, QModelIndex
-from Ui.Ui_FormEnum import Ui_Form
+from PyQt5.QtWidgets import (QWidget, QAbstractItemView, QMenu, QAction,
+                             QMessageBox)
+from PyQt5.QtCore import Qt, QModelIndex, pyqtSlot
+from Ui.Ui_FormEnum import Ui_Form as Ui_Form_list
+from Ui.Ui_FormEnumEdit import Ui_Form as Ui_Form_Edit
 from lib.JPDatabase.Query import JPQueryFieldInfo, JPTabelFieldInfo
-from lib.JPMvc.JPModel import (JPTableViewModelReadOnly,
-                               JPTableViewModelEditForm)
+from lib.JPMvc.JPModel import (JPTableViewModelReadOnly)
+from lib.JPMvc.JPEditFormModel import JPFormModelMain, JPEditFormDataMode
+from lib.ZionPublc import JPDb
 
 
 class _myReadOnlyMod(JPTableViewModelReadOnly):
@@ -27,10 +30,10 @@ class Form_EnumManger(QWidget):
     def __init__(self, mainform):
         super().__init__()
         self.CurrentTypeID = None
-        ui = Ui_Form()
+        ui = Ui_Form_list()
         ui.setupUi(self)
-        sql1 = """SELECT fTypeID AS 'TypeID 类别ID', 
-                    fTypeName AS 'TypeName 名称', 
+        sql1 = """SELECT fTypeID AS 'TypeID 类别ID',
+                    fTypeName AS 'TypeName 名称',
                     fNote AS 'Note 说明'
                 FROM t_enumeration_type
                 ORDER BY fTypeID
@@ -53,51 +56,44 @@ class Form_EnumManger(QWidget):
             self.type_selected)
 
         self.setTab2Column()
-        self.tab2.setContextMenuPolicy(Qt.CustomContextMenu)
-        self.tab2.customContextMenuRequested.connect(self.custom_right_menu)
         self.refreshTabEnum()
-        self.UI.butSave.clicked.connect(self.but_Save)
+        self.UI.butNew.clicked.connect(self.but_New)
 
     def type_selected(self, index1, index2):
         self.CurrentTypeID = self.tabinfo1.getOnlyData([index1.row(), 0])
         self.refreshTabEnum(self.CurrentTypeID)
 
     def refreshTabEnum(self, type_id: int = -1):
-        sql2 = """SELECT fItemID, fTypeID, 
-            fTitle AS 'text条目文本', 
-            fSpare1 AS 'Value1值1', 
+        sql2 = """
+        SELECT fItemID, fTypeID,
+            fTitle AS 'text条目文本',
+            fSpare1 AS 'Value1值1',
             fSpare2 AS 'Value2值2',
             fNote AS 'Note说明'
         FROM t_enumeration
         WHERE fTypeID = {}
         """.format(type_id)
         self.tabinfo2 = JPTabelFieldInfo(sql2)
-        self.mod2 = JPTableViewModelEditForm(self.tab2, self.tabinfo2)
+        self.mod2 = JPTableViewModelReadOnly(self.tab2, self.tabinfo2)
         self.tab2.setModel(self.mod2)
         self.setTab2Column()
 
-    def but_Save(self):
-        icon = QIcon(QPixmap(getcwd() + "\\res\\ico\\folder.png"))
-        self.tab2.verticalHeader().addAction(QAction(icon, "aaa", self.tab2))
-        print(
-            self.tabinfo2.getSqlSubStatements(self.mainform, 1,
-                                              self.CurrentTypeID))
+    def but_New(self):
+        tid = self.CurrentTypeID
+        if tid is None:
+            return
+        sql = """select fItemID,fTypeID,
+                fTitle AS 'text条目文本',
+                fSpare1 AS 'Value1值1',
+                fSpare2 AS 'Value2值2',
+                fNote AS 'Note说明'
+                from t_enumeration where fItemID='{}'"""
+        frm = EditForm_Enum(sql, None, JPEditFormDataMode.New, tid)
+        frm.afterSaveData.connect(self.refreshsub)
+        frm.exec_()
 
-    def custom_right_menu(self, pos):
-        menu = QMenu()
-        opt1 = menu.addAction("AddNew增加")
-        opt2 = menu.addAction("Delete删除")
-        action = menu.exec_(self.tab2.mapToGlobal(pos))
-        if action == opt1:
-            self.mod2.insertRows(len(self.tabinfo2.DataRows))
-            self.tab2.selectRow(self.mod2.rowCount() - 1)
-            return
-        elif action == opt2:
-            self.mod2.removeRows(
-                self.tab2.selectionModel().currentIndex().row())
-            return
-        else:
-            return
+    def refreshsub(self):
+        self.refreshTabEnum(self.CurrentTypeID)
 
     def setTab2Column(self):
         self.tab2.setColumnHidden(0, True)
@@ -106,3 +102,49 @@ class Form_EnumManger(QWidget):
         self.tab2.setColumnWidth(3, 100)
         self.tab2.setColumnWidth(4, 100)
         self.tab2.setColumnWidth(5, 300)
+
+
+class EditForm_Enum(JPFormModelMain):
+    def __init__(self,
+                 sql_main,
+                 PKValue,
+                 edit_mode,
+                 TypeID,
+                 flags=Qt.WindowFlags()):
+        super().__init__(Ui_Form_Edit(),
+                         sql_main=sql_main,
+                         PKValue=PKValue,
+                         edit_mode=edit_mode,
+                         flags=flags)
+        pix = QPixmap(getcwd() + "\\res\\Zions_100.png")
+        self.ui.label_logo.setPixmap(pix)
+        self.readData()
+        self.ui.fTypeID.refreshValueNotRaiseEvent(TypeID)
+        self.ui.butPrint.hide()
+        self.ui.butPDF.hide()
+        self.ui.fItemID.hide()
+        self.ui.fTypeID.setEnabled(False)
+
+    def onGetFieldsRowSources(self):
+        db = JPDb()
+        lst = db.getDataList(
+            "select fTypeName,fTypeID from t_enumeration_type")
+        return [('fTypeID', lst, 1)]
+
+    def onFirstHasDirty(self):
+        self.ui.butSave.setEnabled(True)
+
+    # @pyqtSlot()
+    # def on_butSave_clicked(self):
+    #     try:
+    #         lst = self.getSqls(self.PKRole)
+    #         isOK, result = JPDb().executeTransaction(lst)
+    #         if isOK:
+    #             self.ui.butSave.setEnabled(False)
+    #             self.afterSaveData.emit(result)
+    #             QMessageBox.information(self, '完成',
+    #                                     '保存数据完成！\nSave data complete!',
+    #                                     QMessageBox.Yes, QMessageBox.Yes)
+    #     except Exception as e:
+    #         msgBox = QMessageBox(QMessageBox.Critical, u'提示', str(e))
+    #         msgBox.exec_()

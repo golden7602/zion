@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'c:\Users\win10\Desktop\Zion\zion\Ui\mainform.ui'
+# Form implementation generated from reading ui file 'e:\Zion\Ui\mainform.ui'
 #
 # Created by: PyQt5 UI code generator 5.11.3
 #
@@ -150,8 +150,14 @@ class Ui_MainWindow(object):
         self.layoutWidget.setObjectName("layoutWidget")
         self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.layoutWidget)
         self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout_2.setSpacing(2)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
         self.label_FunPath = QtWidgets.QLabel(self.layoutWidget)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.label_FunPath.sizePolicy().hasHeightForWidth())
+        self.label_FunPath.setSizePolicy(sizePolicy)
         self.label_FunPath.setMinimumSize(QtCore.QSize(0, 16))
         self.label_FunPath.setMaximumSize(QtCore.QSize(16777215, 16))
         font = QtGui.QFont()
