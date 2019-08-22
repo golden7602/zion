@@ -264,13 +264,13 @@ class PrintOrder_report_Mob(JPReport):
                               AlignmentFlag=Qt.AlignLeft)
 
         # 修改联次
-        def OnBeforePrint_LianCi(*args):
+        def onBeforePrint_LianCi(*args):
             if args[0] == 2:
                 return False, "第二联"
             else:
                 return False, None
 
-        tempItem.OnBeforePrint = OnBeforePrint_LianCi
+        tempItem.onBeforePrint = onBeforePrint_LianCi
 
     def init_ReportHeader_Individualization(self):
         # 第6行 Order个性部分
@@ -279,7 +279,7 @@ class PrintOrder_report_Mob(JPReport):
             0,
             155,
             20, [
-                "#", "数量Qtd", "名称Descrição", "长Larg.", "宽Comp.",
+                "#", "数量Qtd", "名称Descrição", "长Comp.", "宽Larg.",
                 "单价P. Unitario", "金额Total"
             ], [40, 50, 280, 60, 60, 80, 80], [
                 Qt.AlignCenter, Qt.AlignCenter, Qt.AlignCenter, Qt.AlignCenter,
@@ -369,7 +369,7 @@ class PrintOrder_report_Mob(JPReport):
             0,
             75,
             20, [
-                "#", "数量Qtd", "名称Descrição", "长Larg.", "宽Comp.",
+                "#", "数量Qtd", "名称Descrição", "长Comp.", "宽Larg.",
                 "单价P. Unitario", "金额Total"
             ], [40, 50, 280, 60, 60, 80, 80], [
                 Qt.AlignCenter, Qt.AlignCenter, Qt.AlignCenter, Qt.AlignCenter,

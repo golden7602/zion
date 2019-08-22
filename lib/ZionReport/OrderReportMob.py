@@ -262,15 +262,6 @@ class Order_report_Mob(JPReport):
                               Font=self.font_YaHei_8,
                               AlignmentFlag=Qt.AlignLeft)
 
-        # 修改联次
-        def OnBeforePrint_LianCi(*args):
-            if args[0] == 2:
-                return False, "第二联"
-            else:
-                return False, None
-
-        tempItem.OnBeforePrint = OnBeforePrint_LianCi
-
     def init_ReportHeader_Individualization(self):
         # 第6行 Order个性部分
         RH = self.ReportHeader
@@ -278,7 +269,7 @@ class Order_report_Mob(JPReport):
             0,
             155,
             20, [
-                "#", "数量Qtd", "名称Descrição", "长Larg.", "宽Comp.",
+                "#", "数量Qtd", "名称Descrição", "长Comp.", "宽Larg.",
                 "单价P. Unitario", "金额Total"
             ], [40, 50, 280, 60, 60, 80, 80], [
                 Qt.AlignCenter, Qt.AlignCenter, Qt.AlignCenter, Qt.AlignCenter,
@@ -368,7 +359,7 @@ class Order_report_Mob(JPReport):
             0,
             75,
             20, [
-                "#", "数量Qtd", "名称Descrição", "长Larg.", "宽Comp.",
+                "#", "数量Qtd", "名称Descrição", "长Comp.", "宽Larg.",
                 "单价P. Unitario", "金额Total"
             ], [40, 50, 280, 60, 60, 80, 80], [
                 Qt.AlignCenter, Qt.AlignCenter, Qt.AlignCenter, Qt.AlignCenter,
@@ -553,10 +544,23 @@ class Order_report_Mob(JPReport):
                                 AlignmentFlag=Qt.AlignRight,
                                 Font=self.font_YaHei_8)
 
+    # 修改联次
+    def onBeforePrint(self, Copys, Sec, CurrentPrintDataRow, obj):
+        if Copys == 2:
+            print(obj.PrintObject)
+            if obj.PrintObject == " CONT.  / PRDUCAO":
+                return False, "第二联"
+            elif obj.PrintObject in [
+                    "fPrice", "fAmountDetail",
+                    "fAmount", "fDesconto", "fTax", "fPayable"
+            ]:
+                return False, ""
+        return False, None
+
     def init_data(self, OrderID: str):
-        SQL = "select o.*, d.fQuant,d.fProductName,d.fLength,d.fWidth,\
-            d.fPrice,d.fAmount as fAmountDetail from  v_order as o right join t_order_detail \
-                    as d on o.fOrderID=d.fOrderID  where d.fOrderID='{}'"
+        SQL = """select o.*, d.fQuant,d.fProductName,d.fLength,d.fWidth,
+            d.fPrice,d.fAmount as fAmountDetail from  v_order as o right join t_order_detail 
+                    as d on o.fOrderID=d.fOrderID  where d.fOrderID='{}'"""
 
         db = JPDb()
         data = db.getDict(SQL.format(OrderID))

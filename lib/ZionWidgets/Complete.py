@@ -49,7 +49,7 @@ class _myFuncForm(JPFunctionForm):
         self.CP_s_sql = """
                 SELECT fQuant AS '数量Qtd',
                     fProductName AS '名称Descrição',
-                    fLength AS '长Larg.', fWidth AS '宽Comp.'
+                    fLength AS '长Comp.', fWidth AS '宽Larg.'
                 FROM t_order_detail
                 WHERE fOrderID = '{}'
                 """

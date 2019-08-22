@@ -70,7 +70,7 @@ class JPFuncForm_Order(JPFunctionForm):
         s_sql = """
                 SELECT fID, fOrderID, fQuant AS '数量Qtd',
                     fProductName AS '名称Descrição',
-                    fLength AS '长Larg.', fWidth AS '宽Comp.',
+                    fLength AS '长Comp.', fWidth AS '宽Larg.',
                     fPrice AS '单价P. Unitario', fAmount AS '金额Total'
                 FROM t_order_detail
                 WHERE fOrderID = '{}'
@@ -97,8 +97,8 @@ class JPFuncForm_Order(JPFunctionForm):
         SELECT fOrderID,
             fQuant AS '数量Qtd',
             fProductName AS '名称Descrição',
-            fLength AS '长Larg.', 
-            fWidth AS '宽Comp.',
+            fLength AS '长Comp.', 
+            fWidth AS '宽Larg.',
             fPrice AS '单价P. Unitario', 
             fAmount AS '金额Total'
         FROM t_order_detail
@@ -190,6 +190,7 @@ class EditForm_Order(JPFormModelMainHasSub):
     def __onTaxKeyPress(self, KeyEvent):
         if (KeyEvent.modifiers() == Qt.AltModifier
                 and KeyEvent.key() == Qt.Key_Delete):
+            print("alt")
             self.cacuTax = False
             self.ObjectDict['fTax'].refreshValueRaiseEvent(None, True)
         elif (KeyEvent.modifiers() == Qt.AltModifier

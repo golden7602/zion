@@ -49,6 +49,7 @@ class JPFunctionForm(QWidget):
 
         # 以下为初始化部分
         self.ui.comboBox.addItems(['Today', 'Last Month', 'Last Year', 'All'])
+        self.ui.comboBox.setCurrentIndex(1)
         self.ui.checkBox_1.clicked.connect(self.btnRefreshClick)
         self.ui.checkBox_2.clicked.connect(self.btnRefreshClick)
         self.ui.comboBox.activated['int'].connect(self.btnRefreshClick)

@@ -392,8 +392,8 @@ if __name__ == "__main__":
     db.setDatabaseType(1)
     app = QApplication(sys.argv)
     SQL = """select fID,fOrderID,fQuant as '数量Qtd',
-            fProductName as '名称Descrição',fLength as '长Larg.',
-            fWidth as '宽Comp.',fPrice as '单价P. Unitario',
+            fProductName as '名称Descrição',fLength as '长Comp.',
+            fWidth as '宽Larg.',fPrice as '单价P. Unitario',
             fAmount as '金额Total' from t_order_detail limit 0"""
     Qi = JPQueryFieldInfo(SQL)
     dlg = _JPWhereStringCreater(Qi.Fields, app)

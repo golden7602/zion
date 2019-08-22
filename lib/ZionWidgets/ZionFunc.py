@@ -24,7 +24,7 @@ class ZionFuncForm(JPFunctionForm):
         self.CP_s_sql = """
                 SELECT fID, fOrderID, fQuant AS '数量Qtd',
                     fProductName AS '名称Descrição',
-                    fLength AS '长Larg.', fWidth AS '宽Comp.',
+                    fLength AS '长Comp.', fWidth AS '宽Larg.',
                     fPrice AS '单价P. Unitario', fAmount AS '金额Total'
                 FROM t_order_detail
                 WHERE fOrderID = '{}'
@@ -74,8 +74,8 @@ class ZionFuncForm(JPFunctionForm):
         SELECT fOrderID,
             fQuant AS '数量Qtd',
             fProductName AS '名称Descrição',
-            fLength AS '长Larg.', 
-            fWidth AS '宽Comp.',
+            fLength AS '长Comp.', 
+            fWidth AS '宽Larg.',
             fPrice AS '单价P. Unitario', 
             fAmount AS '金额Total'
         FROM t_order_detail

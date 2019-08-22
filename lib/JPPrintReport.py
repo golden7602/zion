@@ -50,6 +50,7 @@ class _jpPrintItem(metaclass=abc.ABCMeta):
         self.FormatString = kwargs.get("FormatString", '{}')
         self.FillColor = kwargs.get("FillColor", None)
         self.Visible = True
+        self.Tag = kwargs.get("Tag", None)
 
     @abc.abstractmethod
     def GetPrintText(self) -> str:
@@ -63,27 +64,17 @@ class _jpPrintItem(metaclass=abc.ABCMeta):
         r = self.Rect
         return QRect(r.x() + m.left, r.y() + o + m.top, r.width(), r.height())
 
-    def OnBeforePrint(self, Copys=None, Sec=None, CurrentPrintDataRow=None):
-        """一个条目的打印前事件,可以给此方法指定一个函数
-        传递参数：
-        1、当前Copy数；2、当前打印的节；3、当前打印的行数据(对于Detail节)
-        要求的返回值：
-        第一个值为True时，将取消打印事件
-        第二个值有返回值时，将用此返回值做为最终打印的文本,
-        """
-        return False, None
-
     def Print(self, p: QPainter, m: QMargins, o: int = 0):
         if _jpPrintItem.TotalPagesCalculated is False:
             return
         if self.Visible is False:
             return
-        r1, r2 = self.OnBeforePrint(_jpPrintItem.Report._CurrentCopys,
-                                    self.Section,
-                                    self.Section._GetCurrentPrintDataRow())
+        r1, r2 = _jpPrintItem.Report.onBeforePrint(
+            _jpPrintItem.Report._CurrentCopys, self.Section,
+            self.Section._GetCurrentPrintDataRow(),self)
         if r1:
             return
-        txt = r2 if r2 else self.GetPrintText()
+        txt = r2 if not (r2 is None) else self.GetPrintText()
         rect = self._NewRect(m, o)
         # 填充颜色
         if self.FillColor:
@@ -193,9 +184,9 @@ class _jpPrintPixmap(_jpPrintItem):
             return
         if self.Visible is False:
             return
-        r1, r2 = self.OnBeforePrint(_jpPrintItem.Report._CurrentCopys,
-                                    self.Section,
-                                    self.Section._GetCurrentPrintDataRow())
+        r1, r2 = _jpPrintItem.Report.onBeforePrint(
+            _jpPrintItem.Report._CurrentCopys, self.Section,
+            self.Section._GetCurrentPrintDataRow(),self)
         if r1:
             return
         obj = r2 if isinstance(r2, QPixmap) else self.PrintObject
@@ -329,6 +320,7 @@ class _jpPrintSection(object):
 
 class _SectionAutoPaging(_jpPrintSection):
     """定义一个自动分页的节，实现，请不要实例化"""
+
     def __init__(self):
         #  当前页面条目打印时的向下偏移量
         self._CurPageOffset = 0
@@ -367,6 +359,7 @@ class _SectionAutoPaging(_jpPrintSection):
 
 class _jpSectionReportHeader(_SectionAutoPaging):
     """报表、组页头类"""
+
     def __init__(self):
         self.SectionType = JPPrintSectionType.ReportHeader
         super().__init__()
@@ -377,6 +370,7 @@ class _jpSectionReportHeader(_SectionAutoPaging):
 
 class _jpSectionReportFooter(_SectionAutoPaging):
     """报表、组页脚类"""
+
     def __init__(self):
         self.SectionType = JPPrintSectionType.ReportFooter
         super().__init__()
@@ -761,6 +755,7 @@ class _jpPrintGroup(object):
 
 class JPReport(object):
     """报表类"""
+
     def __init__(self, PaperSize, Orientation):
         _jpPrintSection.Report = self
         _jpPrintItem.Report = self
@@ -802,6 +797,17 @@ class JPReport(object):
         当前节或Detail节的本行数据不打印，其他值均正常打印。
         """
         return True
+
+    def onBeforePrint(self, Copys, Sec, CurrentPrintDataRow, obj):
+        """一个条目的打印前事件,可以给此方法指定一个函数
+        传递参数：
+        1、当前Copy数；2、当前打印的节；3、当前打印的行数据(对于Detail节)
+        4、当前打印对象 
+        要求的返回值：
+        第一个值为True时，将取消打印事件
+        第二个值有返回值时，将用此返回值做为最终打印的文本,
+        """
+        return False, None
 
     def __del__(self):
         _jpPrintSection.Report = None
