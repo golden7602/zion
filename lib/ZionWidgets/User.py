@@ -216,7 +216,8 @@ def loadTreeview(treeWidget, items, hasCommandButton=False):
             for r in items:
                 item = QTreeWidgetItem(parent)
                 item.setText(0, r["fMenuText"])
-                item.setIcon(0, QIcon(self.icopath + r["fIcon"]))
+                if r["fIcon"]:
+                    item.setIcon(0, QIcon(self.icopath + r["fIcon"]))
                 st = (Qt.Checked if r['fHasRight'] == 1 else Qt.Unchecked)
                 if not r["fDefault"]:
                     item.setCheckState(1, st)
