@@ -24,7 +24,7 @@ import abc
 
 class JPFunctionForm(QWidget):
     currentRowChanged = pyqtSignal(QModelIndex, QModelIndex)
-
+    afterCreateEditForm=  pyqtSignal(int)
     def __init__(self, parent, flags=Qt.WindowFlags()):
         super().__init__(parent, flags=flags)
         # 把本窗体加入主窗体
@@ -132,6 +132,16 @@ class JPFunctionForm(QWidget):
         return True
 
     def btnRefreshClick(self, ID=None):
+        # 记录按钮状态
+        dict_but = {
+            but: but.isEnabled()
+            for but in self.findChildren((QPushButton))
+        }
+        for but in dict_but.keys():
+            but.setEnabled(False)
+        self.ui.checkBox_1.setEnabled(False)
+        self.ui.checkBox_2.setEnabled(False)
+        self.ui.comboBox.setEnabled(False)
         if self.SQL_ListForm_Para:
             self.ui.tableView.setSelectionMode(
                 QAbstractItemView.SingleSelection)
@@ -151,15 +161,33 @@ class JPFunctionForm(QWidget):
                 ch1=ch1, ch2=ch2, date=cb[self.ui.comboBox.currentIndex()])
             info = JPQueryFieldInfo(sql)
             self.currentSQL = sql
-            print(sql)
+            self.MainForm.ProgressBar.show()
+            self.MainForm.Label.setText('Reading')
             self.model = self.getModelClass()(self.ui.tableView, info)
+            self.model.readingRow.connect(self.__refreshProcessBar)
+            self.MainForm.ProgressBar.setRange(0, len(info))
             self.ui.tableView.setModel(self.model)
+            self.MainForm.Label.setText('')
+            self.MainForm.ProgressBar.hide()
             self.ui.tableView.selectionModel(
             ).currentRowChanged[QModelIndex, QModelIndex].connect(
                 self.onCurrentRowChanged)
             self.ui.tableView.resizeColumnsToContents()
             if ID:
                 self._locationRow(ID)
+
+        # 恢复按钮状态
+        for but in dict_but.keys():
+            but.setEnabled(dict_but[but])
+        self.ui.checkBox_1.setEnabled(True)
+        self.ui.checkBox_2.setEnabled(True)
+        self.ui.comboBox.setEnabled(True)
+
+    def __refreshProcessBar(self, row):
+        try:
+            self.MainForm.ProgressBar.setValue(row)
+        except Exception:
+            pass
 
     def onCurrentRowChanged(self, QModelIndex1, QModelIndex2):
         """当前行改变事件"""
@@ -188,8 +216,7 @@ class JPFunctionForm(QWidget):
 
     @pyqtSlot()
     def on_CmdExportToExcel_clicked(self):
-        exp = clsExportToExcelFromTableWidget(self.ui.tableView, self.MainForm)
-        exp.run()
+        return
 
     @pyqtSlot()
     def on_CmdSearch_clicked(self):
@@ -197,14 +224,16 @@ class JPFunctionForm(QWidget):
 
     @pyqtSlot()
     def on_CmdNew_clicked(self):
+        frm = self.getEditForm(sql_main=self.SQL_EditForm_Main,
+                               sql_sub=self.SQL_EditForm_Sub,
+                               edit_mode=JPEditFormDataMode.New,
+                               PKValue=None)
+        frm.setListForm(self)
+        frm.afterSaveData.connect(self.btnRefreshClick)
         self.__EditForm = None
-        self.__EditForm = self.getEditForm(sql_main=self.SQL_EditForm_Main,
-                                           sql_sub=self.SQL_EditForm_Sub,
-                                           edit_mode=JPEditFormDataMode.New,
-                                           PKValue=None)
-        self.__EditForm.setListForm(self)
-        self.__EditForm.afterSaveData.connect(self.btnRefreshClick)
-        self.__EditForm.exec_()
+        self.__EditForm = frm
+        self.afterCreateEditForm.emit(JPEditFormDataMode.New)
+        frm.exec_()
 
     @pyqtSlot()
     def on_CmdEdit_clicked(self):
@@ -219,6 +248,7 @@ class JPFunctionForm(QWidget):
         frm.afterSaveData.connect(self.btnRefreshClick)
         self.__EditForm = None
         self.__EditForm = frm
+        self.afterCreateEditForm.emit(JPEditFormDataMode.Edit)
         frm.exec_()
 
     @pyqtSlot()
@@ -233,6 +263,7 @@ class JPFunctionForm(QWidget):
         frm.setListForm(self)
         self.__EditForm = None
         self.__EditForm = frm
+        self.afterCreateEditForm.emit(JPEditFormDataMode.ReadOnly)
         frm.exec_()
 
     @pyqtSlot()

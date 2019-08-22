@@ -1,12 +1,14 @@
-from os import getcwd
+import re
+from configparser import ConfigParser
+from functools import singledispatch
+from os import getcwd, path as ospath
 from sys import path as jppath
 jppath.append(getcwd())
 
-from configparser import ConfigParser
-from functools import singledispatch
-import re
-from pymysql import (connect as mysql_connect, cursors as mysql_cursors)
+from pymysql import connect as mysql_connect
+from pymysql import cursors as mysql_cursors
 from PyQt5.QtWidgets import QMessageBox
+
 from lib.JPDatabase.Field import JPFieldInfo, JPMySQLFieldInfo
 from lib.JPFunction import Singleton
 
@@ -34,16 +36,32 @@ class JPDb(object):
 
     @property
     def currentConn(self) -> mysql_connect:
+        notFind = '当前文件夹下没有找到"Config.ini"文件！\n'
+        notFind = notFind + '"Config.ini" file was not found in the current folder!'
+        linkErr = '连接数据库错误，请检查"config.ini"文件\n'
+        linkErr = linkErr + 'Connecting the database incorrectly, please check the "config.ini" file'
         if self.__db_type == JPDbType.MySQL:
             if self.__currentConn is None:
+                if ospath.exists(getcwd() + '\\config.ini') is False:
+
+                    QMessageBox.warning(None, '错误', notFind, QMessageBox.Yes,
+                                        QMessageBox.Yes)
+                    exit()
                 config = ConfigParser()
                 config.read("config.ini", encoding="utf-8")
                 kw = dict(config._sections["database"])
-                self.__currentConn = mysql_connect(host=kw["host"],
-                                                   user=kw["user"],
-                                                   password=kw["password"],
-                                                   database=kw["database"],
-                                                   port=int(kw['port']))
+                try:
+                    conn = mysql_connect(host=kw["host"],
+                                         user=kw["user"],
+                                         password=kw["password"],
+                                         database=kw["database"],
+                                         port=int(kw['port']))
+                except Exception as e:
+                    s = Exception.__repr__(e) + '\n' + linkErr
+                    QMessageBox.warning(None, '错误', s, QMessageBox.Yes,
+                                        QMessageBox.Yes)
+                    exit()
+                self.__currentConn = conn
             return self.__currentConn
         if self.__db_type == JPDbType.SqlServer:
             pass

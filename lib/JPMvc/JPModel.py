@@ -27,6 +27,7 @@ class JPTableViewModelBase(QAbstractTableModel):
     dataChanged = pyqtSignal(QModelIndex, object)
     firstHasDirty = pyqtSignal()
     editNext = pyqtSignal(QModelIndex)
+    readingRow = pyqtSignal(int)
 
     def __init__(self, tabelFieldInfo: JPTabelFieldInfo = None):
         super().__init__()
@@ -34,6 +35,7 @@ class JPTableViewModelBase(QAbstractTableModel):
         self.tableView = None
         self.__dirty = False
         self.__isCalculating = False
+        self.__readingRow = -1
 
     def __setdirty(self, state: bool = True):
         # 第一次存在脏数据时，发送一个信号
@@ -85,7 +87,12 @@ class JPTableViewModelBase(QAbstractTableModel):
 
     def data(self, Index: QModelIndex,
              role: int = Qt.DisplayRole) -> QVariant():
+
         c = Index.column()
+        r = Index.row()
+        if r != self.__readingRow:
+            self.__readingRow = r
+            self.readingRow.emit(r)
         tf = self.TabelFieldInfo
         if not Index.isValid():
             print(Index.row())
@@ -147,7 +154,7 @@ class JPTableViewModelBase(QAbstractTableModel):
         if tmp.isValid():
             self.editNext.emit(tmp)
 
-        self.dataChanged[QModelIndex,object].emit(Index, Any)
+        self.dataChanged[QModelIndex, object].emit(Index, Any)
         return True
 
     def AfterSetDataBeforeInsterRowEvent(self, row_data,
@@ -265,4 +272,3 @@ class JPTableViewModelEditForm(JPTableViewModelBase):
         '''
         super().__init__(tabelFieldInfo)
         self.tableView = tableView
-

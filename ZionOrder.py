@@ -3,19 +3,20 @@
 from os import getcwd
 from sys import path as jppath, argv, exit as sys_exit
 jppath.append(getcwd())
-import PyQt5.sip
+
 from PyQt5.QtWidgets import (QApplication, QHBoxLayout, QMainWindow,
                              QTreeWidgetItem, QWidget, QPushButton, QLabel,
                              QProgressBar)
 from PyQt5.QtGui import QIcon, QPixmap
 from lib.ZionPublc import JPPub, JPUser
-from Ui import Ui_mainform
+from Ui.Ui_FormMain import Ui_MainWindow
 from lib.JPFunction import readQss, setButtonIconByName
 from lib.JPDatabase.Database import JPDb, JPDbType
 from lib.ZionWidgets.Background import Form_Background
 from Ui.Ui_FormUserLogin import Ui_Dialog
 from lib.JPFunction import setButtonIconByName, setButtonIcon
 from PyQt5.QtCore import QThread, QMetaObject, Qt
+from PyQt5 import sip
 
 
 def loadTreeview(treeWidget, items):
@@ -28,7 +29,7 @@ def loadTreeview(treeWidget, items):
             root.FullPath = "Function"
             self.root = root
             self.items = items
-            self.icopath = getcwd() +  "\\res\\ico\\"
+            self.icopath = getcwd() + "\\res\\ico\\"
 
         def addItems(self, parent, items):
             for r in items:
@@ -37,14 +38,13 @@ def loadTreeview(treeWidget, items):
                 item.setIcon(0, QIcon(self.icopath + r["fIcon"]))
                 item.jpData = r
                 item.FullPath = (parent.FullPath + '\\' + r["fMenuText"])
-                self.addItems(
-                    item,
-                    [l for l in self.items if l["fParentId"] == r["fNMID"]])
+                lst = [l for l in self.items if l["fParentId"] == r["fNMID"]]
+                self.addItems(item, lst)
                 item.setExpanded(1)
 
         def run(self):  # 线程执行函数
-            self.addItems(self.root,
-                          [l for l in self.items if l["fParentId"] == 1])
+            lst = [l for l in self.items if l["fParentId"] == 1]
+            self.addItems(self.root, lst)
             self.root.setExpanded(True)
 
         def getRoot(self):
@@ -58,13 +58,13 @@ class JPMainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         JPPub().MainForm = self
-        self.ui = Ui_mainform.Ui_MainWindow()
+        self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.ui.label_Title.setText("Zion OrderM")
         setButtonIconByName(self.ui.ChangeUser)
         setButtonIconByName(self.ui.ChangePassword)
-        self.ui.label_logo.setPixmap(QPixmap(getcwd() +
-                                             "\\res\\Zions_100.png"))
+        pic = QPixmap(getcwd() + "\\res\\Zions_100.png")
+        self.ui.label_logo.setPixmap(pic)
 
         def onUserChanged(args):
             self.ui.label_UserName.setText(args[1])
@@ -128,7 +128,7 @@ class JPMainWindow(QMainWindow):
         elif self.menu_id == 9:
             from lib.ZionWidgets.Payment import JPFuncForm_Payment
             JPFuncForm_Payment(self)
-        elif self.menu_id == 22: #
+        elif self.menu_id == 22:  #
             from lib.ZionReport.Report_Day import Form_Repoet_Day
             Form_Repoet_Day(self)
         elif self.menu_id == 10:
@@ -160,6 +160,9 @@ class JPMainWindow(QMainWindow):
         elif self.menu_id == 55:
             from lib.ZionWidgets.PrintingQuotation import JPFuncForm_PrintingQuotation
             JPFuncForm_PrintingQuotation(self)
+        elif self.menu_id==148:
+            from lib.ZionWidgets.Customer_Arrears import Form_FormCustomer_Arrears
+            Form_FormCustomer_Arrears(self)
         else:
             Form_Background(self)
 
@@ -168,6 +171,7 @@ class JPMainWindow(QMainWindow):
 
 if __name__ == "__main__":
     QApplication.setAttribute(Qt.AA_EnableHighDpiScaling)
+    QApplication.setStyle('Fusion')
     app = QApplication(argv)
     db = JPDb()
     db.setDatabaseType(JPDbType.MySQL)

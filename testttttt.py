@@ -31,3 +31,7 @@ sel_p = r"^SELECT\s+.*from\s(\S+)[$|\s].*"
 sel_p = r"^(SELECT\s+.*from\s(\S+)[$|\s](as\s\S+)*)"
 mt = re.match(sel_p, sql, flags=(re.I | re.M))
 print(mt.groups()[0])
+
+
+from PyQt5 import sip
+print(sip.SIP_VERSION_STR)

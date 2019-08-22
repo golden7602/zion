@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS `syslanguage` (
   PRIMARY KEY (`fID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1006477 DEFAULT CHARSET=utf8;
 
--- 正在导出表  myorder_python.syslanguage 的数据：~844 rows (大约)
+-- 正在导出表  myorder_python.syslanguage 的数据：~813 rows (大约)
 DELETE FROM `syslanguage`;
 /*!40000 ALTER TABLE `syslanguage` DISABLE KEYS */;
 INSERT INTO `syslanguage` (`fID`, `fParentId`, `fObjectName`, `fCaption`, `fFontSize`, `fFontName`, `fIndex`, `fLanguage1`, `fLanguage2`, `fType`, `TS`) VALUES
@@ -877,9 +877,9 @@ CREATE TABLE IF NOT EXISTS `sysnavigationmenus` (
   `TS` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`fNMID`),
   KEY `ParentID` (`fParentId`)
-) ENGINE=InnoDB AUTO_INCREMENT=148 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=149 DEFAULT CHARSET=utf8;
 
--- 正在导出表  myorder_python.sysnavigationmenus 的数据：~131 rows (大约)
+-- 正在导出表  myorder_python.sysnavigationmenus 的数据：~82 rows (大约)
 DELETE FROM `sysnavigationmenus`;
 /*!40000 ALTER TABLE `sysnavigationmenus` DISABLE KEYS */;
 INSERT INTO `sysnavigationmenus` (`fNMID`, `fDispIndex`, `fParentId`, `fEnabled`, `fMenuText`, `fCommand`, `fObjectName`, `fFormMode`, `fArg`, `fIcon`, `fDefault`, `fNodeBackvolor`, `fNodeForeColor`, `fNodeFontBold`, `fExpanded`, `fDescription`, `fLevel`, `fIsCommandButton`, `TS`) VALUES
@@ -906,64 +906,65 @@ INSERT INTO `sysnavigationmenus` (`fNMID`, `fDispIndex`, `fParentId`, `fEnabled`
 	(72, 50, 71, b'1', 'PrintOrder', 2, 'f_PrintingOrder', -1, NULL, 'folder.png', b'0', NULL, NULL, 0, 0, NULL, b'0', b'0', '2019-05-17 14:21:11'),
 	(73, 30, 1, b'1', 'Customer', 2, 'f_Customer', -1, NULL, 'customers.png', b'0', NULL, NULL, 0, 0, NULL, b'0', b'0', '2019-05-17 14:16:14'),
 	(80, 800, 14, b'1', 'Ok', 0, 'CmdOk', NULL, NULL, 'Ok.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-07-15 18:38:01'),
-	(81, 810, 2, b'1', 'Edit', 0, 'CmdEdit', NULL, NULL, 'Edit.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-07-15 18:38:01'),
-	(82, 811, 2, b'1', 'New', 0, 'CmdNew', NULL, NULL, 'New.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-07-15 18:38:01'),
-	(83, 830, 2, b'1', 'ExportToExcel', 0, 'CmdExportToExcel', NULL, NULL, 'ExportToExcel.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-07-15 18:38:01'),
-	(84, 840, 2, b'1', 'Browse', 0, 'CmdBrowse', NULL, NULL, 'Browse.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-07-15 18:38:01'),
-	(85, 850, 2, b'1', 'Submit', 0, 'CmdSubmit', NULL, NULL, 'Submit.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-07-15 18:38:01'),
-	(86, 860, 2, b'1', 'Refresh', 0, 'CmdRefresh', NULL, NULL, 'Refresh.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-07-15 18:38:01'),
-	(87, 870, 2, b'1', 'Search', 0, 'CmdSearch', NULL, NULL, 'Search.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-07-15 18:38:01'),
+	(81, 2002, 2, b'1', 'Edit', 0, 'CmdEdit', NULL, NULL, 'Edit.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-08-22 19:25:47'),
+	(82, 2001, 2, b'1', 'New', 0, 'CmdNew', NULL, NULL, 'New.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-08-22 19:25:38'),
+	(83, 2007, 2, b'1', 'ExportToExcel', 0, 'CmdExportToExcel', NULL, NULL, 'ExportToExcel.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-08-22 19:26:16'),
+	(84, 2003, 2, b'1', 'Browse', 0, 'CmdBrowse', NULL, NULL, 'Browse.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-08-22 19:25:52'),
+	(85, 2004, 2, b'1', 'Submit', 0, 'CmdSubmit', NULL, NULL, 'Submit.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-08-22 19:26:01'),
+	(86, 2005, 2, b'1', 'Refresh', 0, 'CmdRefresh', NULL, NULL, 'Refresh.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-08-22 19:26:05'),
+	(87, 2006, 2, b'1', 'Search', 0, 'CmdSearch', NULL, NULL, 'Search.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-08-22 19:26:11'),
 	(88, 880, 20, b'1', 'Recibido', 0, 'CmdRecibido', NULL, NULL, 'Recibido.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-07-15 18:38:01'),
 	(89, 890, 20, b'1', 'ExportToExcel', 0, 'CmdExportToExcel', NULL, NULL, 'ExportToExcel.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-07-15 18:38:01'),
 	(90, 900, 20, b'1', 'Refresh', 0, 'CmdRefresh', NULL, NULL, 'Refresh.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-07-15 18:38:01'),
 	(91, 910, 20, b'1', 'DailyRreport', 0, 'CMdDailyRreport', NULL, NULL, 'DailyRreport.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-07-15 18:38:01'),
-	(92, 920, 73, b'1', 'Edit', 0, 'CmdEdit', NULL, NULL, 'Edit.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-07-15 18:38:01'),
-	(93, 930, 73, b'1', 'New', 0, 'CmdNew', NULL, NULL, 'New.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-07-15 18:38:01'),
-	(94, 940, 73, b'1', 'Refresh', 0, 'CmdRefresh', NULL, NULL, 'Refresh.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-07-15 18:38:01'),
+	(92, 7302, 73, b'1', 'Edit', 0, 'CmdEdit', NULL, NULL, 'Edit.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-08-22 19:36:41'),
+	(93, 7301, 73, b'1', 'New', 0, 'CmdNew', NULL, NULL, 'New.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-08-22 19:36:36'),
+	(94, 7304, 73, b'1', 'Refresh', 0, 'CmdRefresh', NULL, NULL, 'Refresh.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-08-22 19:36:50'),
 	(95, 950, 73, b'1', 'Search', 0, 'CmdSearch', NULL, NULL, 'Search.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-07-15 18:38:01'),
 	(97, 970, 9, b'1', 'Edit', 0, 'CmdEdit', NULL, NULL, 'Edit.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-07-15 18:38:01'),
 	(98, 980, 9, b'1', 'Browse', 0, 'CmdBrowse', NULL, NULL, 'Browse.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-07-15 18:38:01'),
 	(99, 990, 9, b'1', 'Search', 0, 'CmdSearch', NULL, NULL, 'Search.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-07-15 18:38:01'),
 	(100, 1000, 9, b'1', 'Refresh', 0, 'CmdRefresh', NULL, NULL, 'Refresh.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-07-15 18:38:01'),
-	(101, 1010, 9, b'1', 'Confirm', 0, 'CmdConfirm', NULL, NULL, 'Confirm.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-07-15 18:38:01'),
+	(101, 982, 9, b'1', 'Confirm', 0, 'CmdConfirm', NULL, NULL, 'Confirm.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-08-22 19:31:23'),
 	(102, 1020, 9, b'1', 'ExportToExcel', 0, 'CmdExportToExcel', NULL, NULL, 'ExportToExcel.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-07-15 18:38:01'),
-	(103, 1030, 72, b'1', 'Edit', 0, 'CmdEdit', NULL, NULL, 'Edit.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-07-15 18:38:01'),
-	(104, 1040, 72, b'1', 'New', 0, 'CmdNew', NULL, NULL, 'New.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-07-15 18:38:01'),
-	(105, 1050, 72, b'1', 'ExportToExcel', 0, 'CmdExportToExcel', NULL, NULL, 'ExportToExcel.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-07-15 18:38:01'),
-	(106, 1060, 72, b'1', 'Browse', 0, 'CmdBrowse', NULL, NULL, 'Browse.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-07-15 18:38:01'),
-	(107, 1070, 72, b'1', 'Submit', 0, 'CmdSubmit', NULL, NULL, 'Submit.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-07-15 18:38:01'),
-	(108, 1080, 72, b'1', 'Refresh', 0, 'CmdRefresh', NULL, NULL, 'Refresh.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-07-15 18:38:01'),
-	(109, 1090, 72, b'1', 'Search', 0, 'CmdSearch', NULL, NULL, 'Search.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-07-15 18:38:01'),
-	(110, 1100, 15, b'1', 'Complete', 0, 'CmdComplete', NULL, NULL, 'Complete.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-07-15 18:38:01'),
-	(111, 1110, 15, b'1', 'ExportToExcel', 0, 'CmdExportToExcel', NULL, NULL, 'ExportToExcel.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-07-15 18:38:01'),
-	(112, 1120, 15, b'1', 'Browse', 0, 'CmdBrowse', NULL, NULL, 'Browse.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-07-15 18:38:01'),
-	(113, 1130, 15, b'1', 'Refresh', 0, 'CmdRefresh', NULL, NULL, 'Refresh.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-07-15 18:38:01'),
-	(114, 1140, 15, b'1', 'Search', 0, 'CmdSearch', NULL, NULL, 'Search.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-07-15 18:38:01'),
-	(115, 1150, 55, b'1', 'Edit', 0, 'CmdEdit', NULL, NULL, 'Edit.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-07-15 18:38:01'),
-	(116, 1160, 55, b'1', 'New', 0, 'CmdNew', NULL, NULL, 'New.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-07-15 18:38:01'),
-	(117, 1170, 55, b'1', 'ExportToExcel', 0, 'CmdExportToExcel', NULL, NULL, 'ExportToExcel.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-07-15 18:38:01'),
-	(118, 1180, 55, b'1', 'Browse', 0, 'CmdBrowse', NULL, NULL, 'Browse.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-07-15 18:38:01'),
-	(119, 1190, 55, b'1', 'Order', 0, 'CmdOrder', NULL, NULL, 'Order.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-07-15 18:38:01'),
-	(120, 1200, 55, b'1', 'Refresh', 0, 'CmdRefresh', NULL, NULL, 'Refresh.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-07-15 18:38:01'),
-	(121, 1210, 55, b'1', 'Search', 0, 'CmdSearch', NULL, NULL, 'Search.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-07-15 18:38:01'),
-	(122, 1220, 18, b'1', 'Search', 0, 'CmdSearch', NULL, NULL, 'Search.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-07-15 18:38:01'),
-	(123, 1230, 18, b'1', 'Adjustment', 0, 'CmdAdjustment', NULL, NULL, 'Adjustment.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-07-15 18:38:01'),
-	(124, 1240, 18, b'1', 'Refresh', 0, 'CmdRefresh', NULL, NULL, 'Refresh.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-07-15 18:38:01'),
-	(125, 1250, 18, b'1', 'Browse', 0, 'CmdBrowse', NULL, NULL, 'Browse.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-07-15 18:38:01'),
-	(126, 1260, 18, b'1', 'ExportToExcel', 0, 'CmdExportToExcel', NULL, NULL, 'ExportToExcel.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-07-15 18:38:01'),
-	(127, 1270, 18, b'1', 'Cancel', 0, 'CmdCancel', NULL, NULL, 'Cancel.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-07-15 18:38:01'),
-	(128, 1280, 56, b'1', 'Edit', 0, 'CmdEdit', NULL, NULL, 'Edit.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-07-15 18:38:01'),
-	(129, 1290, 56, b'1', 'New', 0, 'CmdNew', NULL, NULL, 'New.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-07-15 18:38:01'),
-	(130, 1300, 56, b'1', 'ExportToExcel', 0, 'CmdExportToExcel', NULL, NULL, 'ExportToExcel.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-07-15 18:38:01'),
-	(131, 1310, 56, b'1', 'Browse', 0, 'CmdBrowse', NULL, NULL, 'Browse.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-07-15 18:38:01'),
-	(132, 1320, 56, b'1', 'Order', 0, 'CmdOrder', NULL, NULL, 'Order.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-07-15 18:38:01'),
-	(133, 1330, 56, b'1', 'Refresh', 0, 'CmdRefresh', NULL, NULL, 'Refresh.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-07-15 18:38:01'),
-	(134, 1340, 56, b'1', 'Search', 0, 'CmdSearch', NULL, NULL, 'Search.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-07-15 18:38:01'),
+	(103, 7202, 72, b'1', 'Edit', 0, 'CmdEdit', NULL, NULL, 'Edit.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-08-22 19:29:54'),
+	(104, 7201, 72, b'1', 'New', 0, 'CmdNew', NULL, NULL, 'New.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-08-22 19:29:50'),
+	(105, 7207, 72, b'1', 'ExportToExcel', 0, 'CmdExportToExcel', NULL, NULL, 'ExportToExcel.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-08-22 19:30:31'),
+	(106, 7203, 72, b'1', 'Browse', 0, 'CmdBrowse', NULL, NULL, 'Browse.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-08-22 19:30:15'),
+	(107, 7204, 72, b'1', 'Submit', 0, 'CmdSubmit', NULL, NULL, 'Submit.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-08-22 19:30:08'),
+	(108, 7205, 72, b'1', 'Refresh', 0, 'CmdRefresh', NULL, NULL, 'Refresh.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-08-22 19:30:23'),
+	(109, 7206, 72, b'1', 'Search', 0, 'CmdSearch', NULL, NULL, 'Search.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-08-22 19:30:27'),
+	(110, 1501, 15, b'1', 'Complete', 0, 'CmdComplete', NULL, NULL, 'Complete.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-08-22 19:32:05'),
+	(111, 1506, 15, b'1', 'ExportToExcel', 0, 'CmdExportToExcel', NULL, NULL, 'ExportToExcel.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-08-22 19:32:28'),
+	(112, 1502, 15, b'1', 'Browse', 0, 'CmdBrowse', NULL, NULL, 'Browse.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-08-22 19:32:16'),
+	(113, 1503, 15, b'1', 'Refresh', 0, 'CmdRefresh', NULL, NULL, 'Refresh.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-08-22 19:32:19'),
+	(114, 1504, 15, b'1', 'Search', 0, 'CmdSearch', NULL, NULL, 'Search.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-08-22 19:32:23'),
+	(115, 5502, 55, b'1', 'Edit', 0, 'CmdEdit', NULL, NULL, 'Edit.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-08-22 19:33:51'),
+	(116, 5501, 55, b'1', 'New', 0, 'CmdNew', NULL, NULL, 'New.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-08-22 19:33:45'),
+	(117, 5507, 55, b'1', 'ExportToExcel', 0, 'CmdExportToExcel', NULL, NULL, 'ExportToExcel.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-08-22 19:34:20'),
+	(118, 5503, 55, b'1', 'Browse', 0, 'CmdBrowse', NULL, NULL, 'Browse.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-08-22 19:33:55'),
+	(119, 5504, 55, b'1', 'Order', 0, 'CmdOrder', NULL, NULL, 'Order.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-08-22 19:34:04'),
+	(120, 5505, 55, b'1', 'Refresh', 0, 'CmdRefresh', NULL, NULL, 'Refresh.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-08-22 19:34:09'),
+	(121, 5506, 55, b'1', 'Search', 0, 'CmdSearch', NULL, NULL, 'Search.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-08-22 19:34:12'),
+	(122, 1804, 18, b'1', 'Search', 0, 'CmdSearch', NULL, NULL, 'Search.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-08-22 19:33:18'),
+	(123, 1800, 18, b'1', 'Adjustment', 0, 'CmdAdjustment', NULL, NULL, 'Adjustment.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-08-22 19:33:02'),
+	(124, 1803, 18, b'1', 'Refresh', 0, 'CmdRefresh', NULL, NULL, 'Refresh.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-08-22 19:33:13'),
+	(125, 1801, 18, b'1', 'Browse', 0, 'CmdBrowse', NULL, NULL, 'Browse.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-08-22 19:32:48'),
+	(126, 1805, 18, b'1', 'ExportToExcel', 0, 'CmdExportToExcel', NULL, NULL, 'ExportToExcel.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-08-22 19:33:23'),
+	(127, 1802, 18, b'1', 'Cancel', 0, 'CmdCancel', NULL, NULL, 'Cancel.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-08-22 19:33:08'),
+	(128, 5602, 56, b'1', 'Edit', 0, 'CmdEdit', NULL, NULL, 'Edit.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-08-22 19:34:51'),
+	(129, 5601, 56, b'1', 'New', 0, 'CmdNew', NULL, NULL, 'New.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-08-22 19:34:34'),
+	(130, 5607, 56, b'1', 'ExportToExcel', 0, 'CmdExportToExcel', NULL, NULL, 'ExportToExcel.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-08-22 19:35:20'),
+	(131, 5603, 56, b'1', 'Browse', 0, 'CmdBrowse', NULL, NULL, 'Browse.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-08-22 19:34:55'),
+	(132, 5604, 56, b'1', 'Order', 0, 'CmdOrder', NULL, NULL, 'Order.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-08-22 19:35:00'),
+	(133, 5605, 56, b'1', 'Refresh', 0, 'CmdRefresh', NULL, NULL, 'Refresh.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-08-22 19:35:04'),
+	(134, 5606, 56, b'1', 'Search', 0, 'CmdSearch', NULL, NULL, 'Search.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-08-22 19:35:10'),
 	(135, 1350, 13, b'1', 'New', 0, 'CmdNew', NULL, NULL, 'New.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-07-15 18:38:01'),
 	(136, 1360, 13, b'1', 'Delete', 0, 'CmdDelete', NULL, NULL, 'Delete.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-07-15 18:38:01'),
 	(137, 1370, 13, b'1', 'Edit', 0, 'CmdEdit', NULL, NULL, 'Edit.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-07-15 18:38:01'),
-	(145, 1450, 73, b'1', 'Delete', 0, 'CmdDelete', NULL, NULL, 'Delete.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-07-22 22:37:34'),
-	(147, 515, 11, b'1', 'BackupData', 2, 'SysfrmBackupData', -1, NULL, 'backup.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'0', '2019-05-17 14:20:51');
+	(145, 7303, 73, b'1', 'Delete', 0, 'CmdDelete', NULL, NULL, 'Delete.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-08-22 19:36:46'),
+	(147, 515, 11, b'1', 'BackupData', 2, 'SysfrmBackupData', -1, NULL, 'backup.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'0', '2019-05-17 14:20:51'),
+	(148, 411, 1, b'1', 'CustomerArrears', 0, 'f_Customer_Arrears', -1, NULL, 'query.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'0', '2019-08-22 20:33:41');
 /*!40000 ALTER TABLE `sysnavigationmenus` ENABLE KEYS */;
 
 -- 导出  表 myorder_python.syssql 结构
@@ -978,7 +979,7 @@ CREATE TABLE IF NOT EXISTS `syssql` (
   `MariaDB_NoPara` text
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- 正在导出表  myorder_python.syssql 的数据：~29 rows (大约)
+-- 正在导出表  myorder_python.syssql 的数据：~35 rows (大约)
 DELETE FROM `syssql`;
 /*!40000 ALTER TABLE `syssql` DISABLE KEYS */;
 INSERT INTO `syssql` (`ID`, `UseFor`, `Description`, `ObjectName`, `ControlName`, `MariaDB`, `MariaDB_NoPara`) VALUES
@@ -1042,7 +1043,7 @@ CREATE TABLE IF NOT EXISTS `systabelautokeyroles` (
 DELETE FROM `systabelautokeyroles`;
 /*!40000 ALTER TABLE `systabelautokeyroles` DISABLE KEYS */;
 INSERT INTO `systabelautokeyroles` (`fRoleID`, `fRoleName`, `fTabelName`, `fFieldName`, `fHasDateTime`, `fPreFix`, `fCurrentValue`, `fLenght`, `fLastKey`, `fDateFormat`, `TS`) VALUES
-	(1, 'OrderID', 't_order', 'forderID', b'1', 'CP', 0000000616, 6, 'CP2019-0816000616', 'yyyy-mmdd', '2019-08-16 22:13:00'),
+	(1, 'OrderID', 't_order', 'forderID', b'1', 'CP', 0000000617, 6, 'CP2019-0821000617', 'yyyy-mmdd', '2019-08-21 16:44:36'),
 	(2, 'InkjetPrintingGuide_ID', 't_InkjetPrintingGuide', 'InkjetPrintingGuide_ID', b'1', 'PG', 0000000000, 6, '0', 'yyyy-mmdd', '2019-04-18 12:37:08'),
 	(3, 'Attachment', 't_InkjetPrintingGuide_Map', 'MapName', b'1', 'ATT', 0000000000, 10, '', 'yyyymmdd', '2019-04-18 12:37:08'),
 	(4, 'PrintingQuoteID', 't_quotation', 'fQuoteID', b'1', 'QP', 0000000005, 6, 'QP2019-0819000005', 'yyyy-mmdd', '2019-08-19 21:33:43'),
@@ -1060,9 +1061,9 @@ CREATE TABLE IF NOT EXISTS `sysuserright` (
   `TS` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`fID`),
   UNIQUE KEY `UserID` (`fUserID`,`fRightID`)
-) ENGINE=InnoDB AUTO_INCREMENT=2706 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2791 DEFAULT CHARSET=utf8;
 
--- 正在导出表  myorder_python.sysuserright 的数据：~249 rows (大约)
+-- 正在导出表  myorder_python.sysuserright 的数据：~1,209 rows (大约)
 DELETE FROM `sysuserright`;
 /*!40000 ALTER TABLE `sysuserright` DISABLE KEYS */;
 INSERT INTO `sysuserright` (`fID`, `fRightID`, `fUserID`, `fHasRight`, `TS`) VALUES
@@ -1141,86 +1142,6 @@ INSERT INTO `sysuserright` (`fID`, `fRightID`, `fUserID`, `fHasRight`, `TS`) VAL
 	(91, 144, 1, b'0', '2019-04-26 20:28:43'),
 	(92, 145, 1, b'0', '2019-04-26 20:28:43'),
 	(93, 147, 1, b'0', '2019-04-26 20:28:43'),
-	(304, 2, 32, b'1', '2019-07-26 22:08:47'),
-	(305, 9, 32, b'1', '2019-04-26 20:34:31'),
-	(306, 10, 32, b'1', '2019-04-26 20:34:31'),
-	(307, 11, 32, b'1', '2019-04-26 20:34:31'),
-	(308, 13, 32, b'1', '2019-04-26 20:34:31'),
-	(309, 14, 32, b'1', '2019-04-26 20:34:31'),
-	(310, 15, 32, b'1', '2019-04-26 20:34:31'),
-	(311, 18, 32, b'1', '2019-04-26 20:34:31'),
-	(312, 19, 32, b'1', '2019-04-26 20:34:31'),
-	(313, 20, 32, b'1', '2019-04-26 20:34:31'),
-	(314, 21, 32, b'1', '2019-04-26 20:34:31'),
-	(315, 22, 32, b'1', '2019-04-26 20:34:31'),
-	(316, 54, 32, b'1', '2019-04-26 20:34:31'),
-	(317, 55, 32, b'1', '2019-04-26 20:34:31'),
-	(318, 56, 32, b'1', '2019-04-26 20:34:31'),
-	(319, 71, 32, b'1', '2019-07-26 22:08:47'),
-	(320, 72, 32, b'1', '2019-04-26 20:34:31'),
-	(321, 73, 32, b'1', '2019-04-26 20:34:31'),
-	(322, 80, 32, b'1', '2019-04-26 20:34:31'),
-	(323, 81, 32, b'1', '2019-07-26 22:08:47'),
-	(324, 82, 32, b'1', '2019-04-26 20:34:31'),
-	(325, 83, 32, b'1', '2019-04-26 20:34:31'),
-	(326, 84, 32, b'1', '2019-04-26 20:34:31'),
-	(327, 85, 32, b'1', '2019-04-26 20:34:31'),
-	(328, 86, 32, b'1', '2019-04-26 20:34:31'),
-	(329, 87, 32, b'1', '2019-04-26 20:34:31'),
-	(330, 88, 32, b'1', '2019-04-26 20:34:31'),
-	(331, 89, 32, b'1', '2019-04-26 20:34:31'),
-	(332, 90, 32, b'1', '2019-04-26 20:34:31'),
-	(333, 91, 32, b'1', '2019-04-26 20:34:31'),
-	(334, 92, 32, b'1', '2019-04-26 20:34:31'),
-	(335, 93, 32, b'1', '2019-04-26 20:34:31'),
-	(336, 94, 32, b'1', '2019-04-26 20:34:31'),
-	(337, 95, 32, b'1', '2019-04-26 20:34:31'),
-	(338, 96, 32, b'1', '2019-04-26 20:34:31'),
-	(339, 97, 32, b'1', '2019-04-26 20:34:31'),
-	(340, 98, 32, b'1', '2019-04-26 20:34:31'),
-	(341, 99, 32, b'1', '2019-04-26 20:34:31'),
-	(342, 100, 32, b'1', '2019-04-26 20:34:31'),
-	(343, 101, 32, b'1', '2019-04-26 20:34:31'),
-	(344, 102, 32, b'1', '2019-04-26 20:34:31'),
-	(345, 103, 32, b'1', '2019-04-26 20:34:31'),
-	(346, 104, 32, b'1', '2019-04-26 20:34:31'),
-	(347, 105, 32, b'1', '2019-04-26 20:34:31'),
-	(348, 106, 32, b'1', '2019-04-26 20:34:31'),
-	(349, 107, 32, b'1', '2019-04-26 20:34:31'),
-	(350, 108, 32, b'1', '2019-04-26 20:34:31'),
-	(351, 109, 32, b'1', '2019-04-26 20:34:31'),
-	(352, 110, 32, b'1', '2019-04-26 20:34:31'),
-	(353, 111, 32, b'1', '2019-04-26 20:34:31'),
-	(354, 112, 32, b'1', '2019-04-26 20:34:31'),
-	(355, 113, 32, b'1', '2019-04-26 20:34:31'),
-	(356, 114, 32, b'1', '2019-04-26 20:34:31'),
-	(357, 115, 32, b'1', '2019-04-26 20:34:31'),
-	(358, 116, 32, b'1', '2019-04-26 20:34:31'),
-	(359, 117, 32, b'1', '2019-04-26 20:34:31'),
-	(360, 118, 32, b'1', '2019-04-26 20:34:31'),
-	(361, 119, 32, b'1', '2019-04-26 20:34:31'),
-	(362, 120, 32, b'1', '2019-04-26 20:34:31'),
-	(363, 121, 32, b'1', '2019-04-26 20:34:31'),
-	(364, 122, 32, b'1', '2019-04-26 20:34:31'),
-	(365, 123, 32, b'1', '2019-04-26 20:34:31'),
-	(366, 124, 32, b'1', '2019-04-26 20:34:31'),
-	(367, 125, 32, b'1', '2019-04-26 20:34:31'),
-	(368, 126, 32, b'1', '2019-04-26 20:34:31'),
-	(369, 127, 32, b'1', '2019-04-26 20:34:31'),
-	(370, 128, 32, b'1', '2019-04-26 20:34:31'),
-	(371, 129, 32, b'1', '2019-04-26 20:34:31'),
-	(372, 130, 32, b'1', '2019-04-26 20:34:31'),
-	(373, 131, 32, b'1', '2019-04-26 20:34:31'),
-	(374, 132, 32, b'1', '2019-04-26 20:34:31'),
-	(375, 133, 32, b'1', '2019-04-26 20:34:31'),
-	(376, 134, 32, b'1', '2019-04-26 20:34:31'),
-	(377, 135, 32, b'1', '2019-07-26 23:51:16'),
-	(378, 136, 32, b'1', '2019-07-26 23:51:19'),
-	(379, 137, 32, b'1', '2019-07-26 23:51:20'),
-	(381, 143, 32, b'1', '2019-04-26 20:34:31'),
-	(382, 144, 32, b'1', '2019-04-26 20:34:31'),
-	(383, 145, 32, b'1', '2019-04-26 20:34:31'),
-	(385, 147, 32, b'1', '2019-04-26 20:34:31'),
 	(463, 2, 35, b'0', '2019-07-26 21:37:59'),
 	(464, 9, 35, b'1', '2019-04-26 20:38:17'),
 	(465, 10, 35, b'1', '2019-04-26 20:38:17'),
@@ -1301,9 +1222,6 @@ INSERT INTO `sysuserright` (`fID`, `fRightID`, `fUserID`, `fHasRight`, `TS`) VAL
 	(541, 144, 35, b'1', '2019-04-26 20:38:17'),
 	(542, 145, 35, b'1', '2019-04-26 20:38:17'),
 	(544, 147, 35, b'1', '2019-04-26 20:38:17'),
-	(797, 1, 32, b'1', '2019-05-05 16:29:59'),
-	(798, 12, 32, b'1', '2019-05-05 16:29:59'),
-	(799, 17, 32, b'1', '2019-05-05 16:29:59'),
 	(1148, 1, 1, b'1', '2019-05-08 17:00:40'),
 	(1149, 11, 1, b'1', '2019-05-08 17:00:40'),
 	(1150, 12, 1, b'1', '2019-05-08 17:00:40'),
@@ -2274,7 +2192,90 @@ INSERT INTO `sysuserright` (`fID`, `fRightID`, `fUserID`, `fHasRight`, `TS`) VAL
 	(2655, 136, 45, b'0', '2019-08-20 08:29:18'),
 	(2656, 137, 45, b'0', '2019-08-20 08:29:18'),
 	(2657, 145, 45, b'0', '2019-08-20 08:29:18'),
-	(2658, 147, 45, b'0', '2019-08-20 08:29:18');
+	(2658, 147, 45, b'0', '2019-08-20 08:29:18'),
+	(2659, 148, 33, b'0', '2019-08-22 20:44:03'),
+	(2663, 1, 32, b'1', '2019-08-22 20:47:12'),
+	(2664, 2, 32, b'1', '2019-08-22 20:48:12'),
+	(2665, 9, 32, b'1', '2019-08-22 20:48:12'),
+	(2666, 10, 32, b'1', '2019-08-22 20:48:12'),
+	(2667, 11, 32, b'1', '2019-08-22 20:48:12'),
+	(2668, 12, 32, b'1', '2019-08-22 20:47:12'),
+	(2669, 13, 32, b'1', '2019-08-22 20:48:12'),
+	(2670, 14, 32, b'1', '2019-08-22 20:48:12'),
+	(2671, 15, 32, b'1', '2019-08-22 20:48:12'),
+	(2672, 17, 32, b'1', '2019-08-22 20:47:12'),
+	(2673, 18, 32, b'1', '2019-08-22 20:48:12'),
+	(2674, 19, 32, b'1', '2019-08-22 20:48:12'),
+	(2675, 20, 32, b'1', '2019-08-22 20:48:12'),
+	(2676, 21, 32, b'1', '2019-08-22 20:48:12'),
+	(2677, 22, 32, b'1', '2019-08-22 20:48:12'),
+	(2678, 54, 32, b'1', '2019-08-22 20:48:12'),
+	(2679, 55, 32, b'1', '2019-08-22 20:48:12'),
+	(2680, 56, 32, b'1', '2019-08-22 20:48:12'),
+	(2681, 71, 32, b'1', '2019-08-22 20:48:12'),
+	(2682, 72, 32, b'1', '2019-08-22 20:48:12'),
+	(2683, 73, 32, b'1', '2019-08-22 20:48:12'),
+	(2684, 80, 32, b'1', '2019-08-22 20:48:12'),
+	(2685, 81, 32, b'1', '2019-08-22 20:48:12'),
+	(2686, 82, 32, b'1', '2019-08-22 20:48:12'),
+	(2687, 83, 32, b'1', '2019-08-22 20:48:12'),
+	(2688, 84, 32, b'1', '2019-08-22 20:48:12'),
+	(2689, 85, 32, b'1', '2019-08-22 20:48:12'),
+	(2690, 86, 32, b'1', '2019-08-22 20:48:12'),
+	(2691, 87, 32, b'1', '2019-08-22 20:48:12'),
+	(2692, 88, 32, b'1', '2019-08-22 20:48:12'),
+	(2693, 89, 32, b'1', '2019-08-22 20:48:12'),
+	(2694, 90, 32, b'1', '2019-08-22 20:48:12'),
+	(2695, 91, 32, b'1', '2019-08-22 20:48:12'),
+	(2696, 92, 32, b'1', '2019-08-22 20:48:12'),
+	(2697, 93, 32, b'1', '2019-08-22 20:48:12'),
+	(2698, 94, 32, b'1', '2019-08-22 20:48:12'),
+	(2699, 95, 32, b'1', '2019-08-22 20:48:12'),
+	(2700, 97, 32, b'1', '2019-08-22 20:48:12'),
+	(2701, 98, 32, b'1', '2019-08-22 20:48:12'),
+	(2702, 99, 32, b'1', '2019-08-22 20:48:12'),
+	(2703, 100, 32, b'1', '2019-08-22 20:48:12'),
+	(2704, 101, 32, b'1', '2019-08-22 20:48:12'),
+	(2705, 102, 32, b'1', '2019-08-22 20:48:12'),
+	(2706, 103, 32, b'1', '2019-08-22 20:48:12'),
+	(2707, 104, 32, b'1', '2019-08-22 20:48:12'),
+	(2708, 105, 32, b'1', '2019-08-22 20:48:12'),
+	(2709, 106, 32, b'1', '2019-08-22 20:48:12'),
+	(2710, 107, 32, b'1', '2019-08-22 20:48:12'),
+	(2711, 108, 32, b'1', '2019-08-22 20:48:12'),
+	(2712, 109, 32, b'1', '2019-08-22 20:48:12'),
+	(2713, 110, 32, b'1', '2019-08-22 20:48:12'),
+	(2714, 111, 32, b'1', '2019-08-22 20:48:12'),
+	(2715, 112, 32, b'1', '2019-08-22 20:48:12'),
+	(2716, 113, 32, b'1', '2019-08-22 20:48:12'),
+	(2717, 114, 32, b'1', '2019-08-22 20:48:12'),
+	(2718, 115, 32, b'1', '2019-08-22 20:48:12'),
+	(2719, 116, 32, b'1', '2019-08-22 20:48:12'),
+	(2720, 117, 32, b'1', '2019-08-22 20:48:12'),
+	(2721, 118, 32, b'1', '2019-08-22 20:48:12'),
+	(2722, 119, 32, b'1', '2019-08-22 20:48:12'),
+	(2723, 120, 32, b'1', '2019-08-22 20:48:12'),
+	(2724, 121, 32, b'1', '2019-08-22 20:48:12'),
+	(2725, 122, 32, b'1', '2019-08-22 20:48:12'),
+	(2726, 123, 32, b'1', '2019-08-22 20:48:12'),
+	(2727, 124, 32, b'1', '2019-08-22 20:48:12'),
+	(2728, 125, 32, b'1', '2019-08-22 20:48:12'),
+	(2729, 126, 32, b'1', '2019-08-22 20:48:12'),
+	(2730, 127, 32, b'1', '2019-08-22 20:48:12'),
+	(2731, 128, 32, b'1', '2019-08-22 20:48:12'),
+	(2732, 129, 32, b'1', '2019-08-22 20:48:12'),
+	(2733, 130, 32, b'1', '2019-08-22 20:48:12'),
+	(2734, 131, 32, b'1', '2019-08-22 20:48:12'),
+	(2735, 132, 32, b'1', '2019-08-22 20:48:12'),
+	(2736, 133, 32, b'1', '2019-08-22 20:48:12'),
+	(2737, 134, 32, b'1', '2019-08-22 20:48:12'),
+	(2738, 135, 32, b'1', '2019-08-22 20:48:12'),
+	(2739, 136, 32, b'1', '2019-08-22 20:48:12'),
+	(2740, 137, 32, b'1', '2019-08-22 20:48:12'),
+	(2741, 145, 32, b'1', '2019-08-22 20:48:12'),
+	(2742, 147, 32, b'1', '2019-08-22 20:48:12'),
+	(2743, 148, 32, b'1', '2019-08-22 20:48:12'),
+	(2790, 148, 34, b'0', '2019-08-22 20:48:16');
 /*!40000 ALTER TABLE `sysuserright` ENABLE KEYS */;
 
 -- 导出  表 myorder_python.sysusers 结构
@@ -2296,9 +2297,9 @@ CREATE TABLE IF NOT EXISTS `sysusers` (
   PRIMARY KEY (`fUserID`),
   KEY `LoginID` (`fLoginID`),
   KEY `RoleID` (`fRoleID`)
-) ENGINE=InnoDB AUTO_INCREMENT=46 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=47 DEFAULT CHARSET=utf8;
 
--- 正在导出表  myorder_python.sysusers 的数据：~11 rows (大约)
+-- 正在导出表  myorder_python.sysusers 的数据：~16 rows (大约)
 DELETE FROM `sysusers`;
 /*!40000 ALTER TABLE `sysusers` DISABLE KEYS */;
 INSERT INTO `sysusers` (`fUserID`, `fOnline`, `fEnabled`, `fDepartment`, `fUsername`, `fNickname`, `fPassword`, `fRoleID`, `fLastLoginComputer`, `fLastLoginTime`, `fLoginID`, `fNotes`, `TS`) VALUES
@@ -2316,7 +2317,8 @@ INSERT INTO `sysusers` (`fUserID`, `fOnline`, `fEnabled`, `fDepartment`, `fUsern
 	(42, b'0', b'0', NULL, 'New User', NULL, '1234', NULL, NULL, NULL, NULL, NULL, '2019-08-20 08:27:05'),
 	(43, b'0', b'0', NULL, 'New User', NULL, '1234', NULL, NULL, NULL, NULL, NULL, '2019-08-20 08:29:16'),
 	(44, b'0', b'0', NULL, 'New User', NULL, '1234', NULL, NULL, NULL, NULL, NULL, '2019-08-20 08:29:18'),
-	(45, b'0', b'0', NULL, 'New User', NULL, '1234', NULL, NULL, NULL, NULL, NULL, '2019-08-20 08:29:21');
+	(45, b'0', b'0', NULL, 'New User', NULL, '1234', NULL, NULL, NULL, NULL, NULL, '2019-08-20 08:29:21'),
+	(46, b'0', b'0', '45645', '23423', '342', '020fa6dc0e18c0a2852d2bf2bf42cc63', NULL, NULL, NULL, NULL, '56756756', '2019-08-21 16:38:32');
 /*!40000 ALTER TABLE `sysusers` ENABLE KEYS */;
 
 -- 导出  表 myorder_python.t_customer 结构
@@ -2337,9 +2339,9 @@ CREATE TABLE IF NOT EXISTS `t_customer` (
   `TS` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`fCustomerID`),
   UNIQUE KEY `OnlyOne` (`fCustomerName`)
-) ENGINE=InnoDB AUTO_INCREMENT=176 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=178 DEFAULT CHARSET=utf8;
 
--- 正在导出表  myorder_python.t_customer 的数据：~175 rows (大约)
+-- 正在导出表  myorder_python.t_customer 的数据：~176 rows (大约)
 DELETE FROM `t_customer`;
 /*!40000 ALTER TABLE `t_customer` DISABLE KEYS */;
 INSERT INTO `t_customer` (`fCustomerID`, `fCustomerName`, `fNUIT`, `fCity`, `fContato`, `fAreaCode`, `fCelular`, `fTelefone`, `fEndereco`, `fEmail`, `fWeb`, `fFax`, `TS`) VALUES
@@ -2348,7 +2350,7 @@ INSERT INTO `t_customer` (`fCustomerID`, `fCustomerName`, `fNUIT`, `fCity`, `fCo
 	(3, '8346 DESIGNER', NULL, '马普托 MAPUTO', NULL, NULL, '843909163', NULL, NULL, NULL, NULL, NULL, '2019-04-26 20:22:59'),
 	(4, '8384DEZIGN', NULL, '马普托 MAPUTO', NULL, NULL, '846440003', NULL, NULL, NULL, NULL, NULL, '2019-04-26 20:22:59'),
 	(5, '8386 DESIGNER', NULL, '马普托 MAPUTO', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-04-26 20:22:59'),
-	(6, '8386 DEZIGN', NULL, '马普托 MAPUTO', NULL, NULL, '843909163', NULL, NULL, NULL, NULL, NULL, '2019-04-26 20:22:59'),
+	(6, '8386 DEZIGN', '324345', '马普托 MAPUTO', '6786', '345346', '843909163', '56356', '23', '678', '56756', '567', '2019-08-21 09:30:04'),
 	(7, 'ADELINO', NULL, '马普托 MAPUTO', NULL, NULL, '849488869', NULL, NULL, NULL, NULL, NULL, '2019-04-26 20:22:59'),
 	(8, 'AFSD', '101996093', '马普托 MAPUTO', NULL, NULL, '823005680', NULL, NULL, NULL, NULL, NULL, '2019-04-26 20:22:59'),
 	(9, 'AGUILA ENERGY MOZAMBIQUE', NULL, '马普托 MAPUTO', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-04-26 20:22:59'),
@@ -2517,7 +2519,8 @@ INSERT INTO `t_customer` (`fCustomerID`, `fCustomerName`, `fNUIT`, `fCity`, `fCo
 	(172, 'YUAN BO AUTO SERVICO', NULL, '马普托 MAPUTO', NULL, NULL, '850669999', NULL, NULL, NULL, NULL, NULL, '2019-04-26 20:22:59'),
 	(173, 'YURAN BO AUTO SERVICE', NULL, '马普托 MAPUTO', NULL, NULL, '850669999', NULL, NULL, NULL, NULL, NULL, '2019-04-26 20:22:59'),
 	(174, 'Zion', NULL, '南普拉 NAMPULA', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-04-26 20:22:59'),
-	(175, 'ZOOTHUVA SERVICE, LDA', NULL, '马普托 MAPUTO', NULL, NULL, '842735687', NULL, NULL, NULL, NULL, NULL, '2019-04-26 20:22:59');
+	(175, 'ZOOTHUVA SERVICE, LDA', NULL, '马普托 MAPUTO', NULL, NULL, '842735687', NULL, NULL, NULL, NULL, NULL, '2019-04-26 20:22:59'),
+	(176, '7867657567', '234123', '54766586', '57658765', '34534', '56568768', '54356546', '2342', '87568756856', '4575565', '87567', '2019-08-21 09:31:18');
 /*!40000 ALTER TABLE `t_customer` ENABLE KEYS */;
 
 -- 导出  表 myorder_python.t_enumeration 结构
@@ -2531,9 +2534,9 @@ CREATE TABLE IF NOT EXISTS `t_enumeration` (
   `fNote` varchar(255) DEFAULT NULL,
   `TS` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`fItemID`)
-) ENGINE=InnoDB AUTO_INCREMENT=105 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=114 DEFAULT CHARSET=utf8;
 
--- 正在导出表  myorder_python.t_enumeration 的数据：~97 rows (大约)
+-- 正在导出表  myorder_python.t_enumeration 的数据：~106 rows (大约)
 DELETE FROM `t_enumeration`;
 /*!40000 ALTER TABLE `t_enumeration` DISABLE KEYS */;
 INSERT INTO `t_enumeration` (`fItemID`, `fTypeID`, `fTitle`, `fSpare1`, `fSpare2`, `fNote`, `TS`) VALUES
@@ -2633,7 +2636,16 @@ INSERT INTO `t_enumeration` (`fItemID`, `fTypeID`, `fTitle`, `fSpare1`, `fSpare2
 	(101, 1, '1234', NULL, NULL, NULL, '2019-07-22 14:25:08'),
 	(102, 1, '3452345', NULL, NULL, NULL, '2019-07-22 14:25:08'),
 	(103, 1, '1234', NULL, NULL, NULL, '2019-07-22 14:25:14'),
-	(104, 1, '3452345', NULL, NULL, NULL, '2019-07-22 14:25:14');
+	(104, 1, '3452345', NULL, NULL, NULL, '2019-07-22 14:25:14'),
+	(105, 10, '11', NULL, NULL, NULL, '2019-08-21 15:28:15'),
+	(106, 10, '11', NULL, NULL, NULL, '2019-08-21 15:28:20'),
+	(107, 10, '11', NULL, NULL, NULL, '2019-08-21 15:28:22'),
+	(108, 10, '11', NULL, NULL, NULL, '2019-08-21 15:28:27'),
+	(109, 10, '11', NULL, NULL, NULL, '2019-08-21 15:28:31'),
+	(110, 10, '342', '345', '345', '546', '2019-08-21 16:14:08'),
+	(111, 10, '7777', '345', '6567', '。', '2019-08-21 16:16:32'),
+	(112, 10, '45699999', '345', '456', '564', '2019-08-21 16:17:39'),
+	(113, 10, '333', NULL, NULL, NULL, '2019-08-21 16:20:48');
 /*!40000 ALTER TABLE `t_enumeration` ENABLE KEYS */;
 
 -- 导出  表 myorder_python.t_enumeration_type 结构
@@ -2712,7 +2724,7 @@ CREATE TABLE IF NOT EXISTS `t_order` (
   KEY `iOrderDate` (`fOrderDate`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- 正在导出表  myorder_python.t_order 的数据：~521 rows (大约)
+-- 正在导出表  myorder_python.t_order 的数据：~492 rows (大约)
 DELETE FROM `t_order`;
 /*!40000 ALTER TABLE `t_order` DISABLE KEYS */;
 INSERT INTO `t_order` (`fOrderID`, `fPrice`, `fCustomerID`, `fOrderDate`, `fEspecieID`, `fRequiredDeliveryDate`, `fCategoryID`, `fBrandMateriaID`, `fAmount`, `fTax`, `fPayable`, `fDesconto`, `fColorID`, `fEntryID`, `fSubmited`, `fSubmitID`, `fReviewed`, `fReviewerID`, `fConfirmed`, `fConfirmID`, `fDelivered`, `fDelivererID`, `fCanceled`, `fCancelID`, `fDeliveryDate`, `fNumerBegin`, `fQuant`, `fPagePerVolumn`, `fNumerEnd`, `fAvistaID`, `fTamanhoID`, `fSucursal`, `fLogo`, `fVendedorID`, `fNrCopyID`, `fContato`, `fCelular`, `fTelefone`, `fNote`, `TS`, `fDeliverViewed`) VALUES
@@ -3124,7 +3136,7 @@ INSERT INTO `t_order` (`fOrderID`, `fPrice`, `fCustomerID`, `fOrderDate`, `fEspe
 	('CP2019-0417000408', NULL, 74, '2019-04-17', NULL, '2019-04-17', NULL, NULL, 486.00, NULL, 486.00, NULL, NULL, NULL, b'1', NULL, b'0', NULL, b'1', NULL, b'1', 41, b'0', NULL, '2019-04-17', NULL, NULL, NULL, NULL, NULL, NULL, b'1', b'0', NULL, NULL, NULL, NULL, NULL, NULL, '2019-08-16 22:31:36', NULL),
 	('CP2019-0417000409', NULL, 17, '2019-04-17', NULL, '2019-04-17', NULL, NULL, 1300.00, 221.00, 1521.00, NULL, NULL, NULL, b'1', NULL, b'0', NULL, b'1', NULL, b'1', 41, b'0', NULL, '2019-04-17', NULL, NULL, NULL, NULL, NULL, NULL, b'1', b'0', NULL, NULL, NULL, NULL, NULL, NULL, '2019-08-16 22:31:36', NULL),
 	('CP2019-0417000410', NULL, 14, '2019-04-17', NULL, '2019-04-17', NULL, NULL, 1000.00, NULL, 1000.00, NULL, NULL, NULL, b'1', NULL, b'0', NULL, b'1', NULL, b'1', 41, b'0', NULL, '2019-04-18', NULL, NULL, NULL, NULL, NULL, NULL, b'1', b'0', NULL, NULL, NULL, NULL, NULL, NULL, '2019-08-16 22:31:36', NULL),
-	('CP2019-0417000411', NULL, 14, '2019-04-17', NULL, '2019-04-17', NULL, NULL, 5000.00, 850.00, 5850.00, NULL, NULL, NULL, b'1', NULL, b'0', NULL, b'1', NULL, b'0', NULL, b'1', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, b'1', b'0', NULL, NULL, NULL, NULL, NULL, NULL, '2019-08-16 22:31:36', NULL),
+	('CP2019-0417000411', NULL, 14, '2019-04-17', NULL, '2019-04-17', NULL, NULL, 1008392.00, 171426.64, 1179818.64, NULL, NULL, NULL, b'1', NULL, b'0', NULL, b'1', NULL, b'0', NULL, b'1', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, b'1', b'0', NULL, NULL, NULL, NULL, NULL, NULL, '2019-08-21 11:54:49', NULL),
 	('CP2019-0417000412', NULL, 88, '2019-04-17', NULL, '2019-04-17', NULL, NULL, 1978.80, 336.39, 2315.19, NULL, NULL, NULL, b'1', NULL, b'0', NULL, b'1', NULL, b'1', 41, b'0', NULL, '2019-04-18', NULL, NULL, NULL, NULL, NULL, NULL, b'1', b'0', NULL, NULL, NULL, NULL, NULL, NULL, '2019-08-16 22:31:36', NULL),
 	('CP2019-0417000413', NULL, 93, '2019-04-17', NULL, '2019-04-17', NULL, NULL, 910.40, NULL, 910.40, NULL, NULL, NULL, b'1', NULL, b'0', NULL, b'1', NULL, b'1', 41, b'0', NULL, '2019-04-18', NULL, NULL, NULL, NULL, NULL, NULL, b'1', b'0', NULL, NULL, NULL, NULL, NULL, NULL, '2019-08-16 22:31:36', NULL),
 	('CP2019-0418000414', NULL, 51, '2019-04-18', NULL, '2019-04-18', NULL, NULL, 199.58, NULL, 199.58, NULL, NULL, NULL, b'1', NULL, b'0', NULL, b'1', NULL, b'1', 41, b'0', NULL, '2019-04-22', NULL, NULL, NULL, NULL, NULL, NULL, b'1', b'0', NULL, NULL, NULL, NULL, NULL, NULL, '2019-08-16 22:31:36', NULL),
@@ -3188,7 +3200,7 @@ INSERT INTO `t_order` (`fOrderID`, `fPrice`, `fCustomerID`, `fOrderDate`, `fEspe
 	('CP2019-0816000605', NULL, 2, '2019-08-16', NULL, '2019-08-16', NULL, NULL, 60.00, 10.20, 70.20, NULL, NULL, 32, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, b'1', b'0', NULL, NULL, 'lianxiren', '849138244', '1234', NULL, '2019-08-16 22:31:36', NULL),
 	('CP2019-0816000606', NULL, 2, '2019-08-16', NULL, '2019-08-16', NULL, NULL, 60.00, 10.20, 70.20, NULL, NULL, 32, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, b'1', b'0', NULL, NULL, 'lianxiren', '849138244', '1234', NULL, '2019-08-16 22:31:36', NULL),
 	('CP2019-0816000607', NULL, 2, '2019-08-16', NULL, '2019-08-16', NULL, NULL, 114238594.20, 19420561.01, 133659155.21, NULL, NULL, 32, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, b'1', b'0', NULL, NULL, 'lianxiren', '849138244', '1234', NULL, '2019-08-16 22:31:36', NULL),
-	('CP2019-0816000608', NULL, 2, '2019-08-16', NULL, '2019-08-16', NULL, NULL, 35202570.48, 5984436.98, 41187007.46, NULL, NULL, 32, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, b'1', b'0', NULL, NULL, 'lianxiren', '849138244', '1234', NULL, '2019-08-16 22:31:36', NULL),
+	('CP2019-0816000608', NULL, 2, '2019-08-16', NULL, '2019-08-16', NULL, NULL, 35202570.48, 5984436.98, 41187007.46, NULL, NULL, 32, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'1', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, b'1', b'0', NULL, NULL, 'lianxiren', '849138244', '1234', NULL, '2019-08-21 11:34:42', NULL),
 	('CP2019-0816000609', NULL, 2, '2019-08-16', NULL, '2019-08-16', NULL, NULL, 60.00, 10.20, 70.20, NULL, NULL, 32, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, b'1', b'0', NULL, NULL, 'lianxiren', '849138244', '1234', NULL, '2019-08-16 22:31:36', NULL),
 	('CP2019-0816000610', NULL, 2, '2019-08-16', NULL, '2019-08-16', NULL, NULL, 60.00, 10.20, 70.20, NULL, NULL, 32, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, b'1', b'0', NULL, NULL, 'lianxiren', '849138244', '1234', NULL, '2019-08-16 22:31:36', NULL),
 	('CP2019-0816000611', NULL, 2, '2019-08-16', NULL, '2019-08-16', NULL, NULL, 60.00, 10.20, 70.20, NULL, NULL, 32, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, b'1', b'0', NULL, NULL, 'lianxiren', '849138244', '1234', NULL, '2019-08-16 22:31:36', NULL),
@@ -3197,6 +3209,7 @@ INSERT INTO `t_order` (`fOrderID`, `fPrice`, `fCustomerID`, `fOrderDate`, `fEspe
 	('CP2019-0816000614', NULL, 2, '2019-08-16', NULL, '2019-08-16', NULL, NULL, 60.00, 10.20, 70.20, NULL, NULL, 32, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, b'1', b'0', NULL, NULL, 'lianxiren', '849138244', '1234', NULL, '2019-08-16 22:31:36', NULL),
 	('CP2019-0816000615', NULL, 2, '2019-08-16', NULL, '2019-08-16', NULL, NULL, 60.00, 10.20, 70.20, NULL, NULL, 32, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, b'1', b'0', NULL, NULL, 'lianxiren', '849138244', '1234', NULL, '2019-08-16 22:31:36', NULL),
 	('CP2019-0816000616', NULL, 2, '2019-08-16', NULL, '2019-08-16', NULL, NULL, 60.00, 10.20, 70.20, NULL, NULL, 32, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, b'1', b'0', NULL, NULL, 'lianxiren', '849138244', '1234', NULL, '2019-08-16 22:31:36', NULL),
+	('CP2019-0821000617', NULL, 2, '2019-08-21', NULL, '2019-08-21', NULL, NULL, 60.00, 8.33, 57.33, 11.00, NULL, 32, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, b'0', b'0', 90, NULL, 'lianxiren', '849138244', '1234', NULL, '2019-08-21 16:44:36', NULL),
 	('TP2019-0505000001', 2, 24, '2019-05-05', 64, '2019-05-08', NULL, NULL, 890.00, 151.30, 1041.30, NULL, NULL, NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, NULL, 0, 445, 50, 22249, 78, 82, b'1', b'0', 90, 86, NULL, NULL, NULL, NULL, '2019-08-16 22:31:36', NULL),
 	('TP2019-0505000002', 3, 24, '2019-05-05', 64, '2019-05-15', NULL, NULL, 132.00, 22.44, 154.44, NULL, NULL, NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, NULL, 22250, 44, 50, 24449, 78, 83, b'1', b'0', 90, 86, NULL, NULL, NULL, NULL, '2019-08-16 22:31:36', NULL),
 	('TP2019-0507000003', 33, 7, '2019-05-14', NULL, '2019-05-08', NULL, NULL, 99.00, 16.83, 115.83, NULL, NULL, NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, NULL, NULL, 3, 50, NULL, NULL, NULL, b'1', b'0', NULL, NULL, NULL, NULL, NULL, NULL, '2019-08-16 22:31:36', NULL),
@@ -3222,9 +3235,9 @@ CREATE TABLE IF NOT EXISTS `t_order_detail` (
   `fAmount` decimal(11,2) NOT NULL,
   `TS` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`fID`)
-) ENGINE=InnoDB AUTO_INCREMENT=748 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=750 DEFAULT CHARSET=utf8;
 
--- 正在导出表  myorder_python.t_order_detail 的数据：~780 rows (大约)
+-- 正在导出表  myorder_python.t_order_detail 的数据：~746 rows (大约)
 DELETE FROM `t_order_detail`;
 /*!40000 ALTER TABLE `t_order_detail` DISABLE KEYS */;
 INSERT INTO `t_order_detail` (`fID`, `fOrderID`, `fQuant`, `fProductName`, `fLength`, `fWidth`, `fPrice`, `fAmount`, `TS`) VALUES
@@ -3971,7 +3984,9 @@ INSERT INTO `t_order_detail` (`fID`, `fOrderID`, `fQuant`, `fProductName`, `fLen
 	(744, 'CP2019-0816000613', 1, '2', 3, 4, 5.00, 60.00, '2019-08-16 20:01:58'),
 	(745, 'CP2019-0816000614', 1, '2', 3, 4, 5.00, 60.00, '2019-08-16 20:03:45'),
 	(746, 'CP2019-0816000615', 1, '2', 3, 4, 5.00, 60.00, '2019-08-16 20:05:55'),
-	(747, 'CP2019-0816000616', 1, '2', 3, 4, 5.00, 60.00, '2019-08-16 22:13:00');
+	(747, 'CP2019-0816000616', 1, '2', 3, 4, 5.00, 60.00, '2019-08-16 22:13:00'),
+	(748, 'CP2019-0417000411', 234, '324', 8, 8, 67.00, 1003392.00, '2019-08-21 11:54:49'),
+	(749, 'CP2019-0821000617', 1, '2', 3, 4, 5.00, 60.00, '2019-08-21 16:44:36');
 /*!40000 ALTER TABLE `t_order_detail` ENABLE KEYS */;
 
 -- 导出  表 myorder_python.t_quotation 结构
@@ -4014,7 +4029,7 @@ CREATE TABLE IF NOT EXISTS `t_quotation` (
   KEY `iOrderDate` (`fOrderDate`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- 正在导出表  myorder_python.t_quotation 的数据：~8 rows (大约)
+-- 正在导出表  myorder_python.t_quotation 的数据：~10 rows (大约)
 DELETE FROM `t_quotation`;
 /*!40000 ALTER TABLE `t_quotation` DISABLE KEYS */;
 INSERT INTO `t_quotation` (`fOrderID`, `fPrice`, `fCustomerID`, `fOrderDate`, `fEspecieID`, `fRequiredDeliveryDate`, `fCategoryID`, `fBrandMateriaID`, `fAmount`, `fTax`, `fPayable`, `fDesconto`, `fColorID`, `fEntryID`, `fConfirmed`, `fConfirmID`, `fCanceled`, `fCancelID`, `fNumerBegin`, `fQuant`, `fPagePerVolumn`, `fNumerEnd`, `fAvistaID`, `fTamanhoID`, `fSucursal`, `fLogo`, `fVendedorID`, `fNrCopyID`, `fContato`, `fCelular`, `fTelefone`, `fNote`, `TS`) VALUES
@@ -4045,7 +4060,7 @@ CREATE TABLE IF NOT EXISTS `t_quotation_detail` (
   PRIMARY KEY (`fID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 
--- 正在导出表  myorder_python.t_quotation_detail 的数据：~4 rows (大约)
+-- 正在导出表  myorder_python.t_quotation_detail 的数据：~6 rows (大约)
 DELETE FROM `t_quotation_detail`;
 /*!40000 ALTER TABLE `t_quotation_detail` DISABLE KEYS */;
 INSERT INTO `t_quotation_detail` (`fID`, `fOrderID`, `fQuant`, `fProductName`, `fLength`, `fWidth`, `fPrice`, `fAmount`, `TS`) VALUES
@@ -4071,7 +4086,7 @@ CREATE TABLE IF NOT EXISTS `t_receivables` (
   PRIMARY KEY (`fID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=426 DEFAULT CHARSET=utf8;
 
--- 正在导出表  myorder_python.t_receivables 的数据：~301 rows (大约)
+-- 正在导出表  myorder_python.t_receivables 的数据：~425 rows (大约)
 DELETE FROM `t_receivables`;
 /*!40000 ALTER TABLE `t_receivables` DISABLE KEYS */;
 INSERT INTO `t_receivables` (`fID`, `fCustomerID`, `fPaymentMethodID`, `fReceiptDate`, `fAmountCollected`, `fPayeeID`, `fNote`, `TS`) VALUES
@@ -4820,7 +4835,7 @@ case o.fCanceled when 1 then 'SIM' else '' end as fCanceled1,
 u_Entry.fUsername as fEntry_Name,
 u_Confirm.fUsername as fConfirm_Name,
 u_Cancel.fUsername as fCancel_Name,
-e_fEspecieid.fTitle as fEspecie,
+e_fEspecieID.fTitle as fEspecie,
 e_fCategoryID.fTitle as fCategory,
 e_fBrandMateriaID.fTitle as fBrandMateria,
 e_fColorID.fTitle as fColor,
@@ -4833,7 +4848,7 @@ left join t_customer as c on o.fCustomerID=c.fCustomerID
 left join sysusers as u_Entry on o.fEntryID=u_Entry.fUserID
 left join sysusers as u_Confirm on o.fConfirmID=u_Confirm.fUserID 
 left join sysusers as u_Cancel on o.fCancelID=u_Cancel.fUserID
-left join t_enumeration as e_fEspecieID on o.fEspecieID=e_fEspecieid.fItemID
+left join t_enumeration as e_fEspecieID on o.fEspecieID=e_fEspecieID.fItemID
 left join t_enumeration as e_fCategoryID on o.fCategoryID=e_fCategoryID.fItemID
 left join t_enumeration as e_fBrandMateriaID on o.fBrandMateriaID=e_fBrandMateriaID.fItemID
 left join t_enumeration as e_fColorID on o.fColorID=e_fColorID.fItemID

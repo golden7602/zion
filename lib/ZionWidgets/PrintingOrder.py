@@ -17,6 +17,7 @@ from lib.ZionReport.PrintingOrderReportMob import PrintOrder_report_Mob
 from Ui.Ui_FormPrintingOrder import Ui_Form
 from lib.JPFunction import JPRound
 from lib.JPMvc.JPModel import JPTableViewModelReadOnly
+from lib.JPExcel.JPExportToExcel import clsExportToExcelFromJPTabelFieldInfo
 
 
 class JPFuncForm_PrintingOrder(JPFunctionForm):
@@ -82,10 +83,18 @@ class JPFuncForm_PrintingOrder(JPFunctionForm):
         self.setEditFormSQL(m_sql, None)
 
     def getEditForm(self, sql_main, edit_mode, sql_sub, PKValue):
-        return EditForm_PrintingOrder(sql_main=sql_main,
-                                      edit_mode=edit_mode,
-                                      sql_sub=sql_sub,
-                                      PKValue=PKValue)
+        frm = EditForm_PrintingOrder(sql_main=sql_main,
+                                     edit_mode=edit_mode,
+                                     sql_sub=sql_sub,
+                                     PKValue=PKValue)
+        if edit_mode != JPEditFormDataMode.ReadOnly:
+            frm.ui.fCustomerID.setEditable(True)
+        frm.ui.fOrderID.setEnabled(False)
+        frm.ui.fCity.setEnabled(False)
+        frm.ui.fNUIT.setEnabled(False)
+        frm.ui.fEntryID.setEnabled(False)
+        frm.ui.fEndereco.setEnabled(False)
+        return frm
 
     @pyqtSlot()
     def on_CmdSubmit_clicked(self):
@@ -118,6 +127,26 @@ class JPFuncForm_PrintingOrder(JPFunctionForm):
                              pk_v=cu_id)
             if db.executeTransaction([sql, sql1.format(pk_v=cu_id)]):
                 self.btnRefreshClick()
+
+    @pyqtSlot()
+    def on_CmdExportToExcel_clicked(self):
+        sql = """
+        SELECT fOrderID,
+            fQuant AS '数量Qtd',
+            fProductName AS '名称Descrição',
+            fLength AS '长Larg.', 
+            fWidth AS '宽Comp.',
+            fPrice AS '单价P. Unitario', 
+            fAmount AS '金额Total'
+        FROM t_order_detail
+        WHERE fOrderID IN (
+            SELECT 订单号码OrderID FROM ({cur_sql}) Q)"""
+        sql = sql.format(cur_sql=self.currentSQL)
+        tab = JPQueryFieldInfo(sql)
+        exp = clsExportToExcelFromJPTabelFieldInfo(self.model.TabelFieldInfo,
+                                                   self.MainForm)
+        exp.setSubQueryFieldInfo(tab, 0, 0)
+        exp.run()
 
 
 class myHistoryView(JPTableViewModelReadOnly):

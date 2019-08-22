@@ -29,7 +29,6 @@ def setButtonIcon(btn: QPushButton):
 
 def setButtonIconByName(btn: QPushButton):
     if isinstance(btn, QLabel):
-        print(getcwd() + "\\res\\ico\\" + btn.objectName() + ".png")
         pix = QPixmap(getcwd() + "\\res\\ico\\" + btn.objectName() + ".png")
         btn.setPixmap(pix)
 
@@ -225,7 +224,9 @@ def _(value, *args):
 
 @JPGetDisplayText.register(bytes)
 def _(value, *args):
-    return JPBooleanString().getBooleanString()[ord(x)]
+    tup = JPBooleanString().getBooleanString()
+    i = ord(value)
+    return tup[i]
 
 
 ###################日期转换器###################################################
@@ -277,5 +278,3 @@ def _(value, vCls=str):
 def readQss(style):  # Use: win.setStyleSheet(readQss(qssStyle))
     with open(style, 'r') as f:
         return f.read()
-
-

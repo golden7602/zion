@@ -3,7 +3,7 @@
 block_cipher = None
 
 
-a = Analysis(['main.py'],
+a = Analysis(['ZionOrder.py'],
              pathex=['e:\\Zion'],
              binaries=[],
              datas=[],
@@ -15,6 +15,9 @@ a = Analysis(['main.py'],
              win_private_assemblies=False,
              cipher=block_cipher,
              noarchive=False)
+a.datas.extend([
+    ('PyQt5/Qt/plugins/styles/qwindowsvistastyle.dll', 'src/styles/qwindowsvistastyle.dll', 'BINARY')
+])
 pyz = PYZ(a.pure, a.zipped_data,
              cipher=block_cipher)
 exe = EXE(pyz,
@@ -23,10 +26,11 @@ exe = EXE(pyz,
           a.zipfiles,
           a.datas,
           [],
-          name='main',
+          name='ZionOrder',
           debug=False,
           bootloader_ignore_signals=False,
           strip=False,
           upx=True,
           runtime_tmpdir=None,
-          console=False )
+          console=False,
+          icon='order_162.ico' )

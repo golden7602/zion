@@ -147,6 +147,17 @@ class Form_Receivables(QWidget):
     def on_butRecibido_clicked(self):
         frm = RecibidoEdit()
         frm.ListForm = self
+        frm.ui.fCustomerID.setEditable(True)
+        frm.ui.fCity.setEnabled(False)
+        frm.ui.fNUIT.setEnabled(False)
+        frm.ui.fEndereco.setEnabled(False)
+        frm.ui.fEndereco.setEnabled(False)
+        frm.ui.fCelular.setEnabled(False)
+        frm.ui.fContato.setEnabled(False)
+        frm.ui.fTelefone.setEnabled(False)
+        frm.ui.fAmountPayable.setEnabled(False)
+        frm.ui.fAmountPaid.setEnabled(False)
+        frm.ui.fArrears.setEnabled(False)
         frm.exec_()
 
     def dateChanged(self, s_date):

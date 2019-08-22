@@ -6,6 +6,10 @@ from lib.JPMvc.JPFuncForm import JPFunctionForm
 from lib.ZionWidgets.Order import EditForm_Order
 from lib.ZionWidgets.PrintingOrder import EditForm_PrintingOrder
 from PyQt5.QtCore import pyqtSlot, Qt, QModelIndex
+from lib.JPExcel.JPExportToExcel import clsExportToExcelFromJPTabelFieldInfo
+from lib.JPDatabase.Query import JPQueryFieldInfo
+from lib.JPMvc.JPFuncForm import JPEditFormDataMode
+
 
 class ZionFuncForm(JPFunctionForm):
     def __init__(self, parent):
@@ -51,8 +55,35 @@ class ZionFuncForm(JPFunctionForm):
               edit_mode=edit_mode,
               sql_sub=sql_sub,
               PKValue=PKValue)
-        self.onAfterCreatedForm(cur_tp,F)
+        if edit_mode != JPEditFormDataMode.ReadOnly:
+            F.ui.fCustomerID.setEditable(True)
+        F.ui.fOrderID.setEnabled(False)
+        F.ui.fCity.setEnabled(False)
+        F.ui.fNUIT.setEnabled(False)
+        F.ui.fEntryID.setEnabled(False)
+        F.ui.fEndereco.setEnabled(False)
+        self.onAfterCreatedForm(cur_tp, F)
         return F
 
     def onAfterCreatedForm(self, cur_tp, form):
         return
+
+    @pyqtSlot()
+    def on_CmdExportToExcel_clicked(self):
+        sql = """
+        SELECT fOrderID,
+            fQuant AS '数量Qtd',
+            fProductName AS '名称Descrição',
+            fLength AS '长Larg.', 
+            fWidth AS '宽Comp.',
+            fPrice AS '单价P. Unitario', 
+            fAmount AS '金额Total'
+        FROM t_order_detail
+        WHERE fOrderID IN (
+            SELECT 订单号码OrderID FROM ({cur_sql}) Q)"""
+        sql = sql.format(cur_sql=self.currentSQL)
+        tab = JPQueryFieldInfo(sql)
+        exp = clsExportToExcelFromJPTabelFieldInfo(self.model.TabelFieldInfo,
+                                                   self.MainForm)
+        exp.setSubQueryFieldInfo(tab, 0, 0)
+        exp.run()

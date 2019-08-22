@@ -1,13 +1,26 @@
 # -*- coding: utf-8 -*-
 
+import time
 from os import getcwd
 from sys import path as jppath
 jppath.append(getcwd())
 
-from lib.JPDatabase.Query import JPQueryFieldInfo
+import xlwt
 from PyQt5.QtWidgets import QFileDialog, QMessageBox
 
-import xlwt
+from lib.JPDatabase.Query import JPQueryFieldInfo
+from lib.JPFunction import JPGetDisplayText
+
+
+
+
+class xls_alignment():
+    VERT_TOP = 0x00  #上端对齐
+    VERT_CENTER = 0x01  #居中对齐（垂直方向上）
+    VERT_BOTTOM = 0x02  #低端对齐
+    HORZ_LEFT = 0x01  #左端对齐
+    HORZ_CENTER = 0x02  #居中对齐（水平方向上）
+    HORZ_RIGHT = 0x03  #右端对齐
 
 
 class clsExportToExcelFromTableWidget(object):
@@ -79,11 +92,21 @@ class clsExportToExcelFromTableWidget(object):
 
 
 class clsExportToExcelFromJPTabelFieldInfo(object):
-    def __init__(self, QueryFieldInfo, MainForm):
+    def __init__(self, QueryFieldInfo: JPQueryFieldInfo, MainForm):
+        """"""
         self.QueryFieldInfo = QueryFieldInfo
         self.MainForm = MainForm
         self.linkMainTableFieldIndex = 0
         self.linkSubTableFieldIndex = 0
+        self.SubQueryFieldInfo = None
+
+    def setSubQueryFieldInfo(self,
+                             SubQueryFieldInfo: JPQueryFieldInfo,
+                             linkMainTableFieldIndex: int = 0,
+                             linkSubTableFieldIndex: int = 0):
+        self.linkMainTableFieldIndex = linkMainTableFieldIndex
+        self.linkSubTableFieldIndex = linkMainTableFieldIndex
+        self.SubQueryFieldInfo = SubQueryFieldInfo
 
     def run(self):
         fileName_choose, filetype = QFileDialog.getSaveFileName(
@@ -93,7 +116,6 @@ class clsExportToExcelFromJPTabelFieldInfo(object):
             "Excel Files (*.xls)")
         if not fileName_choose:
             return
-        tab = self.QueryFieldInfo
         book = xlwt.Workbook(encoding='utf-8')  # 新建一个excel
         sheet = book.add_sheet('newsheet')  # 添加一个sheet页
         borders = xlwt.Borders()  # Create Borders
@@ -105,6 +127,7 @@ class clsExportToExcelFromJPTabelFieldInfo(object):
         # MEDIUM_DASH_DOTTED, THIN_DASH_DOT_DOTTED,
         # MEDIUM_DASH_DOT_DOTTED,
         # SLANTED_MEDIUM_DASH_DOTTED, or 0x00 through 0x0D.
+
         borders.right = xlwt.Borders.THIN
         borders.top = xlwt.Borders.THIN
         borders.bottom = xlwt.Borders.THIN
@@ -127,7 +150,10 @@ class clsExportToExcelFromJPTabelFieldInfo(object):
         pattern.pattern_fore_colour = 22
         style.pattern = pattern  # Add Pattern to Style
 
-        for i in range(len(tab.Fields)):
+        # 写入主表标题
+        tab = self.QueryFieldInfo
+        mian_cols = len(tab.Fields)
+        for i in range(mian_cols):
             sheet.write(0, i, tab.Fields[i].Title, style)
         try:
             self.MainForm.ProgressBar.show()
@@ -135,60 +161,81 @@ class clsExportToExcelFromJPTabelFieldInfo(object):
             self.MainForm.ProgressBar.setRange(0, len(tab))
         except Exception:
             pass
-
+        # 写入子表标题
+        subTab = self.SubQueryFieldInfo
+        if subTab:
+            for i in range(len(subTab.Fields)):
+                if i != self.linkSubTableFieldIndex:
+                    sheet.write(0, mian_cols + i, subTab.Fields[i].Title,
+                                style)
         pattern1 = xlwt.Pattern()
         pattern1.pattern = xlwt.Pattern.SOLID_PATTERN
         pattern1.pattern_fore_colour = 1
         style1 = xlwt.XFStyle()
         style1.borders = borders
         style1.pattern = pattern1
-        subTab = self.getSubQueryFieldInfo()
-        cols = len(tab.Fields)
-        sub_cols = len(subTab.Fields)
-        if len(subTab):
-            i = 0
-            row = 0
-            for sub_j in range(sub_cols):
-                sheet.write(0, cols + sub_j, subTab.Fields[sub_j].Title, style)
-            while i < len(tab):
-                for j in range(0, cols):
-                    try:
-                        self.MainForm.ProgressBar.setValue(row)
-                    except Exception:
-                        pass
-                    sheet.write(row + 1, j, tab.getDispText((row, j)), style1)
-                sub_rec = [
-                    r.Datas for r in subTab.DataRows
-                    if r.Datas[self.linkMainTableFieldIndex] == tab.Datas[row][
-                        self.linkMainTableFieldIndex]
-                ]
-                for sub_i in range(len(subTab)):
-                    for sub_j in range(sub_cols):
-                        print(sub_i, sub_j)
-                        sheet.write(row + 1 + sub_i, cols + sub_j,
-                                    tab.getDispText((sub_i, sub_j)), style1)
+        al = xlwt.Alignment()
+        al.horz = xls_alignment.HORZ_LEFT
+        al.vert = xls_alignment.VERT_CENTER
+        style1.alignment = al
+
+        # 开始导出数据
+        main_row = 1
+        for i in range(len(tab)):
             try:
-                self.MainForm.Label.setText('')
-                self.MainForm.ProgressBar.hide()
+                self.MainForm.ProgressBar.setValue(i)
             except Exception:
                 pass
-        else:
-            for i in range(0, len(tab)):
-                for j in range(0, cols):
-                    try:
-                        self.MainForm.ProgressBar.setValue(i)
-                    except Exception:
-                        pass
-                    sheet.write(i + 1, j, tab.getDispText((i, j)), style1)
-            try:
-                self.MainForm.Label.setText('')
-                self.MainForm.ProgressBar.hide()
-            except Exception:
-                pass
-        book.save(fileName_choose)
-        QMessageBox.information(self, '', 'Export to excel complete!',
+            # 尝试导出子表
+            sub_rows = self.__expSub(
+                sheet, style1, main_row, mian_cols,
+                tab.DataRows[i].Datas[self.linkMainTableFieldIndex])
+            if sub_rows > 0:
+                row1 = main_row
+                row2 = main_row + sub_rows - 1
+                for col_main in range(mian_cols):
+                    v = JPGetDisplayText(tab.DataRows[i].Datas[col_main])
+
+                    #print(row1, row2, col_main, col_main)
+                    sheet.write_merge(row1, row2, col_main, col_main, v,
+                                      style1)
+
+            else:
+                for col_main in range(mian_cols):
+                    v = JPGetDisplayText(tab.DataRows[i].Datas[col_main])
+                    #print(main_row, col_main)
+                    sheet.write(main_row, col_main, v, style1)
+            main_row = main_row + (sub_rows if sub_rows else 1)
+        try:
+            self.MainForm.Label.setText('')
+            self.MainForm.ProgressBar.hide()
+        except Exception:
+            pass
+        try:
+            book.save(fileName_choose)
+        except Exception as e:
+            errstr = '写入文件出错！\nWrite file error!\n'
+            errstr = errstr + Exception.__repr__(e)
+            QMessageBox.information(self.MainForm, '', errstr, QMessageBox.Yes,
+                                    QMessageBox.Yes) == QMessageBox.Yes
+        QMessageBox.information(self.MainForm, '',
+                                '导出数据完成！\nExport to excel complete!',
                                 QMessageBox.Yes,
                                 QMessageBox.Yes) == QMessageBox.Yes
 
-    def getSubQueryFieldInfo(self):
-        return []
+    def __expSub(self, sheet, style, cur_row, maincols, linkData) -> int:
+        if self.SubQueryFieldInfo is None:
+            return 0
+        li = self.linkSubTableFieldIndex
+        tab = self.SubQueryFieldInfo
+        sub_cols = len(tab.Fields)
+        lst = [r.Datas for r in tab.DataRows if r.Datas[li] == linkData]
+        for row in lst:
+            cur_col = len(self.QueryFieldInfo.Fields) + 1
+            for sub_col in range(sub_cols):
+                if sub_col != self.linkSubTableFieldIndex:
+                    sheet.write(cur_row, cur_col,
+                                JPGetDisplayText(row[sub_col]), style)
+                    cur_col += 1
+            cur_row += 1
+        return len(lst)
