@@ -62,23 +62,23 @@ class Form_Repoet_Day(QWidget):
                 , M11, M12
             FROM (
                 SELECT Q1.d
-                    , IF(Q1.m = 1, Q1.j1, NULL) AS M1
-                    , IF(Q1.m = 2, Q1.j1, NULL) AS M2
-                    , IF(Q1.m = 3, Q1.j1, NULL) AS M3
-                    , IF(Q1.m = 4, Q1.j1, NULL) AS M4
-                    , IF(Q1.m = 5, Q1.j1, NULL) AS M5
-                    , IF(Q1.m = 6, Q1.j1, NULL) AS M6
-                    , IF(Q1.m = 7, Q1.j1, NULL) AS M7
-                    , IF(Q1.m = 8, Q1.j1, NULL) AS M8
-                    , IF(Q1.m = 9, Q1.j1, NULL) AS M9
-                    , IF(Q1.m = 10, Q1.j1, NULL) AS M10
-                    , IF(Q1.m = 11, Q1.j1, NULL) AS M11
-                    , IF(Q1.m = 12, Q1.j1, NULL) AS M12
+                    , sum(IF(Q1.m = 1, Q1.j1, NULL)) AS M1
+                    , sum(IF(Q1.m = 2, Q1.j1, NULL)) AS M2
+                    , sum(IF(Q1.m = 3, Q1.j1, NULL)) AS M3
+                    , sum(IF(Q1.m = 4, Q1.j1, NULL)) AS M4
+                    , sum(IF(Q1.m = 5, Q1.j1, NULL)) AS M5
+                    , sum(IF(Q1.m = 6, Q1.j1, NULL)) AS M6
+                    , sum(IF(Q1.m = 7, Q1.j1, NULL)) AS M7
+                    , sum(IF(Q1.m = 8, Q1.j1, NULL)) AS M8
+                    , sum(IF(Q1.m = 9, Q1.j1, NULL)) AS M9
+                    , sum(IF(Q1.m = 10, Q1.j1, NULL)) AS M10
+                    , sum(IF(Q1.m = 11, Q1.j1, NULL)) AS M11
+                    , sum(IF(Q1.m = 12, Q1.j1, NULL)) AS M12
                 FROM (
                     SELECT MONTH(fReceiptDate) AS m, DAY(fReceiptDate) AS d
                         , SUM(fAmountCollected) AS j1
                     FROM t_receivables
-                    WHERE YEAR(fReceiptDate) = {}
+                    WHERE YEAR(fReceiptDate) = 2019
                     GROUP BY MONTH(fReceiptDate), DAY(fReceiptDate)
                 ) Q1
                 GROUP BY Q1.d WITH ROLLUP
@@ -90,18 +90,18 @@ class Form_Repoet_Day(QWidget):
                     , M11, M12
                 FROM (
                     SELECT Q1.d
-                        , IF(Q1.m = 1, Q1.j1, NULL) AS M1
-                        , IF(Q1.m = 2, Q1.j1, NULL) AS M2
-                        , IF(Q1.m = 3, Q1.j1, NULL) AS M3
-                        , IF(Q1.m = 4, Q1.j1, NULL) AS M4
-                        , IF(Q1.m = 5, Q1.j1, NULL) AS M5
-                        , IF(Q1.m = 6, Q1.j1, NULL) AS M6
-                        , IF(Q1.m = 7, Q1.j1, NULL) AS M7
-                        , IF(Q1.m = 8, Q1.j1, NULL) AS M8
-                        , IF(Q1.m = 9, Q1.j1, NULL) AS M9
-                        , IF(Q1.m = 10, Q1.j1, NULL) AS M10
-                        , IF(Q1.m = 11, Q1.j1, NULL) AS M11
-                        , IF(Q1.m = 12, Q1.j1, NULL) AS M12
+                        , sum(IF(Q1.m = 1, Q1.j1, NULL)) AS M1
+                        , sum(IF(Q1.m = 2, Q1.j1, NULL)) AS M2
+                        , sum(IF(Q1.m = 3, Q1.j1, NULL)) AS M3
+                        , sum(IF(Q1.m = 4, Q1.j1, NULL)) AS M4
+                        , sum(IF(Q1.m = 5, Q1.j1, NULL)) AS M5
+                        , sum(IF(Q1.m = 6, Q1.j1, NULL)) AS M6
+                        , sum(IF(Q1.m = 7, Q1.j1, NULL)) AS M7
+                        , sum(IF(Q1.m = 8, Q1.j1, NULL)) AS M8
+                        , sum(IF(Q1.m = 9, Q1.j1, NULL)) AS M9
+                        , sum(IF(Q1.m = 10, Q1.j1, NULL)) AS M10
+                        , sum(IF(Q1.m = 11, Q1.j1, NULL)) AS M11
+                        , sum(IF(Q1.m = 12, Q1.j1, NULL)) AS M12
                     FROM (
                         SELECT MONTH(fOrderDate) AS m, DAY(fOrderDate) AS d
                             , SUM(fPayable) AS j1
@@ -148,7 +148,7 @@ class Form_Repoet_Day(QWidget):
         if len(self.queryInfo) == 0:
             return
         flds = self.queryInfo.Fields
-        rpt = FormReport_Day_print(flds, self.cbo_year.currentText())
+        rpt = FormReport_Day_print(flds, self.cbo_year.currentText(),self.cbo_base.currentText())
         rpt.DataSource = self.mod.getDataDict(Qt.EditRole)
         rpt.BeginPrint()
 
@@ -163,6 +163,7 @@ class FormReport_Day_print(JPReport):
     def __init__(self,
                  flds,
                  myyear,
+                 baseon,
                  PaperSize=QPrinter.A3,
                  Orientation=QPrinter.Orientation(1)):
         super().__init__(PaperSize, Orientation)
@@ -179,10 +180,18 @@ class FormReport_Day_print(JPReport):
                                  0,
                                  100 * 13,
                                  40,
-                                 'Rec Year Report收款日报表',
+                                 'Zion Year Report收款日报表',
                                  Bolder=False,
                                  AlignmentFlag=(Qt.AlignCenter),
                                  Font=self.font_YaHei_10)
+        self.ReportHeader.AddItem(1,
+                                  0,
+                                  20,
+                                  200,
+                                  20,
+                                  '基于Base on: {}'.format(baseon),
+                                  Bolder=False,
+                                  AlignmentFlag=(Qt.AlignLeft))
         self.ReportHeader.AddItem(1,
                                   100 * 11,
                                   20,
