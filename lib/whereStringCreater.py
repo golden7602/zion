@@ -2,7 +2,7 @@
 import sys
 import os
 sys.path.append(os.getcwd())
-from PyQt5.QtWidgets import (QFileDialog, QPushButton, QDialog, QHeaderView,
+from PyQt5.QtWidgets import (QPushButton, QDialog, QHeaderView,
                              QComboBox, QTabWidget, QStyledItemDelegate,
                              QApplication, QWidget)
 from lib.Ui_WhereStringCreater import Ui_DlgSearch
@@ -302,18 +302,29 @@ class _JPWhereStringCreater(Ui_DlgSearch):
         self.ui.setupUi(self.Dlg)
         self.tab = self.ui.tableWidget
         self.tab.setRowCount(1)
-        list_fld = [[fld.Title, fld.FieldName, fld.TypeCode] for fld in fields]
+        # 取得所有字段信息
+        self.list_fld = [[fld.Title, fld.FieldName, fld.TypeCode]
+                         for fld in fields]
+
         self.de_boo = JPDelegate.JPDelegate_ComboBox(
             self.tab, [['And', 'And'], ['Or', 'Or'], ['Not', 'Not']])
-        self.de_fld = JPDelegate.JPDelegate_ComboBox(self.tab, list_fld)
+
+        self.de_fld = JPDelegate.JPDelegate_ComboBox(self.tab, self.list_fld)
+
         self.de_kh_left = JPDelegate.JPDelegate_ComboBox(
             self.tab, [['(', '(']])
+
         self.de_kh_right = JPDelegate.JPDelegate_ComboBox(
             self.tab, [[')', ')']])
+
         self.de_date = JPDelegate.JPDelegate_DateEdit(self.tab)
+
         self.de_int = JPDelegate.JPDelegate_LineEdit(self.tab, 1)
+
         self.de_float = JPDelegate.JPDelegate_LineEdit(self.tab, 2)
+
         self.de_no = JPDelegate.JPDelegate_ReadOnly(self.tab)
+
         self.tab.setColumnWidth(0, 50)
         self.tab.setColumnWidth(1, 20)
         self.tab.setColumnWidth(2, 200)
@@ -321,13 +332,22 @@ class _JPWhereStringCreater(Ui_DlgSearch):
         self.tab.setColumnWidth(4, 150)
         self.tab.setColumnWidth(5, 150)
         self.tab.setColumnWidth(6, 20)
+
         self.tab.setItemDelegate(self.de_no)
         self.tab.setItemDelegateForColumn(1, self.de_kh_left)
+        self.tab.setItemDelegateForColumn(2, self.de_fld)
         self.tab.setItemDelegateForColumn(6, self.de_kh_right)
 
         self.tab.currentCellChanged.connect(self.cell_change)
 
+    def getFieldType(self, FieldName):
+        if FieldName:
+            return [r[2] for r in self.list_fld if r[0] == FieldName]
+
     def cell_change(self, x1, y1, x2, y2):
+        if y2 == 2:
+            print(self.getFieldType(self.tab.item(x1, y2).text()))
+        return
         if x1 == 0 and y1 == 0:
             self.tab.setItemDelegate(self.de_no)
         elif y1 == 1:
@@ -383,12 +403,11 @@ class _JPWhereStringCreater(Ui_DlgSearch):
 #                              index: QModelIndex):
 #         editor.setGeometry(StyleOptionViewItem.rect)
 
-
 if __name__ == "__main__":
     import sys
     from lib.JPDatabase.Query import JPQueryFieldInfo
     from lib.JPDatabase.Database import JPDb
-    db=JPDb()
+    db = JPDb()
     db.setDatabaseType(1)
     app = QApplication(sys.argv)
     SQL = """select fID,fOrderID,fQuant as '数量Qtd',

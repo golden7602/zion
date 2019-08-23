@@ -16,7 +16,7 @@ from PyQt5.QtCore import (QAbstractItemModel, QModelIndex, QObject, Qt, QDate,
 from PyQt5.QtWidgets import (QPushButton, QStyledItemDelegate,
                              QStyleOptionViewItem, QWidget, QLineEdit,
                              QComboBox, QDateEdit)
-from lib.JPDatabase.Field  import JPFieldType
+from lib.JPDatabase.Field import JPFieldType
 from PyQt5.QtGui import (QDoubleValidator, QIntValidator)
 
 
@@ -81,7 +81,8 @@ class JPDelegate_LineEdit(_JPDelegate_Base):
 
     def setEditorData(self, editor: QWidget, index: QModelIndex):
         text = index.model().data(index, Qt.EditRole)
-        if text: editor.setText(str(text))
+        if text:
+            editor.setText(str(text))
 
     def setModelData(self, editor: QWidget, model: QAbstractItemModel,
                      index: QModelIndex):
@@ -105,6 +106,7 @@ class JPDelegate_ComboBox(_JPDelegate_Base):
     def createEditor(self, parent: QWidget, option: QStyleOptionViewItem,
                      index: QModelIndex) -> QWidget:
         wdgt = QComboBox(parent)
+        
         for row in self.RowSource:
             wdgt.addItem(row[0], row[1])
         return wdgt
@@ -122,7 +124,7 @@ class JPDelegate_ComboBox(_JPDelegate_Base):
 
     def setModelData(self, editor: QWidget, model: QAbstractItemModel,
                      index: QModelIndex):
-        index.model().setData(index, editor.currentData()[1], Qt.EditRole)
+        index.model().setData(index, editor.currentData(), Qt.EditRole)
 
 
 class JPDelegate_DateEdit(_JPDelegate_Base):

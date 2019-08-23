@@ -153,7 +153,6 @@ class JPTableViewModelBase(QAbstractTableModel):
                             0 if self.columnCount() - 1 else c + 1)
         if tmp.isValid():
             self.editNext.emit(tmp)
-
         self.dataChanged[QModelIndex, object].emit(Index, Any)
         return True
 
