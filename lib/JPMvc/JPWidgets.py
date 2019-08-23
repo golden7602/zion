@@ -30,12 +30,30 @@ def __getattr__(name):
 
 
 class _JPDoubleValidator(QDoubleValidator):
-    def __init__(self, decima=2):
+    def __init__(self, v1, v2, decima=2):
         super().__init__()
+        self.decima = decima
         self.setDecimals(decima)
+        self.min = v1
+        self.max = v2
 
     def validate(self, vstr, pos):
-        return super().validate(vstr.replace(',', ''), pos)
+        str0 = vstr.replace(',', '')
+        if str0 == '':
+            return QValidator.Intermediate, vstr, pos
+        if str0 == "-":
+            if self.min < 0.0:
+                return QValidator.Intermediate, vstr, pos
+            if self.min > 0.0:
+                return QValidator.Invalid, vstr, pos
+        if re.match(r"^-?[1-9]\d*\.?$", str0, flags=(re.I)):
+            return QValidator.Intermediate, vstr, pos
+        else:
+            if re.match(r"^-?[1-9]\d*\.\d{1," + str(self.decima) + r"}$",
+                        str0,
+                        flags=(re.I)):
+                return QValidator.Acceptable, vstr, pos
+        return QValidator.Invalid, vstr, pos
 
 
 class _JPIntValidator(QValidator):
@@ -130,7 +148,7 @@ class QLineEdit(QLineEdit_, __JPWidgetBase):
     def __init__(self, parent):
         super().__init__(parent)
         self.passWordConver = None
-        self.textChanged[str].connect(self.refreshValueNotRaiseEvent)
+        self.textChanged[str].connect(self.__onlyRefreshDisplayText)
 
     def getSqlValue(self) -> str:
         t = self.text()
@@ -144,6 +162,7 @@ class QLineEdit(QLineEdit_, __JPWidgetBase):
         return "'{}'".format(t)
 
     def refreshValueNotRaiseEvent(self, v, changeDisplayText: bool = False):
+
         try:
             tp = self.FieldInfo.TypeCode
         except AttributeError as e:
@@ -184,10 +203,6 @@ class QLineEdit(QLineEdit_, __JPWidgetBase):
         self.setReadOnly(self.MainModel.isReadOnlyMode)
         if not self.MainModel.isNewMode:
             self.__setDisplayText()
-        # if self.FieldInfo.TypeCode == JPFieldType.Int:
-        #     self.setValidator(_JPIntValidator())
-        # if self.FieldInfo.TypeCode == JPFieldType.Float:
-        #     self.setValidator(_JPDoubleValidator())
 
     def __setDisplayText(self):
         v = self.FieldInfo.Value
@@ -197,7 +212,7 @@ class QLineEdit(QLineEdit_, __JPWidgetBase):
             self.setText('')
 
     def setDoubleValidator(self, v_Min, v_Max, Decimals: int = 2):
-        Validator = _JPDoubleValidator()
+        Validator = _JPDoubleValidator(v_Min, v_Max, Decimals)
         Validator.setRange(float(v_Min), float(v_Max))
         Validator.setDecimals(Decimals)
         self.setValidator(Validator)
@@ -206,15 +221,17 @@ class QLineEdit(QLineEdit_, __JPWidgetBase):
         Validator = _JPIntValidator(v_Min, v_Max)
         self.setValidator(Validator)
 
+    def __onlyRefreshDisplayText(self, v):
+        self.setText(v)
+
     def focusInEvent(self, e):
         # 如果此对象没有被赋值字段信息
         try:
             if self.FieldInfo.TypeCode in (JPFieldType.Int, JPFieldType.Float):
                 t = self.text()
-                self.textChanged[str].disconnect(
-                    self.refreshValueNotRaiseEvent)
+                self.textChanged[str].disconnect(self.__onlyRefreshDisplayText)
                 self.setText(t.replace(',', ''))
-                self.textChanged[str].connect(self.refreshValueNotRaiseEvent)
+                self.textChanged[str].connect(self.__onlyRefreshDisplayText)
         except Exception:
             print(self.objectName())
             print(Exception)
@@ -222,7 +239,7 @@ class QLineEdit(QLineEdit_, __JPWidgetBase):
             QLineEdit_.focusInEvent(self, e)
 
     def focusOutEvent(self, e):
-        self.__setDisplayText()
+        self.refreshValueNotRaiseEvent(self.text())
         super()._onValueChange(self.FieldInfo.Value)
         QLineEdit_.focusOutEvent(self, e)
 

@@ -14,6 +14,7 @@ from lib.ZionPublc import JPPub, JPDb
 from lib.JPMvc.JPFuncForm import JPFunctionForm
 from lib.ZionWidgets.PrintingOrder import EditForm_PrintingOrder
 from lib.ZionReport.PrintingOrderReportMob import PrintOrder_report_Mob
+from lib.JPMvc.JPEditFormModel import JPEditFormDataMode
 
 
 class JPFuncForm_PrintingQuotation(JPFunctionForm):
@@ -89,6 +90,8 @@ class JPFuncForm_PrintingQuotation(JPFunctionForm):
                                       sql_sub=sql_sub,
                                       PKValue=PKValue)
 
+
+
     @pyqtSlot()
     def on_CmdOrder_clicked(self):
         cu_id = self.getCurrentSelectPKValue()
@@ -131,6 +134,10 @@ class Edit_PrintingQuotation(EditForm_PrintingOrder):
                          edit_mode=edit_mode,
                          PKValue=PKValue)
         self.setPkRole(4)
+        self.ui.label_Title_Chn.setText("报价单")
+        self.ui.label_Title_Eng.setText("Cotação")
+        if self.EditMode != JPEditFormDataMode.ReadOnly:
+            self.ui.fCustomerID.setEditable(True)
 
     @pyqtSlot()
     def on_butPrint_clicked(self):
@@ -146,13 +153,26 @@ class Order_Printingreport(PrintOrder_report_Mob):
         if (SectionType == JPPrintSectionType.PageHeader and CurrentPage == 1):
             return True
 
+    def init_data(self, OrderID: str):
+        SQL = """
+        SELECT o.*, if(not isnull(fNumerBegin) and not 
+        isnull(fNumerBegin), concat(fNumerBegin , 
+        ' VIE ' ,fNumerEnd),'') AS Numeracao,
+        if(isnull(fNote),' ',fNote) as fNote1 
+        FROM v_quotation o  WHERE o.fOrderID ='{}'"""
+        db = JPDb()
+        data = db.getDict(SQL.format(OrderID))
+        data.sort(key=lambda x: (x['fCustomerName'], x['fCity'], x['fAmount']
+                                 is None, x['fAmount']))
+        self.DataSource = data
+
     def PrintCurrentReport(self, OrderID: str):
         self.init_data(OrderID)
         self.init_ReportHeader_title(
             title1="Cotação", title2="(ESTE DOCUMENTO É DO USO INTERNO)")
         self.init_ReportHeader()
-        self.init_ReportHeader_Individualization()
+
         self.init_PageHeader()
-        self.init_Detail()
         self.init_ReportFooter()
+
         super().BeginPrint()

@@ -462,12 +462,12 @@ class Order_report_Mob(JPReport):
                    FormatString='{:,.2f}',
                    AlignmentFlag=Qt.AlignRight,
                    Font=self.font_YaHei_8)
-        RF.AddItem(3,
+        RF.AddItem(1,
                    0,
                    0,
                    390,
                    100,
-                   "fNote",
+                   "fNote1",
                    FormatString='Note:Esta cotação é válida por 7 dias.\n{}',
                    Bolder=False,
                    AlignmentFlag=(Qt.AlignLeft | Qt.TextWordWrap),
@@ -503,26 +503,27 @@ class Order_report_Mob(JPReport):
                    AlignmentFlag=Qt.AlignRight,
                    Font=self.font_YaHei_8)
         RF.AddItem(1, 540, 125, 100, 0, '')
-        RF.AddItem(1,
-                   10,
-                   140,
-                   180,
-                   20,
-                   '客户签名Assinatura do cliente:',
-                   Bolder=False,
-                   AlignmentFlag=Qt.AlignLeft,
-                   Font=self.font_YaHei_8)
-        RF.AddItem(1, 170, 155, 100, 0, '')
-        RF.AddItem(1,
-                   390,
-                   140,
-                   180,
-                   20,
-                   '联系电话Número de contato:',
-                   Bolder=False,
-                   AlignmentFlag=Qt.AlignLeft,
-                   Font=self.font_YaHei_8)
-        RF.AddItem(1, 540, 155, 100, 0, '')
+
+        # RF.AddItem(1,
+        #            10,
+        #            140,
+        #            180,
+        #            20,
+        #            '客户签名Assinatura do cliente:',
+        #            Bolder=False,
+        #            AlignmentFlag=Qt.AlignLeft,
+        #            Font=self.font_YaHei_8)
+        # RF.AddItem(1, 170, 155, 100, 0, '')
+        # RF.AddItem(1,
+        #            390,
+        #            140,
+        #            180,
+        #            20,
+        #            '联系电话Número de contato:',
+        #            Bolder=False,
+        #            AlignmentFlag=Qt.AlignLeft,
+        #            Font=self.font_YaHei_8)
+        # RF.AddItem(1, 540, 155, 100, 0, '')
         self.PageFooter.AddItem(4,
                                 10,
                                 0,
@@ -547,7 +548,6 @@ class Order_report_Mob(JPReport):
     # 修改联次
     def onBeforePrint(self, Copys, Sec, CurrentPrintDataRow, obj):
         if Copys == 2:
-            print(obj.PrintObject)
             if obj.PrintObject == " CONT.  / PRDUCAO":
                 return False, "第二联"
             elif obj.PrintObject in [
@@ -558,9 +558,13 @@ class Order_report_Mob(JPReport):
         return False, None
 
     def init_data(self, OrderID: str):
-        SQL = """select o.*, d.fQuant,d.fProductName,d.fLength,d.fWidth,
-            d.fPrice,d.fAmount as fAmountDetail from  v_order as o right join t_order_detail 
-                    as d on o.fOrderID=d.fOrderID  where d.fOrderID='{}'"""
+        SQL = """SELECT o.*
+                    , if(isnull(fNote), ' ', fNote) AS fNote1
+                    , d.fQuant, d.fProductName, d.fLength, d.fWidth, d.fPrice
+                    , d.fAmount AS fAmountDetail
+                FROM v_order o
+                    RIGHT JOIN t_order_detail d ON o.fOrderID = d.fOrderID
+                WHERE d.fOrderID = '{}'"""
 
         db = JPDb()
         data = db.getDict(SQL.format(OrderID))

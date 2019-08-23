@@ -6,7 +6,7 @@ from lib.JPMvc.JPFuncForm import JPFunctionForm
 from lib.ZionWidgets.Order import EditForm_Order
 from lib.ZionWidgets.PrintingOrder import EditForm_PrintingOrder
 from PyQt5.QtCore import pyqtSlot, Qt, QModelIndex
-from lib.JPExcel.JPExportToExcel import clsExportToExcelFromJPTabelFieldInfo
+from lib.JPExcel.JPExportToExcel import JPExpExcelFromTabelFieldInfo
 from lib.JPDatabase.Query import JPQueryFieldInfo
 from lib.JPMvc.JPFuncForm import JPEditFormDataMode
 
@@ -83,7 +83,7 @@ class ZionFuncForm(JPFunctionForm):
             SELECT 订单号码OrderID FROM ({cur_sql}) Q)"""
         sql = sql.format(cur_sql=self.currentSQL)
         tab = JPQueryFieldInfo(sql)
-        exp = clsExportToExcelFromJPTabelFieldInfo(self.model.TabelFieldInfo,
+        exp = JPExpExcelFromTabelFieldInfo(self.model.TabelFieldInfo,
                                                    self.MainForm)
         exp.setSubQueryFieldInfo(tab, 0, 0)
         exp.run()

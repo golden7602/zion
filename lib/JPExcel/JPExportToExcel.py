@@ -91,7 +91,7 @@ class clsExportToExcelFromTableWidget(object):
         book.save(fileName_choose)
 
 
-class clsExportToExcelFromJPTabelFieldInfo(object):
+class JPExpExcelFromTabelFieldInfo(object):
     def __init__(self, QueryFieldInfo: JPQueryFieldInfo, MainForm):
         """"""
         self.QueryFieldInfo = QueryFieldInfo

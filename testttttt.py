@@ -33,5 +33,6 @@ mt = re.match(sel_p, sql, flags=(re.I | re.M))
 print(mt.groups()[0])
 
 
-from PyQt5 import sip
-print(sip.SIP_VERSION_STR)
+str0="-12345.123"
+rr = re.match(r"^-?[1-9]\d*\.\d{1,2}$", str0, flags=(re.I))
+print(rr)

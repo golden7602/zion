@@ -12,6 +12,7 @@ from lib.JPDatabase.Query import JPQueryFieldInfo
 from lib.JPFunction import findButtonAndSetIcon
 from lib.JPPrintReport import JPReport
 from PyQt5.QtPrintSupport import QPrinter
+from lib.JPExcel.JPExportToExcel import JPExpExcelFromTabelFieldInfo
 
 
 class _myMod(JPTableViewModelReadOnly):
@@ -39,7 +40,7 @@ class _myMod(JPTableViewModelReadOnly):
 class Form_Repoet_Day(QWidget):
     def __init__(self, mainform):
         super().__init__()
-        self.ui=Ui_Form()
+        self.ui = Ui_Form()
         self.ui.setupUi(self)
         mainform.addForm(self)
         findButtonAndSetIcon(self)
@@ -113,9 +114,9 @@ class Form_Repoet_Day(QWidget):
                     ) Q1
                     GROUP BY Q1.d WITH ROLLUP
                 ) Q3        """
-        self.cbo_base=self.ui.cbo_base
-        self.cbo_year=self.ui.cbo_year
-        self.tableView=self.ui.tableView
+        self.cbo_base = self.ui.cbo_base
+        self.cbo_year = self.ui.cbo_year
+        self.tableView = self.ui.tableView
         self.cbo_base.addItem('Payment', sql_payment)
         self.cbo_base.addItem('Receivables', sql_receivables)
         db = JPDb()
@@ -147,15 +148,50 @@ class Form_Repoet_Day(QWidget):
         if len(self.queryInfo) == 0:
             return
         flds = self.queryInfo.Fields
-        rpt = JPReport(QPrinter.A4, QPrinter.Orientation(1))
+        rpt = FormReport_Day_print(flds, self.cbo_year.currentText())
+        rpt.DataSource = self.mod.getDataDict(Qt.EditRole)
+        rpt.BeginPrint()
+
+    @pyqtSlot()
+    def on_CmdExportToExcel_clicked(self):
+        exp = JPExpExcelFromTabelFieldInfo(self.model.TabelFieldInfo,
+                                           self.MainForm)
+        exp.run()
+
+
+class FormReport_Day_print(JPReport):
+    def __init__(self,
+                 flds,
+                 myyear,
+                 PaperSize=QPrinter.A3,
+                 Orientation=QPrinter.Orientation(1)):
+        super().__init__(PaperSize, Orientation)
+
+        self.font_YaHei = QFont("微软雅黑")
+        self.font_YaHei_8 = QFont(self.font_YaHei)
+        self.font_YaHei_8.setPointSize(8)
+        self.font_YaHei_10 = QFont(self.font_YaHei)
+        self.font_YaHei_10.setPointSize(20)
+        self.font_YaHei_10.setBold(True)
+        rpt = self
         rpt.ReportHeader.AddItem(1,
                                  0,
                                  0,
                                  100 * 13,
                                  40,
-                                 '收款日报表',
+                                 'Rec Year Report收款日报表',
                                  Bolder=False,
-                                 AlignmentFlag=(Qt.AlignCenter))
+                                 AlignmentFlag=(Qt.AlignCenter),
+                                 Font=self.font_YaHei_10)
+        self.ReportHeader.AddItem(1,
+                                  100 * 11,
+                                  20,
+                                  200,
+                                  20,
+                                  '年度Year: {}'.format(myyear),
+                                  Bolder=False,
+                                  AlignmentFlag=(Qt.AlignRight))
+
         title = [fld.Title for fld in flds]
         fns = [fld.FieldName for fld in flds]
         cols = len(flds)
@@ -183,8 +219,29 @@ class Form_Repoet_Day(QWidget):
                                fns[i],
                                AlignmentFlag=al_r,
                                FormatString='{:,.2f}')
-        rpt.DataSource = self.mod.getDataDict(Qt.EditRole)
-        rpt.BeginPrint()
+        self.PageFooter.AddItem(4,
+                                10,
+                                0,
+                                100,
+                                20,
+                                '',
+                                FormatString='Page: {Page}/{Pages}',
+                                Bolder=False,
+                                AlignmentFlag=Qt.AlignLeft,
+                                Font=self.font_YaHei_8)
+        self.PageFooter.AddItem(5,
+                                100 * 10,
+                                0,
+                                100 * 3,
+                                20,
+                                '',
+                                FormatString="PrintTime: %Y-%m-%d %H:%M:%S",
+                                Bolder=False,
+                                AlignmentFlag=Qt.AlignRight,
+                                Font=self.font_YaHei_8)
+
+    def onFormat(self, SectionType, CurrentPage, RowDate=None):
+        return False
 
 
 # def getFuncForm_FormReport_Day(mainform):

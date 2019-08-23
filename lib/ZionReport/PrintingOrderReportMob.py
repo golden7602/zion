@@ -2,12 +2,12 @@ from os import getcwd
 from sys import path as jppath
 jppath.append(getcwd())
 
-
 from PyQt5.QtPrintSupport import QPrinter
 from lib.JPPrintReport import JPPrintSectionType, JPReport
 from PyQt5.QtGui import QColor, QFont, QPainter, QPixmap
 from PyQt5.QtCore import Qt
 from lib.JPDatabase.Database import JPDb
+from configparser import ConfigParser
 
 
 class PrintOrder_report_Mob(JPReport):
@@ -251,6 +251,150 @@ class PrintOrder_report_Mob(JPReport):
                    "fTelefone",
                    Font=self.font_YaHei_8,
                    AlignmentFlag=Qt.AlignLeft)
+
+        # 第6行
+        RH.AddItem(1,
+                   0,
+                   155,
+                   90,
+                   20,
+                   "类别Especie:",
+                   Font=self.font_YaHei_8,
+                   AlignmentFlag=Qt.AlignCenter)
+        RH.AddItem(3,
+                   90,
+                   155,
+                   90,
+                   20,
+                   "fEspecie",
+                   Font=self.font_YaHei_8,
+                   AlignmentFlag=Qt.AlignLeft)
+        RH.AddItem(1,
+                   180,
+                   155,
+                   130,
+                   20,
+                   "数量Quant:",
+                   Font=self.font_YaHei_8,
+                   AlignmentFlag=Qt.AlignCenter)
+        RH.AddItem(3,
+                   310,
+                   155,
+                   90,
+                   20,
+                   "fQuant",
+                   Font=self.font_YaHei_8,
+                   AlignmentFlag=Qt.AlignLeft)
+        RH.AddItem(1,
+                   400,
+                   155,
+                   90,
+                   20,
+                   "单价Price:",
+                   Font=self.font_YaHei_8,
+                   AlignmentFlag=Qt.AlignCenter)
+        RH.AddItem(3,
+                   490,
+                   155,
+                   160,
+                   20,
+                   "fPrice",
+                   Font=self.font_YaHei_8,
+                   AlignmentFlag=Qt.AlignLeft)
+
+        # 第7行
+        RH.AddItem(1,
+                   0,
+                   175,
+                   90,
+                   20,
+                   "每页序号Avista:",
+                   Font=self.font_YaHei_8,
+                   AlignmentFlag=Qt.AlignCenter)
+        RH.AddItem(3,
+                   90,
+                   175,
+                   90,
+                   20,
+                   "fAvista",
+                   Font=self.font_YaHei_8,
+                   AlignmentFlag=Qt.AlignLeft)
+        RH.AddItem(1,
+                   180,
+                   175,
+                   130,
+                   20,
+                   "联数Nr.Copy:",
+                   Font=self.font_YaHei_8,
+                   AlignmentFlag=Qt.AlignCenter)
+        RH.AddItem(3,
+                   310,
+                   175,
+                   90,
+                   20,
+                   "fNrCopy",
+                   Font=self.font_YaHei_8,
+                   AlignmentFlag=Qt.AlignLeft)
+        RH.AddItem(1,
+                   400,
+                   175,
+                   90,
+                   20,
+                   "每本页数 Page/Vol:",
+                   Font=self.font_YaHei_8,
+                   AlignmentFlag=Qt.AlignCenter)
+        RH.AddItem(3,
+                   490,
+                   175,
+                   80,
+                   20,
+                   "fPagePerVolumn",
+                   Font=self.font_YaHei_8,
+                   AlignmentFlag=Qt.AlignLeft)
+        RH.AddItem(3,
+                   570,
+                   175,
+                   80,
+                   20,
+                   "fLogo1",
+                   Font=self.font_YaHei_8,
+                   AlignmentFlag=Qt.AlignLeft,
+                   FormatString="Logo:{}")
+
+        # 第8行
+        RH.AddItem(1,
+                   0,
+                   195,
+                   90,
+                   20,
+                   "尺寸Tamanho:",
+                   Font=self.font_YaHei_8,
+                   AlignmentFlag=Qt.AlignCenter)
+        RH.AddItem(3,
+                   90,
+                   195,
+                   90,
+                   20,
+                   "fTamanho",
+                   Font=self.font_YaHei_8,
+                   AlignmentFlag=Qt.AlignLeft)
+        RH.AddItem(1,
+                   180,
+                   195,
+                   130,
+                   20,
+                   "起始号码Numeracao:",
+                   Font=self.font_YaHei_8,
+                   AlignmentFlag=Qt.AlignCenter)
+        RH.AddItem(3,
+                   310,
+                   195,
+                   340,
+                   20,
+                   "Numeracao",
+                   Font=self.font_YaHei_8,
+                   AlignmentFlag=Qt.AlignLeft)
+
         # 联次信息
         tempItem = RH.AddItem(1,
                               655,
@@ -262,31 +406,6 @@ class PrintOrder_report_Mob(JPReport):
                               Transform=True,
                               Font=self.font_YaHei_8,
                               AlignmentFlag=Qt.AlignLeft)
-
-        # 修改联次
-        def onBeforePrint_LianCi(*args):
-            if args[0] == 2:
-                return False, "第二联"
-            else:
-                return False, None
-
-        tempItem.onBeforePrint = onBeforePrint_LianCi
-
-    def init_ReportHeader_Individualization(self):
-        # 第6行 Order个性部分
-        RH = self.ReportHeader
-        RH.AddPrintLables(
-            0,
-            155,
-            20, [
-                "#", "数量Qtd", "名称Descrição", "长Comp.", "宽Larg.",
-                "单价P. Unitario", "金额Total"
-            ], [40, 50, 280, 60, 60, 80, 80], [
-                Qt.AlignCenter, Qt.AlignCenter, Qt.AlignCenter, Qt.AlignCenter,
-                Qt.AlignCenter, Qt.AlignCenter, Qt.AlignCenter
-            ],
-            FillColor=self.FillColor,
-            Font=self.font_YaHei_8)
 
     def init_PageHeader(self,
                         title1="NOTA DE PAGAMENTO",
@@ -378,30 +497,6 @@ class PrintOrder_report_Mob(JPReport):
             Font=self.font_YaHei_8,
             FillColor=self.FillColor)
 
-    def init_Detail(self):
-        D = self.Detail
-        D.AddPrintFields(
-            0,
-            0,
-            20, [
-                "fQuant", "fQuant", "fProductName", "fLength", "fWidth",
-                "fPrice"
-            ], [40, 50, 280, 60, 60, 80], [
-                Qt.AlignCenter, Qt.AlignCenter, Qt.AlignLeft, Qt.AlignCenter,
-                (Qt.AlignRight | Qt.AlignVCenter),
-                (Qt.AlignRight | Qt.AlignVCenter)
-            ],
-            Font=self.font_YaHei_8)
-        D.AddItem(3,
-                  40 + 50 + 280 + 60 + 60 + 80,
-                  0,
-                  80,
-                  20,
-                  "fAmountDetail",
-                  Font=self.font_YaHei_8,
-                  FormatString='{:,.2f}',
-                  AlignmentFlag=(Qt.AlignRight | Qt.AlignVCenter))
-
     def init_ReportFooter(self):
         RF = self.ReportFooter
         RF.AddItem(1,
@@ -472,17 +567,7 @@ class PrintOrder_report_Mob(JPReport):
                    FormatString='{:,.2f}',
                    AlignmentFlag=Qt.AlignRight,
                    Font=self.font_YaHei_8)
-        RF.AddItem(
-            3,
-            0,
-            0,
-            390,
-            100,
-            "fNote",
-            FormatString='Note:Esta cotação é válida por 7 dias.\n{}',
-            Bolder=False,
-            AlignmentFlag=(Qt.AlignLeft | Qt.TextWordWrap),
-            Font=self.font_YaHei_8)
+
         # 签字部分
         RF.AddItem(1,
                    0,
@@ -514,26 +599,40 @@ class PrintOrder_report_Mob(JPReport):
                    AlignmentFlag=Qt.AlignRight,
                    Font=self.font_YaHei_8)
         RF.AddItem(1, 540, 125, 100, 0, '')
-        RF.AddItem(1,
-                   10,
-                   140,
-                   180,
-                   20,
-                   '客户签名Assinatura do cliente:',
+
+        noteStr = JPDb().getOnConfigValue('Note_PrintingOrder', str)+'{}'
+        noteFont = QFont(self.font_YaHei_8)
+        noteFont.setBold(True)
+        RF.AddItem(3,
+                   0,
+                   130,
+                   650,
+                   100,
+                   "fNote1",
+                   FormatString=noteStr,
                    Bolder=False,
-                   AlignmentFlag=Qt.AlignLeft,
-                   Font=self.font_YaHei_8)
-        RF.AddItem(1, 170, 155, 100, 0, '')
-        RF.AddItem(1,
-                   390,
-                   140,
-                   180,
-                   20,
-                   '联系电话Número de contato:',
-                   Bolder=False,
-                   AlignmentFlag=Qt.AlignLeft,
-                   Font=self.font_YaHei_8)
-        RF.AddItem(1, 540, 155, 100, 0, '')
+                   AlignmentFlag=(Qt.AlignLeft | Qt.TextWordWrap),
+                   Font=noteFont)
+        # RF.AddItem(1,
+        #            10,
+        #            140,
+        #            180,
+        #            20,
+        #            '客户签名Assinatura do cliente:',
+        #            Bolder=False,
+        #            AlignmentFlag=Qt.AlignLeft,
+        #            Font=self.font_YaHei_8)
+        # RF.AddItem(1, 170, 155, 100, 0, '')
+        # RF.AddItem(1,
+        #            390,
+        #            140,
+        #            180,
+        #            20,
+        #            '联系电话Número de contato:',
+        #            Bolder=False,
+        #            AlignmentFlag=Qt.AlignLeft,
+        #            Font=self.font_YaHei_8)
+        # RF.AddItem(1, 540, 155, 100, 0, '')
         self.PageFooter.AddItem(4,
                                 10,
                                 0,
@@ -555,8 +654,25 @@ class PrintOrder_report_Mob(JPReport):
                                 AlignmentFlag=Qt.AlignRight,
                                 Font=self.font_YaHei_8)
 
+    # 修改联次
+    def onBeforePrint(self, Copys, Sec, CurrentPrintDataRow, obj):
+        if Copys == 2:
+            if obj.PrintObject == " CONT.  / PRDUCAO":
+                return False, "第二联"
+            elif obj.PrintObject in [
+                    "fPrice", "fAmountDetail", "fAmount", "fDesconto", "fTax",
+                    "fPayable"
+            ]:
+                return False, ""
+        return False, None
+
     def init_data(self, OrderID: str):
-        SQL = "SELECT o.* FROM v_order o  WHERE o.fOrderID ='{}'"
+        SQL = """
+        SELECT o.*, if(not isnull(fNumerBegin) and not 
+        isnull(fNumerBegin), concat(fNumerBegin , 
+        ' VIE ' ,fNumerEnd),'') AS Numeracao,
+        if(isnull(fNote),' ',fNote) as fNote1 
+        FROM v_order o  WHERE o.fOrderID ='{}'"""
         db = JPDb()
         data = db.getDict(SQL.format(OrderID))
         data.sort(key=lambda x: (x['fCustomerName'], x['fCity'], x['fAmount']

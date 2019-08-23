@@ -3,16 +3,17 @@ from sys import path as jppath
 jppath.append(getcwd())
 
 from Ui.Ui_FormReceivables import Ui_Form
-from PyQt5.QtWidgets import QDialog, QMessageBox, QWidget
+from PyQt5.QtWidgets import QDialog, QMessageBox, QWidget, QPushButton
 from PyQt5.QtCore import QDate, QMetaObject, pyqtSlot, Qt, QModelIndex
 from lib.JPDatabase.Query import JPQueryFieldInfo
 from lib.JPMvc.JPModel import JPTableViewModelReadOnly
-from lib.JPFunction import JPDateConver, findButtonAndSetIcon
+from lib.JPFunction import JPDateConver, findButtonAndSetIcon, setButtonIcon
 from lib.JPMvc.JPEditFormModel import JPFormModelMain, JPEditFormDataMode
 from Ui.Ui_FormReceivableEdit import Ui_Form as Edit_ui
 from PyQt5.QtGui import QPixmap
 from lib.ZionPublc import JPPub, JPUser
 from lib.JPMvc import JPWidgets
+from lib.JPExcel.JPExportToExcel import JPExpExcelFromTabelFieldInfo
 
 
 class Form_Receivables(QWidget):
@@ -138,29 +139,64 @@ class Form_Receivables(QWidget):
         self.ui.SelectDate.dateChanged.connect(self.dateChanged)
         self.ui.SelectDate.setDate(QDate.currentDate())
         self.currentCustomerChanged()
+        # self.ui.tabCurrentDayRec.cellActivated.connect(self.__formChange)
+        # self.ui.tabCustomerArrearsList.cellActivated.connect(self.__formChange)
+        # self.ui.tabCustomerRecorder.cellActivated.connect(self.__formChange)
+
+    def __formChange(self, *args):
+        print(args)
+
+    def addButtons(self, btnNames: list):
+        for item in btnNames:
+            btn = QPushButton(item['fMenuText'])
+            btn.setObjectName(item['fObjectName'])
+            setButtonIcon(btn)
+            btn.setEnabled(item['fHasRight'])
+            self.ui.horizontalLayout_Button.addWidget(btn)
+        QMetaObject.connectSlotsByName(self)
 
     @pyqtSlot()
     def on_SelectDate_dateChanged(self, *args):
         return
 
-    @pyqtSlot()
-    def on_butRecibido_clicked(self):
-        frm = RecibidoEdit()
-        frm.ListForm = self
+    def __setEnabled(self, frm):
         frm.ui.fCustomerID.setEditable(True)
         frm.ui.fCity.setEnabled(False)
         frm.ui.fNUIT.setEnabled(False)
         frm.ui.fEndereco.setEnabled(False)
         frm.ui.fEndereco.setEnabled(False)
         frm.ui.fCelular.setEnabled(False)
-        frm.ui.fContato.setEnabled(False)
         frm.ui.fTelefone.setEnabled(False)
         frm.ui.fAmountPayable.setEnabled(False)
         frm.ui.fAmountPaid.setEnabled(False)
         frm.ui.fArrears.setEnabled(False)
+        frm.ui.fPayeeID.setEnabled(False)
+
+    @pyqtSlot()
+    def on_CmdEdit_clicked(self):
+        frm = RecibidoEdit()
+        frm.ListForm = self
+        frm.ui.fAmountCollected.setDoubleValidator(-100000000.0, 100000000.0,
+                                                   2)
+        self.__setEnabled(frm)
         frm.exec_()
 
-    def dateChanged(self, s_date):
+    @pyqtSlot()
+    def on_CmdRecibido_clicked(self):
+        frm = RecibidoEdit()
+        frm.ListForm = self
+        frm.ui.fAmountCollected.setDoubleValidator(0.01, 100000000.0, 2)
+        self.__setEnabled(frm)
+        frm.exec_()
+
+    @pyqtSlot()
+    def on_CmdExportToExcel_clicked(self):
+        pass
+        # exp = JPExpExcelFromTabelFieldInfo(self.model.TabelFieldInfo,
+        #                                    self.MainForm)
+        # exp.run()
+
+    def dateChanged(self, s_data):
         str_date = JPDateConver(self.ui.SelectDate.date(), str)
         self.QinfoCurrentDayRec = JPQueryFieldInfo(
             self.SQLCurrentDayRec.format(dateString=str_date))
@@ -196,10 +232,14 @@ class Form_Receivables(QWidget):
 
 class RecibidoEdit(JPFormModelMain):
     def __init__(self):
-        m_sql = '''select fID,fCustomerID,fPaymentMethodID,
-                fReceiptDate,fAmountCollected,fPayeeID,fNote 
-                from t_receivables
-                where fID='{}'
+        m_sql = '''SELECT fID, 
+                        fCustomerID AS 客户名Cliente, 
+                        fPaymentMethodID AS 收款方式ModoPago, 
+                        fReceiptDate, 
+                        fAmountCollected AS 金额Amount,
+                        fPayeeID, fNote
+                        FROM t_receivables
+                        WHERE fID = '{}'
                 '''
         super().__init__(Edit_ui(),
                          sql_main=m_sql,
@@ -210,6 +250,9 @@ class RecibidoEdit(JPFormModelMain):
         self.ui.label_logo.setPixmap(pix)
         self.ui.fID.hide()
         self.readData()
+        self.ui.fPayeeID.refreshValueNotRaiseEvent(JPUser().currentUserID())
+        self.ui.butPrint.hide()
+        self.ui.butPDF.hide()
 
     def onGetFieldsRowSources(self):
         pub = JPPub()
@@ -221,16 +264,16 @@ class RecibidoEdit(JPFormModelMain):
     def onGetPrintReport(self):
         return  #PrintOrder_report_Mob()
 
-    # def onGetReadOnlyFields(self):
+    # # def onGetReadOnlyFields(self):
+    # #     return [
+    # #         'fAmountPayable', 'fAmountPaid', 'fArrears', 'fSucursal',
+    # #         'fTelefone', 'fCelular', "fEntryID", "fEndereco", 'fCity', 'fNUIT'
+    # #     ]
+    # def onGetDisableFields(self):
     #     return [
-    #         'fAmountPayable', 'fAmountPaid', 'fArrears', 'fSucursal',
-    #         'fTelefone', 'fCelular', "fEntryID", "fEndereco", 'fCity', 'fNUIT'
+    #         'fNUIT', 'fCity', 'fEndereco', 'fCelular', 'fContato', 'fTelefone',
+    #         'fAmountPayable', 'fAmountPaid', 'fArrears'
     #     ]
-    def onGetDisableFields(self):
-        return [
-            'fNUIT', 'fCity', 'fEndereco', 'fCelular', 'fContato', 'fTelefone',
-            'fAmountPayable', 'fAmountPaid', 'fArrears'
-        ]
 
     def onDateChangeEvent(self, obj, value):
         nm = obj.objectName()
@@ -277,6 +320,4 @@ class RecibidoEdit(JPFormModelMain):
 
     def onAfterSaveData(self, data):
         self.ui.butSave.setEnabled(False)
-        self.ui.butPrint.setEnabled(False)
-        self.ui.butPDF.setEnabled(False)
-        self.ListForm.dateChanged()
+        self.ListForm.dateChanged(data)

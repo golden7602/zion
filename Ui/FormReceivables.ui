@@ -79,55 +79,7 @@
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_3">
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_2">
-           <item>
-            <widget class="QPushButton" name="butRecibido">
-             <property name="text">
-              <string>Recibido</string>
-             </property>
-             <property name="iconSize">
-              <size>
-               <width>16</width>
-               <height>16</height>
-              </size>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="butRefresh">
-             <property name="text">
-              <string>Refresh</string>
-             </property>
-             <property name="icon">
-              <iconset>
-               <normaloff>../res/ico/printer.png</normaloff>../res/ico/printer.png</iconset>
-             </property>
-             <property name="iconSize">
-              <size>
-               <width>16</width>
-               <height>16</height>
-              </size>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="butExportToExcel">
-             <property name="text">
-              <string>ExportToExcel</string>
-             </property>
-             <property name="icon">
-              <iconset>
-               <normaloff>../res/ico/printer.png</normaloff>../res/ico/printer.png</iconset>
-             </property>
-             <property name="iconSize">
-              <size>
-               <width>16</width>
-               <height>16</height>
-              </size>
-             </property>
-            </widget>
-           </item>
-          </layout>
+          <layout class="QHBoxLayout" name="horizontalLayout_Button"/>
          </item>
          <item>
           <spacer name="horizontalSpacer">

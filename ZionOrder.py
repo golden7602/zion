@@ -10,7 +10,7 @@ from PyQt5.QtWidgets import (QApplication, QHBoxLayout, QMainWindow,
 from PyQt5.QtGui import QIcon, QPixmap
 from lib.ZionPublc import JPPub, JPUser
 from Ui.Ui_FormMain import Ui_MainWindow
-from lib.JPFunction import readQss, setButtonIconByName
+from lib.JPFunction import readQss, setButtonIconByName, seWindowsIcon
 from lib.JPDatabase.Database import JPDb, JPDbType
 from lib.ZionWidgets.Background import Form_Background
 from Ui.Ui_FormUserLogin import Ui_Dialog
@@ -122,7 +122,9 @@ class JPMainWindow(QMainWindow):
     def getStackedWidget(self, sysnavigationmenus_data):
         self.btns = sysnavigationmenus_data['btns']
         self.menu_id = sysnavigationmenus_data['fNMID']
-        if self.menu_id == 2:  # Order
+        if self.menu_id == 12:
+            self.close()
+        elif self.menu_id == 2:  # Order
             from lib.ZionWidgets.Order import JPFuncForm_Order
             JPFuncForm_Order(self)
         elif self.menu_id == 9:
@@ -136,7 +138,8 @@ class JPMainWindow(QMainWindow):
             Form_EnumManger(self)
         elif self.menu_id == 20:
             from lib.ZionWidgets.Receivables import Form_Receivables
-            Form_Receivables(self)
+            frm = Form_Receivables(self)
+            frm.addButtons(self.btns)
         elif self.menu_id == 72:
             from lib.ZionWidgets.PrintingOrder import JPFuncForm_PrintingOrder
             JPFuncForm_PrintingOrder(self)
@@ -160,9 +163,14 @@ class JPMainWindow(QMainWindow):
         elif self.menu_id == 55:
             from lib.ZionWidgets.PrintingQuotation import JPFuncForm_PrintingQuotation
             JPFuncForm_PrintingQuotation(self)
-        elif self.menu_id==148:
+        elif self.menu_id == 148:
             from lib.ZionWidgets.Customer_Arrears import Form_FormCustomer_Arrears
             Form_FormCustomer_Arrears(self)
+        elif self.menu_id == 14:  # config
+            from lib.ZionWidgets.config import Form_Config
+            frm = Form_Config(self)
+            frm.setWindowTitle("COnfig")
+            seWindowsIcon(frm)
         else:
             Form_Background(self)
 

@@ -71,7 +71,7 @@ class _jpPrintItem(metaclass=abc.ABCMeta):
             return
         r1, r2 = _jpPrintItem.Report.onBeforePrint(
             _jpPrintItem.Report._CurrentCopys, self.Section,
-            self.Section._GetCurrentPrintDataRow(),self)
+            self.Section._GetCurrentPrintDataRow(), self)
         if r1:
             return
         txt = r2 if not (r2 is None) else self.GetPrintText()
@@ -186,7 +186,7 @@ class _jpPrintPixmap(_jpPrintItem):
             return
         r1, r2 = _jpPrintItem.Report.onBeforePrint(
             _jpPrintItem.Report._CurrentCopys, self.Section,
-            self.Section._GetCurrentPrintDataRow(),self)
+            self.Section._GetCurrentPrintDataRow(), self)
         if r1:
             return
         obj = r2 if isinstance(r2, QPixmap) else self.PrintObject
@@ -320,7 +320,6 @@ class _jpPrintSection(object):
 
 class _SectionAutoPaging(_jpPrintSection):
     """定义一个自动分页的节，实现，请不要实例化"""
-
     def __init__(self):
         #  当前页面条目打印时的向下偏移量
         self._CurPageOffset = 0
@@ -359,7 +358,6 @@ class _SectionAutoPaging(_jpPrintSection):
 
 class _jpSectionReportHeader(_SectionAutoPaging):
     """报表、组页头类"""
-
     def __init__(self):
         self.SectionType = JPPrintSectionType.ReportHeader
         super().__init__()
@@ -370,7 +368,6 @@ class _jpSectionReportHeader(_SectionAutoPaging):
 
 class _jpSectionReportFooter(_SectionAutoPaging):
     """报表、组页脚类"""
-
     def __init__(self):
         self.SectionType = JPPrintSectionType.ReportFooter
         super().__init__()
@@ -755,7 +752,6 @@ class _jpPrintGroup(object):
 
 class JPReport(object):
     """报表类"""
-
     def __init__(self, PaperSize, Orientation):
         _jpPrintSection.Report = self
         _jpPrintItem.Report = self

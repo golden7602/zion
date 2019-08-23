@@ -15,7 +15,7 @@ from lib.JPMvc.JPFuncForm import JPFunctionForm
 from lib.ZionWidgets.Order import EditForm_Order
 from lib.ZionPublc import JPDb
 from lib.ZionReport.OrderReportMob import Order_report_Mob
-
+from lib.JPMvc.JPEditFormModel import JPEditFormDataMode
 
 class JPFuncForm_Quotation(JPFunctionForm):
     def __init__(self, MainForm):
@@ -139,6 +139,10 @@ class Edit_Order_Quotation(EditForm_Order):
                          edit_mode=edit_mode,
                          PKValue=PKValue)
         self.setPkRole(6)
+        self.ui.label_Title_Chn.setText("报价单")
+        self.ui.label_Title_Eng.setText("Cotação")
+        if self.EditMode != JPEditFormDataMode.ReadOnly:
+            self.ui.fCustomerID.setEditable(True)
 
     @pyqtSlot()
     def on_butPrint_clicked(self):
@@ -153,6 +157,21 @@ class Order_report(Order_report_Mob):
     def onFormat(self, SectionType, CurrentPage, RowDate=None):
         if (SectionType == JPPrintSectionType.PageHeader and CurrentPage == 1):
             return True
+
+    def init_data(self, OrderID: str):
+        SQL = """SELECT o.*
+                    , if(isnull(fNote), ' ', fNote) AS fNote1
+                    , d.fQuant, d.fProductName, d.fLength, d.fWidth, d.fPrice
+                    , d.fAmount AS fAmountDetail
+                FROM v_quotation o
+                    RIGHT JOIN t_quotation_detail d ON o.fOrderID = d.fOrderID
+                WHERE d.fOrderID = '{}'"""
+
+        db = JPDb()
+        data = db.getDict(SQL.format(OrderID))
+        data.sort(key=lambda x: (x['fCustomerName'], x['fCity'], x['fAmount']
+                                 is None, x['fAmount']))
+        self.DataSource = data
 
     def PrintCurrentReport(self, OrderID: str):
         self.init_data(OrderID)

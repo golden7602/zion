@@ -232,7 +232,7 @@ class JPFormModelMain(QDialog):
         """返回主窗体处理子类，必须继承自JPReport"""
         pass
 
-    def onAfterSaveData(self,data):
+    def onAfterSaveData(self, data):
         """保存数据后执行，请覆盖"""
         return
 
@@ -433,6 +433,10 @@ class JPFormModelMainHasSub(JPFormModelMain):
         mod = self.SubModel
         opt1 = menu.addAction("AddNew增加")
         opt2 = menu.addAction("Delete删除")
+        index =self.ui.tableView.selectionModel().currentIndex().row()
+        opt1.setEnabled(False)
+        opt2.setEnabled((index == -1
+                         or index != (len(mod.TabelFieldInfo) - 1)))
         action = menu.exec_(tv.mapToGlobal(pos))
         if action == opt1:
             mod.insertRows(len(mod.DataRows))

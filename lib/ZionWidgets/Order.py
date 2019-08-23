@@ -17,7 +17,7 @@ from lib.ZionPublc import JPPub, JPUser
 from lib.ZionReport.OrderReportMob import Order_report_Mob
 from Ui.Ui_FormOrderMob import Ui_Form
 from lib.JPFunction import JPRound
-from lib.JPExcel.JPExportToExcel import clsExportToExcelFromJPTabelFieldInfo
+from lib.JPExcel.JPExportToExcel import JPExpExcelFromTabelFieldInfo
 
 
 class JPFuncForm_Order(JPFunctionForm):
@@ -106,7 +106,7 @@ class JPFuncForm_Order(JPFunctionForm):
             SELECT 订单号码OrderID FROM ({cur_sql}) Q)"""
         sql = sql.format(cur_sql=self.currentSQL)
         tab = JPQueryFieldInfo(sql)
-        exp = clsExportToExcelFromJPTabelFieldInfo(self.model.TabelFieldInfo,
+        exp = JPExpExcelFromTabelFieldInfo(self.model.TabelFieldInfo,
                                                    self.MainForm)
         exp.setSubQueryFieldInfo(tab, 0, 0)
         exp.run()

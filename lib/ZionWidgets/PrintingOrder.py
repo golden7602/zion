@@ -17,7 +17,7 @@ from lib.ZionReport.PrintingOrderReportMob import PrintOrder_report_Mob
 from Ui.Ui_FormPrintingOrder import Ui_Form
 from lib.JPFunction import JPRound
 from lib.JPMvc.JPModel import JPTableViewModelReadOnly
-from lib.JPExcel.JPExportToExcel import clsExportToExcelFromJPTabelFieldInfo
+from lib.JPExcel.JPExportToExcel import JPExpExcelFromTabelFieldInfo
 
 
 class JPFuncForm_PrintingOrder(JPFunctionForm):
@@ -143,7 +143,7 @@ class JPFuncForm_PrintingOrder(JPFunctionForm):
             SELECT 订单号码OrderID FROM ({cur_sql}) Q)"""
         sql = sql.format(cur_sql=self.currentSQL)
         tab = JPQueryFieldInfo(sql)
-        exp = clsExportToExcelFromJPTabelFieldInfo(self.model.TabelFieldInfo,
+        exp = JPExpExcelFromTabelFieldInfo(self.model.TabelFieldInfo,
                                                    self.MainForm)
         exp.setSubQueryFieldInfo(tab, 0, 0)
         exp.run()
@@ -194,6 +194,7 @@ class EditForm_PrintingOrder(JPFormModelMain):
                 JPUser().currentUserID())
         if self.EditMode != JPEditFormDataMode.New:
             self.__refreshBeginNum()
+
 
     def __onTaxKeyPress(self, KeyEvent: QKeyEvent):
         if (KeyEvent.modifiers() == Qt.AltModifier
@@ -360,8 +361,8 @@ class Order_Printingreport(PrintOrder_report_Mob):
             title1="NOTA DE PAGAMENTO",
             title2="(ESTE DOCUMENTO É DO USO INTERNO)")
         self.init_ReportHeader()
-        self.init_ReportHeader_Individualization()
+        #        self.init_ReportHeader_Individualization()
         self.init_PageHeader()
-        self.init_Detail()
+        #        self.init_Detail()
         self.init_ReportFooter()
         super().BeginPrint()

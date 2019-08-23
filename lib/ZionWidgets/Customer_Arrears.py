@@ -68,7 +68,7 @@ class Form_FormCustomer_Arrears(QWidget):
         cbo = self.ui.comboBox
         tv = self.ui.tableView
         cid = cbo.currentIndex()
-        sql="""
+        sql = """
             SELECT c.fCustomerID as `ID`, 
                 c.fCustomerName as `客户名称Cliente`, 
                 c.fNUIT as `税号NUIT`, 
@@ -96,7 +96,7 @@ class Form_FormCustomer_Arrears(QWidget):
             WHERE c.fCustomerID={cid} AND NOT (isnull(QDD.dd)
             AND isnull(QSK.sk))"""
 
-        sql = self.SQL if cid==-1 else sql.format(cid=cid)
+        sql = self.SQL if cid == -1 else sql.format(cid=cid)
         self.dataInfo = JPTabelFieldInfo(sql)
         self.mod = JPTableViewModelEditForm(tv, self.dataInfo)
         tv.setModel(self.mod)

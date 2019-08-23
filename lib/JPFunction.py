@@ -1,14 +1,20 @@
 # -*- coding: utf-8 -*-
-from PyQt5.QtCore import Qt, QDate
 import datetime
-from os import getcwd
-
-from PyQt5.QtGui import QIcon, QPixmap
-from PyQt5.QtWidgets import QWidget, QPushButton, QLabel
-from functools import singledispatch
-from decimal import Decimal
 import hashlib
 import time
+from decimal import Decimal
+from functools import singledispatch
+from os import getcwd
+from sys import path as jppath
+jppath.append(getcwd())
+
+from PyQt5.QtCore import QDate, Qt
+from PyQt5.QtGui import QIcon, QPixmap
+from PyQt5.QtWidgets import QLabel, QPushButton, QWidget
+
+
+def seWindowsIcon(win):
+    win.setWindowIcon(QIcon(getcwd() + '\\order_162.ico'))
 
 
 def md5_passwd(str0, salt='al;dkfjgutriepw,cmvnfjisjmwudnus000999'):
