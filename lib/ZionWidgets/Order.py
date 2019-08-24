@@ -11,6 +11,7 @@ from lib.JPDatabase.Database import JPDb
 from lib.JPDatabase.Query import JPQueryFieldInfo
 from lib.JPMvc.JPEditFormModel import JPFormModelMainHasSub, JPEditFormDataMode
 from lib.JPMvc.JPFuncForm import JPFunctionForm
+from lib.JPMvc.JPModel import JPTableViewModelReadOnly
 #from lib.JPMvc.JPModel import JPEditFormDataMode, JPFormModelMainSub
 from lib.JPPrintReport import JPPrintSectionType
 from lib.ZionPublc import JPPub, JPUser
@@ -18,6 +19,20 @@ from lib.ZionReport.OrderReportMob import Order_report_Mob
 from Ui.Ui_FormOrderMob import Ui_Form
 from lib.JPFunction import JPRound
 from lib.JPExcel.JPExportToExcel import JPExpExcelFromTabelFieldInfo
+
+
+class OrderMod(JPTableViewModelReadOnly):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def data(self, index, role=Qt.DisplayRole):
+        r = index.row()
+        c = index.column()
+        if role == Qt.DisplayRole and r > 0 and c<=13:
+            if self.TabelFieldInfo.DataRows[r].Datas[
+                    0] == self.TabelFieldInfo.DataRows[r-1].Datas[0]:
+                return ""
+        return super().data(index, role=role)
 
 
 class JPFuncForm_Order(JPFunctionForm):
@@ -40,17 +55,38 @@ class JPFuncForm_Order(JPFunctionForm):
                         fSubmited AS fSubmited,
                         fEntry_Name as 录入Entry
                 FROM v_order AS o"""
+        sql_0 = """
+                SELECT o.fOrderID as 订单号码OrderID,
+                        fOrderDate as 日期OrderDate,
+                        fCustomerName as 客户名Cliente,
+                        fCity as 城市City,
+                        fSubmited1 as 提交Submited,
+                        fSubmit_Name as 提交人Submitter,
+                        fRequiredDeliveryDate as 交货日期RequiredDeliveryDate,
+                        o.fAmount as 金额SubTotal,
+                        fDesconto as 折扣Desconto,
+                        fTax as 税金IVA,
+                        fPayable as `应付金额Valor a Pagar`,
+                        fContato as 联系人Contato,
+                        fCelular as 手机Celular,
+                        fSubmited AS fSubmited,
+                        fEntry_Name as 录入Entry,
+                        t.fQuant AS '数量Qtd',
+                    fProductName AS '名称Descrição',
+                    fLength AS '长Comp.', fWidth AS '宽Larg.',
+                    t.fPrice AS '单价P. Unitario', t.fAmount AS '金额Total'
+                FROM v_order AS o right join t_order_detail as t on o.fOrderID=t.fOrderID"""
         sql_1 = sql_0 + """
                 WHERE fCanceled=0
-                        AND left(fOrderID,2)='CP'
+                        AND left(o.fOrderID,2)='CP'
                         AND (fSubmited={ch1}
                         OR fSubmited={ch2})
                         AND fOrderDate{date}
-                ORDER BY  forderID DESC"""
+                ORDER BY  o.fOrderID DESC"""
         sql_2 = sql_0 + """
                 WHERE fCanceled=0
-                        AND left(fOrderID,2)='CP'
-                ORDER BY  forderID DESC"""
+                        AND left(o.fOrderID,2)='CP'
+                ORDER BY  o.fOrderID DESC"""
         self.backgroundWhenValueIsTrueFieldName = ['fSubmited']
         self.checkBox_1.setText('UnSubmited')
         self.checkBox_2.setText('Submited')
@@ -91,6 +127,9 @@ class JPFuncForm_Order(JPFunctionForm):
         frm.ui.fEndereco.setEnabled(False)
         return frm
 
+    def getModelClass(self):
+        return OrderMod
+
     @pyqtSlot()
     def on_CmdExportToExcel_clicked(self):
         sql = """
@@ -107,7 +146,7 @@ class JPFuncForm_Order(JPFunctionForm):
         sql = sql.format(cur_sql=self.currentSQL)
         tab = JPQueryFieldInfo(sql)
         exp = JPExpExcelFromTabelFieldInfo(self.model.TabelFieldInfo,
-                                                   self.MainForm)
+                                           self.MainForm)
         exp.setSubQueryFieldInfo(tab, 0, 0)
         exp.run()
 

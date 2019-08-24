@@ -188,5 +188,7 @@ if __name__ == "__main__":
     icon.addPixmap(
         QPixmap(getcwd() + "\\res\\ico\\medical_invoice_information.png"))
     MainWindow.setWindowIcon(icon)
+    MainWindow.ui.splitter.setStretchFactor(0,2)
+    MainWindow.ui.splitter.setStretchFactor(1,11)
     MainWindow.showMaximized()
     sys_exit(app.exec_())

@@ -189,7 +189,6 @@ class Ui_MainWindow(object):
         self.verticalLayout_3.addWidget(self.splitter)
         self.verticalLayout_4.addWidget(self.frame)
         MainWindow.setCentralWidget(self.centralwidget)
-
         self.retranslateUi(MainWindow)
         self.stackedWidget.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -205,8 +204,11 @@ if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
+
     ui = Ui_MainWindow()
+
     ui.setupUi(MainWindow)
     MainWindow.show()
+
     sys.exit(app.exec_())
 
