@@ -17,13 +17,43 @@ DROP DATABASE IF EXISTS `myorder_python`;
 CREATE DATABASE IF NOT EXISTS `myorder_python` /*!40100 DEFAULT CHARACTER SET utf8 */;
 USE `myorder_python`;
 
+-- 导出  表 myorder_python.sysconfig 结构
+DROP TABLE IF EXISTS `sysconfig`;
+CREATE TABLE IF NOT EXISTS `sysconfig` (
+  `fID` int(11) NOT NULL AUTO_INCREMENT,
+  `fName` varchar(50) DEFAULT NULL,
+  `fValueInt` int(11) DEFAULT NULL,
+  `fValueStr` text,
+  `fValueBool` bit(1) DEFAULT NULL,
+  `fValueDate` date DEFAULT NULL,
+  `fValueDateTime` datetime DEFAULT NULL,
+  PRIMARY KEY (`fID`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
 -- 正在导出表  myorder_python.sysconfig 的数据：~1 rows (大约)
 /*!40000 ALTER TABLE `sysconfig` DISABLE KEYS */;
 INSERT INTO `sysconfig` (`fID`, `fName`, `fValueInt`, `fValueStr`, `fValueBool`, `fValueDate`, `fValueDateTime`) VALUES
 	(1, 'Note_PrintingOrder', NULL, 'Note:Esta cotação é válida por 7 dias.\r\nEsta ordem sera entregue em 10 dias de trabalho, se esta for urgente,e necessario pagar mais 20%. Para que nao afecte os trrabalhos diarios da vossa empresa,por favor, encomendem a vossa ordem  o mais rapido possivel.\r\n', NULL, NULL, NULL);
 /*!40000 ALTER TABLE `sysconfig` ENABLE KEYS */;
 
--- 正在导出表  myorder_python.syslanguage 的数据：~813 rows (大约)
+-- 导出  表 myorder_python.syslanguage 结构
+DROP TABLE IF EXISTS `syslanguage`;
+CREATE TABLE IF NOT EXISTS `syslanguage` (
+  `fID` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
+  `fParentId` int(11) NOT NULL DEFAULT '0' COMMENT '上级编号',
+  `fObjectName` varchar(60) DEFAULT NULL COMMENT '对象名',
+  `fCaption` varchar(255) DEFAULT NULL COMMENT '标题',
+  `fFontSize` tinyint(2) DEFAULT NULL COMMENT '字号',
+  `fFontName` varchar(255) DEFAULT NULL COMMENT '字体',
+  `fIndex` smallint(6) DEFAULT NULL COMMENT '顺序',
+  `fLanguage1` varchar(255) DEFAULT NULL COMMENT '语言1',
+  `fLanguage2` varchar(255) DEFAULT NULL COMMENT '语言2',
+  `fType` tinyint(4) DEFAULT NULL COMMENT '类型',
+  `TS` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`fID`)
+) ENGINE=InnoDB AUTO_INCREMENT=1006477 DEFAULT CHARSET=utf8;
+
+-- 正在导出表  myorder_python.syslanguage 的数据：~756 rows (大约)
 /*!40000 ALTER TABLE `syslanguage` DISABLE KEYS */;
 INSERT INTO `syslanguage` (`fID`, `fParentId`, `fObjectName`, `fCaption`, `fFontSize`, `fFontName`, `fIndex`, `fLanguage1`, `fLanguage2`, `fType`, `TS`) VALUES
 	(1, 0, NULL, 'Logical Operational Symbols', NULL, NULL, NULL, '逻辑运算符', 'Logical Operational Symbols', NULL, '2019-04-10 09:01:01'),
@@ -841,7 +871,33 @@ INSERT INTO `syslanguage` (`fID`, `fParentId`, `fObjectName`, `fCaption`, `fFont
 	(1006476, 1006445, 'Label_Caixa', '会计Caixa:', NULL, NULL, NULL, '会计Caixa:', '会计Caixa:', 100, '2019-04-22 09:45:25');
 /*!40000 ALTER TABLE `syslanguage` ENABLE KEYS */;
 
--- 正在导出表  myorder_python.sysnavigationmenus 的数据：~83 rows (大约)
+-- 导出  表 myorder_python.sysnavigationmenus 结构
+DROP TABLE IF EXISTS `sysnavigationmenus`;
+CREATE TABLE IF NOT EXISTS `sysnavigationmenus` (
+  `fNMID` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
+  `fDispIndex` int(11) DEFAULT NULL COMMENT '显示顺序',
+  `fParentId` int(11) DEFAULT NULL COMMENT '上级编号',
+  `fEnabled` bit(1) NOT NULL DEFAULT b'1' COMMENT '可用',
+  `fMenuText` char(60) DEFAULT NULL COMMENT '文本',
+  `fCommand` tinyint(4) NOT NULL DEFAULT '0' COMMENT '命令',
+  `fObjectName` char(50) DEFAULT NULL COMMENT '对象名',
+  `fFormMode` tinyint(2) DEFAULT NULL COMMENT '模式',
+  `fArg` char(255) DEFAULT NULL COMMENT '参数',
+  `fIcon` char(50) DEFAULT NULL COMMENT '图标',
+  `fDefault` bit(1) NOT NULL DEFAULT b'0' COMMENT '默认',
+  `fNodeBackvolor` int(11) DEFAULT NULL COMMENT '背景色',
+  `fNodeForeColor` int(11) DEFAULT NULL COMMENT '前景色',
+  `fNodeFontBold` tinyint(1) NOT NULL DEFAULT '0' COMMENT '加粗',
+  `fExpanded` tinyint(1) NOT NULL DEFAULT '1' COMMENT '展开',
+  `fDescription` char(255) DEFAULT NULL COMMENT '说明',
+  `fLevel` bit(1) NOT NULL DEFAULT b'0' COMMENT '级别',
+  `fIsCommandButton` bit(1) DEFAULT b'0' COMMENT '是否按钮',
+  `TS` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`fNMID`),
+  KEY `ParentID` (`fParentId`)
+) ENGINE=InnoDB AUTO_INCREMENT=150 DEFAULT CHARSET=utf8;
+
+-- 正在导出表  myorder_python.sysnavigationmenus 的数据：~33 rows (大约)
 /*!40000 ALTER TABLE `sysnavigationmenus` DISABLE KEYS */;
 INSERT INTO `sysnavigationmenus` (`fNMID`, `fDispIndex`, `fParentId`, `fEnabled`, `fMenuText`, `fCommand`, `fObjectName`, `fFormMode`, `fArg`, `fIcon`, `fDefault`, `fNodeBackvolor`, `fNodeForeColor`, `fNodeFontBold`, `fExpanded`, `fDescription`, `fLevel`, `fIsCommandButton`, `TS`) VALUES
 	(1, 110, 0, b'1', 'Function', 0, '', 0, '', 'home', b'1', NULL, NULL, 0, 1, '', b'0', b'0', '2019-04-20 13:45:28'),
@@ -929,7 +985,19 @@ INSERT INTO `sysnavigationmenus` (`fNMID`, `fDispIndex`, `fParentId`, `fEnabled`
 	(149, 2002, 20, b'1', 'Edit', 0, 'CmdEdit', NULL, NULL, 'Edit.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-08-23 12:21:35');
 /*!40000 ALTER TABLE `sysnavigationmenus` ENABLE KEYS */;
 
--- 正在导出表  myorder_python.syssql 的数据：~35 rows (大约)
+-- 导出  表 myorder_python.syssql 结构
+DROP TABLE IF EXISTS `syssql`;
+CREATE TABLE IF NOT EXISTS `syssql` (
+  `ID` int(11) DEFAULT NULL,
+  `UseFor` varchar(50) DEFAULT NULL,
+  `Description` varchar(255) DEFAULT NULL,
+  `ObjectName` varchar(50) DEFAULT NULL,
+  `ControlName` varchar(50) DEFAULT NULL,
+  `MariaDB` text,
+  `MariaDB_NoPara` text
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- 正在导出表  myorder_python.syssql 的数据：~43 rows (大约)
 /*!40000 ALTER TABLE `syssql` DISABLE KEYS */;
 INSERT INTO `syssql` (`ID`, `UseFor`, `Description`, `ObjectName`, `ControlName`, `MariaDB`, `MariaDB_NoPara`) VALUES
 	(1, 'Other', 'right  系统启动时给管理员添加基本权限', NULL, NULL, 'replace into sysuserright (fUserID,fRightID,fHasRight)\r\nselect 1,fNMID,1 from sysnavigationmenus where fDefault=1 or fMenuText=\'User\' or fMenuText=\'Setup\' or fParentId=(select fNMID from sysnavigationmenus where fMenuText=\'User\');', NULL),
@@ -969,6 +1037,25 @@ INSERT INTO `syssql` (`ID`, `UseFor`, `Description`, `ObjectName`, `ControlName`
 	(55, 'Other', '枚举值列表', NULL, NULL, 'Select fItemID,fTitle,fSpare1,fSpare2 from t_enumeration where fTypeID=@Para and fTitle like \'%\\@Para%\'', NULL);
 /*!40000 ALTER TABLE `syssql` ENABLE KEYS */;
 
+-- 导出  表 myorder_python.systabelautokeyroles 结构
+DROP TABLE IF EXISTS `systabelautokeyroles`;
+CREATE TABLE IF NOT EXISTS `systabelautokeyroles` (
+  `fRoleID` tinyint(4) NOT NULL AUTO_INCREMENT COMMENT '编号',
+  `fRoleName` varchar(50) NOT NULL COMMENT '名称',
+  `fTabelName` varchar(50) NOT NULL COMMENT '表名',
+  `fFieldName` varchar(50) NOT NULL COMMENT '字段名',
+  `fHasDateTime` bit(1) NOT NULL DEFAULT b'0' COMMENT '有时间',
+  `fPreFix` varchar(50) NOT NULL COMMENT '前缀',
+  `fCurrentValue` int(10) unsigned zerofill DEFAULT NULL COMMENT '当前值',
+  `fLenght` tinyint(4) NOT NULL DEFAULT '6' COMMENT '长度',
+  `fLastKey` varchar(255) DEFAULT NULL COMMENT '最后生成键值',
+  `fDateFormat` varchar(50) DEFAULT NULL COMMENT '日期格式',
+  `TS` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`fRoleID`),
+  UNIQUE KEY `PreFix` (`fPreFix`),
+  KEY `LastKey` (`fLastKey`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+
 -- 正在导出表  myorder_python.systabelautokeyroles 的数据：~6 rows (大约)
 /*!40000 ALTER TABLE `systabelautokeyroles` DISABLE KEYS */;
 INSERT INTO `systabelautokeyroles` (`fRoleID`, `fRoleName`, `fTabelName`, `fFieldName`, `fHasDateTime`, `fPreFix`, `fCurrentValue`, `fLenght`, `fLastKey`, `fDateFormat`, `TS`) VALUES
@@ -980,7 +1067,19 @@ INSERT INTO `systabelautokeyroles` (`fRoleID`, `fRoleName`, `fTabelName`, `fFiel
 	(6, 'OrderQuoteID', 't_Quotation', 'fQuoteID', b'1', 'QS', 0000000007, 6, 'QS2019-0823000007', 'yyyy-mmdd', '2019-08-23 11:58:18');
 /*!40000 ALTER TABLE `systabelautokeyroles` ENABLE KEYS */;
 
--- 正在导出表  myorder_python.sysuserright 的数据：~1,210 rows (大约)
+-- 导出  表 myorder_python.sysuserright 结构
+DROP TABLE IF EXISTS `sysuserright`;
+CREATE TABLE IF NOT EXISTS `sysuserright` (
+  `fID` smallint(6) NOT NULL AUTO_INCREMENT COMMENT '编号',
+  `fRightID` smallint(6) NOT NULL COMMENT '权限编号',
+  `fUserID` smallint(6) NOT NULL COMMENT '用户编号',
+  `fHasRight` bit(1) DEFAULT b'0' COMMENT '有权限',
+  `TS` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`fID`),
+  UNIQUE KEY `UserID` (`fUserID`,`fRightID`)
+) ENGINE=InnoDB AUTO_INCREMENT=2792 DEFAULT CHARSET=utf8;
+
+-- 正在导出表  myorder_python.sysuserright 的数据：~1,282 rows (大约)
 /*!40000 ALTER TABLE `sysuserright` DISABLE KEYS */;
 INSERT INTO `sysuserright` (`fID`, `fRightID`, `fUserID`, `fHasRight`, `TS`) VALUES
 	(19, 2, 1, b'0', '2019-04-26 20:28:43'),
@@ -2195,6 +2294,27 @@ INSERT INTO `sysuserright` (`fID`, `fRightID`, `fUserID`, `fHasRight`, `TS`) VAL
 	(2791, 149, 32, b'1', '2019-08-23 12:23:16');
 /*!40000 ALTER TABLE `sysuserright` ENABLE KEYS */;
 
+-- 导出  表 myorder_python.sysusers 结构
+DROP TABLE IF EXISTS `sysusers`;
+CREATE TABLE IF NOT EXISTS `sysusers` (
+  `fUserID` int(11) NOT NULL AUTO_INCREMENT,
+  `fOnline` bit(1) NOT NULL DEFAULT b'0',
+  `fEnabled` bit(1) NOT NULL DEFAULT b'1',
+  `fDepartment` varchar(20) DEFAULT NULL,
+  `fUsername` varchar(20) NOT NULL,
+  `fNickname` varchar(20) DEFAULT NULL,
+  `fPassword` varchar(255) NOT NULL,
+  `fRoleID` smallint(6) DEFAULT NULL,
+  `fLastLoginComputer` char(50) DEFAULT NULL,
+  `fLastLoginTime` datetime DEFAULT NULL,
+  `fLoginID` varchar(255) DEFAULT NULL,
+  `fNotes` varchar(255) DEFAULT NULL,
+  `TS` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`fUserID`),
+  KEY `LoginID` (`fLoginID`),
+  KEY `RoleID` (`fRoleID`)
+) ENGINE=InnoDB AUTO_INCREMENT=47 DEFAULT CHARSET=utf8;
+
 -- 正在导出表  myorder_python.sysusers 的数据：~16 rows (大约)
 /*!40000 ALTER TABLE `sysusers` DISABLE KEYS */;
 INSERT INTO `sysusers` (`fUserID`, `fOnline`, `fEnabled`, `fDepartment`, `fUsername`, `fNickname`, `fPassword`, `fRoleID`, `fLastLoginComputer`, `fLastLoginTime`, `fLoginID`, `fNotes`, `TS`) VALUES
@@ -2215,6 +2335,26 @@ INSERT INTO `sysusers` (`fUserID`, `fOnline`, `fEnabled`, `fDepartment`, `fUsern
 	(45, b'0', b'0', NULL, 'New User', NULL, '1234', NULL, NULL, NULL, NULL, NULL, '2019-08-20 08:29:21'),
 	(46, b'0', b'0', '45645', '23423', '342', '020fa6dc0e18c0a2852d2bf2bf42cc63', NULL, NULL, NULL, NULL, '56756756', '2019-08-21 16:38:32');
 /*!40000 ALTER TABLE `sysusers` ENABLE KEYS */;
+
+-- 导出  表 myorder_python.t_customer 结构
+DROP TABLE IF EXISTS `t_customer`;
+CREATE TABLE IF NOT EXISTS `t_customer` (
+  `fCustomerID` int(11) NOT NULL AUTO_INCREMENT,
+  `fCustomerName` varchar(50) NOT NULL COMMENT '客户名',
+  `fNUIT` varchar(25) DEFAULT NULL COMMENT '税号',
+  `fCity` varchar(30) DEFAULT NULL COMMENT '所在地 Mordo',
+  `fContato` varchar(20) DEFAULT NULL COMMENT '联系人',
+  `fAreaCode` varchar(15) DEFAULT NULL COMMENT '区号',
+  `fCelular` varchar(15) DEFAULT NULL COMMENT '手机',
+  `fTelefone` varchar(15) DEFAULT NULL COMMENT '电话',
+  `fEndereco` varchar(15) DEFAULT NULL COMMENT '地址',
+  `fEmail` varchar(50) DEFAULT NULL COMMENT '电子邮件',
+  `fWeb` varchar(50) DEFAULT NULL COMMENT '主页',
+  `fFax` varchar(15) DEFAULT NULL COMMENT '传真',
+  `TS` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`fCustomerID`),
+  UNIQUE KEY `OnlyOne` (`fCustomerName`)
+) ENGINE=InnoDB AUTO_INCREMENT=177 DEFAULT CHARSET=utf8;
 
 -- 正在导出表  myorder_python.t_customer 的数据：~176 rows (大约)
 /*!40000 ALTER TABLE `t_customer` DISABLE KEYS */;
@@ -2397,6 +2537,19 @@ INSERT INTO `t_customer` (`fCustomerID`, `fCustomerName`, `fNUIT`, `fCity`, `fCo
 	(176, '7867657567', '234123', '54766586', '57658765', '34534', '56568768', '54356546', '2342', '87568756856', '4575565', '87567', '2019-08-21 09:31:18');
 /*!40000 ALTER TABLE `t_customer` ENABLE KEYS */;
 
+-- 导出  表 myorder_python.t_enumeration 结构
+DROP TABLE IF EXISTS `t_enumeration`;
+CREATE TABLE IF NOT EXISTS `t_enumeration` (
+  `fItemID` int(11) NOT NULL AUTO_INCREMENT COMMENT '选项编号',
+  `fTypeID` int(11) NOT NULL,
+  `fTitle` varchar(50) NOT NULL,
+  `fSpare1` varchar(50) DEFAULT NULL COMMENT '备用1',
+  `fSpare2` varchar(50) DEFAULT NULL COMMENT '备用2',
+  `fNote` varchar(255) DEFAULT NULL,
+  `TS` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`fItemID`)
+) ENGINE=InnoDB AUTO_INCREMENT=114 DEFAULT CHARSET=utf8;
+
 -- 正在导出表  myorder_python.t_enumeration 的数据：~106 rows (大约)
 /*!40000 ALTER TABLE `t_enumeration` DISABLE KEYS */;
 INSERT INTO `t_enumeration` (`fItemID`, `fTypeID`, `fTitle`, `fSpare1`, `fSpare2`, `fNote`, `TS`) VALUES
@@ -2508,6 +2661,17 @@ INSERT INTO `t_enumeration` (`fItemID`, `fTypeID`, `fTitle`, `fSpare1`, `fSpare2
 	(113, 10, '333', NULL, NULL, NULL, '2019-08-21 16:20:48');
 /*!40000 ALTER TABLE `t_enumeration` ENABLE KEYS */;
 
+-- 导出  表 myorder_python.t_enumeration_type 结构
+DROP TABLE IF EXISTS `t_enumeration_type`;
+CREATE TABLE IF NOT EXISTS `t_enumeration_type` (
+  `fTypeID` int(11) NOT NULL AUTO_INCREMENT,
+  `fTypeName` varchar(20) NOT NULL,
+  `fNote` varchar(50) DEFAULT NULL,
+  `TS` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`fTypeID`),
+  UNIQUE KEY `fTypeName` (`fTypeName`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+
 -- 正在导出表  myorder_python.t_enumeration_type 的数据：~10 rows (大约)
 /*!40000 ALTER TABLE `t_enumeration_type` DISABLE KEYS */;
 INSERT INTO `t_enumeration_type` (`fTypeID`, `fTypeName`, `fNote`, `TS`) VALUES
@@ -2523,7 +2687,56 @@ INSERT INTO `t_enumeration_type` (`fTypeID`, `fTypeName`, `fNote`, `TS`) VALUES
 	(10, '销售Vendedor', NULL, '2019-04-05 23:56:19');
 /*!40000 ALTER TABLE `t_enumeration_type` ENABLE KEYS */;
 
--- 正在导出表  myorder_python.t_order 的数据：~492 rows (大约)
+-- 导出  表 myorder_python.t_order 结构
+DROP TABLE IF EXISTS `t_order`;
+CREATE TABLE IF NOT EXISTS `t_order` (
+  `fOrderID` char(20) NOT NULL COMMENT '订单号',
+  `fPrice` decimal(10,0) DEFAULT NULL COMMENT '单价_印刷',
+  `fCustomerID` int(11) NOT NULL COMMENT '客户编号',
+  `fOrderDate` date NOT NULL COMMENT '订单日期',
+  `fEspecieID` int(11) DEFAULT NULL COMMENT '印刷分类',
+  `fRequiredDeliveryDate` date DEFAULT NULL COMMENT '客户要求交货日期',
+  `fCategoryID` int(11) DEFAULT NULL COMMENT '类别',
+  `fBrandMateriaID` int(11) DEFAULT NULL COMMENT '品牌材料',
+  `fAmount` decimal(11,2) DEFAULT NULL COMMENT '金额',
+  `fTax` decimal(11,2) DEFAULT NULL COMMENT '税金',
+  `fPayable` decimal(11,2) DEFAULT NULL COMMENT '应付金额',
+  `fDesconto` decimal(11,2) DEFAULT NULL COMMENT '折扣',
+  `fColorID` int(11) DEFAULT NULL COMMENT '颜色',
+  `fEntryID` int(11) DEFAULT NULL COMMENT '录入人',
+  `fSubmited` bit(1) NOT NULL DEFAULT b'0' COMMENT '提交',
+  `fSubmitID` int(11) DEFAULT NULL COMMENT '提交人',
+  `fReviewed` bit(1) NOT NULL DEFAULT b'0' COMMENT '已审核',
+  `fReviewerID` int(11) DEFAULT NULL COMMENT '审核人',
+  `fConfirmed` bit(1) NOT NULL DEFAULT b'0' COMMENT '已确认',
+  `fConfirmID` int(11) DEFAULT NULL COMMENT '确认人',
+  `fDelivered` bit(1) NOT NULL DEFAULT b'0' COMMENT '已交付',
+  `fDelivererID` int(11) DEFAULT NULL COMMENT '交付人',
+  `fCanceled` bit(1) NOT NULL DEFAULT b'0' COMMENT '已作废',
+  `fCancelID` int(11) DEFAULT NULL COMMENT '作废人',
+  `fDeliveryDate` date DEFAULT NULL COMMENT '交付日期',
+  `fNumerBegin` int(11) DEFAULT NULL COMMENT '起始编号',
+  `fQuant` int(11) DEFAULT NULL COMMENT '数量',
+  `fPagePerVolumn` tinyint(4) DEFAULT NULL COMMENT '每本号数',
+  `fNumerEnd` int(11) DEFAULT NULL COMMENT '结束编号',
+  `fAvistaID` int(11) DEFAULT NULL COMMENT '每页单据数',
+  `fTamanhoID` int(11) DEFAULT NULL COMMENT '尺寸',
+  `fSucursal` bit(1) DEFAULT NULL COMMENT 'Sucursal 分公司',
+  `fLogo` bit(1) DEFAULT b'0' COMMENT '标志',
+  `fVendedorID` int(11) DEFAULT NULL COMMENT '销售人员',
+  `fNrCopyID` int(11) DEFAULT NULL COMMENT '联次',
+  `fContato` varchar(20) DEFAULT NULL COMMENT '联系人',
+  `fCelular` varchar(15) DEFAULT NULL COMMENT '手机',
+  `fTelefone` varchar(15) DEFAULT NULL COMMENT '电话',
+  `fNote` varchar(255) DEFAULT NULL COMMENT '备注',
+  `TS` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `fDeliverViewed` bit(1) DEFAULT NULL COMMENT '已查阅',
+  PRIMARY KEY (`fOrderID`),
+  KEY `iDelivererID` (`fDelivererID`),
+  KEY `iOrderDate` (`fOrderDate`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- 正在导出表  myorder_python.t_order 的数据：~523 rows (大约)
 /*!40000 ALTER TABLE `t_order` DISABLE KEYS */;
 INSERT INTO `t_order` (`fOrderID`, `fPrice`, `fCustomerID`, `fOrderDate`, `fEspecieID`, `fRequiredDeliveryDate`, `fCategoryID`, `fBrandMateriaID`, `fAmount`, `fTax`, `fPayable`, `fDesconto`, `fColorID`, `fEntryID`, `fSubmited`, `fSubmitID`, `fReviewed`, `fReviewerID`, `fConfirmed`, `fConfirmID`, `fDelivered`, `fDelivererID`, `fCanceled`, `fCancelID`, `fDeliveryDate`, `fNumerBegin`, `fQuant`, `fPagePerVolumn`, `fNumerEnd`, `fAvistaID`, `fTamanhoID`, `fSucursal`, `fLogo`, `fVendedorID`, `fNrCopyID`, `fContato`, `fCelular`, `fTelefone`, `fNote`, `TS`, `fDeliverViewed`) VALUES
 	('CP2019-0130000001', NULL, 159, '2019-01-30', NULL, '2019-01-30', NULL, NULL, 20000.00, NULL, 20000.00, NULL, NULL, NULL, b'1', NULL, b'0', NULL, b'1', NULL, b'1', 39, b'0', NULL, '2019-01-30', NULL, NULL, NULL, NULL, NULL, NULL, b'1', b'0', NULL, NULL, NULL, NULL, NULL, NULL, '2019-08-16 22:31:36', NULL),
@@ -3020,7 +3233,22 @@ INSERT INTO `t_order` (`fOrderID`, `fPrice`, `fCustomerID`, `fOrderDate`, `fEspe
 	('TP2019-0815000013', 1, 2, '2019-08-15', 64, '2019-08-15', NULL, NULL, 11.00, 2.00, 13.00, NULL, NULL, NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, NULL, 301, 11, 12, 564, 79, NULL, b'1', b'0', NULL, NULL, NULL, NULL, NULL, 'rg dfg dfg dfhgfhgfghdfhgfdhgdfgh', '2019-08-23 09:48:21', NULL);
 /*!40000 ALTER TABLE `t_order` ENABLE KEYS */;
 
--- 正在导出表  myorder_python.t_order_detail 的数据：~746 rows (大约)
+-- 导出  表 myorder_python.t_order_detail 结构
+DROP TABLE IF EXISTS `t_order_detail`;
+CREATE TABLE IF NOT EXISTS `t_order_detail` (
+  `fID` int(11) NOT NULL AUTO_INCREMENT,
+  `fOrderID` char(20) DEFAULT NULL,
+  `fQuant` smallint(6) DEFAULT NULL,
+  `fProductName` varchar(50) DEFAULT NULL,
+  `fLength` smallint(6) DEFAULT NULL,
+  `fWidth` smallint(6) DEFAULT NULL,
+  `fPrice` decimal(11,2) DEFAULT NULL,
+  `fAmount` decimal(11,2) NOT NULL,
+  `TS` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`fID`)
+) ENGINE=InnoDB AUTO_INCREMENT=750 DEFAULT CHARSET=utf8;
+
+-- 正在导出表  myorder_python.t_order_detail 的数据：~845 rows (大约)
 /*!40000 ALTER TABLE `t_order_detail` DISABLE KEYS */;
 INSERT INTO `t_order_detail` (`fID`, `fOrderID`, `fQuant`, `fProductName`, `fLength`, `fWidth`, `fPrice`, `fAmount`, `TS`) VALUES
 	(1, 'CP2019-0130000001', 1000, 'PANFLETOS', 1, 1, 20.00, 20000.00, '2019-04-26 20:23:00'),
@@ -3771,6 +3999,55 @@ INSERT INTO `t_order_detail` (`fID`, `fOrderID`, `fQuant`, `fProductName`, `fLen
 	(749, 'CP2019-0821000617', 1, '2', 3, 4, 5.00, 60.00, '2019-08-21 16:44:36');
 /*!40000 ALTER TABLE `t_order_detail` ENABLE KEYS */;
 
+-- 导出  表 myorder_python.t_quotation 结构
+DROP TABLE IF EXISTS `t_quotation`;
+CREATE TABLE IF NOT EXISTS `t_quotation` (
+  `fOrderID` char(20) NOT NULL COMMENT '订单号',
+  `fPrice` decimal(10,0) DEFAULT NULL COMMENT '单价_印刷',
+  `fCustomerID` int(11) NOT NULL COMMENT '客户编号',
+  `fOrderDate` date NOT NULL COMMENT '订单日期',
+  `fEspecieID` int(11) DEFAULT NULL COMMENT '印刷分类',
+  `fRequiredDeliveryDate` date DEFAULT NULL COMMENT '客户要求交货日期',
+  `fCategoryID` int(11) DEFAULT NULL COMMENT '类别',
+  `fBrandMateriaID` int(11) DEFAULT NULL COMMENT '品牌材料',
+  `fAmount` decimal(11,2) DEFAULT NULL COMMENT '金额',
+  `fTax` decimal(11,2) DEFAULT NULL COMMENT '税金',
+  `fPayable` decimal(11,2) DEFAULT NULL COMMENT '应付金额',
+  `fDesconto` decimal(11,2) DEFAULT NULL COMMENT '折扣',
+  `fColorID` int(11) DEFAULT NULL COMMENT '颜色',
+  `fEntryID` int(11) DEFAULT NULL COMMENT '录入人',
+  `fSubmited` bit(1) NOT NULL DEFAULT b'0' COMMENT '提交',
+  `fSubmitID` int(11) DEFAULT NULL COMMENT '提交人',
+  `fReviewed` bit(1) NOT NULL DEFAULT b'0' COMMENT '已审核',
+  `fReviewerID` int(11) DEFAULT NULL COMMENT '审核人',
+  `fConfirmed` bit(1) NOT NULL DEFAULT b'0' COMMENT '已确认',
+  `fConfirmID` int(11) DEFAULT NULL COMMENT '确认人',
+  `fDelivered` bit(1) NOT NULL DEFAULT b'0' COMMENT '已交付',
+  `fDelivererID` int(11) DEFAULT NULL COMMENT '交付人',
+  `fCanceled` bit(1) NOT NULL DEFAULT b'0' COMMENT '已作废',
+  `fCancelID` int(11) DEFAULT NULL COMMENT '作废人',
+  `fDeliveryDate` date DEFAULT NULL COMMENT '交付日期',
+  `fNumerBegin` int(11) DEFAULT NULL COMMENT '起始编号',
+  `fQuant` int(11) DEFAULT NULL COMMENT '数量',
+  `fPagePerVolumn` tinyint(4) DEFAULT NULL COMMENT '每本号数',
+  `fNumerEnd` int(11) DEFAULT NULL COMMENT '结束编号',
+  `fAvistaID` int(11) DEFAULT NULL COMMENT '每页单据数',
+  `fTamanhoID` int(11) DEFAULT NULL COMMENT '尺寸',
+  `fSucursal` bit(1) DEFAULT NULL COMMENT 'Sucursal 分公司',
+  `fLogo` bit(1) DEFAULT b'0' COMMENT '标志',
+  `fVendedorID` int(11) DEFAULT NULL COMMENT '销售人员',
+  `fNrCopyID` int(11) DEFAULT NULL COMMENT '联次',
+  `fContato` varchar(20) DEFAULT NULL COMMENT '联系人',
+  `fCelular` varchar(15) DEFAULT NULL COMMENT '手机',
+  `fTelefone` varchar(15) DEFAULT NULL COMMENT '电话',
+  `fNote` varchar(255) DEFAULT NULL COMMENT '备注',
+  `TS` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `fDeliverViewed` bit(1) DEFAULT NULL COMMENT '已查阅',
+  PRIMARY KEY (`fOrderID`),
+  KEY `iDelivererID` (`fDelivererID`),
+  KEY `iOrderDate` (`fOrderDate`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- 正在导出表  myorder_python.t_quotation 的数据：~3 rows (大约)
 /*!40000 ALTER TABLE `t_quotation` DISABLE KEYS */;
 INSERT INTO `t_quotation` (`fOrderID`, `fPrice`, `fCustomerID`, `fOrderDate`, `fEspecieID`, `fRequiredDeliveryDate`, `fCategoryID`, `fBrandMateriaID`, `fAmount`, `fTax`, `fPayable`, `fDesconto`, `fColorID`, `fEntryID`, `fSubmited`, `fSubmitID`, `fReviewed`, `fReviewerID`, `fConfirmed`, `fConfirmID`, `fDelivered`, `fDelivererID`, `fCanceled`, `fCancelID`, `fDeliveryDate`, `fNumerBegin`, `fQuant`, `fPagePerVolumn`, `fNumerEnd`, `fAvistaID`, `fTamanhoID`, `fSucursal`, `fLogo`, `fVendedorID`, `fNrCopyID`, `fContato`, `fCelular`, `fTelefone`, `fNote`, `TS`, `fDeliverViewed`) VALUES
@@ -3778,6 +4055,21 @@ INSERT INTO `t_quotation` (`fOrderID`, `fPrice`, `fCustomerID`, `fOrderDate`, `f
 	('QS2019-0823000006', NULL, 17, '2019-08-23', NULL, '2019-08-23', NULL, NULL, 5604.00, 952.68, 6556.68, NULL, NULL, 32, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, b'0', b'0', 90, NULL, '31241234', '848602917', '234', NULL, '2019-08-23 11:48:39', NULL),
 	('QS2019-0823000007', NULL, 18, '2019-08-23', NULL, '2019-08-23', NULL, NULL, 60.00, 10.20, 70.20, NULL, NULL, 32, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, b'0', b'0', NULL, NULL, NULL, '847500315', NULL, NULL, '2019-08-23 11:58:18', NULL);
 /*!40000 ALTER TABLE `t_quotation` ENABLE KEYS */;
+
+-- 导出  表 myorder_python.t_quotation_detail 结构
+DROP TABLE IF EXISTS `t_quotation_detail`;
+CREATE TABLE IF NOT EXISTS `t_quotation_detail` (
+  `fID` int(11) NOT NULL AUTO_INCREMENT,
+  `fOrderID` varchar(50) DEFAULT NULL,
+  `fQuant` smallint(6) DEFAULT NULL,
+  `fProductName` varchar(50) DEFAULT NULL,
+  `fLength` smallint(6) DEFAULT NULL,
+  `fWidth` smallint(6) DEFAULT NULL,
+  `fPrice` decimal(11,2) DEFAULT NULL,
+  `fAmount` decimal(11,2) DEFAULT NULL,
+  `TS` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`fID`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 
 -- 正在导出表  myorder_python.t_quotation_detail 的数据：~10 rows (大约)
 /*!40000 ALTER TABLE `t_quotation_detail` DISABLE KEYS */;
@@ -3794,7 +4086,21 @@ INSERT INTO `t_quotation_detail` (`fID`, `fOrderID`, `fQuant`, `fProductName`, `
 	(10, 'QS2019-0823000007', 1, '2', 3, 4, 5.00, 60.00, '2019-08-23 11:58:18');
 /*!40000 ALTER TABLE `t_quotation_detail` ENABLE KEYS */;
 
--- 正在导出表  myorder_python.t_receivables 的数据：~431 rows (大约)
+-- 导出  表 myorder_python.t_receivables 结构
+DROP TABLE IF EXISTS `t_receivables`;
+CREATE TABLE IF NOT EXISTS `t_receivables` (
+  `fID` int(11) NOT NULL AUTO_INCREMENT,
+  `fCustomerID` int(11) NOT NULL,
+  `fPaymentMethodID` int(11) NOT NULL COMMENT '收款方式',
+  `fReceiptDate` date NOT NULL COMMENT '收款日期',
+  `fAmountCollected` decimal(11,2) NOT NULL COMMENT '金额',
+  `fPayeeID` int(11) NOT NULL COMMENT '收款人',
+  `fNote` varchar(255) DEFAULT NULL COMMENT '备注',
+  `TS` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`fID`)
+) ENGINE=InnoDB AUTO_INCREMENT=432 DEFAULT CHARSET=utf8;
+
+-- 正在导出表  myorder_python.t_receivables 的数据：~563 rows (大约)
 /*!40000 ALTER TABLE `t_receivables` DISABLE KEYS */;
 INSERT INTO `t_receivables` (`fID`, `fCustomerID`, `fPaymentMethodID`, `fReceiptDate`, `fAmountCollected`, `fPayeeID`, `fNote`, `TS`) VALUES
 	(1, 161, 63, '2019-01-30', 1000.00, 37, 'Recebido pelo boss', '2019-04-26 20:23:03'),
