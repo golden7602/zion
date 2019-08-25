@@ -10,7 +10,7 @@ from PyQt5.QtCore import (QDate, QAbstractItemModel, QModelIndex, QObject, Qt,
 from PyQt5.QtWidgets import (QAbstractItemView, QComboBox, QDateEdit, QDialog,
                              QLineEdit, QMenu, QMessageBox, QPushButton,
                              QStyledItemDelegate, QStyleOptionViewItem,
-                             QTableView, QWidget, QApplication)
+                             QTableView, QWidget, QApplication, QHBoxLayout)
 
 import lib.JPMvc.JPDelegate as myDe
 from lib.JPDatabase.Database import JPDb
@@ -23,6 +23,7 @@ from lib.JPMvc.JPModel import (JPTableViewModelEditForm,
 from lib.JPPrintReport import JPReport
 from lib.ZionPublc import JPPub
 from Ui.Ui_FormSearch import Ui_DlgSearch
+from PyQt5.QtGui import QIcon, QPixmap
 
 jppath.append(getcwd())
 
@@ -39,6 +40,7 @@ jppath.append(getcwd())
 class myJPTableViewModelEditForm(JPTableViewModelEditForm):
     def __init__(self, tableView, tabelFieldInfo):
         super().__init__(tableView, tabelFieldInfo)
+        self.dataChanged.connect(self._whenDataChange)
 
     def clear456(self, r):
         # 只要修改了字段，清除后三项并禁止编辑
@@ -53,6 +55,9 @@ class myJPTableViewModelEditForm(JPTableViewModelEditForm):
         # self.TabelFieldInfo.DataRows[r].setData(5, None)
         # self.TabelFieldInfo.DataRows[r].setData(6, None)
         # self.dataChanged.emit()
+
+    def _whenDataChange(self, index):
+        print(index.row(), index.column())
 
     def data(self, index, role=Qt.DisplayRole):
         c = index.column()
@@ -73,6 +78,53 @@ class myJPTableViewModelEditForm(JPTableViewModelEditForm):
                 return result
         else:
             return super().data(index, role=role)
+
+
+class myPushButton(QPushButton):
+    MyClick = pyqtSignal(int)
+
+    def __init__(self,parent):
+        super().__init__('', parent,clicked=self.cellButtonClicked)
+        self.__type = -1
+
+
+    def setType(self, value):
+        fn = "del_line.ico" if self.__type else 'plus.png'
+        icon = QIcon()
+        icon.addPixmap(QPixmap(getcwd() + "\\res\\ico\\" + 'plus.png'),
+                       QIcon.Normal, QIcon.Off)
+        self.setIcon(icon)
+        self.__type = value
+
+    def cellButtonClicked(self):
+        print(self.__type )
+        self.MyClick.emit(self.__type)
+
+
+class MyButtonDelegate(QStyledItemDelegate):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+
+    def paint(self, painter, option, index):
+        widget = QPushButton(
+                self.tr('读'),
+                self.parent(),
+                clicked=self.cellButtonClicked
+            )
+        # if index.row() == index.model().rowCount() - 1:
+        #     widget.setType(1)
+        # else:
+        #     widget.setType(-1)
+        self.parent().setIndexWidget(index, widget)
+        # widget.MyClick.connect(self.myButClick)
+
+    def cellButtonClicked(self):
+        print(self.parent().selectionModel().currentIndex())
+
+    def updateEditorGeometry(self, editor: QWidget,
+                             StyleOptionViewItem: QStyleOptionViewItem,
+                             index: QModelIndex):
+        editor.setGeometry(StyleOptionViewItem.rect)
 
 
 class JDFieldComboBox(QStyledItemDelegate):
@@ -104,10 +156,12 @@ class JDFieldComboBox(QStyledItemDelegate):
 
     def setModelData(self, editor: QWidget, model: QAbstractItemModel,
                      index: QModelIndex):
-        data = editor.currentData()
-        index.model().setData(index, data, Qt.EditRole)
-        model.clear456(index.row())
-        self.Dialog.fieldChange(index, data)
+        if index.column() > 0:
+            data = editor.currentData()
+            index.model().setData(index, data, Qt.EditRole)
+            model.clear456(index.row())
+            if data:
+                self.Dialog.fieldChange(index, data)
 
     def updateEditorGeometry(self, editor: QWidget,
                              StyleOptionViewItem: QStyleOptionViewItem,
@@ -464,14 +518,14 @@ class Form_Search(QDialog):
         self.Model = myJPTableViewModelEditForm(self.tv, self.tab)
 
         self.tv.setModel(self.Model)
-        self.tv.setColumnWidth(0, 50)
+        self.tv.setColumnWidth(0, 30)
         self.tv.setColumnWidth(1, 50)
-        self.tv.setColumnWidth(2, 20)
+        self.tv.setColumnWidth(2, 50)
         self.tv.setColumnWidth(3, 200)
         self.tv.setColumnWidth(4, 200)
         self.tv.setColumnWidth(5, 150)
         self.tv.setColumnWidth(6, 150)
-        self.tv.setColumnWidth(7, 20)
+        self.tv.setColumnWidth(7, 50)
 
         de_sy = myDe.JPDelegate_ComboBox(
             self.tv, [['And', 'And'], ['Or', 'Or'], ['Not', 'Not']])
@@ -489,14 +543,20 @@ class Form_Search(QDialog):
         self.tv.setItemDelegateForColumn(4, self.de_no)
         self.tv.setItemDelegateForColumn(5, self.de_no)
         self.tv.setItemDelegateForColumn(6, self.de_no)
+        self.tv.cellButtonClicked = self.cellButtonClicked
+        self.tv.setItemDelegateForColumn(0, MyButtonDelegate(self.tv))
+
+    def cellButtonClicked(self, *args):
+        index = self.tv.selectionModel().currentIndex()
+        print(index.row())
 
     def fieldChange(self, index, data):
-
-        print(data)
-        tp = data[1][2]
-        de = mySYCombobox(tp, self.tv)
-        de.setDialog(self)
-        self.tv.setItemDelegateForColumn(4, de)
+        if index.column() > 0:
+            print(data)
+            tp = data[1][2]
+            de = mySYCombobox(tp, self.tv)
+            de.setDialog(self)
+            self.tv.setItemDelegateForColumn(4, de)
 
     def syChange(self, index, data):
         de_bool = myDe.JPDelegate_ComboBox(self.tv, [['SIM', 1], ['Non', 0]])
@@ -512,14 +572,13 @@ class Form_Search(QDialog):
             JPFieldType.Date: de_date
         }
         if data:
-            r= index.row()
+            r = index.row()
             tp = self.tab.DataRows[r].Datas[3][1][2]
             dic = data[1]
             if dic["En1"]:
                 self.tv.setItemDelegateForColumn(5, self.des[tp])
             if dic["En2"]:
                 self.tv.setItemDelegateForColumn(6, self.des[tp])
-
 
 
 if __name__ == "__main__":

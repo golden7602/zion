@@ -62,8 +62,8 @@ class JPFuncForm_PrintingOrder(JPFunctionForm):
                         AND left(fOrderID,2)='TP'
                 ORDER BY  fOrderID DESC"""
         self.backgroundWhenValueIsTrueFieldName = ['fSubmited']
-        self.checkBox_1.setText('UnSubmited')
-        self.checkBox_2.setText('Submited')
+        self.checkBox_1.setText('Submited')
+        self.checkBox_2.setText('UnSubmited')
         self.checkBox_1.setChecked(False)
         self.checkBox_2.setChecked(True)
         super().setListFormSQL(sql_1, sql_2)
@@ -118,8 +118,10 @@ class JPFuncForm_PrintingOrder(JPFunctionForm):
         msg = msg + 'The order "{cu_id}" will not be modified after submission. '
         msg = msg + 'Click OK to continue submitting?'
         msg = msg.replace("{cu_id}", str(cu_id))
-        if QMessageBox.question(self, '确认', msg, QMessageBox.Ok,
-                                QMessageBox.Ok) == QMessageBox.Ok:
+        reply = QMessageBox.question(self, '确认', msg,
+                                     QMessageBox.Yes | QMessageBox.No,
+                                     QMessageBox.No)
+        if reply == QMessageBox.Yes:
             sql = "update {tn} set fSubmited=1 where {pk_n}='{pk_v}';"
             sql1 = "select '{pk_v}';"
             sql = sql.format(tn=self.EditFormMainTableName,
@@ -144,7 +146,7 @@ class JPFuncForm_PrintingOrder(JPFunctionForm):
         sql = sql.format(cur_sql=self.currentSQL)
         tab = JPQueryFieldInfo(sql)
         exp = JPExpExcelFromTabelFieldInfo(self.model.TabelFieldInfo,
-                                                   self.MainForm)
+                                           self.MainForm)
         exp.setSubQueryFieldInfo(tab, 0, 0)
         exp.run()
 
@@ -192,9 +194,10 @@ class EditForm_PrintingOrder(JPFormModelMain):
         if self.isNewMode:
             self.ui.fEntryID.refreshValueNotRaiseEvent(
                 JPUser().currentUserID())
+            self.ui.fNumerBegin.setEnabled(False)
         if self.EditMode != JPEditFormDataMode.New:
             self.__refreshBeginNum()
-
+        
 
     def __onTaxKeyPress(self, KeyEvent: QKeyEvent):
         if (KeyEvent.modifiers() == Qt.AltModifier
@@ -303,6 +306,7 @@ class EditForm_PrintingOrder(JPFormModelMain):
         temp = (self.ui.fEspecieID.currentIndex() == -1
                 or self.ui.fCustomerID.currentIndex() == -1)
         if temp:
+            obj_begin.setEnabled(False)
             clearNum()
             return
 

@@ -135,6 +135,7 @@ class JPDelegate_DateEdit(_JPDelegate_Base):
     def createEditor(self, parent: QWidget, option: QStyleOptionViewItem,
                      index: QModelIndex) -> QWidget:
         wdgt = QDateEdit(parent)
+        wdgt.setCalendarPopup(True)
         return wdgt
 
     def setEditorData(self, editor: QWidget, index: QModelIndex):

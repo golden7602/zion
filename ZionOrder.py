@@ -114,7 +114,7 @@ class JPMainWindow(QMainWindow):
                 widget.ui.btn = QPushButton(m['fMenuText'])
                 widget.ui.btn.NMID = m['fNMID']
                 widget.ui.btn.setObjectName(m['fObjectName'])
-                setButtonIcon(widget.ui.btn)
+                setButtonIcon(widget.ui.btn,m['fIcon'])
                 widget.ui.btn.setEnabled(m['fHasRight'])
                 layout.addWidget(widget.ui.btn)
             QMetaObject.connectSlotsByName(widget)

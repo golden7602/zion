@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'e:\Zion\Ui\FormCustomer.ui'
+# Form implementation generated from reading ui file 'c:\Users\win10\Desktop\Zion\zion\Ui\FormCustomer.ui'
 #
 # Created by: PyQt5 UI code generator 5.11.3
 #
@@ -38,6 +38,8 @@ class Ui_Form(object):
         self.horizontalLayout_2.addWidget(self.label)
         self.comboBox = QtWidgets.QComboBox(Form)
         self.comboBox.setMinimumSize(QtCore.QSize(100, 0))
+        self.comboBox.setToolTip("")
+        self.comboBox.setModelColumn(0)
         self.comboBox.setObjectName("comboBox")
         self.horizontalLayout_2.addWidget(self.comboBox)
         spacerItem1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)

@@ -100,8 +100,8 @@ class JPFuncForm_Complete(_myFuncForm):
                 ORDER BY  forderID DESC"""
 
         self.backgroundWhenValueIsTrueFieldName = ['fSubmited']
-        self.checkBox_1.setText('Unfinished')
-        self.checkBox_2.setText('Completed')
+        self.checkBox_1.setText('finished')
+        self.checkBox_2.setText('UnCompleted')
         self.checkBox_1.setChecked(True)
         self.checkBox_2.setChecked(False)
         self.setListFormSQL(sql_1, sql_2)
@@ -128,9 +128,12 @@ class JPFuncForm_Complete(_myFuncForm):
         db = JPDb()
         us = JPUser()
         sql = sql.format(pk=cu_id, uid=us.currentUserID())
-        msg = "确认要交付记录【{}】吗？".format(cu_id)
-        if QMessageBox.question(JPPub().MainForm, '确认', msg, QMessageBox.Yes,
-                                QMessageBox.Yes) == QMessageBox.Yes:
+        msg = '确认要交付记录【{cu_id}】吗？\n'
+        msg = msg + 'Are you sure you want to deliver this order[{cu_id}]?'
+        msg = msg.format(cu_id=cu_id)
+        if QMessageBox.question(JPPub().MainForm, '确认', msg,
+                                QMessageBox.Yes | QMessageBox.No,
+                                QMessageBox.No) == QMessageBox.Yes:
             db.executeTransaction(sql)
             self.btnRefreshClick()
 

@@ -43,8 +43,8 @@ class JPFuncForm_Payment(ZionFuncForm):
                 ORDER BY  forderID DESC"""
         self.backgroundWhenValueIsTrueFieldName = ['fConfirmed1']
         self.setListFormSQL(sql_1, sql_2)
-        self.checkBox_1.setText('UnConfirmed')
-        self.checkBox_2.setText('Confirmed')
+        self.checkBox_1.setText('Confirmed')
+        self.checkBox_2.setText('UnConfirmed')
         self.checkBox_1.setChecked(False)
         self.checkBox_2.setChecked(True)
         #self.tableView.setColumnHidden(13, True)
@@ -73,7 +73,7 @@ class JPFuncForm_Payment(ZionFuncForm):
         msg = msg.format(pk=cu_id)
         if QMessageBox.question(JPPub().MainForm, '确认', msg,
                                 QMessageBox.Yes | QMessageBox.No,
-                                QMessageBox.Yes) == QMessageBox.Yes:
+                                QMessageBox.No) == QMessageBox.Yes:
             db.executeTransaction(sql)
             self.btnRefreshClick()
 

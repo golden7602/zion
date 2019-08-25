@@ -28,7 +28,7 @@ class OrderMod(JPTableViewModelReadOnly):
     def data(self, index, role=Qt.DisplayRole):
         r = index.row()
         c = index.column()
-        if role == Qt.DisplayRole and r > 0 and c<=13:
+        if role == Qt.DisplayRole and r > 0 and c<=14:
             if self.TabelFieldInfo.DataRows[r].Datas[
                     0] == self.TabelFieldInfo.DataRows[r-1].Datas[0]:
                 return ""
@@ -38,49 +38,51 @@ class OrderMod(JPTableViewModelReadOnly):
 class JPFuncForm_Order(JPFunctionForm):
     def __init__(self, MainForm):
         super().__init__(MainForm)
-        sql_0 = """
-                SELECT fOrderID as 订单号码OrderID,
-                        fOrderDate as 日期OrderDate,
-                        fCustomerName as 客户名Cliente,
-                        fCity as 城市City,
-                        fSubmited1 as 提交Submited,
-                        fSubmit_Name as 提交人Submitter,
-                        fRequiredDeliveryDate as 交货日期RequiredDeliveryDate,
-                        fAmount as 金额SubTotal,
-                        fDesconto as 折扣Desconto,
-                        fTax as 税金IVA,
-                        fPayable as `应付金额Valor a Pagar`,
-                        fContato as 联系人Contato,
-                        fCelular as 手机Celular,
-                        fSubmited AS fSubmited,
-                        fEntry_Name as 录入Entry
-                FROM v_order AS o"""
+        # sql_0 = """
+        #         SELECT fOrderID as 订单号码OrderID,
+        #                 fOrderDate as 日期OrderDate,
+        #                 fCustomerName as 客户名Cliente,
+        #                 fCity as 城市City,
+        #                 fSubmited1 as 提交Submited,
+        #                 fSubmit_Name as 提交人Submitter,
+        #                 fRequiredDeliveryDate as 交货日期RequiredDeliveryDate,
+        #                 fAmount as 金额SubTotal,
+        #                 fDesconto as 折扣Desconto,
+        #                 fTax as 税金IVA,
+        #                 fPayable as `应付金额Valor a Pagar`,
+        #                 fContato as 联系人Contato,
+        #                 fCelular as 手机Celular,
+        #                 fSubmited AS fSubmited,
+        #                 fEntry_Name as 录入Entry
+        #         FROM v_order AS o"""
         sql_0 = """
                 SELECT o.fOrderID as 订单号码OrderID,
-                        fOrderDate as 日期OrderDate,
-                        fCustomerName as 客户名Cliente,
-                        fCity as 城市City,
-                        fSubmited1 as 提交Submited,
-                        fSubmit_Name as 提交人Submitter,
-                        fRequiredDeliveryDate as 交货日期RequiredDeliveryDate,
-                        o.fAmount as 金额SubTotal,
-                        fDesconto as 折扣Desconto,
-                        fTax as 税金IVA,
-                        fPayable as `应付金额Valor a Pagar`,
-                        fContato as 联系人Contato,
-                        fCelular as 手机Celular,
-                        fSubmited AS fSubmited,
-                        fEntry_Name as 录入Entry,
-                        t.fQuant AS '数量Qtd',
+                    fOrderDate as 日期OrderDate,
+                    fCustomerName as 客户名Cliente,
+                    fCity as 城市City,
+                    fSubmited1 as 提交Submited,
+                    fSubmit_Name as 提交人Submitter,
+                    fRequiredDeliveryDate as 交货日期RequiredDeliveryDate,
+                    o.fAmount as 金额SubTotal,
+                    fDesconto as 折扣Desconto,
+                    fTax as 税金IVA,
+                    fPayable as `应付金额Valor a Pagar`,
+                    fContato as 联系人Contato,
+                    fCelular as 手机Celular,
+                    fSubmited AS fSubmited,
+                    fEntry_Name as 录入Entry,
+                    Null as ``,
+                    t.fQuant AS '数量Qtd',
                     fProductName AS '名称Descrição',
-                    fLength AS '长Comp.', fWidth AS '宽Larg.',
-                    t.fPrice AS '单价P. Unitario', t.fAmount AS '金额Total'
+                    fLength AS '长Comp.', 
+                    fWidth AS '宽Larg.',
+                    t.fPrice AS '单价P. Unitario', 
+                    t.fAmount AS '金额Total'
                 FROM v_order AS o right join t_order_detail as t on o.fOrderID=t.fOrderID"""
         sql_1 = sql_0 + """
                 WHERE fCanceled=0
                         AND left(o.fOrderID,2)='CP'
-                        AND (fSubmited={ch1}
-                        OR fSubmited={ch2})
+                        AND (fSubmited={ch1} OR fSubmited={ch2})
                         AND fOrderDate{date}
                 ORDER BY  o.fOrderID DESC"""
         sql_2 = sql_0 + """
@@ -88,8 +90,8 @@ class JPFuncForm_Order(JPFunctionForm):
                         AND left(o.fOrderID,2)='CP'
                 ORDER BY  o.fOrderID DESC"""
         self.backgroundWhenValueIsTrueFieldName = ['fSubmited']
-        self.checkBox_1.setText('UnSubmited')
-        self.checkBox_2.setText('Submited')
+        self.checkBox_1.setText('Submited')
+        self.checkBox_2.setText('UnSubmited')
         self.checkBox_1.setChecked(False)
         self.checkBox_2.setChecked(True)
         super().setListFormSQL(sql_1, sql_2)
@@ -118,8 +120,6 @@ class JPFuncForm_Order(JPFunctionForm):
                              edit_mode=edit_mode,
                              sql_sub=sql_sub,
                              PKValue=PKValue)
-        if edit_mode != JPEditFormDataMode.ReadOnly:
-            frm.ui.fCustomerID.setEditable(True)
         frm.ui.fOrderID.setEnabled(False)
         frm.ui.fCity.setEnabled(False)
         frm.ui.fNUIT.setEnabled(False)
@@ -172,8 +172,9 @@ class JPFuncForm_Order(JPFunctionForm):
         msg = msg + 'The order "{cu_id}" will not be modified after submission. '
         msg = msg + 'Click OK to continue submitting?'
         msg = msg.replace("{cu_id}", str(cu_id))
-        if QMessageBox.question(self, '确认', msg, QMessageBox.Ok,
-                                QMessageBox.Ok) == QMessageBox.Ok:
+        reply = QMessageBox.question(self, '确认', msg, QMessageBox.Yes|QMessageBox.No,
+                                QMessageBox.No)
+        if  reply== QMessageBox.Ok:
             sql = "update {tn} set fSubmited=1 where {pk_n}='{pk_v}';"
             sql1 = "select '{pk_v}';"
             sql = sql.format(tn=self.EditFormMainTableName,
@@ -205,6 +206,9 @@ class EditForm_Order(JPFormModelMainHasSub):
         if self.isNewMode:
             self.ObjectDict['fEntryID'].refreshValueNotRaiseEvent(
                 JPUser().currentUserID())
+        if edit_mode != JPEditFormDataMode.ReadOnly:
+            self.ui.fCustomerID.setEditable(True)
+
 
     def __customerIDChanged(self):
         sql = '''select fCelular, fContato, fTelefone ,fNUIT,fEndereco,fCity

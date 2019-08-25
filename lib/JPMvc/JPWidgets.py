@@ -284,7 +284,7 @@ class QTextEdit(QTextEdit_, __JPWidgetBase):
 class QComboBox(QComboBox_, __JPWidgetBase):
     def __init__(self, parent):
         super().__init__(parent)
-        self.setEditable(False)
+        super().setEditable(False)
         self.BindingData = []
         self.currentIndexChanged[int].connect(self._onValueChange)
 
@@ -330,16 +330,22 @@ class QComboBox(QComboBox_, __JPWidgetBase):
     @property
     def RowSource(self) -> list:
         return self.FieldInfo.RowSource
-
-    def setFieldInfo(self, fld: JPFieldType, raiseEvent=True):
-        self.currentIndexChanged[int].disconnect(self._onValueChange)
-        self.FieldInfo = fld
-        if self.FieldInfo.RowSource:
+        
+    def setEditable(self, state:bool):
+        if state:
+            super().setEditable(state)
             qcom = QCompleter([str(r[0]) for r in self.FieldInfo.RowSource])
             qcom.setCaseSensitivity(Qt.CaseInsensitive)
             qcom.setCompletionMode(QCompleter.PopupCompletion)
             qcom.setFilterMode(Qt.MatchContains)
             self.setCompleter(qcom)
+        else:
+            super().setEditable(state)
+
+    def setFieldInfo(self, fld: JPFieldType, raiseEvent=True):
+        self.currentIndexChanged[int].disconnect(self._onValueChange)
+        self.FieldInfo = fld
+        if self.FieldInfo.RowSource:
             for r in self.FieldInfo.RowSource:
                 self.addItem(str(r[0]), r)
         c = self.FieldInfo.BindingColumn

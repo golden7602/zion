@@ -93,6 +93,12 @@
          <height>0</height>
         </size>
        </property>
+       <property name="toolTip">
+        <string extracomment="请输入客户名称中任意包含的关键字"/>
+       </property>
+       <property name="modelColumn">
+        <number>0</number>
+       </property>
       </widget>
      </item>
      <item>

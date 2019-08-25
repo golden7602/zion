@@ -80,7 +80,7 @@ class JPFuncForm_Adjustment(ZionFuncForm):
         msg = msg.format(pk=cu_id)
         if QMessageBox.question(JPPub().MainForm, '确认', msg,
                                 QMessageBox.Yes | QMessageBox.No,
-                                QMessageBox.Yes) == QMessageBox.Yes:
+                                QMessageBox.No) == QMessageBox.Yes:
             db.executeTransaction(sql)
             self.btnRefreshClick()
 
