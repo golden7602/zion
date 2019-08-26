@@ -11,7 +11,9 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_DlgSearch(object):
     def setupUi(self, DlgSearch):
         DlgSearch.setObjectName("DlgSearch")
-        DlgSearch.resize(944, 349)
+        DlgSearch.resize(702, 349)
+        DlgSearch.setMinimumSize(QtCore.QSize(0, 0))
+        DlgSearch.setMaximumSize(QtCore.QSize(16777215, 16777215))
         font = QtGui.QFont()
         font.setFamily("Arial")
         DlgSearch.setFont(font)

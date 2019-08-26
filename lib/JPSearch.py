@@ -5,12 +5,14 @@ from decimal import Decimal
 from os import getcwd
 from sys import path as jppath
 jppath.append(getcwd())
-from PyQt5.QtCore import (QDate, QAbstractItemModel, QModelIndex, QObject, Qt,
+
+from PyQt5.QtCore import (QAbstractItemModel, QDate, QModelIndex, QObject, Qt,
                           QVariant, pyqtSignal, pyqtSlot)
-from PyQt5.QtWidgets import (QAbstractItemView, QComboBox, QDateEdit, QDialog,
-                             QLineEdit, QMenu, QMessageBox, QPushButton,
-                             QStyledItemDelegate, QStyleOptionViewItem,
-                             QTableView, QWidget, QApplication, QHBoxLayout)
+from PyQt5.QtGui import QIcon, QPixmap
+from PyQt5.QtWidgets import (QAbstractItemView, QApplication, QComboBox,
+                             QDateEdit, QDialog, QHBoxLayout, QLineEdit, QMenu,
+                             QMessageBox, QPushButton, QStyledItemDelegate,
+                             QStyleOptionViewItem, QTableView, QWidget)
 
 import lib.JPMvc.JPDelegate as myDe
 from lib.JPDatabase.Database import JPDb
@@ -18,23 +20,13 @@ from lib.JPDatabase.Field import JPFieldType
 from lib.JPDatabase.Query import (JPQueryFieldInfo, JPTabelFieldInfo,
                                   JPTabelRowData)
 from lib.JPException import JPExceptionFieldNull, JPExceptionRowDataNull
+from lib.JPFunction import JPDateConver, JPGetDisplayText
+from lib.JPMvc.JPDelegate import _JPDelegate_Base
 from lib.JPMvc.JPModel import (JPTableViewModelEditForm,
                                JPTableViewModelReadOnly)
 from lib.JPPrintReport import JPReport
 from lib.ZionPublc import JPPub
 from Ui.Ui_FormSearch import Ui_DlgSearch
-from PyQt5.QtGui import QIcon, QPixmap
-
-jppath.append(getcwd())
-
-# class myJPTabelFieldInfo(JPTabelFieldInfo):
-#     def __init__(self, sql, noData=False):
-#         super().__init__(sql, noData=noData)
-
-#     def addRow(self):
-#         newRow = [None, None, None, None, None, None, None]
-#         newRow._state = JPTabelRowData.New_None
-#         self.DataRows.append(newRow)
 
 
 class myJPTableViewModelEditForm(JPTableViewModelEditForm):
@@ -51,13 +43,32 @@ class myJPTableViewModelEditForm(JPTableViewModelEditForm):
         self.setData(self.createIndex(r, 4), None)
         self.setData(self.createIndex(r, 5), None)
         self.setData(self.createIndex(r, 6), None)
-        # self.TabelFieldInfo.DataRows[r].setData(4, None)
-        # self.TabelFieldInfo.DataRows[r].setData(5, None)
-        # self.TabelFieldInfo.DataRows[r].setData(6, None)
-        # self.dataChanged.emit()
 
     def _whenDataChange(self, index):
         print(index.row(), index.column())
+
+    def checkOnRow_(self, row):
+        ro = Qt.EditRole
+        data3 = self.data(self.createIndex(row, 3), ro)
+        data4 = self.data(self.createIndex(row, 4), ro)
+        data5 = self.data(self.createIndex(row, 5), ro)
+        data6 = self.data(self.createIndex(row, 6), ro)
+        if data3 is None or data4 is None:
+            return False
+        en1 = data4[1]['En1']
+        en2 = data4[1]['En2']
+        if en1 == 0 and en2 == 0:
+            return True
+        elif en1 == 1 and en2 == 0:
+            if data5:
+                return True
+        elif en1 == 1 and en2 == 1:
+            if data5 and data6:
+                return True
+        return False
+
+    def AfterSetDataBeforeInsterRowEvent(self, row_data, Index):
+        return self.checkOnRow_(Index.model().rowCount() - 1)
 
     def data(self, index, role=Qt.DisplayRole):
         c = index.column()
@@ -76,29 +87,15 @@ class myJPTableViewModelEditForm(JPTableViewModelEditForm):
             else:
                 result = cell[1]["TiC"] + cell[1]["Tie"]
                 return result
+        elif role == Qt.DisplayRole and c in [5, 6]:
+            rowData = self.TabelFieldInfo.DataRows[r].Datas
+            #tp = rowData[3][1][2]
+            v = rowData[c]
+            return JPGetDisplayText(v)
+        elif role == Qt.TextAlignmentRole and c in [5, 6]:
+            return Qt.AlignCenter
         else:
             return super().data(index, role=role)
-
-
-class myPushButton(QPushButton):
-    MyClick = pyqtSignal(int)
-
-    def __init__(self,parent):
-        super().__init__('', parent,clicked=self.cellButtonClicked)
-        self.__type = -1
-
-
-    def setType(self, value):
-        fn = "del_line.ico" if self.__type else 'plus.png'
-        icon = QIcon()
-        icon.addPixmap(QPixmap(getcwd() + "\\res\\ico\\" + 'plus.png'),
-                       QIcon.Normal, QIcon.Off)
-        self.setIcon(icon)
-        self.__type = value
-
-    def cellButtonClicked(self):
-        print(self.__type )
-        self.MyClick.emit(self.__type)
 
 
 class MyButtonDelegate(QStyledItemDelegate):
@@ -106,17 +103,22 @@ class MyButtonDelegate(QStyledItemDelegate):
         super().__init__(parent)
 
     def paint(self, painter, option, index):
-        widget = QPushButton(
-                self.tr('读'),
-                self.parent(),
-                clicked=self.cellButtonClicked
-            )
-        # if index.row() == index.model().rowCount() - 1:
-        #     widget.setType(1)
-        # else:
-        #     widget.setType(-1)
+        widget = QPushButton(self.tr(''),
+                             self.parent(),
+                             clicked=self.cellButtonClicked)
+        if index.row() == index.model().rowCount() - 1:
+            fn = 'plus.png'
+        else:
+            fn = "del_line.ico"
+        icon = QIcon()
+        icon.addPixmap(QPixmap(getcwd() + "\\res\\ico\\" + fn), QIcon.Normal,
+                       QIcon.Off)
+        widget.setIcon(icon)
+        if index.row() == index.model().rowCount() - 1:
+            widget.setEnabled(False)
+        widget.clicked.connect(self.cellButtonClicked)
         self.parent().setIndexWidget(index, widget)
-        # widget.MyClick.connect(self.myButClick)
+
 
     def cellButtonClicked(self):
         print(self.parent().selectionModel().currentIndex())
@@ -172,91 +174,91 @@ class JDFieldComboBox(QStyledItemDelegate):
 class mySYCombobox(QStyledItemDelegate):
     SY_CHAR = (
         {
-            "Sy": "`{0}` like '%{1}%'",
+            "Sy": "`{fieldname}` like '%{value1}%'",
             "En1": 1,
             "En2": 0,
             "TiC": "包含",
             "Tie": "Include"
         },
         {
-            "Sy": "`{0}`='{1}'",
+            "Sy": "`{fieldname}`='{value1}'",
             "En1": 1,
             "En2": 0,
             "TiC": "等于",
             "Tie": "Equal"
         },
         {
-            "Sy": "`{0}`>'{1}'",
+            "Sy": "`{fieldname}`>'{value1}'",
             "En1": 1,
             "En2": 0,
             "TiC": "大于",
             "Tie": "GreaterThan"
         },
         {
-            "Sy": "`{0}`>='{1}'",
+            "Sy": "`{fieldname}`>='{value1}'",
             "En1": 1,
             "En2": 0,
             "TiC": "大于或等于",
             "Tie": "GreaterOrEqual"
         },
         {
-            "Sy": "`{0}`<'{1}'",
+            "Sy": "`{fieldname}`<'{value1}'",
             "En1": 1,
             "En2": 0,
             "TiC": "小于",
             "Tie": "LessThan"
         },
         {
-            "Sy": "`{0}`<='{1}'",
+            "Sy": "`{fieldname}`<='{value1}'",
             "En1": 1,
             "En2": 0,
             "TiC": "小于或等于",
             "Tie": "LessOrEqual"
         },
         {
-            "Sy": "`{0}`<>'{1}'",
+            "Sy": "`{fieldname}`<>'{value1}'",
             "En1": 1,
             "En2": 0,
             "TiC": "不等于",
             "Tie": "NotEqual"
         },
         {
-            "Sy": "`{0}` like '{1}%'",
+            "Sy": "`{fieldname}` like '{value1}%'",
             "En1": 1,
             "En2": 0,
             "TiC": "开头是",
             "Tie": "BeginLike"
         },
         {
-            "Sy": "Not `{0}` like '{1}%'",
+            "Sy": "Not `{fieldname}` like '{value1}%'",
             "En1": 1,
             "En2": 0,
             "TiC": "开头不是",
             "Tie": "NotBeginLike"
         },
         {
-            "Sy": "`{0}` like '%{1}'",
+            "Sy": "`{fieldname}` like '%{value1}'",
             "En1": 1,
             "En2": 0,
             "TiC": "结束是",
             "Tie": "EndLike"
         },
         {
-            "Sy": "Not `{0}` like '%{1}'",
+            "Sy": "Not `{fieldname}` like '%{value1}'",
             "En1": 1,
             "En2": 0,
             "TiC": "结束不是",
             "Tie": "NotEndLike"
         },
         {
-            "Sy": "IsNull(`{0}`)",
+            "Sy": "IsNull(`{fieldname}`)",
             "En1": 0,
             "En2": 0,
             "TiC": "为空",
             "Tie": "IsNull"
         },
         {
-            "Sy": "Not IsNull(`{0}`)",
+            "Sy": "Not IsNull(`{fieldname}`)",
             "En1": 0,
             "En2": 0,
             "TiC": "不为空",
@@ -264,183 +266,183 @@ class mySYCombobox(QStyledItemDelegate):
         },
         #Ext
         {
-            "Sy": "LENGTH(`{0}`)={1}",
+            "Sy": "LENGTH(`{fieldname}`)={value1}",
             "En1": 1,
             "En2": 0,
             "TiC": "长度为",
             "Tie": "LengthIs"
         },
         {
-            "Sy": "LENGTH(`{0}`)>={1}",
+            "Sy": "LENGTH(`{fieldname}`)>={value1}",
             "En1": 1,
             "En2": 0,
             "TiC": "长度大于等于",
             "Tie": "LengthGreaterOrEqual"
         },
         {
-            "Sy": "LENGTH(`{0}`)<={1}",
+            "Sy": "LENGTH(`{fieldname}`)<={value1}",
             "En1": 1,
             "En2": 0,
             "TiC": "长度小于等于",
             "Tie": "LengthLessOrEqual"
         },
         {
-            "Sy": "LENGTH(`{0}`)>{1}",
+            "Sy": "LENGTH(`{fieldname}`)>{value1}",
             "En1": 1,
             "En2": 0,
             "TiC": "长度大于",
             "Tie": "LengthGreaterThan"
         },
         {
-            "Sy": "LENGTH(`{0}`)<{1}",
+            "Sy": "LENGTH(`{fieldname}`)<{value1}",
             "En1": 1,
             "En2": 0,
             "TiC": "长度小于",
             "Tie": "LengthLessThan"
         },
         {
-            "Sy": "`{0}`=''",
+            "Sy": "`{fieldname}`=''",
             "En1": 0,
             "En2": 0,
             "TiC": "为空字符",
             "Tie": "IsEmptyString"
         })
     SY_BOOL = ({
-        "Sy": "`{0}`=1",
+        "Sy": "`{fieldname}`=1",
         "En1": 0,
         "En2": 0,
         "TiC": "值为是",
         "Tie": "IsTrue"
     }, {
-        "Sy": "`{0}`=0",
+        "Sy": "`{fieldname}`=0",
         "En1": 0,
         "En2": 0,
         "TiC": "值为否",
         "Tie": "ISFalse"
     }, {
-        "Sy": "IsNull(`{0}`)",
+        "Sy": "IsNull(`{fieldname}`)",
         "En1": 0,
         "En2": 0,
         "TiC": "为空",
         "Tie": "IsNull"
     }, {
-        "Sy": "Not IsNull(`{0}`)",
+        "Sy": "Not IsNull(`{fieldname}`)",
         "En1": 0,
         "En2": 0,
         "TiC": "不为空",
         "Tie": "NotNull"
     })
     SY_DATE = ({
-        "Sy": "`{0}`<'{1}'",
+        "Sy": "`{fieldname}`<'{value1}'",
         "En1": 1,
         "En2": 0,
         "TiC": "早于",
         "Tie": "EarluThan"
     }, {
-        "Sy": "`{0}`<='{1}'",
+        "Sy": "`{fieldname}`<='{value1}'",
         "En1": 1,
         "En2": 0,
         "TiC": "早于等于",
         "Tie": "EarlyOrEqual"
     }, {
-        "Sy": "`{0}`>'{1}'",
+        "Sy": "`{fieldname}`>'{value1}'",
         "En1": 1,
         "En2": 0,
         "TiC": "晚于",
         "Tie": "LaterThan"
     }, {
-        "Sy": "`{0}`>='{1}'",
+        "Sy": "`{fieldname}`>='{value1}'",
         "En1": 1,
         "En2": 0,
         "TiC": "晚于等于",
         "Tie": "LaterOrEqual"
     }, {
-        "Sy": "`{0}`<>'{1}'",
+        "Sy": "`{fieldname}`<>'{value1}'",
         "En1": 1,
         "En2": 0,
         "TiC": "不等于",
         "Tie": "NotEqual"
     }, {
-        "Sy": "`{0}` Between '{1}' And '{2}'",
+        "Sy": "`{fieldname}` Between '{value1}' And '{value2}'",
         "En1": 1,
         "En2": 1,
         "TiC": "在区间内",
         "Tie": "Between"
     }, {
-        "Sy": "Not (`{0}` Between '{1}' And '{2}')",
+        "Sy": "Not (`{fieldname}` Between '{value1}' And '{value2}')",
         "En1": 1,
         "En2": 1,
         "TiC": "不在区间内",
         "Tie": "NotBetween"
     }, {
-        "Sy": "IsNull(`{0}`)",
+        "Sy": "IsNull(`{fieldname}`)",
         "En1": 0,
         "En2": 0,
         "TiC": "为空",
         "Tie": "IsNull"
     }, {
-        "Sy": "Not IsNull(`{0}`)",
+        "Sy": "Not IsNull(`{fieldname}`)",
         "En1": 0,
         "En2": 0,
         "TiC": "不为空",
         "Tie": "NotNull"
     })
     SY_NUM = ({
-        "Sy": "`{0}`={1}",
+        "Sy": "`{fieldname}`={value1}",
         "En1": 1,
         "En2": 0,
         "TiC": "等于",
         "Tie": "Equal"
     }, {
-        "Sy": "`{0}`>{1}",
+        "Sy": "`{fieldname}`>{value1}",
         "En1": 1,
         "En2": 0,
         "TiC": "大于",
         "Tie": "GreaterThan"
     }, {
-        "Sy": "`{0}`>={1}",
+        "Sy": "`{fieldname}`>={value1}",
         "En1": 1,
         "En2": 0,
         "TiC": "大于或等于",
         "Tie": "GreaterOrEqual"
     }, {
-        "Sy": "`{0}`<{1}",
+        "Sy": "`{fieldname}`<{value1}",
         "En1": 1,
         "En2": 0,
         "TiC": "小于",
         "Tie": "LessThan"
     }, {
-        "Sy": "`{0}`<={1}",
+        "Sy": "`{fieldname}`<={value1}",
         "En1": 1,
         "En2": 0,
         "TiC": "小于或等于",
         "Tie": "LessOrEqual"
     }, {
-        "Sy": "`{0}`<>{1}",
+        "Sy": "`{fieldname}`<>{value1}",
         "En1": 1,
         "En2": 0,
         "TiC": "不等于",
         "Tie": "NotEqual"
     }, {
-        "Sy": "`{0}` Between {1} and {2}",
+        "Sy": "`{fieldname}` Between {value1} and {value2}",
         "En1": 1,
         "En2": 1,
         "TiC": "在区间内",
         "Tie": "Between"
     }, {
-        "Sy": "Not (`{0}` Between {1} and {2})",
+        "Sy": "Not (`{fieldname}` Between {value1} and {value2})",
         "En1": 1,
         "En2": 1,
         "TiC": "不在区间内",
         "Tie": "NotBetween"
     }, {
-        "Sy": "IsNull(`{0}`)",
+        "Sy": "IsNull(`{fieldname}`)",
         "En1": 0,
         "En2": 0,
         "TiC": "为空",
         "Tie": "IsNull"
     }, {
-        "Sy": "Not IsNull(`{0}`)",
+        "Sy": "Not IsNull(`{fieldname}`)",
         "En1": 0,
         "En2": 0,
         "TiC": "不为空",
@@ -489,12 +491,27 @@ class mySYCombobox(QStyledItemDelegate):
         editor.setGeometry(StyleOptionViewItem.rect)
 
 
+class myTabelFieldInfo(JPTabelFieldInfo):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def addRow(self):
+        if len(self) == 0:
+            super().addRow()
+        else:
+            super().addRow()
+            self.DataRows[len(self) - 1].setData(1, "And")
+
+
 class Form_Search(QDialog):
-    def __init__(self, tabinfo, parent=None, flags=Qt.WindowFlags()):
+    whereStringCreated = pyqtSignal(str)
+
+    def __init__(self, tabinfo, base_sql, parent=None, flags=Qt.WindowFlags()):
         super().__init__(parent=parent, flags=flags)
         self.ui = Ui_DlgSearch()
         self.ui.setupUi(self)
         self.tv = self.ui.tableView
+        self.BaseSQL = base_sql
 
         sql = """
         SELECT fID,'' AS Guanxi, '' AS ZuoKuoHao, 
@@ -503,39 +520,27 @@ class Form_Search(QDialog):
         FROM sysconfig
         LIMIT 0
         """
-        tab = JPTabelFieldInfo(sql, True)
-        tab.Fields[0].Title = " "
-        tab.Fields[1].Title = "关系"
-        tab.Fields[2].Title = "("
-        tab.Fields[3].Title = "字段Field"
-        tab.Fields[4].Title = "运算Symbols"
-        tab.Fields[5].Title = "值1 Value1"
-        tab.Fields[6].Title = "值2 Value2"
-        tab.Fields[7].Title = ")"
+        tab = myTabelFieldInfo(sql, True)
+        titles = [
+            " ", "关系", "(", "字段Field", "运算Symbols", "值1 Value1", "值2 Value2",
+            ")"
+        ]
+        for i, t in enumerate(titles):
+            tab.Fields[i].Title = t
+
         self.tab = tab
         self.tab.addRow()
-
         self.Model = myJPTableViewModelEditForm(self.tv, self.tab)
-
         self.tv.setModel(self.Model)
-        self.tv.setColumnWidth(0, 30)
-        self.tv.setColumnWidth(1, 50)
-        self.tv.setColumnWidth(2, 50)
-        self.tv.setColumnWidth(3, 200)
-        self.tv.setColumnWidth(4, 200)
-        self.tv.setColumnWidth(5, 150)
-        self.tv.setColumnWidth(6, 150)
-        self.tv.setColumnWidth(7, 50)
-
-        de_sy = myDe.JPDelegate_ComboBox(
-            self.tv, [['And', 'And'], ['Or', 'Or'], ['Not', 'Not']])
-        self.tv.setItemDelegateForColumn(1, de_sy)
-
-        de_kh_left = myDe.JPDelegate_ComboBox(self.tv, [['(', '(']])
-        self.tv.setItemDelegateForColumn(2, de_kh_left)
-        de_kh_right = myDe.JPDelegate_ComboBox(self.tv, [[')', ')']])
-        self.tv.setItemDelegateForColumn(7, de_kh_right)
-
+        widths = [30, 50, 50, 150, 150, 100, 100, 50]
+        for i, w in enumerate(widths):
+            self.tv.setColumnWidth(i, w)
+        lst_gx = [['And', 'And'], ['Or', 'Or'], ['Not', 'Not']]
+        self.de_sy = myDe.JPDelegate_ComboBox(self.tv, lst_gx)
+        self.de_kh_left = myDe.JPDelegate_ComboBox(self.tv,
+                                                   [['(', '('], ['', '']])
+        self.de_kh_right = myDe.JPDelegate_ComboBox(self.tv,
+                                                    [[')', ')'], ['', '']])
         self.de_field = JDFieldComboBox(tabinfo)
         self.de_field.setDialog(self)
         self.tv.setItemDelegateForColumn(3, self.de_field)
@@ -545,6 +550,66 @@ class Form_Search(QDialog):
         self.tv.setItemDelegateForColumn(6, self.de_no)
         self.tv.cellButtonClicked = self.cellButtonClicked
         self.tv.setItemDelegateForColumn(0, MyButtonDelegate(self.tv))
+        self.setDelegate127(0)
+
+    def setDelegate127(self, r):
+        if r == 0:
+            self.tv.setItemDelegateForColumn(1, self.de_no)
+            self.tv.setItemDelegateForColumn(7, self.de_no)
+        else:
+            self.tv.setItemDelegateForColumn(1, self.de_sy)
+            self.tv.setItemDelegateForColumn(7, self.de_kh_right)
+        self.tv.setItemDelegateForColumn(2, self.de_kh_left)
+
+    def accept(self):
+        bz = 1
+        rng = self.Model.rowCount() - bz
+        if rng == 0:
+            txt = '没有输入有效查询条件！\nNo valid query conditions are entered!'
+            if QMessageBox.information(self, "提示", txt, QMessageBox.Ok):
+                return
+            return
+        # 检查括号是否配对
+        kh_l = 0
+        kh_r = 0
+        for i in range(rng):
+            if self.tab.DataRows[i].Datas[2]:
+                kh_l += 1
+            if self.tab.DataRows[i].Datas[7]:
+                kh_r += 1
+        if kh_l != kh_r:
+            txt = "括号不匹配！"
+            if QMessageBox.information(self, "提示", txt, QMessageBox.Ok):
+                return
+        # 检查每一行是否输入完整
+        for i in range(rng):
+            row_ok = self.Model.checkOnRow_(i)
+            if row_ok is False:
+                txt = '第【{n}】行条件输入不完整！\n'
+                txt = txt + 'Line [{n}] condition input is incomplete!'
+                QMessageBox.information(self, "提示", txt.format(n=i + 1),
+                                        QMessageBox.Ok)
+                return
+
+        # 开始生成表达式
+        lst = []
+        for i in range(rng):
+            rd = self.tab.DataRows[i]
+            temp_exp = rd.Datas[4][1]['Sy'].format(fieldname=rd.Datas[3][1][0],
+                                                   value1=rd.Datas[5],
+                                                   value2=rd.Datas[6])
+            gx = rd.Datas[1] + " " if rd.Datas[1] else ''
+            lkh = rd.Datas[2] if rd.Datas[2] else ''
+            rkh = rd.Datas[7] if rd.Datas[7] else ''
+            temp_exp = gx + lkh + temp_exp + rkh
+            lst.append(temp_exp)
+        txt = str(' '.join(lst))
+        sql = "select QQ_QQ.* from ({base_sql}) as QQ_QQ where ({txt})"
+        sql = sql.format(txt=txt, base_sql=self.BaseSQL)
+        self.whereStringCreated.emit(sql)
+        self.close()
+        #QMessageBox.information(self, "提示", txt, QMessageBox.Ok)
+        return
 
     def cellButtonClicked(self, *args):
         index = self.tv.selectionModel().currentIndex()
@@ -552,11 +617,11 @@ class Form_Search(QDialog):
 
     def fieldChange(self, index, data):
         if index.column() > 0:
-            print(data)
             tp = data[1][2]
             de = mySYCombobox(tp, self.tv)
             de.setDialog(self)
             self.tv.setItemDelegateForColumn(4, de)
+            self.setDelegate127(index.row())
 
     def syChange(self, index, data):
         de_bool = myDe.JPDelegate_ComboBox(self.tv, [['SIM', 1], ['Non', 0]])
@@ -579,6 +644,7 @@ class Form_Search(QDialog):
                 self.tv.setItemDelegateForColumn(5, self.des[tp])
             if dic["En2"]:
                 self.tv.setItemDelegateForColumn(6, self.des[tp])
+            self.setDelegate127(index.row())
 
 
 if __name__ == "__main__":
@@ -604,7 +670,7 @@ if __name__ == "__main__":
                         fEntry_Name as 录入Entry
                 FROM v_order AS o"""
 
-    s = Form_Search(JPTabelFieldInfo(sql_0, True))
+    s = Form_Search(JPTabelFieldInfo(sql_0, True), sql_0)
     s.exec_()
 
     db = JPDb()

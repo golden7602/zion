@@ -150,7 +150,7 @@ class Form_Receivables(QWidget):
         for item in btnNames:
             btn = QPushButton(item['fMenuText'])
             btn.setObjectName(item['fObjectName'])
-            setButtonIcon(btn,item['fIcon']))
+            setButtonIcon(btn,item['fIcon'])
             btn.setEnabled(item['fHasRight'])
             self.ui.horizontalLayout_Button.addWidget(btn)
         QMetaObject.connectSlotsByName(self)

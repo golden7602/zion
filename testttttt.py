@@ -34,5 +34,7 @@ print(mt.groups()[0])
 
 
 str0="-12345.123"
+
+
 rr = re.match(r"^-?[1-9]\d*\.\d{1,2}$", str0, flags=(re.I))
 print(rr)

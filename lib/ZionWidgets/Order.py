@@ -180,8 +180,8 @@ class JPFuncForm_Order(JPFunctionForm):
             sql = sql.format(tn=self.EditFormMainTableName,
                              pk_n=self.EditFormPrimarykeyFieldName,
                              pk_v=cu_id)
-            if db.executeTransaction([sql, sql1.format(pk_v=cu_id)]):
-                self.btnRefreshClick()
+            db.executeTransaction([sql, sql1.format(pk_v=cu_id)])
+            self.btnRefreshClick()
 
 
 class EditForm_Order(JPFormModelMainHasSub):

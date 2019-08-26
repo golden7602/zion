@@ -127,8 +127,8 @@ class JPFuncForm_PrintingOrder(JPFunctionForm):
             sql = sql.format(tn=self.EditFormMainTableName,
                              pk_n=self.EditFormPrimarykeyFieldName,
                              pk_v=cu_id)
-            if db.executeTransaction([sql, sql1.format(pk_v=cu_id)]):
-                self.btnRefreshClick()
+            db.executeTransaction([sql, sql1.format(pk_v=cu_id)])
+            self.btnRefreshClick()
 
     @pyqtSlot()
     def on_CmdExportToExcel_clicked(self):
@@ -197,7 +197,6 @@ class EditForm_PrintingOrder(JPFormModelMain):
             self.ui.fNumerBegin.setEnabled(False)
         if self.EditMode != JPEditFormDataMode.New:
             self.__refreshBeginNum()
-        
 
     def __onTaxKeyPress(self, KeyEvent: QKeyEvent):
         if (KeyEvent.modifiers() == Qt.AltModifier
@@ -336,10 +335,10 @@ class EditForm_PrintingOrder(JPFormModelMain):
             '''
         ID = self.ui.fOrderID.Value()
         WhereID = "AND fOrderID<>'{}'".format(ID) if ID else ''
-        tab = JPQueryFieldInfo(
-            sql.format(fCustomerID=self.ui.fCustomerID.Value(),
-                       fEspecieID=self.ui.fEspecieID.Value(),
-                       WhereID=WhereID))
+        sql = sql.format(fCustomerID=self.ui.fCustomerID.Value(),
+                         fEspecieID=self.ui.fEspecieID.Value(),
+                         WhereID=WhereID)
+        tab = JPQueryFieldInfo(sql)
         mod = myHistoryView(self.ui.listPrintingOrder, tab)
         self.ui.listPrintingOrder.setModel(mod)
         self.ui.listPrintingOrder.resizeColumnsToContents()

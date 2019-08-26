@@ -11,6 +11,7 @@ from lib.JPDatabase.Query import JPQueryFieldInfo
 from lib.JPMvc.JPFuncForm import JPEditFormDataMode
 
 
+
 class ZionFuncForm(JPFunctionForm):
     def __init__(self, parent):
         super().__init__(parent)
@@ -84,6 +85,6 @@ class ZionFuncForm(JPFunctionForm):
         sql = sql.format(cur_sql=self.currentSQL)
         tab = JPQueryFieldInfo(sql)
         exp = JPExpExcelFromTabelFieldInfo(self.model.TabelFieldInfo,
-                                                   self.MainForm)
+                                           self.MainForm)
         exp.setSubQueryFieldInfo(tab, 0, 0)
         exp.run()

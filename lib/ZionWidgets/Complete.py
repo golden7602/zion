@@ -79,7 +79,7 @@ class JPFuncForm_Complete(_myFuncForm):
                 SELECT fOrderID as `订单号码OrderID`,
                     fOrderDate as `日期OrderDate`,
                     fCustomerName as `客户名Cliente`,
-                    fDelivered1 as `已完成fDelivered`,
+                    fDelivered1 as `已完成fDelivered1`,
                     fDeliverer_Name as `fDeliverer`,
                     fDelivered as `已完成fDelivered`,
                     fCity as `城市City`,
@@ -87,8 +87,8 @@ class JPFuncForm_Complete(_myFuncForm):
                     fContato as `联系人Contato`,
                     fCelular as `手机Celular`,
                     fTelefone as `电话fTelefone`,
-                    fDeliverViewed1 as `已查阅Viewed`,
-                    fDeliverViewed
+                    fDeliverViewed1 as `已查阅Viewed1`,
+                    fDeliverViewed as `已查阅Viewed`
                 FROM v_order AS o """
         sql_1 = sql_0 + """
                 WHERE fConfirmed=1 AND fCanceled=0 And fOrderDate{date}

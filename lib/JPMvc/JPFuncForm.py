@@ -20,16 +20,19 @@ from Ui.Ui_FuncFormMob import Ui_Form
 from lib.JPExcel.JPExportToExcel import clsExportToExcelFromTableWidget
 import re
 import abc
+from lib.JPSearch import Form_Search
 
 
 class JPFunctionForm(QWidget):
     currentRowChanged = pyqtSignal(QModelIndex, QModelIndex)
-    afterCreateEditForm=  pyqtSignal(int)
+    afterCreateEditForm = pyqtSignal(int)
+
     def __init__(self, parent, flags=Qt.WindowFlags()):
         super().__init__(parent, flags=flags)
         # 把本窗体加入主窗体
         parent.addForm(self)
         self.MainForm = parent
+        self.TableInfo = None
         self.SQL_ListForm_Para = ''
         self.SQL_ListForm_Base = ''
         self.backgroundWhenValueIsTrueFieldName = []
@@ -160,6 +163,19 @@ class JPFunctionForm(QWidget):
             }
             sql = self.SQL_ListForm_Para.format(
                 ch1=ch1, ch2=ch2, date=cb[self.ui.comboBox.currentIndex()])
+            self.__readSQL(sql)
+            if ID:
+                self._locationRow(ID)
+            
+
+        # 恢复按钮状态
+        for but in dict_but.keys():
+            but.setEnabled(dict_but[but])
+        self.ui.checkBox_1.setEnabled(True)
+        self.ui.checkBox_2.setEnabled(True)
+        self.ui.comboBox.setEnabled(True)
+
+    def __readSQL(self, sql):
             info = JPQueryFieldInfo(sql)
             self.currentSQL = sql
             self.MainForm.ProgressBar.show()
@@ -174,15 +190,7 @@ class JPFunctionForm(QWidget):
             ).currentRowChanged[QModelIndex, QModelIndex].connect(
                 self.onCurrentRowChanged)
             self.ui.tableView.resizeColumnsToContents()
-            if ID:
-                self._locationRow(ID)
-
-        # 恢复按钮状态
-        for but in dict_but.keys():
-            but.setEnabled(dict_but[but])
-        self.ui.checkBox_1.setEnabled(True)
-        self.ui.checkBox_2.setEnabled(True)
-        self.ui.comboBox.setEnabled(True)
+            self.TableInfo = info
 
     def __refreshProcessBar(self, row):
         try:
@@ -219,9 +227,15 @@ class JPFunctionForm(QWidget):
     def on_CmdExportToExcel_clicked(self):
         return
 
+
+    def __whereStringCreated(self,sql):
+        self.__readSQL(sql)
+
     @pyqtSlot()
     def on_CmdSearch_clicked(self):
-        print(" 父类的 CMDSEARCH 请重新写")
+        frm = Form_Search(self.TableInfo, self.SQL_ListForm_Base)
+        frm.whereStringCreated.connect(self.__whereStringCreated)
+        frm.exec_()
 
     @pyqtSlot()
     def on_CmdNew_clicked(self):

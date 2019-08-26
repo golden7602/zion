@@ -90,10 +90,14 @@ class JPDelegate_LineEdit(_JPDelegate_Base):
         if txt is None:
             index.model().setData(index, None, Qt.EditRole)
             return
-        index.model().setData(
-            index,
-            txt.replace(",", "") if self.__ValueType in [1, 2] else txt,
-            Qt.EditRole)
+        v = None
+        if self.__ValueType == JPFieldType.Int:
+            v = int(txt.replace(",", ""))
+        elif self.__ValueType == JPFieldType.Float:
+            v = float(txt.replace(",", ""))
+        else:
+            v = txt
+        index.model().setData(index, v, Qt.EditRole)
 
 
 class JPDelegate_ComboBox(_JPDelegate_Base):
@@ -106,7 +110,7 @@ class JPDelegate_ComboBox(_JPDelegate_Base):
     def createEditor(self, parent: QWidget, option: QStyleOptionViewItem,
                      index: QModelIndex) -> QWidget:
         wdgt = QComboBox(parent)
-        
+
         for row in self.RowSource:
             wdgt.addItem(row[0], row[1])
         return wdgt
@@ -135,6 +139,7 @@ class JPDelegate_DateEdit(_JPDelegate_Base):
     def createEditor(self, parent: QWidget, option: QStyleOptionViewItem,
                      index: QModelIndex) -> QWidget:
         wdgt = QDateEdit(parent)
+        wdgt.setDate(datetime.date.today())
         wdgt.setCalendarPopup(True)
         return wdgt
 

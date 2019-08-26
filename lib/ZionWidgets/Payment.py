@@ -47,7 +47,7 @@ class JPFuncForm_Payment(ZionFuncForm):
         self.checkBox_2.setText('UnConfirmed')
         self.checkBox_1.setChecked(False)
         self.checkBox_2.setChecked(True)
-        #self.tableView.setColumnHidden(13, True)
+        self.tableView.setColumnHidden(13, True)
 
     @pyqtSlot()
     def on_butPrint_clicked(self):

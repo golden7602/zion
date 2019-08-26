@@ -185,8 +185,6 @@ def JPRound(number, power=0):
 @singledispatch
 def JPGetDisplayText(value, *args) -> str:
     '''返回参数的显示用字符形式
-    指定value是一个外键值时，请指定第二个参数为一个列表
-    该列表第一列是返回的字符串，第一列为value对应值
     '''
     if value:
         return

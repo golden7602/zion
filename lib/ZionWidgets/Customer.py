@@ -4,7 +4,7 @@ jppath.append(getcwd())
 
 from PyQt5.QtCore import QDate, QMetaObject, pyqtSlot, Qt
 from PyQt5.QtGui import QPixmap
-from PyQt5.QtWidgets import QMessageBox, QPushButton, QWidget,QCompleter
+from PyQt5.QtWidgets import QMessageBox, QPushButton, QWidget, QCompleter
 
 from lib.JPDatabase.Query import JPTabelFieldInfo
 from lib.JPFunction import JPDateConver, setButtonIcon
@@ -69,17 +69,15 @@ class Form_Customer(QWidget):
         for r in lst:
             cbo.addItem(r[0], r[1])
         # 设置自动补全
-        lst=[item.Datas[1] for item in tab.DataRows]
+        lst = [item.Datas[1] for item in tab.DataRows]
         qcom = QCompleter(lst)
         qcom.setCaseSensitivity(Qt.CaseInsensitive)
         qcom.setCompletionMode(QCompleter.PopupCompletion)
         qcom.setFilterMode(Qt.MatchContains)
         cbo.setCompleter(qcom)
-        
 
         cbo.setCurrentIndex(-1)
         cbo.DisabledEvent = False
-
 
     def refreshTable(self):
         cbo = self.ui.comboBox
@@ -102,7 +100,7 @@ class Form_Customer(QWidget):
         for item in btnNames:
             btn = QPushButton(item['fMenuText'])
             btn.setObjectName(item['fObjectName'])
-            setButtonIcon(btn,item['fIcon']))
+            setButtonIcon(btn, item['fIcon'])
             btn.setEnabled(item['fHasRight'])
             self.ui.horizontalLayout_Button.addWidget(btn)
         QMetaObject.connectSlotsByName(self)
