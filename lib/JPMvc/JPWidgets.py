@@ -273,6 +273,7 @@ class QTextEdit(QTextEdit_, __JPWidgetBase):
 
     def _setFieldInfo(self, fld: JPFieldType, raiseEvent=True):
         self.FieldInfo = fld
+        self.setPlainText(fld.Value)
         # # 设置编辑状态
         # self.setReadOnly(self.MainModel.isReadOnlyMode)
         # if not self.MainModel.isNewMode:

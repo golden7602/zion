@@ -104,8 +104,6 @@ class JPTableViewModelBase(QAbstractTableModel):
             self.readingRow.emit(r)
         tf = self.TabelFieldInfo
         if not Index.isValid():
-            print(Index.row())
-            print(Index.column())
             raise Exception("行数或列数设置有误！")
         if role == Qt.TextAlignmentRole:
             return (Qt.AlignLeft

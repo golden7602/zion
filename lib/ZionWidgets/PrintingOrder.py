@@ -232,7 +232,8 @@ class EditForm_PrintingOrder(JPFormModelMain):
             '''
 
     def onAfterSaveData(self, data):
-        self.ui.fOrderID.refreshValueNotRaiseEvent(data, True)
+        if self.isNewMode:
+            self.ui.fOrderID.refreshValueNotRaiseEvent(data, True)
 
     def setNumberNeedControl(self, arg=None):
         obj_begin = self.ui.fNumerBegin
@@ -294,6 +295,7 @@ class EditForm_PrintingOrder(JPFormModelMain):
         # 检查数据库中是否存在同客户同类型未确认的单据
         # 如果有，则清除当前控件的输入，提示信息并退出
         db = JPDb()
+        orderSQL=" ORDER BY fNumerEnd DESC"
         if self.isNewMode:
             where = """ WHERE fCustomerID={uid} and fEspecieID={tid} and fConfirmed={zt}"""
             sql = 'select fOrderID from t_order'
@@ -312,7 +314,7 @@ class EditForm_PrintingOrder(JPFormModelMain):
 
                 num_sql = self.sql_base + where.format(
                     uid=obj_cus.Value(), tid=obj_esp.Value(), zt=1)
-                self.setNumberNeedControl(num_sql)
+                self.setNumberNeedControl(num_sql+orderSQL)
             return
 
         # 需要管理情况下：
@@ -325,7 +327,7 @@ class EditForm_PrintingOrder(JPFormModelMain):
                                  zt=1,
                                  id=self.ui.fOrderID.Value())
             num_sql = self.sql_base + where
-            self.setNumberNeedControl(num_sql)
+            self.setNumberNeedControl(num_sql+orderSQL)
 
     def cacu_amount(self, obj):
         nm = obj.objectName()

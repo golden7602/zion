@@ -554,7 +554,7 @@ class Order_report_Mob(JPReport):
                     "fPrice", "fAmountDetail",
                     "fAmount", "fDesconto", "fTax", "fPayable"
             ]:
-                return False, ""
+                return False, " "
         return False, None
 
     def init_data(self, OrderID: str):

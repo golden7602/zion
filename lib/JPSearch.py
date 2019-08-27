@@ -12,7 +12,8 @@ from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtWidgets import (QAbstractItemView, QApplication, QComboBox,
                              QDateEdit, QDialog, QHBoxLayout, QLineEdit, QMenu,
                              QMessageBox, QPushButton, QStyledItemDelegate,
-                             QStyleOptionViewItem, QTableView, QWidget,QItemDelegate)
+                             QStyleOptionViewItem, QTableView, QWidget,
+                             QItemDelegate)
 
 import lib.JPMvc.JPDelegate as myDe
 from lib.JPDatabase.Database import JPDb
@@ -45,7 +46,8 @@ class myJPTableViewModelEditForm(JPTableViewModelEditForm):
         self.setData(self.createIndex(r, 6), None)
 
     def _whenDataChange(self, index):
-        print(index.row(), index.column())
+        pass
+
 
     def checkOnRow_(self, row):
         ro = Qt.EditRole
@@ -97,47 +99,20 @@ class myJPTableViewModelEditForm(JPTableViewModelEditForm):
             return super().data(index, role=role)
 
 
-class MyButtonDelegate1(QStyledItemDelegate):
-    def __init__(self, parent=None):
-        super().__init__(parent)
-
-    def paint(self, painter, option, index):
-        widget = QPushButton(self.tr(''),
-                             self.parent(),
-                             clicked=self.parent().cellButtonClicked)
-        if index.row() == index.model().rowCount() - 1:
-            fn = 'plus.png'
-        else:
-            fn = "del_line.ico"
-        icon = QIcon()
-        icon.addPixmap(QPixmap(getcwd() + "\\res\\ico\\" + fn), QIcon.Normal,
-                       QIcon.Off)
-        widget.setIcon(icon)
-        if index.row() == index.model().rowCount() - 1:
-            widget.setEnabled(False)
-        widget.clicked.connect(self.cellButtonClicked)
-        self.parent().setIndexWidget(index, widget)
-
-
-    def cellButtonClicked(self):
-        print(self.parent().selectionModel().currentIndex())
-
-    def updateEditorGeometry(self, editor: QWidget,
-                             StyleOptionViewItem: QStyleOptionViewItem,
-                             index: QModelIndex):
-        editor.setGeometry(StyleOptionViewItem.rect)
-
-
 class MyButtonDelegate(QItemDelegate):
     def __init__(self, parent=None):
         super(MyButtonDelegate, self).__init__(parent)
 
     def paint(self, painter, option, index):
-        if not self.parent().indexWidget(index):
-            button_read = QPushButton(self.tr('读'),
-                                      self.parent(),
-                                      clicked=self.parent().cellButtonClicked)
-            self.parent().setIndexWidget(index, button_read)
+        if not self.parent().indexWidget(index) and (
+                index.row() != index.model().rowCount() - 1):
+            widget = QPushButton(self.tr(''),
+                                 self.parent(),
+                                 clicked=self.parent().cellButtonClicked)
+            fn = 'del_line.ico'
+            icon = QIcon(getcwd() + "\\res\\ico\\" + fn)
+            widget.setIcon(icon)
+            self.parent().setIndexWidget(index, widget)
 
 
 class JDFieldComboBox(QStyledItemDelegate):
@@ -546,12 +521,12 @@ class Form_Search(QDialog):
         widths = [30, 50, 50, 150, 150, 100, 100, 50]
         for i, w in enumerate(widths):
             self.tv.setColumnWidth(i, w)
-        lst_gx = [['And', 'And'], ['Or', 'Or'], ['Not', 'Not']]
+        lst_gx = [['', ''],['And', 'And'], ['Or', 'Or'], ['Not', 'Not']]
         self.de_sy = myDe.JPDelegate_ComboBox(self.tv, lst_gx)
         self.de_kh_left = myDe.JPDelegate_ComboBox(self.tv,
-                                                   [['(', '('], ['', '']])
+                                                   [['', ''],['(', '('], ])
         self.de_kh_right = myDe.JPDelegate_ComboBox(self.tv,
-                                                    [[')', ')'], ['', '']])
+                                                    [['', ''],[')', ')'] ])
         self.de_field = JDFieldComboBox(tabinfo)
         self.de_field.setDialog(self)
         self.tv.setItemDelegateForColumn(3, self.de_field)
@@ -562,6 +537,7 @@ class Form_Search(QDialog):
         self.tv.cellButtonClicked = self.cellButtonClicked
         self.tv.setItemDelegateForColumn(0, MyButtonDelegate(self.tv))
         self.setDelegate127(0)
+        self.tv.setCurrentIndex(self.Model.createIndex(0,3))
 
     def setDelegate127(self, r):
         if r == 0:
@@ -623,9 +599,11 @@ class Form_Search(QDialog):
         return
 
     def cellButtonClicked(self, *args):
-        print("lskadhlksd")
         index = self.tv.selectionModel().currentIndex()
-        print(index.row())
+        self.Model.TabelFieldInfo.DataRows[index.row()+1].setData(1, "")
+        self.Model.removeRows(index.row(), 1, index)
+        
+
 
     def fieldChange(self, index, data):
 
@@ -682,7 +660,7 @@ if __name__ == "__main__":
                         fSubmited AS fSubmited,
                         fEntry_Name as 录入Entry
                 FROM v_order AS o"""
-
+    aaa=JPTabelFieldInfo(sql_0)
     s = Form_Search(JPTabelFieldInfo(sql_0, True), sql_0)
     s.exec_()
 

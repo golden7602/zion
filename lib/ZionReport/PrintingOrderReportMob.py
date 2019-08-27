@@ -499,6 +499,15 @@ class PrintOrder_report_Mob(JPReport):
 
     def init_ReportFooter(self):
         RF = self.ReportFooter
+        RF.AddItem(3,
+                   0,
+                   0,
+                   430,
+                   80,
+                   "fNote1",
+                   FormatString='备注Note:\n{}',
+                   Font=self.font_YaHei_8,
+                   AlignmentFlag=Qt.AlignLeft)
         RF.AddItem(1,
                    430,
                    0,
@@ -663,7 +672,7 @@ class PrintOrder_report_Mob(JPReport):
                     "fPrice", "fAmountDetail", "fAmount", "fDesconto", "fTax",
                     "fPayable"
             ]:
-                return False, ""
+                return False, " "
         return False, None
 
     def init_data(self, OrderID: str):

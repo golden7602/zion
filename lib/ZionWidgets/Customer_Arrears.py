@@ -50,19 +50,22 @@ class Form_FormCustomer_Arrears(QWidget):
         self.refreshCombobox()
 
     def refreshCombobox(self):
-        sql = """select fCustomerID,fCustomerName
+        sql = """select fCustomerName,fCustomerID
                 from  t_customer order by fCustomerName"""
         tab = JPTabelFieldInfo(sql)
-        cbo = self.ui.comboBox
-        cbo.DisabledEvent = True
-        cbo.clear()
-        lst = [[item.Datas[1], item.Datas[0]] for item in tab.DataRows]
-        cbo.setEditable(True)
-        cbo.clear()
-        for r in lst:
-            cbo.addItem(r[0], r[1])
-        cbo.setCurrentIndex(-1)
-        cbo.DisabledEvent = False
+        lst=[r.Datas for r in tab.DataRows]
+        tab.Fields[1].RowSource=lst
+        cbo = self.ui.comboBox.setFieldInfo(tab.Fields[1])
+
+        # cbo.DisabledEvent = True
+        # cbo.clear()
+        # lst = [[item.Datas[1], item.Datas[0]] for item in tab.DataRows]
+        # cbo.setEditable(True)
+        # cbo.clear()
+        # for r in lst:
+        #     cbo.addItem(r[0], r[1])
+        # cbo.setCurrentIndex(-1)
+        # cbo.DisabledEvent = False
 
     def refreshTable(self):
         cbo = self.ui.comboBox
@@ -103,8 +106,8 @@ class Form_FormCustomer_Arrears(QWidget):
         tv.resizeColumnsToContents()
 
     def on_comboBox_currentIndexChanged(self, index):
-        if self.ui.comboBox.DisabledEvent:
-            return
+        # if self.ui.comboBox.DisabledEvent:
+        #     return
         self.refreshTable()
 
     def addButtons(self, btnNames: list):

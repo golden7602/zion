@@ -208,6 +208,7 @@ class JPDb(object):
         if not (vCls in tp.keys()):
             raise ValueError("给定参数类型不在列表中")
         sql = "update sysconfig set {tp}='{value}' where fName='{name}'"
+        sql=sql.format(tp=tp[vCls],value=value,name=name)
         r, r2 = self.executeTransaction(sql)
         if not r:
             raise ValueError("保存参数值错误")

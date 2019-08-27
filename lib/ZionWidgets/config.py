@@ -20,7 +20,7 @@ class Form_Config(QDialog):
         self.exec_()
 
     def accept(self):
-        txt = self.ui.Note_PrintingOrder.text()
+        txt = self.ui.Note_PrintingOrder.toPlainText()
         txt = txt if txt else ''
         try:
             JPDb().saveConfigVale('Note_PrintingOrder', txt, str)
