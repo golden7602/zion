@@ -12,7 +12,7 @@ from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtWidgets import (QAbstractItemView, QApplication, QComboBox,
                              QDateEdit, QDialog, QHBoxLayout, QLineEdit, QMenu,
                              QMessageBox, QPushButton, QStyledItemDelegate,
-                             QStyleOptionViewItem, QTableView, QWidget)
+                             QStyleOptionViewItem, QTableView, QWidget,QItemDelegate)
 
 import lib.JPMvc.JPDelegate as myDe
 from lib.JPDatabase.Database import JPDb
@@ -97,14 +97,14 @@ class myJPTableViewModelEditForm(JPTableViewModelEditForm):
             return super().data(index, role=role)
 
 
-class MyButtonDelegate(QStyledItemDelegate):
+class MyButtonDelegate1(QStyledItemDelegate):
     def __init__(self, parent=None):
         super().__init__(parent)
 
     def paint(self, painter, option, index):
         widget = QPushButton(self.tr(''),
                              self.parent(),
-                             clicked=self.cellButtonClicked)
+                             clicked=self.parent().cellButtonClicked)
         if index.row() == index.model().rowCount() - 1:
             fn = 'plus.png'
         else:
@@ -126,6 +126,18 @@ class MyButtonDelegate(QStyledItemDelegate):
                              StyleOptionViewItem: QStyleOptionViewItem,
                              index: QModelIndex):
         editor.setGeometry(StyleOptionViewItem.rect)
+
+
+class MyButtonDelegate(QItemDelegate):
+    def __init__(self, parent=None):
+        super(MyButtonDelegate, self).__init__(parent)
+
+    def paint(self, painter, option, index):
+        if not self.parent().indexWidget(index):
+            button_read = QPushButton(self.tr('读'),
+                                      self.parent(),
+                                      clicked=self.parent().cellButtonClicked)
+            self.parent().setIndexWidget(index, button_read)
 
 
 class JDFieldComboBox(QStyledItemDelegate):
@@ -611,10 +623,12 @@ class Form_Search(QDialog):
         return
 
     def cellButtonClicked(self, *args):
+        print("lskadhlksd")
         index = self.tv.selectionModel().currentIndex()
         print(index.row())
 
     def fieldChange(self, index, data):
+
         if index.column() > 0:
             tp = data[1][2]
             de = mySYCombobox(tp, self.tv)

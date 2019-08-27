@@ -1,40 +1,71 @@
-import re
-# sql = '''
-#         SELECT fOrderID, fOrderDate, fVendedorID, fRequiredDeliveryDate , fCustomerID, fContato, fCelular, fTelefone, fAmount, fTax , fPayable, fDesconto, fNote FROM t_order WHERE fOrderID = '';
-#         '''
-
-# def getMainTableNameInfo(sql):
-#     sql = re.sub(r'^\s', '', re.sub(r'\s+', ' ', re.sub(r'\n', '', sql)))
-#     sel_p = r"SELECT\s+.*from\s(\S+)\s(as\s\S+){0,1}where\s(\S+)\s*=.*"
-#     mt = re.match(sel_p, sql, flags=(re.I))
-#     if mt:
-#         return mt.groups()[0],C[2]
-
-# f = '{aaa}= {bbbb}+{ccccc} * {dddddd}'
-# f = re.sub(r'\s', '', f)
-# mt = re.match("\{(\S+)\}=(.+)", re.sub(r'\s', '', f), flags=(re.I))
-# try:
-#     fLeft = mt.groups()[0]
-#     fRight = mt.groups()[1]
-# except Exception:
-#     raise ValueError("公式解析错误")
-# print(fLeft, fRight)
-# a='{aa}0000{ab}'.format(aa=1,ab=1,c=3)
-# print(a)
+import sys
+from PyQt5.QtCore import (Qt, QAbstractTableModel, QModelIndex, QVariant)
+from PyQt5.QtWidgets import (QApplication, QHBoxLayout, QItemDelegate, QPushButton, QTableView, QWidget)
 
 
+class MyModel(QAbstractTableModel):
+    def __init__(self, parent=None):
+        super(MyModel, self).__init__(parent)
+
+    def rowCount(self, QModelIndex):
+        return 4
+
+    def columnCount(self, QModelIndex):
+        return 3
+
+    def data(self, index, role):
+        row = index.row()
+        col = index.column()
+        if role == Qt.DisplayRole:
+            return 'Row %d, Column %d' % (row + 1, col + 1)
+        return QVariant()
 
 
-sql = "SELECT fItemID, fTypeID, fTitle AS 'text条目文本', fSpare1 AS 'Value1值1', fSpare2 AS 'Value2值2', fNote AS 'Note说明' FROM t_enumeration as uu WHERE fTypeID = -1 "
-sql = re.sub(r'^\s', '', re.sub(r'\s+', ' ', re.sub(r'\n', '', sql)))
-sel_p = r"^SELECT\s+.*from\s(\S+)[$|\s].*"
-sel_p = r"^(SELECT\s+.*from\s(\S+)[$|\s](as\s\S+)*)"
-mt = re.match(sel_p, sql, flags=(re.I | re.M))
-print(mt.groups()[0])
+class MyButtonDelegate(QItemDelegate):
+    def __init__(self, parent=None):
+        super(MyButtonDelegate, self).__init__(parent)
+
+    def paint(self, painter, option, index):
+        if not self.parent().indexWidget(index):
+            button_read = QPushButton(
+                self.tr('读'),
+                self.parent(),
+                clicked=self.parent().cellButtonClicked
+            )
+            button_write = QPushButton(
+                self.tr('写'),
+                self.parent(),
+                clicked=self.parent().cellButtonClicked
+            )
+            button_read.index = [index.row(), index.column()]
+            button_write.index = [index.row(), index.column()]
+            h_box_layout = QHBoxLayout()
+            h_box_layout.addWidget(button_read)
+            h_box_layout.addWidget(button_write)
+            h_box_layout.setContentsMargins(0, 0, 0, 0)
+            h_box_layout.setAlignment(Qt.AlignCenter)
+            widget = QWidget()
+            widget.setLayout(h_box_layout)
+            self.parent().setIndexWidget(
+                index,
+                widget
+            )
 
 
-str0="-12345.123"
+class MyTableView(QTableView):
+    def __init__(self, parent=None):
+        super(MyTableView, self).__init__(parent)
+        self.setItemDelegateForColumn(0, MyButtonDelegate(self))
+
+    def cellButtonClicked(self):
+        print("Cell Button Clicked", self.sender().index)
 
 
-rr = re.match(r"^-?[1-9]\d*\.\d{1,2}$", str0, flags=(re.I))
-print(rr)
+if __name__ == '__main__':
+    a = QApplication(sys.argv)
+    tableView = MyTableView()
+    myModel = MyModel()
+    tableView.setModel(myModel)
+    tableView.show()
+    a.exec_()
+ 
