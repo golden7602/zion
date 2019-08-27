@@ -167,13 +167,7 @@ class JPFormModelMain(QDialog):
                     v.setRowsData(tf.DataRows[0])
                     v.setMainModel(self)
                     v.setFieldInfo(fld_dict[k])
-
-        if self.EditMode == JPEditFormDataMode.ReadOnly:
-            self.setEditState(False)
-        else:
-            self.setEditState(True)
-            self.__setReadOnlyFields()
-            self.__setFieldsDisabled()
+        #self.setEditState()
 
     def __setReadOnlyFields(self):
         # 设置只读字段
@@ -196,8 +190,12 @@ class JPFormModelMain(QDialog):
                 obj.setEnabled(False)
 
     def setEditState(self, can_edit: bool = False):
-        for obj in self.ObjectDict.values():
-            obj.setReadOnly(not can_edit)
+        if self.EditMode == JPEditFormDataMode.ReadOnly:
+            for obj in self.ObjectDict.values():
+                obj.setEnabled(False)
+            return
+        # for obj in self.ObjectDict.values():
+        #     obj.setReadOnly(not can_edit)
         self.__setReadOnlyFields()
         self.__setFieldsDisabled()
 
@@ -263,7 +261,7 @@ class JPFormModelMain(QDialog):
         """返回主表的SQL语句，如果有检查空值错误，则引发一个错误，错误信息中包含字段名"""
         sqls = []
         pb = JPPub()
-        appform = pb.MainForm
+        # appform = pb.MainForm
         nm_lst = []
         v_lst = []
         mti = self.mainTableFieldsInfo
@@ -487,7 +485,7 @@ class JPFormModelMainHasSub(JPFormModelMain):
 
     def __getSubSQLs(self):
         # 以下返回子表的保存数据用SQL语句"""
-        appform = JPPub().MainForm
+        # appform = JPPub().MainForm
         # 计算主窗体键名、键名列及键值
         if self.isReadOnlyMode:
             return ''

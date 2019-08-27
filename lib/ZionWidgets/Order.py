@@ -28,9 +28,9 @@ class OrderMod(JPTableViewModelReadOnly):
     def data(self, index, role=Qt.DisplayRole):
         r = index.row()
         c = index.column()
-        if role == Qt.DisplayRole and r > 0 and c<=14:
+        if role == Qt.DisplayRole and r > 0 and c <= 14:
             if self.TabelFieldInfo.DataRows[r].Datas[
-                    0] == self.TabelFieldInfo.DataRows[r-1].Datas[0]:
+                    0] == self.TabelFieldInfo.DataRows[r - 1].Datas[0]:
                 return ""
         return super().data(index, role=role)
 
@@ -172,9 +172,10 @@ class JPFuncForm_Order(JPFunctionForm):
         msg = msg + 'The order "{cu_id}" will not be modified after submission. '
         msg = msg + 'Click OK to continue submitting?'
         msg = msg.replace("{cu_id}", str(cu_id))
-        reply = QMessageBox.question(self, '确认', msg, QMessageBox.Yes|QMessageBox.No,
-                                QMessageBox.No)
-        if  reply== QMessageBox.Ok:
+        reply = QMessageBox.question(self, '确认', msg,
+                                     QMessageBox.Yes | QMessageBox.No,
+                                     QMessageBox.No)
+        if reply == QMessageBox.Yes:
             sql = "update {tn} set fSubmited=1 where {pk_n}='{pk_v}';"
             sql1 = "select '{pk_v}';"
             sql = sql.format(tn=self.EditFormMainTableName,
@@ -208,7 +209,6 @@ class EditForm_Order(JPFormModelMainHasSub):
                 JPUser().currentUserID())
         if edit_mode != JPEditFormDataMode.ReadOnly:
             self.ui.fCustomerID.setEditable(True)
-
 
     def __customerIDChanged(self):
         sql = '''select fCelular, fContato, fTelefone ,fNUIT,fEndereco,fCity

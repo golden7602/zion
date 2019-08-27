@@ -148,6 +148,10 @@ class JPDb(object):
             return " Limit 0"
 
     def executeTransaction(self, sqls):
+        """执行一组语句，返回值两个
+            第一个是执行状态，成功返回 True
+            第二个是返回查询结果第一行，第一个字段的值（如果有返回值）,没有返回值则返回None
+        """
         con = self.currentConn
         cur = con.cursor()
         con.begin()
@@ -161,7 +165,7 @@ class JPDb(object):
                     cur.execute(sql_t)
         except Exception as e:
             con.rollback()
-            QMessageBox.warning(None, '提示', "执行保存命令出错！" + '\n' + str(e),
+            QMessageBox.warning(None, '提示', "执行SQL出错！" + '\n' + str(e),
                                 QMessageBox.Yes, QMessageBox.Yes)
             return False, None
         else:

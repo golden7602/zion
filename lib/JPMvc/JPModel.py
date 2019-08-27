@@ -56,15 +56,24 @@ class JPTableViewModelBase(QAbstractTableModel):
 
     def getDataDict(self, role: int = Qt.DisplayRole):
         ''''按行返回数据字典的列表,一般用于打印'''
-        dic = [
-            self.TabelFieldInfo.getRowValueDict(i)
-            for i in range(len(self.TabelFieldInfo))
-        ]
+
+        tab = self.TabelFieldInfo
+        l = len(tab)
         if role == Qt.EditRole:
+            dic = [tab.getRowValueDict(i) for i in range(l)]
             return dic
+        result = []
         if role == Qt.DisplayRole:
-            r = {k: JPGetDisplayText(v) for k, v in dic.items()}
-        return r
+            for r in range(l):
+                temp_Dic = {}
+                row_data = self.DataRows[r].Datas
+                for c, data in row_data:
+                    fld = tab.Fields[c]
+                    txt = JPGetDisplayText(data, FieldInfo=fld)
+                    temp_Dic[fld.FieldName] = txt
+                result.append(temp_Dic)
+            #r = {k: JPGetDisplayText(v) for k, v in dic.items()}
+        return result
 
     def __getPara(self, Index):
         c = Index.column()

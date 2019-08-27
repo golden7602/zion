@@ -109,7 +109,7 @@ class JPQueryFieldInfo(object):
             if txts:
                 return txts[0]
         else:
-            return JPGetDisplayText(v)
+            return JPGetDisplayText(v, FieldInfo=self.Fields[c])
 
     def getRowData(self, row_num) -> list:
         """根据指定的行号返回一个列表,仅仅包含数据"""

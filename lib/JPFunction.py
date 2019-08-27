@@ -26,24 +26,22 @@ def md5_passwd(str0, salt='al;dkfjgutriepw,cmvnfjisjmwudnus000999'):
     return res
 
 
-def setButtonIcon(btn: QPushButton,filename=None):
-    fn=filename if filename else btn.text()
+def setButtonIcon(btn: QPushButton, filename=None):
+    fn = filename if filename else btn.text()
     icon = QIcon()
-    icon.addPixmap(QPixmap(getcwd() + "\\res\\ico\\" + fn),
-                   QIcon.Normal, QIcon.Off)
+    icon.addPixmap(QPixmap(getcwd() + "\\res\\ico\\" + fn), QIcon.Normal,
+                   QIcon.Off)
     btn.setIcon(icon)
 
 
 def setButtonIconByName(btn: QPushButton):
+    fn = getcwd() + "\\res\\ico\\" + btn.objectName() + ".png"
     if isinstance(btn, QLabel):
-        pix = QPixmap(getcwd() + "\\res\\ico\\" + btn.objectName() + ".png")
+        pix = QPixmap(fn)
         btn.setPixmap(pix)
 
     if isinstance(btn, QPushButton):
-        icon = QIcon()
-        icon.addPixmap(QPixmap(getcwd() + "\\res\\ico\\" + btn.objectName()),
-                       QIcon.Normal, QIcon.Off)
-        btn.setIcon(icon)
+        setButtonIcon(btn, fn)
 
 
 def findButtonAndSetIcon(Widget: QWidget):
@@ -183,7 +181,7 @@ def JPRound(number, power=0):
 
 ###################################################################
 @singledispatch
-def JPGetDisplayText(value, *args) -> str:
+def JPGetDisplayText(value, *args, **kwargs) -> str:
     '''返回参数的显示用字符形式
     '''
     if value:
@@ -193,42 +191,48 @@ def JPGetDisplayText(value, *args) -> str:
 
 
 @JPGetDisplayText.register(str)
-def _(value, *args):
+def _(value, *args, **kwargs):
     return value
 
 
 @JPGetDisplayText.register(QDate)
-def _(value, *args):
+def _(value, *args, **kwargs):
     return value.toString("yyyy-MM-dd")
 
 
 @JPGetDisplayText.register(datetime.date)
-def _(value, *args):
+def _(value, *args, **kwargs):
     return value.strftime('%Y-%m-%d')
 
 
 @JPGetDisplayText.register(int)
-def _(value, *args):
+def _(value, *args, **kwargs):
     if value == 0:
         return ''
     return '{:,}'.format(value)
 
 
 @JPGetDisplayText.register(float)
-def _(value, *args):
-    return '{:,.2f}'.format(value)
+def _(value, *args, **kwargs):
+    fld = kwargs.get("FieldInfo", False)
+    Scale = str(fld.Scale) if fld else '2'
+    formatString = "{:,." + Scale + "f}"
+    return formatString.format(value)
 
 
 @JPGetDisplayText.register(Decimal)
-def _(value, *args):
+def _(value, *args, **kwargs):
     if value == 0:
         return ''
     v = float(str(value))
-    return '{:,.2f}'.format(v)
+    fld = kwargs.get("FieldInfo", False)
+    Scale = str(fld.Scale) if fld else '2'
+    formatString = "{:,." + Scale + "f}"
+    return formatString.format(v)
 
 
 @JPGetDisplayText.register(bytes)
-def _(value, *args):
+def _(value, *args, **kwargs):
     tup = JPBooleanString().getBooleanString()
     i = ord(value)
     return tup[i]

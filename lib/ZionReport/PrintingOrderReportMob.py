@@ -15,7 +15,7 @@ class PrintOrder_report_Mob(JPReport):
                  PaperSize=QPrinter.A5,
                  Orientation=QPrinter.Orientation(1)):
         super().__init__(PaperSize, Orientation)
-        self.SetMargins(30, 60, 30, 30)
+        self.SetMargins(30, 60, 30, 20)
         self.Copys = 2
         self.logo = QPixmap(getcwd() + "\\res\\Zions_100.png")
         self.FillColor = QColor(128, 128, 128)
@@ -607,7 +607,7 @@ class PrintOrder_report_Mob(JPReport):
                    0,
                    130,
                    650,
-                   100,
+                   60,
                    "fNote1",
                    FormatString=noteStr,
                    Bolder=False,

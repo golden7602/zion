@@ -12,8 +12,6 @@ from lib.JPDatabase.Query import JPQueryFieldInfo
 from lib.JPFunction import JPGetDisplayText
 
 
-
-
 class xls_alignment():
     VERT_TOP = 0x00  #上端对齐
     VERT_CENTER = 0x01  #居中对齐（垂直方向上）
@@ -194,7 +192,8 @@ class JPExpExcelFromTabelFieldInfo(object):
                 row1 = main_row
                 row2 = main_row + sub_rows - 1
                 for col_main in range(mian_cols):
-                    v = JPGetDisplayText(tab.DataRows[i].Datas[col_main])
+                    v = JPGetDisplayText(tab.DataRows[i].Datas[col_main],
+                                         FieldInfo=tab.Fields[i])
 
                     #print(row1, row2, col_main, col_main)
                     sheet.write_merge(row1, row2, col_main, col_main, v,
@@ -202,7 +201,8 @@ class JPExpExcelFromTabelFieldInfo(object):
 
             else:
                 for col_main in range(mian_cols):
-                    v = JPGetDisplayText(tab.DataRows[i].Datas[col_main])
+                    v = JPGetDisplayText(tab.DataRows[i].Datas[col_main],
+                                         FieldInfo=tab.Fields[i])
                     #print(main_row, col_main)
                     sheet.write(main_row, col_main, v, style1)
             main_row = main_row + (sub_rows if sub_rows else 1)
@@ -234,8 +234,10 @@ class JPExpExcelFromTabelFieldInfo(object):
             cur_col = len(self.QueryFieldInfo.Fields) + 1
             for sub_col in range(sub_cols):
                 if sub_col != self.linkSubTableFieldIndex:
-                    sheet.write(cur_row, cur_col,
-                                JPGetDisplayText(row[sub_col]), style)
+                    sheet.write(
+                        cur_row, cur_col,
+                        JPGetDisplayText(row[sub_col],
+                                         FieldInfo=tab.Fields[sub_col]), style)
                     cur_col += 1
             cur_row += 1
         return len(lst)

@@ -123,8 +123,15 @@ class __JPWidgetBase(QObject):
     @abc.abstractmethod
     def getSqlValue(self):
         """返回字段值，可直接用于SQL语句中"""
-    @abc.abstractmethod
+        pass
+
     def setFieldInfo(self, fld: JPFieldType = None, raiseEvent=True):
+        self._setFieldInfo(fld, raiseEvent)
+        # 设置控件只读状态
+        self.setEnabled(not self.MainModel.isReadOnlyMode)
+
+    @abc.abstractmethod
+    def _setFieldInfo(self, fld: JPFieldType = None, raiseEvent=True):
         pass
 
     @abc.abstractmethod
@@ -197,17 +204,25 @@ class QLineEdit(QLineEdit_, __JPWidgetBase):
             return v if v else ''
         return v
 
-    def setFieldInfo(self, fld: JPFieldType, raiseEvent=True):
+    def _setFieldInfo(self, fld: JPFieldType, raiseEvent=True):
         self.FieldInfo = fld
-        # 设置编辑状态
-        self.setReadOnly(self.MainModel.isReadOnlyMode)
+        st = self.MainModel.isReadOnlyMode
+
         if not self.MainModel.isNewMode:
             self.__setDisplayText()
+        # 设置验证器
+        tp = self.FieldInfo.TypeCode
+        if tp == JPFieldType.Int:
+            self.setIntValidator(0, 999999999999)
+        elif tp == JPFieldType.Float:
+            self.setDoubleValidator(0.0, 999999999999.99, self.FieldInfo.Scale)
+        elif tp == JPFieldType.String:
+            self.setMaxLength(self.FieldInfo.Length)
 
     def __setDisplayText(self):
         v = self.FieldInfo.Value
         if v:
-            self.setText(JPGetDisplayText(v))
+            self.setText(JPGetDisplayText(v, FieldInfo=self.FieldInfo))
         else:
             self.setText('')
 
@@ -256,12 +271,12 @@ class QTextEdit(QTextEdit_, __JPWidgetBase):
         self.setStyleSheet('')
         return "'{}'".format(t)
 
-    def setFieldInfo(self, fld: JPFieldType, raiseEvent=True):
+    def _setFieldInfo(self, fld: JPFieldType, raiseEvent=True):
         self.FieldInfo = fld
-        # 设置编辑状态
-        self.setReadOnly(self.MainModel.isReadOnlyMode)
-        if not self.MainModel.isNewMode:
-            self.setPlainText(fld.Value)
+        # # 设置编辑状态
+        # self.setReadOnly(self.MainModel.isReadOnlyMode)
+        # if not self.MainModel.isNewMode:
+        #     self.setPlainText(fld.Value)
 
     def Value(self):
         return self.FieldInfo.Value
@@ -284,7 +299,7 @@ class QTextEdit(QTextEdit_, __JPWidgetBase):
 class QComboBox(QComboBox_, __JPWidgetBase):
     def __init__(self, parent):
         super().__init__(parent)
-        super().setEditable(False)
+        #super().setEditable(False)
         self.BindingData = []
         self.currentIndexChanged[int].connect(self._onValueChange)
 
@@ -330,8 +345,8 @@ class QComboBox(QComboBox_, __JPWidgetBase):
     @property
     def RowSource(self) -> list:
         return self.FieldInfo.RowSource
-        
-    def setEditable(self, state:bool):
+
+    def setEditable(self, state: bool):
         if state:
             super().setEditable(state)
             qcom = QCompleter([str(r[0]) for r in self.FieldInfo.RowSource])
@@ -342,7 +357,7 @@ class QComboBox(QComboBox_, __JPWidgetBase):
         else:
             super().setEditable(state)
 
-    def setFieldInfo(self, fld: JPFieldType, raiseEvent=True):
+    def _setFieldInfo(self, fld: JPFieldType, raiseEvent=True):
         self.currentIndexChanged[int].disconnect(self._onValueChange)
         self.FieldInfo = fld
         if self.FieldInfo.RowSource:
@@ -355,7 +370,7 @@ class QComboBox(QComboBox_, __JPWidgetBase):
             raise AttributeError(txt.format(self.objectName()))
         self.BindingData = [row[c] for row in self.FieldInfo.RowSource]
         # 设置编辑状态
-        self.setEnabled(not self.MainModel.isReadOnlyMode)
+        # self.setEnabled(not self.MainModel.isReadOnlyMode)
         self.__setCurrentData(fld.Value)
         self.currentIndexChanged[int].connect(self._onValueChange)
 
@@ -389,10 +404,10 @@ class QDateEdit(QDateEdit_, __JPWidgetBase):
         self.refreshValueNotRaiseEvent(value)
         super()._onValueChange(self.FieldInfo.Value)
 
-    def setFieldInfo(self, fld: JPFieldType, raiseEvent=True):
+    def _setFieldInfo(self, fld: JPFieldType, raiseEvent=True):
         self.FieldInfo = fld
         # 设置编辑状态
-        self.setReadOnly(self.MainModel.isReadOnlyMode)
+        # self.setReadOnly(self.MainModel.isReadOnlyMode)
         self.refreshValueNotRaiseEvent(fld.Value)
 
     def Value(self):
@@ -428,11 +443,11 @@ class QCheckBox(QCheckBox_, __JPWidgetBase):
         self.refreshValueNotRaiseEvent(value)
         super()._onValueChange(self.FieldInfo.Value)
 
-    def setFieldInfo(self, fld: JPFieldType, raiseEvent=True):
+    def _setFieldInfo(self, fld: JPFieldType, raiseEvent=True):
         self.FieldInfo = fld
         self.refreshValueNotRaiseEvent(self.FieldInfo.Value)
         # 设置编辑状态
-        self.setEnabled(not self.MainModel.isReadOnlyMode)
+        # self.setEnabled(not self.MainModel.isReadOnlyMode)
         self.refreshValueNotRaiseEvent(fld.Value)
 
     def Value(self):

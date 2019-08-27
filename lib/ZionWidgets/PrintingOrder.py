@@ -180,23 +180,17 @@ class EditForm_PrintingOrder(JPFormModelMain):
         self.ui.label_logo.setPixmap(pix)
         self.setPkRole(5)
         self.cacuTax = True
-        self.__historyOrderSQL = '''
-                SELECT fOrderID AS 单据号码OrderID,
-                    fOrderDate as 单据日期OrderDate,
-                    CAST(e.fTitle AS char(20)) AS 类别Especie,
-                    CAST(fNumerBegin AS SIGNED) AS 起始号码NumerBegin,
-                    CAST(fNumerEnd AS SIGNED) AS 结束号码NumerEnd
-                FROM t_order o
-                    LEFT JOIN t_enumeration e ON o.fEspecieID = e.fItemID
-            '''
+        self.NumberControl = False
         self.ui.fTax.keyPressEvent = self.__onTaxKeyPress
         self.readData()
+        self.ui.fNumerBegin.setEnabled(False)
+        self.ui.fNumerEnd.setEnabled(False)
         if self.isNewMode:
-            self.ui.fEntryID.refreshValueNotRaiseEvent(
-                JPUser().currentUserID())
-            self.ui.fNumerBegin.setEnabled(False)
-        if self.EditMode != JPEditFormDataMode.New:
-            self.__refreshBeginNum()
+            uid = JPUser().currentUserID()
+            self.ui.fEntryID.refreshValueNotRaiseEvent(uid)
+        # 编辑状态下，更新一次历史单据号列表
+        if self.isEditMode or self.isReadOnlyMode:
+            self.onDateChangeEvent(self.ui.fCustomerID, None)
 
     def __onTaxKeyPress(self, KeyEvent: QKeyEvent):
         if (KeyEvent.modifiers() == Qt.AltModifier
@@ -225,124 +219,159 @@ class EditForm_PrintingOrder(JPFormModelMain):
             'fOrderID', "fNumerEnd", "fEntryID", 'fAmount', 'fPayable', 'fNUIT'
         ]
 
+    @property
+    def sql_base(self):
+        return '''
+            SELECT fOrderID AS 单据号码OrderID,
+                fOrderDate as 单据日期OrderDate,
+                CAST(e.fTitle AS char(20)) AS 类别Especie,
+                CAST(fNumerBegin AS SIGNED) AS 起始号码NumerBegin,
+                CAST(fNumerEnd AS SIGNED) AS 结束号码NumerEnd
+            FROM t_order o
+                LEFT JOIN t_enumeration e ON o.fEspecieID = e.fItemID
+            '''
+
     def onAfterSaveData(self, data):
         self.ui.fOrderID.refreshValueNotRaiseEvent(data, True)
 
-    def __customerIDChanged(self):
-        sql = '''select fCelular, fContato, fTelefone 
-            from t_customer where fCustomerID={}'''
-        sql = sql.format(self.ui.fCustomerID.Value())
-        tab = JPQueryFieldInfo(sql)
-        self.ui.fCelular.refreshValueNotRaiseEvent(tab.getOnlyData([0, 0]),
-                                                   True)
-        self.ui.fContato.refreshValueNotRaiseEvent(tab.getOnlyData([0, 1]),
-                                                   True)
-        self.ui.fTelefone.refreshValueNotRaiseEvent(tab.getOnlyData([0, 2]),
-                                                    True)
-
-    def onDateChangeEvent(self, obj, value):
-        nm = obj.objectName()
-        if nm in ('fCustomerID', 'fEspecieID'):
-            if nm == 'fCustomerID':
-                if self.ui.fCustomerID.currentIndex() != -1:
-                    self.__customerIDChanged()
-            self.__refreshBeginNum()
-        if nm in ('fAvistaID', 'fQuant', 'fPagePerVolumn'):
-            self.__refreshEndNum()
-        if nm == 'fNumerBegin':
-            v = obj.Value()
-            self.ui.fNumerEnd.setIntValidator(v + 1, v + 1000000)
-            self.__refreshEndNum()
-        if nm in ('fQuant', 'fPrice', 'fDesconto', "fTax"):
-            fQuant = self.ui.fQuant.Value()
-            fPrice = self.ui.fPrice.Value()
-            temp_fDesconto = self.ui.fDesconto.Value()
-            fDesconto = temp_fDesconto if temp_fDesconto else 0
-            fAmount = (fQuant * fPrice if all((fQuant, fPrice)) else None)
-            self.ui.fAmount.refreshValueNotRaiseEvent(fAmount, True)
-            if fAmount is None:
-                self.ui.fTax.refreshValueNotRaiseEvent(None, True)
-                self.ui.fPayable.refreshValueNotRaiseEvent(None, True)
-                return
-            if nm == "fTax":
-                temp_fTax = self.ui.fTax.Value()
-                fTax = temp_fTax if temp_fTax else 0
-            else:
-                fTax = JPRound((fAmount - fDesconto) * 0.17) if fAmount else 0
-            if self.cacuTax:
-                self.ui.fTax.refreshValueNotRaiseEvent(fTax, True)
-            else:
-                fTax = 0
-            fPayable = fAmount + fTax - fDesconto
-            self.ui.fPayable.refreshValueNotRaiseEvent(fPayable, True)
-
-    def __refreshEndNum(self):
-        temp_fAvistaID = self.ui.fAvistaID.currentData()
-        fNumerBegin = self.ui.fNumerBegin.Value()
-        fAvistaID = int(temp_fAvistaID[2]) if temp_fAvistaID else None
-        fQuant = self.ui.fQuant.Value()
-        fPagePerVolumn = self.ui.fPagePerVolumn.Value()
-        if all((fAvistaID, fQuant, fPagePerVolumn)):
-            fNumerEnd = fNumerBegin + fAvistaID * fQuant * fPagePerVolumn - 1
-        else:
-            fNumerEnd = fNumerBegin
-        self.ui.fNumerEnd.refreshValueNotRaiseEvent(fNumerEnd, True)
-
-    def __refreshBeginNum(self):
+    def setNumberNeedControl(self, arg=None):
         obj_begin = self.ui.fNumerBegin
         obj_end = self.ui.fNumerEnd
-
-        def clearNum():
+        self.NumberControl = True if arg else False
+        if not arg:
             obj_begin.refreshValueNotRaiseEvent(None, True)
             obj_end.refreshValueNotRaiseEvent(None, True)
-            sql = self.__historyOrderSQL + JPDb().getOnlyStrcFilter()
+            sql = self.sql_base + JPDb().getOnlyStrcFilter()
             tab = JPQueryFieldInfo(sql)
             mod = myHistoryView(self.ui.listPrintingOrder, tab)
             self.ui.listPrintingOrder.setModel(mod)
             self.ui.listPrintingOrder.resizeColumnsToContents()
-
-        # 如果没有选择客户或单据管理标志不为1时，清空单据信息并退出
-        temp = (self.ui.fEspecieID.currentIndex() == -1
-                or self.ui.fCustomerID.currentIndex() == -1)
-        if temp:
-            obj_begin.setEnabled(False)
-            clearNum()
-            return
-
-        if self.ui.fEspecieID.currentData()[2] != '1':
             obj_begin.setEnabled(False)
             self.ui.listPrintingOrder.setEnabled(False)
-            clearNum()
+        else:
+            tab = JPQueryFieldInfo(arg)
+            mod = myHistoryView(self.ui.listPrintingOrder, tab)
+            self.ui.listPrintingOrder.setModel(mod)
+            self.ui.listPrintingOrder.resizeColumnsToContents()
+            self.ui.listPrintingOrder.setEnabled(
+                    len(tab) > 0 and self.isEditMode)
+
+            beginNum = tab.getOnlyData([0, 4]) if len(tab.DataRows) > 0 else 0
+            beginNum += 1
+
+            # 编辑状态时，不更新起始值，只修改编辑状态
+            # 编辑和新增加状态时，设定起始、结束值的验证器
+            if self.EditMode == JPEditFormDataMode.New:
+                obj_begin.refreshValueNotRaiseEvent(beginNum, True)
+            obj_begin.setIntValidator(beginNum + 1, 999999999999)
+            obj_begin.setEnabled(True)
+
+    def tryNumberControl(self, obj):
+        obj_cus = self.ui.fCustomerID
+        obj_esp = self.ui.fEspecieID
+
+        nm = obj.objectName()
+        if nm == 'fCustomerID':
+            sql = '''select fCelular, fContato, fTelefone 
+                from t_customer where fCustomerID={}'''
+            sql = sql.format(self.ui.fCustomerID.Value())
+            tab = JPQueryFieldInfo(sql)
+            objs = [self.ui.fCelular, self.ui.fContato, self.ui.fTelefone]
+            for i, obj in enumerate(objs):
+                obj.refreshValueNotRaiseEvent(tab.getOnlyData([0, i]), True)
+
+        # 判断是否需要单据管理,不需要管理则退出
+        if obj_cus.currentIndex() == -1 or obj_esp.currentIndex() == -1:
+            self.setNumberNeedControl(False)
             return
         else:
-            obj_begin.setEnabled(True)
-            self.ui.listPrintingOrder.setEnabled(True)
+            if obj_esp.currentData()[2] != '1':
+                self.setNumberNeedControl(False)
+                return
 
-        self.ui.fNumerBegin.setEnabled(True)
-        new_beginNum = self.__getHistoryOrderMaxNum()
-        obj_begin.refreshValueNotRaiseEvent(new_beginNum + 1, True)
-        obj_begin.setIntValidator(new_beginNum + 1, 999999999999)
-        # 引发一次事件
-        obj_begin._onValueChange(new_beginNum)
+        # 需要管理情况下：
+        # 新增状态
+        # 检查数据库中是否存在同客户同类型未确认的单据
+        # 如果有，则清除当前控件的输入，提示信息并退出
+        db = JPDb()
+        if self.isNewMode:
+            where = """ WHERE fCustomerID={uid} and fEspecieID={tid} and fConfirmed={zt}"""
+            sql = 'select fOrderID from t_order'
+            sql = sql + where.format(
+                uid=obj_cus.Value(), tid=obj_esp.Value(), zt=0)
+            bc, result = db.executeTransaction(sql)
+            if result:
+                txt = '选择的客户名下有同类型但不确认的单据，不能增加新单据!\n'
+                txt = txt + 'There are identical but uncertain documents '
+                txt = txt + 'under the name of the selected customer, '
+                txt = txt + 'and no new documents can be added'
+                QMessageBox.information(self, "提示", txt, QMessageBox.Cancel)
+                obj.setCurrentIndex(-1)
+                return
+            else:
 
-    def __getHistoryOrderMaxNum(self):
-        sql = self.__historyOrderSQL + '''
-                WHERE fCustomerID ={fCustomerID}
-                    AND fEspecieID = {fEspecieID}
-                    AND fConfirmed='1'
-                    {WhereID}
-                ORDER BY fNumerEnd DESC
-            '''
-        ID = self.ui.fOrderID.Value()
-        WhereID = "AND fOrderID<>'{}'".format(ID) if ID else ''
-        sql = sql.format(fCustomerID=self.ui.fCustomerID.Value(),
-                         fEspecieID=self.ui.fEspecieID.Value(),
-                         WhereID=WhereID)
-        tab = JPQueryFieldInfo(sql)
-        mod = myHistoryView(self.ui.listPrintingOrder, tab)
-        self.ui.listPrintingOrder.setModel(mod)
-        self.ui.listPrintingOrder.resizeColumnsToContents()
-        return tab.getOnlyData([0, 4]) if len(tab.DataRows) > 0 else 0
+                num_sql = self.sql_base + where.format(
+                    uid=obj_cus.Value(), tid=obj_esp.Value(), zt=1)
+                self.setNumberNeedControl(num_sql)
+            return
+
+        # 需要管理情况下：
+        # 编辑状态
+        if self.isEditMode or self.isReadOnlyMode:
+            where = """ WHERE fCustomerID={uid} and fEspecieID={tid} and fConfirmed={zt}
+                    and fOrderID<>'{id}'"""
+            where = where.format(uid=obj_cus.Value(),
+                                 tid=obj_esp.Value(),
+                                 zt=1,
+                                 id=self.ui.fOrderID.Value())
+            num_sql = self.sql_base + where
+            self.setNumberNeedControl(num_sql)
+
+    def cacu_amount(self, obj):
+        nm = obj.objectName()
+        fQuant = self.ui.fQuant.Value()
+        fPrice = self.ui.fPrice.Value()
+        temp_fDesconto = self.ui.fDesconto.Value()
+        fDesconto = temp_fDesconto if temp_fDesconto else 0
+        fAmount = (fQuant * fPrice if all((fQuant, fPrice)) else None)
+        self.ui.fAmount.refreshValueNotRaiseEvent(fAmount, True)
+        if fAmount is None:
+            self.ui.fTax.refreshValueNotRaiseEvent(None, True)
+            self.ui.fPayable.refreshValueNotRaiseEvent(None, True)
+            return
+        if nm == "fTax":
+            temp_fTax = self.ui.fTax.Value()
+            fTax = temp_fTax if temp_fTax else 0
+        else:
+            fTax = JPRound((fAmount - fDesconto) * 0.17) if fAmount else 0
+        if self.cacuTax:
+            self.ui.fTax.refreshValueNotRaiseEvent(fTax, True)
+        else:
+            fTax = 0
+        fPayable = fAmount + fTax - fDesconto
+        self.ui.fPayable.refreshValueNotRaiseEvent(fPayable, True)
+
+    def tryRefreshNumber(self):
+        if self.NumberControl:
+            temp_fAvistaID = self.ui.fAvistaID.currentData()
+            fNumerBegin = self.ui.fNumerBegin.Value()
+            fAvistaID = int(temp_fAvistaID[2]) if temp_fAvistaID else None
+            fQuant = self.ui.fQuant.Value()
+            fPagePerVolumn = self.ui.fPagePerVolumn.Value()
+            if all((fAvistaID, fQuant, fPagePerVolumn)):
+                fNumerEnd = fNumerBegin + fAvistaID * fQuant * fPagePerVolumn - 1
+            else:
+                fNumerEnd = fNumerBegin
+            self.ui.fNumerEnd.refreshValueNotRaiseEvent(fNumerEnd, True)
+
+    def onDateChangeEvent(self, obj, value):
+        nm = obj.objectName()
+        if nm in ('fCustomerID', 'fEspecieID'):
+            self.tryNumberControl(obj)
+        if nm in ('fQuant', 'fPrice', 'fDesconto', "fTax"):
+            self.cacu_amount(obj)
+        elif nm in ('fNumerBegin', 'fAvistaID', 'fQuant', 'fPagePerVolumn'):
+            self.tryRefreshNumber()
 
     @pyqtSlot()
     def on_butPrint_clicked(self):

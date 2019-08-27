@@ -89,9 +89,8 @@ class myJPTableViewModelEditForm(JPTableViewModelEditForm):
                 return result
         elif role == Qt.DisplayRole and c in [5, 6]:
             rowData = self.TabelFieldInfo.DataRows[r].Datas
-            #tp = rowData[3][1][2]
             v = rowData[c]
-            return JPGetDisplayText(v)
+            return JPGetDisplayText(v, FieldInfo=self.TabelFieldInfo.Fields[c])
         elif role == Qt.TextAlignmentRole and c in [5, 6]:
             return Qt.AlignCenter
         else:

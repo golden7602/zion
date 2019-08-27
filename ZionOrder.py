@@ -114,7 +114,7 @@ class JPMainWindow(QMainWindow):
                 widget.ui.btn = QPushButton(m['fMenuText'])
                 widget.ui.btn.NMID = m['fNMID']
                 widget.ui.btn.setObjectName(m['fObjectName'])
-                setButtonIcon(widget.ui.btn,m['fIcon'])
+                setButtonIcon(widget.ui.btn, m['fIcon'])
                 widget.ui.btn.setEnabled(m['fHasRight'])
                 layout.addWidget(widget.ui.btn)
             QMetaObject.connectSlotsByName(widget)
@@ -188,7 +188,7 @@ if __name__ == "__main__":
     icon.addPixmap(
         QPixmap(getcwd() + "\\res\\ico\\medical_invoice_information.png"))
     MainWindow.setWindowIcon(icon)
-    MainWindow.ui.splitter.setStretchFactor(0,2)
-    MainWindow.ui.splitter.setStretchFactor(1,11)
+    MainWindow.ui.splitter.setStretchFactor(0, 2)
+    MainWindow.ui.splitter.setStretchFactor(1, 11)
     MainWindow.showMaximized()
     sys_exit(app.exec_())
