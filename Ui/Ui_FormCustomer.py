@@ -1,17 +1,12 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'c:\Users\win10\Desktop\Zion\zion\Ui\FormCustomer.ui'
+# Form implementation generated from reading ui file 'e:\Zion\zion\Ui\FormCustomer.ui'
 #
 # Created by: PyQt5 UI code generator 5.11.3
 #
 # WARNING! All changes made in this file will be lost!
 
-from os import getcwd
-from sys import path as jppath
-jppath.append(getcwd())
-from PyQt5 import QtCore, QtGui
-from lib.JPMvc import JPWidgets as QtWidgets
-
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 class Ui_Form(object):
     def setupUi(self, Form):
@@ -41,16 +36,17 @@ class Ui_Form(object):
         self.label.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.label.setObjectName("label")
         self.horizontalLayout_2.addWidget(self.label)
-        self.comboBox = QtWidgets.QComboBox(Form)
-        self.comboBox.setMinimumSize(QtCore.QSize(100, 0))
-        self.comboBox.setToolTip("")
-        self.comboBox.setModelColumn(0)
-        self.comboBox.setObjectName("comboBox")
-        self.horizontalLayout_2.addWidget(self.comboBox)
+        self.lineEdit = QtWidgets.QLineEdit(Form)
+        self.lineEdit.setMinimumSize(QtCore.QSize(0, 25))
+        self.lineEdit.setMaximumSize(QtCore.QSize(200, 25))
+        self.lineEdit.setObjectName("lineEdit")
+        self.horizontalLayout_2.addWidget(self.lineEdit)
         spacerItem1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_2.addItem(spacerItem1)
         self.verticalLayout.addLayout(self.horizontalLayout_2)
         self.tableView = QtWidgets.QTableView(Form)
+        self.tableView.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
+        self.tableView.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
         self.tableView.setObjectName("tableView")
         self.tableView.verticalHeader().setDefaultSectionSize(25)
         self.verticalLayout.addWidget(self.tableView)

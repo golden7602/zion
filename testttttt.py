@@ -1,71 +1,74 @@
 import sys
-from PyQt5.QtCore import (Qt, QAbstractTableModel, QModelIndex, QVariant)
-from PyQt5.QtWidgets import (QApplication, QHBoxLayout, QItemDelegate, QPushButton, QTableView, QWidget)
+from PyQt5.QtWidgets import *
+from PyQt5.QtGui import *
+from PyQt5.QtCore import *
+################################################
+
+items_list = [
+    "C", "C++", "Java", "Python", "JavaScript", "C#", "Swift", "go", "Ruby",
+    "Lua", "PHP"
+]
 
 
-class MyModel(QAbstractTableModel):
-    def __init__(self, parent=None):
-        super(MyModel, self).__init__(parent)
+################################################
+class Widget(QWidget):
+    def __init__(self, *args, **kwargs):
+        super(Widget, self).__init__(*args, **kwargs)
+        layout = QHBoxLayout(self)
+        self.lineedit = QLineEdit(self, minimumWidth=200)
+        self.combobox = QComboBox(self, minimumWidth=200)
+        self.combobox.setEditable(True)
 
-    def rowCount(self, QModelIndex):
-        return 4
+        layout.addWidget(QLabel("QLineEdit", self))
+        layout.addWidget(self.lineedit)
+        layout.addItem(
+            QSpacerItem(20, 20, QSizePolicy.Expanding, QSizePolicy.Minimum))
 
-    def columnCount(self, QModelIndex):
-        return 3
+        layout.addWidget(QLabel("QComboBox", self))
+        layout.addWidget(self.combobox)
 
-    def data(self, index, role):
-        row = index.row()
-        col = index.column()
-        if role == Qt.DisplayRole:
-            return 'Row %d, Column %d' % (row + 1, col + 1)
-        return QVariant()
+        #初始化combobox
+        self.init_lineedit()
+        self.init_combobox()
 
+        #增加选中事件
+        self.combobox.activated.connect(self.on_combobox_Activate)
 
-class MyButtonDelegate(QItemDelegate):
-    def __init__(self, parent=None):
-        super(MyButtonDelegate, self).__init__(parent)
+    def init_lineedit(self):
+        # 增加自动补全
+        self.completer = QCompleter(items_list)
+        # 设置匹配模式  有三种： Qt.MatchStartsWith 开头匹配（默认）  Qt.MatchContains 内容匹配  Qt.MatchEndsWith 结尾匹配
+        self.completer.setFilterMode(Qt.MatchContains)
+        # 设置补全模式  有三种： QCompleter.PopupCompletion（默认）  QCompleter.InlineCompletion   QCompleter.UnfilteredPopupCompletion
+        self.completer.setCompletionMode(QCompleter.PopupCompletion)
+        # 给lineedit设置补全器
+        self.lineedit.setCompleter(self.completer)
 
-    def paint(self, painter, option, index):
-        if not self.parent().indexWidget(index):
-            button_read = QPushButton(
-                self.tr('读'),
-                self.parent(),
-                clicked=self.parent().cellButtonClicked
-            )
-            button_write = QPushButton(
-                self.tr('写'),
-                self.parent(),
-                clicked=self.parent().cellButtonClicked
-            )
-            button_read.index = [index.row(), index.column()]
-            button_write.index = [index.row(), index.column()]
-            h_box_layout = QHBoxLayout()
-            h_box_layout.addWidget(button_read)
-            h_box_layout.addWidget(button_write)
-            h_box_layout.setContentsMargins(0, 0, 0, 0)
-            h_box_layout.setAlignment(Qt.AlignCenter)
-            widget = QWidget()
-            widget.setLayout(h_box_layout)
-            self.parent().setIndexWidget(
-                index,
-                widget
-            )
+    def init_combobox(self):
+        # 增加选项元素
+        for i in range(len(items_list)):
+            self.combobox.addItem(items_list[i])
+        self.combobox.setCurrentIndex(-1)
 
+        # 增加自动补全
+        self.completer = QCompleter(items_list)
+        self.completer.setFilterMode(Qt.MatchContains)
+        self.completer.setCaseSensitivity(Qt.CaseInsensitive)
+        self.completer.setCompletionMode(QCompleter.PopupCompletion)
+        self.combobox.setCompleter(self.completer)
 
-class MyTableView(QTableView):
-    def __init__(self, parent=None):
-        super(MyTableView, self).__init__(parent)
-        self.setItemDelegateForColumn(0, MyButtonDelegate(self))
-
-    def cellButtonClicked(self):
-        print("Cell Button Clicked", self.sender().index)
+    def on_combobox_Activate(self, index):
+        print(self.combobox.count())
+        print(self.combobox.currentIndex())
+        print(self.combobox.currentText())
+        print(self.combobox.currentData())
+        print(self.combobox.itemData(self.combobox.currentIndex()))
+        print(self.combobox.itemText(self.combobox.currentIndex()))
+        print(self.combobox.itemText(index))
 
 
-if __name__ == '__main__':
-    a = QApplication(sys.argv)
-    tableView = MyTableView()
-    myModel = MyModel()
-    tableView.setModel(myModel)
-    tableView.show()
-    a.exec_()
- 
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    w = Widget()
+    w.show()
+    sys.exit(app.exec_())

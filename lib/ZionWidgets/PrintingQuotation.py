@@ -15,6 +15,22 @@ from lib.JPMvc.JPFuncForm import JPFunctionForm
 from lib.ZionWidgets.PrintingOrder import EditForm_PrintingOrder
 from lib.ZionReport.PrintingOrderReportMob import PrintOrder_report_Mob
 from lib.JPMvc.JPEditFormModel import JPEditFormDataMode
+from lib.JPMvc.JPModel import JPTableViewModelReadOnly
+
+
+class _myMod(JPTableViewModelReadOnly):
+    def __init__(self, *args):
+        super().__init__(*args)
+        self.f = QFont()
+        self.f.Black = True
+        self.f.setBold(True)
+        self._getData = self.TabelFieldInfo.getOnlyData
+
+    def data(self, Index, role: int = Qt.DisplayRole):
+        if role == Qt.TextColorRole:
+            if self._getData([Index.row(), 17]) == 1:
+                return QColor(Qt.blue)
+        return super().data(Index, role)
 
 
 class JPFuncForm_PrintingQuotation(JPFunctionForm):
@@ -38,7 +54,8 @@ class JPFuncForm_PrintingQuotation(JPFunctionForm):
                     fCelular as `手机Celular`,
                     fTelefone as `电话Telefone`,
                     fConfirmed as `已确认Confirmed`,
-                    fCustomerID as `客户编号CustomerID`
+                    fCustomerID as `客户编号CustomerID`,
+                    fCreatedOrder
                 from v_quotation
                 where  left(fOrderID,2)='QP'
                 and fCanceled = 0
@@ -62,7 +79,8 @@ class JPFuncForm_PrintingQuotation(JPFunctionForm):
                     fCelular as `手机Celular`,
                     fTelefone as `电话Telefone`,
                     fConfirmed as `已确认Confirmed`,
-                    fCustomerID as `客户编号CustomerID`
+                    fCustomerID as `客户编号CustomerID`,
+                    fCreatedOrder
                 from v_quotation
                 where  left(fOrderID,2)='QP'
                 and fCanceled = 0
@@ -71,7 +89,8 @@ class JPFuncForm_PrintingQuotation(JPFunctionForm):
         self.checkBox_1.setHidden(True)
         self.checkBox_2.setHidden(True)
         super().setListFormSQL(sql_1, sql_2)
-        self.tableView.setColumnHidden(13, True)
+        self.tableView.setColumnHidden(16, True)
+        self.tableView.setColumnHidden(17, True)
         m_sql = """
                 SELECT fOrderID, fCelular, fRequiredDeliveryDate, fContato
                     , fTelefone, fVendedorID, fCustomerID, fOrderDate
@@ -84,18 +103,19 @@ class JPFuncForm_PrintingQuotation(JPFunctionForm):
                 """
         self.setEditFormSQL(m_sql, None)
 
+    def getModelClass(self):
+        return _myMod
+
     def getEditForm(self, sql_main, edit_mode, sql_sub, PKValue):
         return Edit_PrintingQuotation(sql_main=sql_main,
                                       edit_mode=edit_mode,
                                       sql_sub=sql_sub,
                                       PKValue=PKValue)
 
-
-
     @pyqtSlot()
     def on_CmdOrder_clicked(self):
         cu_id = self.getCurrentSelectPKValue()
-        newPKSQL = JPDb().NewPkSQL(self.PKRole)
+        newPKSQL = JPDb().NewPkSQL(5)
         sql = [
             """
         INSERT INTO t_order (fOrderID, fCelular, fRequiredDeliveryDate, fContato
@@ -104,24 +124,29 @@ class JPFuncForm_PrintingQuotation(JPFunctionForm):
                     , fPrice, fLogo, fEspecieID, fAvistaID, fTamanhoID
                     , fNrCopyID, fPagePerVolumn, fNote, fAmount, fDesconto
                     , fTax, fPayable,fEntryID)
-        SELECT '@PK', fCelular, fRequiredDeliveryDate, fContato
-                    , fTelefone, fVendedorID, fCustomerID, fOrderDate
-                    , fSucursal, fQuant, fNumerBegin, fNumerEnd
-                    , fPrice, fLogo, fEspecieID, fAvistaID, fTamanhoID
-                    , fNrCopyID, fPagePerVolumn, fNote, fAmount, fDesconto
-                    , fTax, fPayable,fEntryID
-        FROM t_quotation
-        WHERE fOrderID = '{fOrderID}'""".format(cu_id)
+            SELECT @PK, fCelular, fRequiredDeliveryDate, fContato
+                        , fTelefone, fVendedorID, fCustomerID, fOrderDate
+                        , fSucursal, fQuant, fNumerBegin, fNumerEnd
+                        , fPrice, fLogo, fEspecieID, fAvistaID, fTamanhoID
+                        , fNrCopyID, fPagePerVolumn, fNote, fAmount, fDesconto
+                        , fTax, fPayable,fEntryID
+            FROM t_quotation
+            WHERE fOrderID = '{id}';""".format(id=cu_id), """
+        UPDATE t_quotation SET fCreatedOrder=1 WHERE fOrderID = '{id}';
+        """.format(id=cu_id)
         ]
         sql = newPKSQL[0:2] + sql + newPKSQL[2:]
+        for q in sql:
+            print(q)
         try:
             isOK, result = JPDb().executeTransaction(sql)
             if isOK:
                 info = '已经根据报价单生成了订单【{id}】，请修改此订单信息!\n'
                 info = info + 'The order [{id}] has been generated according '
                 info = info + 'to the quotation. Please modify the order information.'
-                QMessageBox.information(self, info.format(result),
+                QMessageBox.information(self, "提示", info.format(id=result),
                                         QMessageBox.Yes, QMessageBox.Yes)
+                self.refreshListForm()
         except Exception as e:
             msgBox = QMessageBox(QMessageBox.Critical, u'提示', str(e))
             msgBox.exec_()

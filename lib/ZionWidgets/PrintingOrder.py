@@ -128,26 +128,12 @@ class JPFuncForm_PrintingOrder(JPFunctionForm):
                              pk_n=self.EditFormPrimarykeyFieldName,
                              pk_v=cu_id)
             db.executeTransaction([sql, sql1.format(pk_v=cu_id)])
-            self.btnRefreshClick()
+            self.refreshListForm()
 
     @pyqtSlot()
     def on_CmdExportToExcel_clicked(self):
-        sql = """
-        SELECT fOrderID,
-            fQuant AS '数量Qtd',
-            fProductName AS '名称Descrição',
-            fLength AS '长Comp.', 
-            fWidth AS '宽Larg.',
-            fPrice AS '单价P. Unitario', 
-            fAmount AS '金额Total'
-        FROM t_order_detail
-        WHERE fOrderID IN (
-            SELECT 订单号码OrderID FROM ({cur_sql}) Q)"""
-        sql = sql.format(cur_sql=self.currentSQL)
-        tab = JPQueryFieldInfo(sql)
         exp = JPExpExcelFromTabelFieldInfo(self.model.TabelFieldInfo,
                                            self.MainForm)
-        exp.setSubQueryFieldInfo(tab, 0, 0)
         exp.run()
 
 

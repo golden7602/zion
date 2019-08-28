@@ -1,17 +1,12 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'e:\Zion\Ui\FormCustomer_Arrears.ui'
+# Form implementation generated from reading ui file 'e:\Zion\zion\Ui\FormCustomer_Arrears.ui'
 #
 # Created by: PyQt5 UI code generator 5.11.3
 #
 # WARNING! All changes made in this file will be lost!
 
-from os import getcwd
-from sys import path as jppath
-jppath.append(getcwd())
-from PyQt5 import QtCore, QtGui
-from lib.JPMvc import JPWidgets as QtWidgets
-
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 class Ui_Form(object):
     def setupUi(self, Form):
@@ -24,7 +19,7 @@ class Ui_Form(object):
         Form.setFont(font)
         self.verticalLayout = QtWidgets.QVBoxLayout(Form)
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
-        self.verticalLayout.setSpacing(3)
+        self.verticalLayout.setSpacing(2)
         self.verticalLayout.setObjectName("verticalLayout")
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
@@ -39,17 +34,37 @@ class Ui_Form(object):
         self.label.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.label.setObjectName("label")
         self.horizontalLayout_2.addWidget(self.label)
-        self.comboBox = QtWidgets.QComboBox(Form)
-        self.comboBox.setMinimumSize(QtCore.QSize(100, 0))
-        self.comboBox.setObjectName("comboBox")
-        self.horizontalLayout_2.addWidget(self.comboBox)
+        self.lineEdit = QtWidgets.QLineEdit(Form)
+        self.lineEdit.setMinimumSize(QtCore.QSize(0, 25))
+        self.lineEdit.setMaximumSize(QtCore.QSize(200, 25))
+        self.lineEdit.setSizeIncrement(QtCore.QSize(0, 25))
+        self.lineEdit.setObjectName("lineEdit")
+        self.horizontalLayout_2.addWidget(self.lineEdit)
         spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_2.addItem(spacerItem)
         self.verticalLayout.addLayout(self.horizontalLayout_2)
-        self.tableView = QtWidgets.QTableView(Form)
+        self.splitter_2 = QtWidgets.QSplitter(Form)
+        self.splitter_2.setOrientation(QtCore.Qt.Horizontal)
+        self.splitter_2.setObjectName("splitter_2")
+        self.tableView = QtWidgets.QTableView(self.splitter_2)
+        self.tableView.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
+        self.tableView.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
         self.tableView.setObjectName("tableView")
         self.tableView.verticalHeader().setDefaultSectionSize(25)
-        self.verticalLayout.addWidget(self.tableView)
+        self.splitter = QtWidgets.QSplitter(self.splitter_2)
+        self.splitter.setOrientation(QtCore.Qt.Vertical)
+        self.splitter.setObjectName("splitter")
+        self.tableView_order = QtWidgets.QTableView(self.splitter)
+        self.tableView_order.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
+        self.tableView_order.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
+        self.tableView_order.setObjectName("tableView_order")
+        self.tableView_order.verticalHeader().setDefaultSectionSize(25)
+        self.tableView_rec = QtWidgets.QTableView(self.splitter)
+        self.tableView_rec.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
+        self.tableView_rec.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
+        self.tableView_rec.setObjectName("tableView_rec")
+        self.tableView_rec.verticalHeader().setDefaultSectionSize(25)
+        self.verticalLayout.addWidget(self.splitter_2)
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)

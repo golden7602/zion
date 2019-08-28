@@ -75,7 +75,7 @@ class JPFuncForm_Payment(ZionFuncForm):
                                 QMessageBox.Yes | QMessageBox.No,
                                 QMessageBox.No) == QMessageBox.Yes:
             db.executeTransaction(sql)
-            self.btnRefreshClick()
+            self.refreshListForm()
 
     @pyqtSlot()
     def on_CmdEdit_clicked(self):

@@ -2,9 +2,9 @@ from os import getcwd
 from sys import path as jppath
 jppath.append(getcwd())
 
-from PyQt5.QtCore import QDate, QMetaObject, pyqtSlot, Qt
-from PyQt5.QtGui import QPixmap
-from PyQt5.QtWidgets import QMessageBox, QPushButton, QWidget, QCompleter
+from PyQt5.QtCore import QDate, QMetaObject, pyqtSlot, Qt, QModelIndex
+from PyQt5.QtGui import QPixmap, QIcon
+from PyQt5.QtWidgets import QMessageBox, QPushButton, QWidget, QLineEdit
 
 from lib.JPDatabase.Query import JPTabelFieldInfo
 from lib.JPFunction import JPDateConver, setButtonIcon
@@ -22,21 +22,7 @@ class Form_Customer(QWidget):
         self.ui = Ui_Form_List()
         self.ui.setupUi(self)
         mainform.addForm(self)
-        self.SQL = """
-            select 
-                fCustomerID as `ID`, 
-                fCustomerName as `客户名称Cliente`, 
-                fNUIT as `税号NUIT`, 
-                fCity as `城市City`, 
-                fContato as `联系人Contato`, 
-                fCelular as `手机Celular`, 
-                fTelefone as `电话Telefone`, 
-                fEmail as `电子邮件Email`, 
-                fWeb as `主页Web`, 
-                fEndereco as `地址Endereco`, 
-                fFax as `传真Fax` 
-            from  t_customer 
-        """
+
         medit_sql = """
             select 
             fCustomerID as `ID`, 
@@ -54,47 +40,91 @@ class Form_Customer(QWidget):
             from  t_customer
             where fCustomerID={} 
             order by fCustomerName"""
+        icon = QIcon(getcwd() + "\\res\\ico\\search.png")
+        action = self.ui.lineEdit.addAction(icon, QLineEdit.TrailingPosition)
+        action.triggered.connect(self.actionClick)
+
         self.SQL_EditForm_Main = medit_sql
-        self.refreshTable()
-        self.refreshCombobox()
+        self.actionClick()
 
-    def refreshCombobox(self):
-        sql = """select fCustomerID,fCustomerName
-                from  t_customer order by fCustomerName"""
-        tab = JPTabelFieldInfo(sql)
-        cbo = self.ui.comboBox
-        cbo.setEditable(True)
-        cbo.DisabledEvent = True
-        lst = [[item.Datas[1], item.Datas[0]] for item in tab.DataRows]
-        for r in lst:
-            cbo.addItem(r[0], r[1])
-        # 设置自动补全
-        lst = [item.Datas[1] for item in tab.DataRows]
-        qcom = QCompleter(lst)
-        qcom.setCaseSensitivity(Qt.CaseInsensitive)
-        qcom.setCompletionMode(QCompleter.PopupCompletion)
-        qcom.setFilterMode(Qt.MatchContains)
-        cbo.setCompleter(qcom)
+    # def refreshCombobox(self):
+    #     sql = """select fCustomerID,fCustomerName
+    #             from  t_customer order by fCustomerName"""
+    #     tab = JPTabelFieldInfo(sql)
+    #     cbo = self.ui.comboBox
+    #     cbo.setEditable(True)
+    #     cbo.DisabledEvent = True
+    #     lst = [[item.Datas[1], item.Datas[0]] for item in tab.DataRows]
+    #     for r in lst:
+    #         cbo.addItem(r[0], r[1])
+    #     # 设置自动补全
+    #     lst = [item.Datas[1] for item in tab.DataRows]
+    #     qcom = QCompleter(lst)
+    #     qcom.setCaseSensitivity(Qt.CaseInsensitive)
+    #     qcom.setCompletionMode(QCompleter.PopupCompletion)
+    #     qcom.setFilterMode(Qt.MatchContains)
+    #     cbo.setCompleter(qcom)
 
-        cbo.setCurrentIndex(-1)
-        cbo.DisabledEvent = False
+    #     cbo.setCurrentIndex(-1)
+    #     cbo.DisabledEvent = False
+    def __getUID(self):
+        r = self.ui.tableView.currentIndex()
+        if r:
+            return self.dataInfo.DataRows[r.row()].Datas[0]
+        else:
+            return -1
 
-    def refreshTable(self):
-        cbo = self.ui.comboBox
+    def actionClick(self):
+        sql = """
+            select 
+                fCustomerID as `ID`, 
+                fCustomerName as `客户名称Cliente`, 
+                fNUIT as `税号NUIT`, 
+                fCity as `城市City`, 
+                fContato as `联系人Contato`, 
+                fCelular as `手机Celular`, 
+                fTelefone as `电话Telefone`, 
+                fEmail as `电子邮件Email`, 
+                fWeb as `主页Web`, 
+                fEndereco as `地址Endereco`, 
+                fFax as `传真Fax` 
+            from  t_customer 
+            where fCustomerName like '%{}%'"""
+        txt = self.ui.lineEdit.text()
+        txt = txt if txt else ''
+        sql = sql.format(txt)
+
         tv = self.ui.tableView
-        cid = cbo.currentIndex()
-        so = "order by fCustomerName"
-        sw = "where fCustomerID={}"
-        sql = self.SQL + so if (cid == -1) else (self.SQL + sw).format(cid)
         self.dataInfo = JPTabelFieldInfo(sql)
         self.mod = JPTableViewModelEditForm(tv, self.dataInfo)
         tv.setModel(self.mod)
         tv.resizeColumnsToContents()
 
-    def on_comboBox_currentIndexChanged(self, index):
-        if self.ui.comboBox.DisabledEvent:
-            return
-        self.refreshTable()
+        # tv.selectionModel(
+        # ).currentRowChanged[QModelIndex, QModelIndex].connect(self.refreshRec)
+        # tv.selectionModel(
+        # ).currentRowChanged[QModelIndex, QModelIndex].connect(
+        #     self.refreshOrder)
+
+
+
+
+
+        # cbo = self.ui.comboBox
+        # tv = self.ui.tableView
+        # cid = cbo.currentIndex()
+        # so = "order by fCustomerName"
+        # sw = "where fCustomerID={}"
+        # sql = self.SQL + so if (cid == -1) else (self.SQL + sw).format(cid)
+        # self.dataInfo = JPTabelFieldInfo(sql)
+        # self.mod = JPTableViewModelEditForm(tv, self.dataInfo)
+        # tv.setModel(self.mod)
+        # tv.resizeColumnsToContents()
+
+    # def on_comboBox_currentIndexChanged(self, index):
+    #     if self.ui.comboBox.DisabledEvent:
+    #         return
+    #     self.refreshTable()
 
     def addButtons(self, btnNames: list):
         for item in btnNames:
@@ -106,9 +136,9 @@ class Form_Customer(QWidget):
         QMetaObject.connectSlotsByName(self)
 
     def getEditForm(self, sql_main, edit_mode, sql_sub, PKValue):
-        return EditForm_User(sql_main=sql_main,
-                             edit_mode=edit_mode,
-                             PKValue=PKValue)
+        return EditForm_Customer(sql_main=sql_main,
+                                 edit_mode=edit_mode,
+                                 PKValue=PKValue)
 
     def getCurrentSelectPKValue(self):
         index = self.ui.tableView.selectionModel().currentIndex()
@@ -174,7 +204,7 @@ class Form_Customer(QWidget):
             self.refreshTable()
 
 
-class EditForm_User(JPFormModelMain):
+class EditForm_Customer(JPFormModelMain):
     def __init__(self, sql_main, PKValue, edit_mode, flags=Qt.WindowFlags()):
         super().__init__(Ui_Form_Edit(),
                          sql_main=sql_main,

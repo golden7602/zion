@@ -10,11 +10,11 @@ from PyQt5.QtWidgets import (QApplication, QHBoxLayout, QMainWindow,
 from PyQt5.QtGui import QIcon, QPixmap
 from lib.ZionPublc import JPPub, JPUser
 from Ui.Ui_FormMain import Ui_MainWindow
-from lib.JPFunction import readQss, setButtonIconByName, seWindowsIcon
+from lib.JPFunction import readQss, setWidgetIconByName, seWindowsIcon
 from lib.JPDatabase.Database import JPDb, JPDbType
 from lib.ZionWidgets.Background import Form_Background
 from Ui.Ui_FormUserLogin import Ui_Dialog
-from lib.JPFunction import setButtonIconByName, setButtonIcon
+from lib.JPFunction import setWidgetIconByName, setButtonIcon
 from PyQt5.QtCore import QThread, QMetaObject, Qt
 from PyQt5 import sip
 
@@ -61,8 +61,8 @@ class JPMainWindow(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.ui.label_Title.setText("Zion OrderM")
-        setButtonIconByName(self.ui.ChangeUser)
-        setButtonIconByName(self.ui.ChangePassword)
+        setWidgetIconByName(self.ui.ChangeUser)
+        setWidgetIconByName(self.ui.ChangePassword)
         pic = QPixmap(getcwd() + "\\res\\Zions_100.png")
         self.ui.label_logo.setPixmap(pic)
 
@@ -165,7 +165,8 @@ class JPMainWindow(QMainWindow):
             JPFuncForm_PrintingQuotation(self)
         elif self.menu_id == 148:
             from lib.ZionWidgets.Customer_Arrears import Form_FormCustomer_Arrears
-            Form_FormCustomer_Arrears(self)
+            frm=Form_FormCustomer_Arrears(self)
+            frm.addButtons(self.btns)
         elif self.menu_id == 14:  # config
             from lib.ZionWidgets.config import Form_Config
             frm = Form_Config(self)

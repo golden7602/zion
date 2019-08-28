@@ -118,7 +118,7 @@ class JPFuncForm_Complete(_myFuncForm):
         db = JPDb()
         db.executeTransaction(sql.format(cu_id))
         super().on_CmdBrowse_clicked()
-        self.btnRefreshClick()
+        self.refreshListForm()
 
     @pyqtSlot()
     def on_CmdComplete_clicked(self):
@@ -135,7 +135,7 @@ class JPFuncForm_Complete(_myFuncForm):
                                 QMessageBox.Yes | QMessageBox.No,
                                 QMessageBox.No) == QMessageBox.Yes:
             db.executeTransaction(sql)
-            self.btnRefreshClick()
+            self.refreshListForm()
 
     def getEditForm(self, sql_main, edit_mode, sql_sub, PKValue):
         cur_tp = self.getCurrentSelectPKValue()[0:2]

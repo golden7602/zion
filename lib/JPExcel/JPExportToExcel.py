@@ -10,6 +10,7 @@ from PyQt5.QtWidgets import QFileDialog, QMessageBox
 
 from lib.JPDatabase.Query import JPQueryFieldInfo
 from lib.JPFunction import JPGetDisplayText
+from lib.JPDatabase.Field import JPFieldType
 
 
 class xls_alignment():
@@ -177,6 +178,14 @@ class JPExpExcelFromTabelFieldInfo(object):
         al.vert = xls_alignment.VERT_CENTER
         style1.alignment = al
 
+        styleR = xlwt.XFStyle()
+        styleR.borders = borders
+        styleR.pattern = pattern1
+        aR = xlwt.Alignment()
+        aR.horz = xls_alignment.HORZ_RIGHT
+        aR.vert = xls_alignment.VERT_CENTER
+        styleR.alignment = aR
+
         # 开始导出数据
         main_row = 1
         for i in range(len(tab)):
@@ -184,10 +193,11 @@ class JPExpExcelFromTabelFieldInfo(object):
                 self.MainForm.ProgressBar.setValue(i)
             except Exception:
                 pass
-            # 尝试导出子表
+            # 调用函数，尝试导出子表
             sub_rows = self.__expSub(
                 sheet, style1, main_row, mian_cols,
                 tab.DataRows[i].Datas[self.linkMainTableFieldIndex])
+            # 导出主表
             if sub_rows > 0:
                 row1 = main_row
                 row2 = main_row + sub_rows - 1
@@ -202,9 +212,12 @@ class JPExpExcelFromTabelFieldInfo(object):
             else:
                 for col_main in range(mian_cols):
                     v = JPGetDisplayText(tab.DataRows[i].Datas[col_main],
-                                         FieldInfo=tab.Fields[i])
+                                         FieldInfo=tab.Fields[col_main])
                     #print(main_row, col_main)
-                    sheet.write(main_row, col_main, v, style1)
+                    tp = tab.Fields[col_main].TypeCode
+                    styleTemp = styleR if tp in (JPFieldType.Int,
+                                                 JPFieldType.Float) else style1
+                    sheet.write(main_row, col_main, v, styleTemp)
             main_row = main_row + (sub_rows if sub_rows else 1)
         try:
             self.MainForm.Label.setText('')

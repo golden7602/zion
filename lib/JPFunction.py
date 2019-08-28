@@ -28,20 +28,19 @@ def md5_passwd(str0, salt='al;dkfjgutriepw,cmvnfjisjmwudnus000999'):
 
 def setButtonIcon(btn: QPushButton, filename=None):
     fn = filename if filename else btn.text()
-    icon = QIcon()
-    icon.addPixmap(QPixmap(getcwd() + "\\res\\ico\\" + fn), QIcon.Normal,
-                   QIcon.Off)
+    icon = QIcon(getcwd() + "\\res\\ico\\" + fn)
     btn.setIcon(icon)
 
 
-def setButtonIconByName(btn: QPushButton):
-    fn = getcwd() + "\\res\\ico\\" + btn.objectName() + ".png"
-    if isinstance(btn, QLabel):
+def setWidgetIconByName(ctl: QPushButton):
+    fn = getcwd() + "\\res\\ico\\" + ctl.objectName() + ".png"
+    if isinstance(ctl, QLabel):
         pix = QPixmap(fn)
-        btn.setPixmap(pix)
+        ctl.setPixmap(pix)
 
-    if isinstance(btn, QPushButton):
-        setButtonIcon(btn, fn)
+    if isinstance(ctl, QPushButton):
+        icon = QIcon(fn)
+        ctl.setIcon(icon)
 
 
 def findButtonAndSetIcon(Widget: QWidget):

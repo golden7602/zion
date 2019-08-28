@@ -2,7 +2,7 @@ from os import getcwd
 from sys import path as jppath
 jppath.append(getcwd())
 
-from PyQt5.QtCore import (QMetaObject, Qt, pyqtSlot, QThread)
+from PyQt5.QtCore import (QMetaObject, Qt, pyqtSlot, QThread, QModelIndex)
 from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtWidgets import (QMessageBox, QPushButton, QTreeWidgetItem,
                              QTreeWidgetItemIterator, QWidget)
@@ -48,8 +48,7 @@ class Form_User(QWidget):
         self.mod = JPTableViewModelEditForm(tb, self.dataInfo)
         tb.setModel(self.mod)
         tb.resizeColumnsToContents()
-        tb.selectionModel().currentChanged.connect(
-            self.on_tableView_currentChanged)
+
         self.SQL_EditForm_Main = """
                 select fUserID as `编号 ID`,
                 fUsername as `用户名Name` ,
@@ -58,6 +57,10 @@ class Form_User(QWidget):
                 '' as fPassword,
                 fNotes as `备注Note` , fEnabled
                 from sysusers  WHERE fUserID = '{}'"""
+
+        tb.selectionModel(
+        ).currentRowChanged[QModelIndex, QModelIndex].connect(
+            self.on_tableView_currentChanged)
 
     def checkDirty(self):
         try:
@@ -70,10 +73,9 @@ class Form_User(QWidget):
         self.ui.treeWidget.dirty = True
 
     def on_tableView_currentChanged(self, index1, index2):
-        if index2.row() == -1:
-            return
-        if self.checkDirty():
-            self.saveRight(index2)
+        if index2.row() != -1:
+            if self.checkDirty():
+                self.saveRight(index2)
         uid = self.dataInfo.DataRows[index1.row()].Data(0)
         ins_sql = """
             INSERT INTO sysuserright (fUserID, fRightID, fHasRight)
@@ -135,7 +137,7 @@ class Form_User(QWidget):
         for item in btnNames:
             btn = QPushButton(item['fMenuText'])
             btn.setObjectName(item['fObjectName'])
-            setButtonIcon(btn,item['fIcon'])
+            setButtonIcon(btn, item['fIcon'])
             btn.setEnabled(item['fHasRight'])
             self.ui.horizontalLayout_Button.addWidget(btn)
         QMetaObject.connectSlotsByName(self)

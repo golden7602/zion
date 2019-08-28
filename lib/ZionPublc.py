@@ -10,7 +10,7 @@ from PyQt5.QtCore import QThread, pyqtSignal, Qt, QObject
 from PyQt5.QtGui import QIcon
 from Ui.Ui_FormUserLogin import Ui_Dialog as Ui_Dialog_Login
 from Ui.Ui_FormChangePassword import Ui_Dialog as Ui_Dialog_ChnPwd
-from lib.JPFunction import md5_passwd, setButtonIconByName
+from lib.JPFunction import md5_passwd, setWidgetIconByName
 
 
 class Form_ChangePassword(QDialog):
@@ -18,7 +18,7 @@ class Form_ChangePassword(QDialog):
         super().__init__(parent=parent, flags=flags)
         self.ui = Ui_Dialog_ChnPwd()
         self.ui.setupUi(self)
-        setButtonIconByName(self.ui.Login_64)
+        setWidgetIconByName(self.ui.Login_64)
         self.exec_()
 
     def accept(self):
@@ -54,7 +54,7 @@ class Form_UserLogin(QDialog):
         super().__init__()
         self.ui = Ui_Dialog_Login()
         self.ui.setupUi(self)
-        setButtonIconByName(self.ui.Login_64)
+        setWidgetIconByName(self.ui.Login_64)
         self.isLogin = isLogin
         us = JPUser()
         for r in [r for r in us.getAllUserList() if r[0] > 1]:

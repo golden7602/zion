@@ -182,7 +182,7 @@ class JPFuncForm_Order(JPFunctionForm):
                              pk_n=self.EditFormPrimarykeyFieldName,
                              pk_v=cu_id)
             db.executeTransaction([sql, sql1.format(pk_v=cu_id)])
-            self.btnRefreshClick()
+            self.refreshListForm()
 
 
 class EditForm_Order(JPFormModelMainHasSub):

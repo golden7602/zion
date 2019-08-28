@@ -82,35 +82,8 @@ class JPFuncForm_Adjustment(ZionFuncForm):
                                 QMessageBox.Yes | QMessageBox.No,
                                 QMessageBox.No) == QMessageBox.Yes:
             db.executeTransaction(sql)
-            self.btnRefreshClick()
+            self.refreshListForm()
 
     @pyqtSlot()
     def on_CmdAdjustment_clicked(self):
         super().on_CmdEdit_clicked()
-
-    # def but_click(self, name):
-    #     for n, fun in JPFuncForm_Complete.__dict__.items():
-    #         if n.upper() == 'BTN{}CLICKED'.format(name.upper()):
-    #             fun(self)
-
-    # def getCurrentCustomerID(self):
-    #     index = self.tableView.selectionModel().currentIndex()
-    #     if index.isValid():
-    #         return self.model.TabelFieldInfo.getOnlyData([index.row(), 0])
-
-    # @pyqtSlot()
-    # def on_CMDEXPORTTOEXCEL_clicked(self):
-    #     print('单击了CMDEXPORTTOEXCEL按钮')
-
-    # @pyqtSlot()
-    # def on_CMDNEW_clicked(self):
-    #     print("CMDNEW被下")
-    #     #showEditForm_Order(self.MainForm, JPFormModelMainSub.New)
-
-    # @pyqtSlot()
-    # def on_CMDBROWSE_clicked(self):
-    #     cu_id = self.getCurrentCustomerID()
-    #     if not cu_id:
-    #         return
-    #     #showEditForm_Order(self.MainForm, JPFormModelMainSub.ReadOnly, cu_id)
-    #     print("CMDBROWSE被下", cu_id)

@@ -53,9 +53,9 @@ class JPFunctionForm(QWidget):
         # 以下为初始化部分
         self.ui.comboBox.addItems(['Today', 'Last Month', 'Last Year', 'All'])
         self.ui.comboBox.setCurrentIndex(1)
-        self.ui.checkBox_1.clicked.connect(self.btnRefreshClick)
-        self.ui.checkBox_2.clicked.connect(self.btnRefreshClick)
-        self.ui.comboBox.activated['int'].connect(self.btnRefreshClick)
+        self.ui.checkBox_1.clicked.connect(self.refreshListForm)
+        self.ui.checkBox_2.clicked.connect(self.refreshListForm)
+        self.ui.comboBox.activated['int'].connect(self.refreshListForm)
         # 行交错颜色
         self.ui.tableView.setAlternatingRowColors(True)
         self.SQL_EditForm_Main = None
@@ -69,7 +69,7 @@ class JPFunctionForm(QWidget):
         '''
         self.SQL_ListForm_Para = sql_with_where
         self.SQL_ListForm_Base = sql_base
-        self.btnRefreshClick()
+        self.refreshListForm()
 
     def __getTableNameInfo(self, sql, errType=1):
         # 返回一个指定SQL语句的表名和条件字段名
@@ -135,7 +135,7 @@ class JPFunctionForm(QWidget):
         '''删除行之前查检用方法，可重载'''
         return True
 
-    def btnRefreshClick(self, ID=None):
+    def refreshListForm(self, ID=None):
         # 记录按钮状态
         dict_but = {
             but: but.isEnabled()
@@ -244,7 +244,7 @@ class JPFunctionForm(QWidget):
                                edit_mode=JPEditFormDataMode.New,
                                PKValue=None)
         frm.setListForm(self)
-        frm.afterSaveData.connect(self.btnRefreshClick)
+        frm.afterSaveData.connect(self.refreshListForm)
         self.__EditForm = None
         self.__EditForm = frm
         self.afterCreateEditForm.emit(JPEditFormDataMode.New)
@@ -260,7 +260,7 @@ class JPFunctionForm(QWidget):
                                edit_mode=JPEditFormDataMode.Edit,
                                PKValue=cu_id)
         frm.setListForm(self)
-        frm.afterSaveData.connect(self.btnRefreshClick)
+        frm.afterSaveData.connect(self.refreshListForm)
         self.__EditForm = None
         self.__EditForm = frm
         self.afterCreateEditForm.emit(JPEditFormDataMode.Edit)
@@ -283,7 +283,7 @@ class JPFunctionForm(QWidget):
 
     @pyqtSlot()
     def on_CmdRefresh_clicked(self):
-        self.btnRefreshClick()
+        self.refreshListForm()
 
     @pyqtSlot()
     def on_CmdDelete_clicked(self):
