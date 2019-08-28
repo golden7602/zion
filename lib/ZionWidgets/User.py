@@ -54,7 +54,7 @@ class Form_User(QWidget):
                 fUsername as `用户名Name` ,
                 fNickname as `昵称Nickname`,
                 fDepartment as `部门Department`,
-                '' as fPassword,
+                fPassword as 密码Password,
                 fNotes as `备注Note` , fEnabled
                 from sysusers  WHERE fUserID = '{}'"""
 
@@ -167,6 +167,9 @@ class Form_User(QWidget):
 
     @pyqtSlot()
     def on_CmdEdit_clicked(self):
+        errt='编辑用户信息时，必须修改用户密码。\nWhen editing user information, user passwords must be changed '
+        QMessageBox.information(None, '提示', errt, QMessageBox.Yes,
+                                        QMessageBox.Yes)
         cu_id = self.getCurrentSelectPKValue()
         if not cu_id:
             return
@@ -256,10 +259,14 @@ class EditForm_User(JPFormModelMain):
         self.ui.butPrint.hide()
         self.ui.butPDF.hide()
         self.ui.fUserID.setEnabled(False)
+        self.ui.fPassword.setEnabled(True)
+        self.ui.fPassword.refreshValueNotRaiseEvent("1234",True)
         self.ui.fPassword.passWordConver = md5_passwd
 
     def onFirstHasDirty(self):
         self.ui.butSave.setEnabled(True)
+
+
 
     # @pyqtSlot()
     # def on_butSave_clicked(self):

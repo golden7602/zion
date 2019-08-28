@@ -75,7 +75,7 @@ class Form_UserLogin(QDialog):
         pwd = self.ui.Password.text()
         sql0 = """
             select fUserID from sysusers 
-            where fUserName='{uid}' and fPassword='{pwd}'"""
+            where fUserName='{username}' and fPassword='{pwd}'"""
         sql1 = """
             select fUserID from sysusers 
             where fUserID='{uid}' and fPassword='{pwd}' 
@@ -83,7 +83,7 @@ class Form_UserLogin(QDialog):
         if all((pwd, uid)):
             isAdmin = 1 if uid.upper() == 'ADMIN' else 0
             if isAdmin:
-                sql = sql0.format(pwd=md5_passwd(pwd), uid=uid)
+                sql = sql0.format(pwd=md5_passwd(pwd), username=uid)
             else:
                 sql = sql1.format(pwd=md5_passwd(pwd),
                                   uid=self.ui.User.currentData())
