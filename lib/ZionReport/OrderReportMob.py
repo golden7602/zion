@@ -462,14 +462,14 @@ class Order_report_Mob(JPReport):
                    FormatString='{:,.2f}',
                    AlignmentFlag=Qt.AlignRight,
                    Font=self.font_YaHei_8)
-        RF.AddItem(1,
+        RF.AddItem(3,
                    0,
                    0,
-                   390,
-                   100,
+                   430,
+                   80,
                    "fNote1",
-                   FormatString='Note:Esta cotação é válida por 7 dias.\n{}',
-                   Bolder=False,
+                   FormatString='备注Note:\n{}',
+                   Bolder=True,
                    AlignmentFlag=(Qt.AlignLeft | Qt.TextWordWrap),
                    Font=self.font_YaHei_8)
         # 签字部分
@@ -561,7 +561,7 @@ class Order_report_Mob(JPReport):
         SQL = """SELECT o.*
                     , if(isnull(fNote), ' ', fNote) AS fNote1
                     , d.fQuant, d.fProductName, d.fLength, d.fWidth, d.fPrice
-                    , d.fAmount AS fAmountDetail
+                    , d.fAmount AS fAmountDetail,if(isnull(fNote),' ',fNote) as fNote1
                 FROM v_order o
                     RIGHT JOIN t_order_detail d ON o.fOrderID = d.fOrderID
                 WHERE d.fOrderID = '{}'"""

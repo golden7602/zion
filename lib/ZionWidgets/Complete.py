@@ -34,7 +34,7 @@ class _myMod(JPTableViewModelReadOnly):
                 return QColor(Qt.blue)
         return super().data(Index, role)
 
-
+    
 class _myFuncForm(JPFunctionForm):
     def __init__(self, parent):
         super().__init__(parent)
@@ -43,6 +43,7 @@ class _myFuncForm(JPFunctionForm):
                     , fCustomerID, fNote,fEntryID,fSucursal
                     , fContato, fCelular  ,fTelefone
                     , fNUIT, fCity, fEndereco
+                    ,' ' as fAmount,' ' as fDesconto,' ' as fTax,' ' as fPayable, ' ' as fPrice
                 FROM v_order_readonly
                 WHERE fOrderID = '{}'
                 """
@@ -60,6 +61,7 @@ class _myFuncForm(JPFunctionForm):
                     , fLogo, fEspecieID, fAvistaID, fTamanhoID, fNrCopyID
                     , fPagePerVolumn, fNote, fEntryID, fContato, fCelular
                     , fTelefone, fNUIT, fCity, fEndereco
+                    ,' ' as fAmount,' ' as fDesconto,' ' as fTax,' ' as fPayable, ' ' as fPrice
                 FROM v_order_readonly
                 WHERE fOrderID = '{}'
             """
@@ -153,15 +155,15 @@ def hideObject(ui):
     ui.butSave.hide()
     ui.butPrint.hide()
     ui.butPDF.hide()
-    ui.label.hide()
-    ui.label_13.hide()
-    ui.label_14.hide()
-    ui.label_15.hide()
-    ui.fAmount.hide()
-    ui.fDesconto.hide()
-    ui.fTax.hide()
-    ui.fPayable.hide()
-    ui.verticalLayout_2.hide()
+    # ui.label.hide()
+    # ui.label_13.hide()
+    # ui.label_14.hide()
+    # ui.label_15.hide()
+    # ui.fAmount.hide()
+    # ui.fDesconto.hide()
+    # ui.fTax.hide()
+    # ui.fPayable.hide()
+    #ui.verticalLayout_2.hide()
 
 
 class EditForm_Order(JPFormModelMainHasSub):

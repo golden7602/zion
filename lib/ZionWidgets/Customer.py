@@ -47,26 +47,6 @@ class Form_Customer(QWidget):
         self.SQL_EditForm_Main = medit_sql
         self.actionClick()
 
-    # def refreshCombobox(self):
-    #     sql = """select fCustomerID,fCustomerName
-    #             from  t_customer order by fCustomerName"""
-    #     tab = JPTabelFieldInfo(sql)
-    #     cbo = self.ui.comboBox
-    #     cbo.setEditable(True)
-    #     cbo.DisabledEvent = True
-    #     lst = [[item.Datas[1], item.Datas[0]] for item in tab.DataRows]
-    #     for r in lst:
-    #         cbo.addItem(r[0], r[1])
-    #     # 设置自动补全
-    #     lst = [item.Datas[1] for item in tab.DataRows]
-    #     qcom = QCompleter(lst)
-    #     qcom.setCaseSensitivity(Qt.CaseInsensitive)
-    #     qcom.setCompletionMode(QCompleter.PopupCompletion)
-    #     qcom.setFilterMode(Qt.MatchContains)
-    #     cbo.setCompleter(qcom)
-
-    #     cbo.setCurrentIndex(-1)
-    #     cbo.DisabledEvent = False
     def __getUID(self):
         r = self.ui.tableView.currentIndex()
         if r:
@@ -89,7 +69,9 @@ class Form_Customer(QWidget):
                 fEndereco as `地址Endereco`, 
                 fFax as `传真Fax` 
             from  t_customer 
-            where fCustomerName like '%{}%'"""
+            where fCustomerName like '%{}%'
+            order by fCustomerName
+            """
         txt = self.ui.lineEdit.text()
         txt = txt if txt else ''
         sql = sql.format(txt)
@@ -100,31 +82,9 @@ class Form_Customer(QWidget):
         tv.setModel(self.mod)
         tv.resizeColumnsToContents()
 
-        # tv.selectionModel(
-        # ).currentRowChanged[QModelIndex, QModelIndex].connect(self.refreshRec)
-        # tv.selectionModel(
-        # ).currentRowChanged[QModelIndex, QModelIndex].connect(
-        #     self.refreshOrder)
-
-
-
-
-
-        # cbo = self.ui.comboBox
-        # tv = self.ui.tableView
-        # cid = cbo.currentIndex()
-        # so = "order by fCustomerName"
-        # sw = "where fCustomerID={}"
-        # sql = self.SQL + so if (cid == -1) else (self.SQL + sw).format(cid)
-        # self.dataInfo = JPTabelFieldInfo(sql)
-        # self.mod = JPTableViewModelEditForm(tv, self.dataInfo)
-        # tv.setModel(self.mod)
-        # tv.resizeColumnsToContents()
-
-    # def on_comboBox_currentIndexChanged(self, index):
-    #     if self.ui.comboBox.DisabledEvent:
-    #         return
-    #     self.refreshTable()
+    def refreshTable(self):
+        self.ui.lineEdit.setText(None)
+        self.actionClick()
 
     def addButtons(self, btnNames: list):
         for item in btnNames:
@@ -202,7 +162,6 @@ class Form_Customer(QWidget):
                                 QMessageBox.Yes) == QMessageBox.Yes:
             JPDb().executeTransaction(sql.format(uid))
             self.refreshTable()
-
 
 class EditForm_Customer(JPFormModelMain):
     def __init__(self, sql_main, PKValue, edit_mode, flags=Qt.WindowFlags()):

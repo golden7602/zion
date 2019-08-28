@@ -881,6 +881,7 @@ class JPReport(object):
     def Printer(self, Printer):
         # 重置相关内部属性，恢复页码，设置纸型
         self.CurrentPage = 0
+        self._CurrentCopys = 0
         if self.__Reseted is False:
             self.PageCount = 0
         self._SectionPrintBeginY = 0

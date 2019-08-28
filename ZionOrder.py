@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python 
 # -*- coding: UTF-8 -*-
 from os import getcwd
 from sys import path as jppath, argv, exit as sys_exit
