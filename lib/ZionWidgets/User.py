@@ -11,9 +11,23 @@ from lib.JPDatabase.Database import JPDb
 from lib.JPDatabase.Query import JPTabelFieldInfo
 from lib.JPFunction import JPDateConver, md5_passwd, setButtonIcon
 from lib.JPMvc.JPEditFormModel import JPEditFormDataMode, JPFormModelMain
-from lib.JPMvc.JPModel import JPTableViewModelEditForm
+from lib.JPMvc.JPModel import JPTableViewModelReadOnly
 from Ui.Ui_FormUser import Ui_Form as Ui_Form_List
 from Ui.Ui_FormUserEdit import Ui_Form as Ui_Form_Edit
+from PyQt5.QtGui import QColor
+
+
+class myJPTableViewModelReadOnly(JPTableViewModelReadOnly):
+    def __init__(self, tableView, tabelFieldInfo):
+        super().__init__(tableView, tabelFieldInfo)
+
+    def data(self, Index, role=Qt.DisplayRole):
+        r = Index.row()
+        if role == Qt.TextColorRole and self.TabelFieldInfo.DataRows[
+                r].Datas[5] == "Non":
+            return QColor(Qt.red)
+
+        return super().data(Index, role)
 
 
 class Form_User(QWidget):
@@ -45,7 +59,7 @@ class Form_User(QWidget):
 
         tb = self.ui.tableView
         self.dataInfo = JPTabelFieldInfo(self.SQL)
-        self.mod = JPTableViewModelEditForm(tb, self.dataInfo)
+        self.mod = myJPTableViewModelReadOnly(tb, self.dataInfo)
         tb.setModel(self.mod)
         tb.resizeColumnsToContents()
 
@@ -167,9 +181,8 @@ class Form_User(QWidget):
 
     @pyqtSlot()
     def on_CmdEdit_clicked(self):
-        errt='编辑用户信息时，必须修改用户密码。\nWhen editing user information, user passwords must be changed '
-        QMessageBox.information(None, '提示', errt, QMessageBox.Yes,
-                                        QMessageBox.Yes)
+        errt = '编辑用户信息时，必须修改用户密码。\nWhen editing user information, user passwords must be changed '
+        QMessageBox.information(None, '提示', errt)
         cu_id = self.getCurrentSelectPKValue()
         if not cu_id:
             return
@@ -260,25 +273,8 @@ class EditForm_User(JPFormModelMain):
         self.ui.butPDF.hide()
         self.ui.fUserID.setEnabled(False)
         self.ui.fPassword.setEnabled(True)
-        self.ui.fPassword.refreshValueNotRaiseEvent("1234",True)
+        self.ui.fPassword.refreshValueNotRaiseEvent("1234", True)
         self.ui.fPassword.passWordConver = md5_passwd
 
     def onFirstHasDirty(self):
         self.ui.butSave.setEnabled(True)
-
-
-
-    # @pyqtSlot()
-    # def on_butSave_clicked(self):
-    #     try:
-    #         lst = self.getSqls(self.PKRole)
-    #         isOK, result = JPDb().executeTransaction(lst)
-    #         if isOK:
-    #             self.ui.butSave.setEnabled(False)
-    #             self.afterSaveData.emit(result)
-    #             QMessageBox.information(self, '完成',
-    #                                     '保存数据完成！\nSave data complete!',
-    #                                     QMessageBox.Yes, QMessageBox.Yes)
-    #     except Exception as e:
-    #         msgBox = QMessageBox(QMessageBox.Critical, u'提示', str(e))
-    #         msgBox.exec_()

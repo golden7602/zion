@@ -31,22 +31,27 @@ class Form_ChangePassword(QDialog):
         new_pw2 = self.ui.ConfirmPassword.text()
         uid = JPUser().currentUserID()
         if not all((old_pw, new_pw, new_pw2)):
-            msgbox("请完整输入！")
+            msgbox('请完整输入！\nPlease complete the form')
             return False
         sql = """
             select fUserID from sysusers
-             where fUserName='{uid}' and fPassword='{pwd}'
+             where fUserID='{uid}' and fPassword='{pwd}'
              """.format(uid=uid, pwd=md5_passwd(old_pw))
         if not JPDb().getDataList(sql):
-            msgbox("密码错误！")
+            msgbox('密码错误！\nPassword error!')
             return False
         if new_pw != new_pw2:
-            msgbox("两次输入新密码不一致！")
+            msgbox(
+                '两次输入新密码不一致！\nYour confirmed password and new password do not match'
+            )
             return False
         sql = """
             update sysusers set fPassword='{pwd}' 
-            where fUserName='{uid}'""".format(uid=uid, pwd=md5_passwd(new_pw))
-        self.hide()
+            where fUserID='{uid}'""".format(uid=uid, pwd=md5_passwd(new_pw))
+        result = JPDb().executeTransaction(sql)
+        if result:
+            msgbox('密码修改完成。\nSuccessful password modification.')
+        self.close()
 
 
 class Form_UserLogin(QDialog):
@@ -115,7 +120,7 @@ class JPUser(QObject):
 
     def reFreshAllUser(self):
         db = JPDb()
-        sql = """select fUserID,fUsername from sysusers where fUserID=1 or ord(fEnabled)=1"""
+        sql = """select fUserID,fUsername from sysusers where fUserID=1 or fEnabled=1"""
         self.__AllUser = db.getDataList(sql)
 
     def currentUserID(self):
@@ -134,27 +139,36 @@ class JPUser(QObject):
 
     def INIT(self):
         self.reFreshAllUser()
-        #self.__refreshCurrentUserRight()
+
 
     def __refreshCurrentUserRight(self):
         db = JPDb()
         uid = self.currentUserID()
-        sql = """
+        sql_1 = """
+            SELECT 1, n.fNMID, n.fDispIndex, n.fParentId, 
+                n.fMenuText, n.fObjectName, n.fIcon, 
+                n.fIsCommandButton+0 AS fIsCommandButton, 
+                1 as fHasRight
+            FROM sysnavigationmenus n
+				where n.fNMID in (1,11,13,135,136,137) or n.fDefault=1
+        """
+        sql_else = """
             SELECT ur.fUserID, n.fNMID, n.fDispIndex, n.fParentId, 
                 n.fMenuText, n.fObjectName, n.fIcon, 
-                ord(n.fIsCommandButton) AS fIsCommandButton, 
-                ord(ur.fHasRight) as fHasRight
+                n.fIsCommandButton+0 AS fIsCommandButton, 
+                ur.fHasRight+0 as fHasRight
             FROM sysnavigationmenus n
-                RIGHT JOIN (
+                left JOIN (
                     SELECT *
                     FROM sysuserright
                     WHERE fUserID = {}
                 ) ur
                 ON n.fNMID = ur.fRightID
-            WHERE ord(n.fEnabled) = 1
-            ORDER BY n.fDispIndex
+            WHERE (n.fEnabled = 1 and ur.fHasRight=1) or n.fDefault=1
+            ORDER BY n.fParentId, n.fDispIndex
         """.format(uid)
-        re = db.getDict(sql)
+        exesql = sql_1 if uid == 1 else sql_else
+        re = db.getDict(exesql)
         menu = [r for r in re if r['fIsCommandButton'] == 0]
         for r in menu:
             r['btns'] = [

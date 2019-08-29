@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'e:\Zion\Ui\FormChangePassword.ui'
+# Form implementation generated from reading ui file 'e:\Zion\zion\Ui\FormChangePassword.ui'
 #
 # Created by: PyQt5 UI code generator 5.11.3
 #
@@ -12,9 +12,9 @@ class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
         Dialog.setWindowModality(QtCore.Qt.ApplicationModal)
-        Dialog.resize(379, 215)
-        Dialog.setMinimumSize(QtCore.QSize(379, 215))
-        Dialog.setMaximumSize(QtCore.QSize(379, 215))
+        Dialog.resize(379, 220)
+        Dialog.setMinimumSize(QtCore.QSize(379, 220))
+        Dialog.setMaximumSize(QtCore.QSize(379, 220))
         font = QtGui.QFont()
         font.setFamily("Arial")
         Dialog.setFont(font)
@@ -69,6 +69,7 @@ class Ui_Dialog(object):
         self.gridLayout.addWidget(self.label_2, 0, 0, 1, 1)
         self.OldPassword = QtWidgets.QLineEdit(Dialog)
         self.OldPassword.setMinimumSize(QtCore.QSize(0, 25))
+        self.OldPassword.setEchoMode(QtWidgets.QLineEdit.Password)
         self.OldPassword.setObjectName("OldPassword")
         self.gridLayout.addWidget(self.OldPassword, 0, 1, 1, 1)
         self.label_3 = QtWidgets.QLabel(Dialog)
@@ -88,13 +89,16 @@ class Ui_Dialog(object):
         self.gridLayout.addWidget(self.label_5, 2, 0, 1, 1)
         self.ConfirmPassword = QtWidgets.QLineEdit(Dialog)
         self.ConfirmPassword.setMinimumSize(QtCore.QSize(0, 25))
+        self.ConfirmPassword.setEchoMode(QtWidgets.QLineEdit.Password)
         self.ConfirmPassword.setObjectName("ConfirmPassword")
         self.gridLayout.addWidget(self.ConfirmPassword, 2, 1, 1, 1)
         self.verticalLayout.addLayout(self.gridLayout)
+        spacerItem2 = QtWidgets.QSpacerItem(20, 50, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        self.verticalLayout.addItem(spacerItem2)
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
-        spacerItem2 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_2.addItem(spacerItem2)
+        spacerItem3 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_2.addItem(spacerItem3)
         self.buttonBox = QtWidgets.QDialogButtonBox(Dialog)
         self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
         self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel|QtWidgets.QDialogButtonBox.Ok)

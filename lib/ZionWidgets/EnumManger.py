@@ -134,17 +134,3 @@ class EditForm_Enum(JPFormModelMain):
     def onFirstHasDirty(self):
         self.ui.butSave.setEnabled(True)
 
-    # @pyqtSlot()
-    # def on_butSave_clicked(self):
-    #     try:
-    #         lst = self.getSqls(self.PKRole)
-    #         isOK, result = JPDb().executeTransaction(lst)
-    #         if isOK:
-    #             self.ui.butSave.setEnabled(False)
-    #             self.afterSaveData.emit(result)
-    #             QMessageBox.information(self, '完成',
-    #                                     '保存数据完成！\nSave data complete!',
-    #                                     QMessageBox.Yes, QMessageBox.Yes)
-    #     except Exception as e:
-    #         msgBox = QMessageBox(QMessageBox.Critical, u'提示', str(e))
-    #         msgBox.exec_()

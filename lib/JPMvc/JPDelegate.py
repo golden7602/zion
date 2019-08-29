@@ -139,6 +139,7 @@ class JPDelegate_DateEdit(_JPDelegate_Base):
     def createEditor(self, parent: QWidget, option: QStyleOptionViewItem,
                      index: QModelIndex) -> QWidget:
         wdgt = QDateEdit(parent)
+        wdgt.setDisplayFormat("yyyy-MM-dd")
         wdgt.setDate(datetime.date.today())
         wdgt.setCalendarPopup(True)
         return wdgt

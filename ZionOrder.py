@@ -1,4 +1,4 @@
-#!/usr/bin/python 
+#!/usr/bin/python
 # -*- coding: UTF-8 -*-
 from os import getcwd
 from sys import path as jppath, argv, exit as sys_exit
@@ -172,6 +172,9 @@ class JPMainWindow(QMainWindow):
             frm = Form_Config(self)
             frm.setWindowTitle("COnfig")
             seWindowsIcon(frm)
+        elif self.menu_id == 147:  # backup
+            from lib.ZionWidgets.Backup import Form_Backup
+            Form_Backup(self)
         else:
             Form_Background(self)
 

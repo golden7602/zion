@@ -50,7 +50,6 @@ class JPDb(object):
                                         QMessageBox.Yes)
                     exit()
                 config = ConfigParser()
-
                 config.read("config.ini", encoding="utf-8")
                 kw = dict(config._sections["database"])
                 try:

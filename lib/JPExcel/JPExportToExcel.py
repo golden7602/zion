@@ -229,12 +229,9 @@ class JPExpExcelFromTabelFieldInfo(object):
         except Exception as e:
             errstr = '写入文件出错！\nWrite file error!\n'
             errstr = errstr + Exception.__repr__(e)
-            QMessageBox.information(self.MainForm, '', errstr, QMessageBox.Yes,
-                                    QMessageBox.Yes) == QMessageBox.Yes
+            QMessageBox.information(self.MainForm, '', errstr)
         QMessageBox.information(self.MainForm, '',
-                                '导出数据完成！\nExport to excel complete!',
-                                QMessageBox.Yes,
-                                QMessageBox.Yes) == QMessageBox.Yes
+                                '导出数据完成！\nExport to excel complete!')
 
     def __expSub(self, sheet, style, cur_row, maincols, linkData) -> int:
         if self.SubQueryFieldInfo is None:

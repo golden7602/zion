@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'e:\Zion\Ui\FormOrderMob.ui'
+# Form implementation generated from reading ui file 'e:\Zion\zion\Ui\FormOrderMob.ui'
 #
 # Created by: PyQt5 UI code generator 5.11.3
 #
@@ -284,6 +284,10 @@ class Ui_Form(object):
         self.horizontalLayout_7.setObjectName("horizontalLayout_7")
         self.tableView = QtWidgets.QTableView(Form)
         self.tableView.setMinimumSize(QtCore.QSize(0, 200))
+        font = QtGui.QFont()
+        font.setFamily("Arial")
+        font.setPointSize(10)
+        self.tableView.setFont(font)
         self.tableView.setObjectName("tableView")
         self.horizontalLayout_7.addWidget(self.tableView)
         spacerItem5 = QtWidgets.QSpacerItem(0, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)

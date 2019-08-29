@@ -144,8 +144,7 @@ class JPFuncForm_PrintingQuotation(JPFunctionForm):
                 info = '已经根据报价单生成了订单【{id}】，请修改此订单信息!\n'
                 info = info + 'The order [{id}] has been generated according '
                 info = info + 'to the quotation. Please modify the order information.'
-                QMessageBox.information(self, "提示", info.format(id=result),
-                                        QMessageBox.Yes, QMessageBox.Yes)
+                QMessageBox.information(self, "提示", info.format(id=result))
                 self.refreshListForm()
         except Exception as e:
             msgBox = QMessageBox(QMessageBox.Critical, u'提示', str(e))

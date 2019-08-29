@@ -4,7 +4,7 @@ from sys import path as jppath
 jppath.append(getcwd())
 
 from PyQt5.QtCore import pyqtSlot, Qt, QModelIndex
-from PyQt5.QtGui import QPixmap
+from PyQt5.QtGui import QPixmap, QFont
 from PyQt5.QtWidgets import QMessageBox
 
 from lib.JPDatabase.Database import JPDb
@@ -24,13 +24,49 @@ from lib.JPExcel.JPExportToExcel import JPExpExcelFromTabelFieldInfo
 class OrderMod(JPTableViewModelReadOnly):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.tabFont = QFont("Times", 10)
+        self.tabFont.setBold(False)
+        self.tabFont.setStretch(150)
 
     def data(self, index, role=Qt.DisplayRole):
         r = index.row()
         c = index.column()
+        tab = self.TabelFieldInfo
+        curid = tab.DataRows[r].Datas[0]
+
+        # if role == Qt.FontRole and c == 15:
+        #     return self.tabFont
+
+        # if role == Qt.DisplayRole and c == 15:
+        #     # 如果主表只有一行
+        #     if len(tab) == 1:
+        #         return "─"
+        #     # 如果是主表第一行
+        #     if r == 0:
+        #         if curid != tab.DataRows[1].Datas[0]:
+        #             return "─"
+        #         else:
+        #             return "┌"
+        #     # 如果是主表最后一行
+        #     if r == (len(tab)-1):
+        #         if curid == tab.DataRows[r-1].Datas[0]:
+        #             return "└"
+        #         else:
+        #             return "─"
+        #     # 如果是中间行
+        #     nxtid = tab.DataRows[r+1].Datas[0]
+        #     preid = tab.DataRows[r-1].Datas[0]
+        #     if curid == nxtid and curid == preid:
+        #         return "├"
+        #     if curid == nxtid and curid != preid:
+        #         return "┌"
+        #     if curid != nxtid and curid == preid:
+        #         return "└"
+        #     if curid != nxtid and curid != preid:
+        #         return "─"
+
         if role == Qt.DisplayRole and r > 0 and c <= 14:
-            if self.TabelFieldInfo.DataRows[r].Datas[
-                    0] == self.TabelFieldInfo.DataRows[r - 1].Datas[0]:
+            if curid == tab.DataRows[r - 1].Datas[0]:
                 return ""
         return super().data(index, role=role)
 

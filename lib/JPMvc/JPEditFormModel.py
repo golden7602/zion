@@ -247,8 +247,7 @@ class JPFormModelMain(QDialog):
                 # self.MainModle.setEditState(False)
                 self.afterSaveData.emit(result)
                 QMessageBox.information(self, '完成',
-                                        '保存数据完成！\nSave data complete!',
-                                        QMessageBox.Yes, QMessageBox.Yes)
+                                        '保存数据完成！\nSave data complete!')
         except Exception as e:
             msgBox = QMessageBox(QMessageBox.Critical, u'提示', str(e))
             msgBox.exec_()
@@ -431,10 +430,10 @@ class JPFormModelMainHasSub(JPFormModelMain):
         mod = self.SubModel
         opt1 = menu.addAction("AddNew增加")
         opt2 = menu.addAction("Delete删除")
-        index =self.ui.tableView.selectionModel().currentIndex().row()
+        index = self.ui.tableView.selectionModel().currentIndex().row()
         opt1.setEnabled(False)
-        opt2.setEnabled((index == -1
-                         or index != (len(mod.TabelFieldInfo) - 1)))
+        opt2.setEnabled((index == -1 or index !=
+                         (len(mod.TabelFieldInfo) - 1)))
         action = menu.exec_(tv.mapToGlobal(pos))
         if action == opt1:
             mod.insertRows(len(mod.DataRows))
@@ -614,8 +613,7 @@ class JPFormModelMainHasSub(JPFormModelMain):
                 # self.MainModle.setEditState(False)
                 self.afterSaveData.emit(result)
                 QMessageBox.information(self, '完成',
-                                        '保存数据完成！\nSave data complete!',
-                                        QMessageBox.Yes, QMessageBox.Yes)
+                                        '保存数据完成！\nSave data complete!')
         except Exception as e:
             msgBox = QMessageBox(QMessageBox.Critical, u'提示', str(e))
             msgBox.exec_()

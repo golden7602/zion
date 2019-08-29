@@ -293,7 +293,7 @@ class EditForm_PrintingOrder(JPFormModelMain):
                 txt = txt + 'There are identical but uncertain documents '
                 txt = txt + 'under the name of the selected customer, '
                 txt = txt + 'and no new documents can be added'
-                QMessageBox.information(self, "提示", txt, QMessageBox.Cancel)
+                QMessageBox.information(self, "提示", txt)
                 obj.setCurrentIndex(-1)
                 return
             else:

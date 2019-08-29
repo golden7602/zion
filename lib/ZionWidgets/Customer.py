@@ -9,11 +9,24 @@ from PyQt5.QtWidgets import QMessageBox, QPushButton, QWidget, QLineEdit
 from lib.JPDatabase.Query import JPTabelFieldInfo
 from lib.JPFunction import JPDateConver, setButtonIcon
 from lib.JPMvc.JPEditFormModel import JPEditFormDataMode, JPFormModelMain
-from lib.JPMvc.JPModel import JPTableViewModelEditForm
+from lib.JPMvc.JPModel import JPTableViewModelReadOnly
 from lib.ZionPublc import JPDb
 from Ui.Ui_FormCustomer import Ui_Form as Ui_Form_List
 from Ui.Ui_FormCustomerEdit import Ui_Form as Ui_Form_Edit
 from lib.JPDatabase.Query import JPQueryFieldInfo
+
+
+# class myJPTableViewModelReadOnly(JPTableViewModelReadOnly):
+#     def __init__(self, tableView, tabelFieldInfo):
+#         super().__init__(tableView, tabelFieldInfo)
+
+#     def data(self, Index, role=Qt.DisplayRole):
+#         r = Index.row()
+#         if role == Qt.TextColorRole and self.TabelFieldInfo.DataRows[r].Datas[
+#                 5] == "Non":
+#             return QColor(Qt.red)
+
+#         return super().data(Index, role)
 
 
 class Form_Customer(QWidget):
@@ -78,7 +91,7 @@ class Form_Customer(QWidget):
 
         tv = self.ui.tableView
         self.dataInfo = JPTabelFieldInfo(sql)
-        self.mod = JPTableViewModelEditForm(tv, self.dataInfo)
+        self.mod = JPTableViewModelReadOnly(tv, self.dataInfo)
         tv.setModel(self.mod)
         tv.resizeColumnsToContents()
 
@@ -189,8 +202,7 @@ class EditForm_Customer(JPFormModelMain):
                 self.ui.butSave.setEnabled(False)
                 self.afterSaveData.emit(result)
                 QMessageBox.information(self, '完成',
-                                        '保存数据完成！\nSave data complete!',
-                                        QMessageBox.Yes, QMessageBox.Yes)
+                                        '保存数据完成！\nSave data complete!')
         except Exception as e:
             msgBox = QMessageBox(QMessageBox.Critical, u'提示', str(e))
             msgBox.exec_()

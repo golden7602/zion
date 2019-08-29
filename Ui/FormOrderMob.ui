@@ -824,6 +824,12 @@
          <height>200</height>
         </size>
        </property>
+       <property name="font">
+        <font>
+         <family>Arial</family>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
       </widget>
      </item>
      <item>

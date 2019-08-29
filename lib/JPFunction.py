@@ -8,7 +8,7 @@ from os import getcwd
 from sys import path as jppath
 jppath.append(getcwd())
 
-from PyQt5.QtCore import QDate, Qt
+from PyQt5.QtCore import QDate, Qt, QDateTime
 from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtWidgets import QLabel, QPushButton, QWidget
 
@@ -279,6 +279,22 @@ def _(value, vCls=str):
     if vCls is QDate:
         return cur_date
     if vCls is datetime.date:
+        return value
+    raise TypeError("JPDateConver函数vCls参数类型错误！")
+
+
+@JPDateConver.register(datetime.datetime)
+def _(value, vCls=str):
+    cur_date = QDateTime(value.year, value.month, value.day, value.hour,
+                         value.minute, value.second)
+    if vCls is str:
+        return cur_date.toString("yyyy-MM-dd HH:mm:ss")
+    if vCls is QDate:
+        return QDate(cur_date)
+    if vCls is datetime.date:
+        return datetime.date(cur_date.year(), cur_date.month(),
+                             cur_date.day()).date()
+    if vCls is datetime.datetime:
         return value
     raise TypeError("JPDateConver函数vCls参数类型错误！")
 

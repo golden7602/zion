@@ -553,7 +553,7 @@ class Form_Search(QDialog):
         rng = self.Model.rowCount() - bz
         if rng == 0:
             txt = '没有输入有效查询条件！\nNo valid query conditions are entered!'
-            if QMessageBox.information(self, "提示", txt, QMessageBox.Ok):
+            if QMessageBox.information(self, "提示", txt):
                 return
             return
         # 检查括号是否配对
@@ -566,7 +566,7 @@ class Form_Search(QDialog):
                 kh_r += 1
         if kh_l != kh_r:
             txt = "括号不匹配！"
-            if QMessageBox.information(self, "提示", txt, QMessageBox.Ok):
+            if QMessageBox.information(self, "提示", txt):
                 return
         # 检查每一行是否输入完整
         for i in range(rng):
@@ -574,8 +574,7 @@ class Form_Search(QDialog):
             if row_ok is False:
                 txt = '第【{n}】行条件输入不完整！\n'
                 txt = txt + 'Line [{n}] condition input is incomplete!'
-                QMessageBox.information(self, "提示", txt.format(n=i + 1),
-                                        QMessageBox.Ok)
+                QMessageBox.information(self, "提示", txt.format(n=i + 1))
                 return
 
         # 开始生成表达式
@@ -595,7 +594,7 @@ class Form_Search(QDialog):
         sql = sql.format(txt=txt, base_sql=self.BaseSQL)
         self.whereStringCreated.emit(sql)
         self.close()
-        #QMessageBox.information(self, "提示", txt, QMessageBox.Ok)
+        
         return
 
     def cellButtonClicked(self, *args):
