@@ -87,3 +87,11 @@ class JPFuncForm_Adjustment(ZionFuncForm):
     @pyqtSlot()
     def on_CmdAdjustment_clicked(self):
         super().on_CmdEdit_clicked()
+
+    def onAfterCreatedForm(self, cur_tp, form):
+        for nm in form.ObjectDict.keys():
+            form.ObjectDict[nm].setEnabled(False)
+        form.ui.fPrice.setEnabled(True)
+        form.ui.fTax.setEnabled(True)
+
+        return super().onAfterCreatedForm(cur_tp, form)

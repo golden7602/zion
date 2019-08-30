@@ -234,23 +234,29 @@ class JPFormModelMain(QDialog):
         """保存数据后执行，请覆盖"""
         return
 
+    @pyqtSlot()   
+    def onBefortSaveData(self):
+        """函数返回值为False时取消保存"""
+        return True
+
     @pyqtSlot()
     def on_butSave_clicked(self):
-        try:
-            lst = self.getSqls(self.PKRole)
-            isOK, result = JPDb().executeTransaction(lst)
-            if isOK:
-                self.onAfterSaveData(result)
-                self.ui.butSave.setEnabled(False)
-                self.ui.butPrint.setEnabled(True)
-                self.ui.butPDF.setEnabled(True)
-                # self.MainModle.setEditState(False)
-                self.afterSaveData.emit(result)
-                QMessageBox.information(self, '完成',
-                                        '保存数据完成！\nSave data complete!')
-        except Exception as e:
-            msgBox = QMessageBox(QMessageBox.Critical, u'提示', str(e))
-            msgBox.exec_()
+        if self.onBefortSaveData():
+            try:
+                lst = self.getSqls(self.PKRole)
+                isOK, result = JPDb().executeTransaction(lst)
+                if isOK:
+                    self.onAfterSaveData(result)
+                    self.ui.butSave.setEnabled(False)
+                    self.ui.butPrint.setEnabled(True)
+                    self.ui.butPDF.setEnabled(True)
+                    # self.MainModle.setEditState(False)
+                    self.afterSaveData.emit(result)
+                    QMessageBox.information(self, '完成',
+                                            '保存数据完成！\nSave data complete!')
+            except Exception as e:
+                msgBox = QMessageBox(QMessageBox.Critical, u'提示', str(e))
+                msgBox.exec_()
 
     @pyqtSlot()
     def on_butPrint_clicked(self):

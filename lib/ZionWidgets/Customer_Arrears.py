@@ -36,7 +36,7 @@ class Form_FormCustomer_Arrears(QWidget):
                 c.fCustomerName as `客户名称Cliente`, 
                 c.fNUIT as `税号NUIT`, 
                 c.fCity as `城市City`,
-                QDD.dd AS 订单金额OrderAmount,
+                QDD.dd AS 订单应付金额OrderPayable,
                 QSK.sk AS Aeceivables收款, 
                 QDD.dd - QSK.sk AS Arrears欠款
             FROM t_customer c
@@ -47,7 +47,7 @@ class Form_FormCustomer_Arrears(QWidget):
                 ) QSK
                 ON QSK.fCustomerID = c.fCustomerID
                 LEFT JOIN (
-                    SELECT fCustomerID, SUM(fAmount) AS dd
+                    SELECT fCustomerID, SUM(fPayable) AS dd
                     FROM t_order
                     WHERE fCanceled = 0
                         AND fConfirmed = 1
@@ -81,14 +81,14 @@ class Form_FormCustomer_Arrears(QWidget):
 
     def refreshOrder(self):
         sql = """
-        SELECT fOrderID,
-            fOrderDate,
-            fPrice,
-            fQuant,
-            fAmount,
-            fDesconto,
-            fTax,
-            fPayable
+        SELECT fOrderID as 订单号码OrderID,
+            fOrderDate as 日期OrderDate,
+            fPrice as '单价P. Unitario' ,
+            fQuant AS '数量Qtd',
+            fAmount as 金额SubTotal,
+            fDesconto as 折扣Desconto,
+            fTax as 税金IVA,
+            fPayable as `应付金额Valor a Pagar`
         FROM t_order
         WHERE fCustomerID={uid}
         ORDER BY  fOrderDate Desc"""
@@ -100,11 +100,11 @@ class Form_FormCustomer_Arrears(QWidget):
         tv.resizeColumnsToContents()
 
     def refreshRec(self):
-        sql = """SELECT fID,
-            fReceiptDate,
-            e.fTitle AS 收款方式 ,
-            fAmountCollected,
-            u.fUsername
+        sql = """SELECT fID as 流水号ID,
+            fReceiptDate as 收款日期ReceiptDate,
+            e.fTitle AS 收款方式ModoPago,
+            fAmountCollected as 收款额AmountCollected,
+            u.fUsername as 收款人fPayee
         FROM t_receivables AS r
         LEFT JOIN t_enumeration AS e
             ON r.fPaymentMethodID=e.fItemID

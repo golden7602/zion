@@ -24,9 +24,9 @@ class Form_Receivables(QWidget):
         findButtonAndSetIcon(self)
         mainform.addForm(self)
         self.SQLCustomerArrearsList = """
-            select c.fCustomerID,
+            select c.fCustomerID as 客户编号ID,
                 c.fCustomerName as `客户名Cliente`,
-                c.fCity,
+                c.fCity as 城市City,
             if(	YS.fYS=0,null,YS.fYS) as `应收合计TotalReceivables`,
                 if(SK.fSK=0,null,SK.fSK) as `收款累计SumRec`,
                 if(if(isnull(YS.fYS),0,YS.fYS)-if(isnull(SK.fSK),0,SK.fSK)=0,null,if(isnull(YS.fYS),0,YS.fYS)-if(isnull(SK.fSK),0,SK.fSK)) as `欠款Arrears`,
@@ -123,19 +123,30 @@ class Form_Receivables(QWidget):
                 Q.TS DESC
         """
         self.SQLCurrentDayRec = """
-            select 
-            fid as 流水号ID, 
-            fCustomerID as 客户编号CustomerID, 
-            fCustomerName as 客户名Cliente, 
-            fReceiptDate as 收款日期ReceiptDate, 
-            fAmountCollected as 收款额AmountCollected, 
-            fPayee as 收款人fPayee 
-            from  v_receivables as r 
-            where 
-            r.fReceiptDate = STR_TO_DATE('{dateString}', '%Y-%m-%d') 
-            order by 
-            fID DESC
+            SELECT fID as 流水号ID,
+                    fCustomerID as 客户编号CustomerID,
+                    fCustomerName as 客户名Cliente,
+                    fReceiptDate as 收款日期ReceiptDate,
+                    fAmountCollected as 收款额AmountCollected,
+                    fPayee as 收款人fPayee,
+                    fPaymentMethod AS 收款方式ModoPago
+            FROM v_receivables as r           
+            WHERE 
+                r.fReceiptDate = STR_TO_DATE('{dateString}', '%Y-%m-%d') 
+            order by fID DESC
         """
+        self.SQLSumPaymentMethod = """
+            SELECT e.fTitle AS `收款方式PaymentMethod` ,
+                    sum(fAmountCollected) AS `收款合计Collection of receipts`,
+                    count(fID) AS `收款笔数Number of Payments Received`
+            FROM t_receivables AS r
+            LEFT JOIN t_enumeration AS e
+                ON r.fPaymentMethodID=e.fItemID
+            WHERE 
+                r.fReceiptDate = STR_TO_DATE('{dateString}', '%Y-%m-%d') 
+            GROUP BY  r.fPaymentMethodID
+
+            """
         self.ui.SelectDate.dateChanged.connect(self.dateChanged)
         self.ui.SelectDate.setDate(QDate.currentDate())
         self.currentCustomerChanged()
@@ -152,7 +163,7 @@ class Form_Receivables(QWidget):
             btn.setObjectName(item['fObjectName'])
             setButtonIcon(btn,item['fIcon'])
             btn.setEnabled(item['fHasRight'])
-            self.ui.horizontalLayout_Button.addWidget(btn)
+            self.ui.horizontalLayout_3.addWidget(btn)
         QMetaObject.connectSlotsByName(self)
 
     @pyqtSlot()
@@ -202,7 +213,13 @@ class Form_Receivables(QWidget):
             self.SQLCurrentDayRec.format(dateString=str_date))
         self.modCurrentDayRec = JPTableViewModelReadOnly(
             self.ui.tabCurrentDayRec, self.QinfoCurrentDayRec)
+        self.tabFangShiTongJi = JPQueryFieldInfo(
+            self.SQLSumPaymentMethod.format(dateString=str_date))
+        self.modFangShiTongJi = JPTableViewModelReadOnly(
+            self.ui.SumPaymentMethod, self.tabFangShiTongJi)
         self.ui.tabCurrentDayRec.setModel(self.modCurrentDayRec)
+        self.ui.SumPaymentMethod.setModel(self.modFangShiTongJi)
+        self.ui.SumPaymentMethod.resizeColumnsToContents()
         self.ui.tabCurrentDayRec.selectionModel(
         ).currentRowChanged[QModelIndex, QModelIndex].connect(
             self.currentCustomerChanged)

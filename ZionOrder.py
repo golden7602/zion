@@ -165,7 +165,7 @@ class JPMainWindow(QMainWindow):
             JPFuncForm_PrintingQuotation(self)
         elif self.menu_id == 148:
             from lib.ZionWidgets.Customer_Arrears import Form_FormCustomer_Arrears
-            frm=Form_FormCustomer_Arrears(self)
+            frm = Form_FormCustomer_Arrears(self)
             frm.addButtons(self.btns)
         elif self.menu_id == 14:  # config
             from lib.ZionWidgets.config import Form_Config

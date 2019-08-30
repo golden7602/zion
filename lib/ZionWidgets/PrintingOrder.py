@@ -178,6 +178,17 @@ class EditForm_PrintingOrder(JPFormModelMain):
         if self.isEditMode or self.isReadOnlyMode:
             self.onDateChangeEvent(self.ui.fCustomerID, None)
 
+        # 设置必输入字段
+        self.ui.fEspecieID.FieldInfo.NotNull = True
+        self.ui.fAvistaID.FieldInfo.NotNull = True
+        self.ui.fQuant.FieldInfo.NotNull = True
+        self.ui.fPagePerVolumn.FieldInfo.NotNull = True
+        self.ui.fTamanhoID.FieldInfo.NotNull = True
+        self.ui.fPrice.FieldInfo.NotNull = True
+        self.ui.fRequiredDeliveryDate.FieldInfo.NotNull = True
+        self.ui.fVendedorID.FieldInfo.NotNull = True
+        self.ui.fNrCopyID.FieldInfo.NotNull = True
+
     def __onTaxKeyPress(self, KeyEvent: QKeyEvent):
         if (KeyEvent.modifiers() == Qt.AltModifier
                 and KeyEvent.key() == Qt.Key_Delete):
@@ -250,7 +261,7 @@ class EditForm_PrintingOrder(JPFormModelMain):
             # 编辑和新增加状态时，设定起始、结束值的验证器
             if self.EditMode == JPEditFormDataMode.New:
                 obj_begin.refreshValueNotRaiseEvent(beginNum, True)
-            obj_begin.setIntValidator(beginNum + 1, 999999999999)
+            obj_begin.setIntValidator(beginNum, 999999999999)
             obj_begin.setEnabled(True)
 
     def tryNumberControl(self, obj):

@@ -15,6 +15,7 @@ from lib.JPMvc.JPModel import JPTableViewModelReadOnly
 from Ui.Ui_FormUser import Ui_Form as Ui_Form_List
 from Ui.Ui_FormUserEdit import Ui_Form as Ui_Form_Edit
 from PyQt5.QtGui import QColor
+from lib.ZionPublc import JPUser
 
 
 class myJPTableViewModelReadOnly(JPTableViewModelReadOnly):
@@ -278,3 +279,7 @@ class EditForm_User(JPFormModelMain):
 
     def onFirstHasDirty(self):
         self.ui.butSave.setEnabled(True)
+
+    def onAfterSaveData(self, data):
+        JPUser().INIT()
+        super().onAfterSaveData(data)

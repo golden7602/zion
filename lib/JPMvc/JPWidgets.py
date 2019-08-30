@@ -14,7 +14,7 @@ from PyQt5.QtCore import QDate, pyqtSignal, Qt, QObject
 from PyQt5.QtWidgets import (QCheckBox as QCheckBox_, QComboBox as QComboBox_,
                              QDateEdit as QDateEdit_, QLineEdit as QLineEdit_,
                              QTextEdit as QTextEdit_, QWidget as QWidget_,
-                             QCompleter)
+                             QCompleter, QMessageBox)
 from lib.JPDatabase.Database import JPDb
 from lib.JPDatabase.Field import JPFieldType
 from lib.JPDatabase.Query import JPTabelRowData
@@ -38,6 +38,8 @@ class _JPDoubleValidator(QDoubleValidator):
         self.max = v2
 
     def validate(self, vstr, pos):
+        if (vstr is None) or (vstr == ''):
+            return QValidator.Acceptable, vstr, pos
         str0 = vstr.replace(',', '')
         if str0 == '':
             return QValidator.Intermediate, vstr, pos
@@ -63,12 +65,16 @@ class _JPIntValidator(QValidator):
         self.max = v2
 
     def validate(self, vstr, pos):
+        if (vstr is None) or (vstr == ''):
+            return QValidator.Acceptable, vstr, pos
         str0 = vstr.replace(',', '')
         mt = re.match(r"^-?[1-9]\d*$", str0, flags=(re.I))
         if mt:
             if self.min <= int(str0) <= self.max:
-                return QValidator.Acceptable, vstr, pos
-        return QValidator.Invalid, vstr, pos
+                return QValidator.Acceptable, str0, pos
+            elif self.min > int(str0):
+                return QValidator.Intermediate, str0, pos
+        return QValidator.Invalid, str0, pos
 
 
 class __JPWidgetBase(QObject):
@@ -155,6 +161,7 @@ class QLineEdit(QLineEdit_, __JPWidgetBase):
     def __init__(self, parent):
         super().__init__(parent)
         self.passWordConver = None
+        self.Validator = None
         self.textChanged[str].connect(self.__onlyRefreshDisplayText)
 
     def getSqlValue(self) -> str:
@@ -231,10 +238,12 @@ class QLineEdit(QLineEdit_, __JPWidgetBase):
         Validator.setRange(float(v_Min), float(v_Max))
         Validator.setDecimals(Decimals)
         self.setValidator(Validator)
+        self.Validator = Validator
 
     def setIntValidator(self, v_Min: int, v_Max: int):
         Validator = _JPIntValidator(v_Min, v_Max)
         self.setValidator(Validator)
+        self.Validator = Validator
 
     def __onlyRefreshDisplayText(self, v):
         self.setText(v)
@@ -254,7 +263,28 @@ class QLineEdit(QLineEdit_, __JPWidgetBase):
             QLineEdit_.focusInEvent(self, e)
 
     def focusOutEvent(self, e):
-        self.refreshValueNotRaiseEvent(self.text())
+        txt = self.text()
+        errtxt = '您输入的值小于允许值，已经自动调整为最小合法值。\n'
+        errtxt = errtxt + 'The value you entered is less than '
+        errtxt = errtxt + 'the allowable value and has been '
+        errtxt = errtxt + 'automatically adjusted to the minimum legal value.'
+        if txt:
+            if self.Validator:
+                min = self.Validator.min
+                cur = None
+                if isinstance(min, float):
+                    cur = float(txt)
+                if isinstance(min, int):
+                    cur = int(txt)
+                if cur < min:
+                    QMessageBox.warning(self.parent(), "提示", errtxt)
+                    self.refreshValueNotRaiseEvent(str(min), True)
+                else:
+                    self.refreshValueNotRaiseEvent(txt, True)
+            else:
+                self.refreshValueNotRaiseEvent(txt, True)
+        else:
+            self.refreshValueNotRaiseEvent(txt, True)
         super()._onValueChange(self.FieldInfo.Value)
         QLineEdit_.focusOutEvent(self, e)
 
