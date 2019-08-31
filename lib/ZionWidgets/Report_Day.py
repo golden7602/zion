@@ -219,7 +219,7 @@ class FormReport_Day_print(JPReport):
                                  0,
                                  100 * 13,
                                  40,
-                                 'Zion Year Report收款日报表',
+                                 'Zion Year Report收款年报表',
                                  Bolder=False,
                                  AlignmentFlag=(Qt.AlignCenter),
                                  Font=self.font_YaHei_10)

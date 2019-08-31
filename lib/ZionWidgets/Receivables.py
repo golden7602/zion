@@ -13,12 +13,17 @@ from Ui.Ui_FormReceivableEdit import Ui_Form as Edit_ui
 from PyQt5.QtGui import QPixmap
 from lib.ZionPublc import JPPub, JPUser
 from lib.JPMvc import JPWidgets
-from lib.JPExcel.JPExportToExcel import JPExpExcelFromTabelFieldInfo
+from lib.JPExcel.JPExportToExcel import JPExpExcelFromManyTabelFieldInfo
+from PyQt5.QtGui import QColor, QFont
+from lib.JPFunction import JPGetDisplayText
+from lib.JPPrintReport import JPReport
+from PyQt5.QtPrintSupport import QPrinter
 
 
 class Form_Receivables(QWidget):
     def __init__(self, mainform):
         super().__init__()
+        self.MainForm = mainform
         self.ui = Ui_Form()
         self.ui.setupUi(self)
         findButtonAndSetIcon(self)
@@ -148,11 +153,10 @@ class Form_Receivables(QWidget):
 
             """
         self.ui.SelectDate.dateChanged.connect(self.dateChanged)
+        # 引发一次日期修改事件，刷新 左上、右上
         self.ui.SelectDate.setDate(QDate.currentDate())
+        # 引发一次事件，刷新左下、右下
         self.currentCustomerChanged()
-        # self.ui.tabCurrentDayRec.cellActivated.connect(self.__formChange)
-        # self.ui.tabCustomerArrearsList.cellActivated.connect(self.__formChange)
-        # self.ui.tabCustomerRecorder.cellActivated.connect(self.__formChange)
 
     def __formChange(self, *args):
         print(args)
@@ -161,14 +165,14 @@ class Form_Receivables(QWidget):
         for item in btnNames:
             btn = QPushButton(item['fMenuText'])
             btn.setObjectName(item['fObjectName'])
-            setButtonIcon(btn,item['fIcon'])
+            setButtonIcon(btn, item['fIcon'])
             btn.setEnabled(item['fHasRight'])
             self.ui.horizontalLayout_3.addWidget(btn)
         QMetaObject.connectSlotsByName(self)
 
-    @pyqtSlot()
-    def on_SelectDate_dateChanged(self, *args):
-        return
+    # @pyqtSlot()
+    # def on_SelectDate_dateChanged(self, *args):
+    #     return
 
     def __setEnabled(self, frm):
         frm.ui.fCustomerID.setEditable(True)
@@ -202,28 +206,46 @@ class Form_Receivables(QWidget):
 
     @pyqtSlot()
     def on_CmdExportToExcel_clicked(self):
-        pass
-        # exp = JPExpExcelFromTabelFieldInfo(self.model.TabelFieldInfo,
-        #                                    self.MainForm)
-        # exp.run()
+        exp = JPExpExcelFromManyTabelFieldInfo(
+            self.tabinfoCurrentDayRec,
+            self.tabinfoFangShiTongJi,
+            self.tableinfoCustomerRecorder,
+            self.tableinfoCustomerArrearsList,
+            MainForm=self.MainForm)
+        exp.run()
+
+    @pyqtSlot()
+    def on_CmdDailyRreport_clicked(self):
+        if len(self.tabinfoCurrentDayRec) == 0:
+            return
+        p = FormReport_Rec_print(JPDateConver(self.ui.SelectDate.date(),
+                                              str), self.tabinfoCurrentDayRec,
+                                 self.tabinfoFangShiTongJi)
+        p.BeginPrint()
 
     def dateChanged(self, s_data):
         str_date = JPDateConver(self.ui.SelectDate.date(), str)
-        self.QinfoCurrentDayRec = JPQueryFieldInfo(
+
+        # 设置当前日收款记录（左上）
+        self.tabinfoCurrentDayRec = JPQueryFieldInfo(
             self.SQLCurrentDayRec.format(dateString=str_date))
         self.modCurrentDayRec = JPTableViewModelReadOnly(
-            self.ui.tabCurrentDayRec, self.QinfoCurrentDayRec)
-        self.tabFangShiTongJi = JPQueryFieldInfo(
-            self.SQLSumPaymentMethod.format(dateString=str_date))
-        self.modFangShiTongJi = JPTableViewModelReadOnly(
-            self.ui.SumPaymentMethod, self.tabFangShiTongJi)
+            self.ui.tabCurrentDayRec, self.tabinfoCurrentDayRec)
         self.ui.tabCurrentDayRec.setModel(self.modCurrentDayRec)
-        self.ui.SumPaymentMethod.setModel(self.modFangShiTongJi)
-        self.ui.SumPaymentMethod.resizeColumnsToContents()
+        self.ui.tabCurrentDayRec.resizeColumnsToContents()
         self.ui.tabCurrentDayRec.selectionModel(
         ).currentRowChanged[QModelIndex, QModelIndex].connect(
             self.currentCustomerChanged)
-        self.currentCustomerChanged()
+
+        # 设置当前日收款方式统计（右上）
+        self.tabinfoFangShiTongJi = JPQueryFieldInfo(
+            self.SQLSumPaymentMethod.format(dateString=str_date))
+        self.modFangShiTongJi = JPTableViewModelReadOnly(
+            self.ui.SumPaymentMethod, self.tabinfoFangShiTongJi)
+        self.ui.SumPaymentMethod.setModel(self.modFangShiTongJi)
+        self.ui.SumPaymentMethod.resizeColumnsToContents()
+
+        #self.currentCustomerChanged()
 
     def currentCustomerChanged(self):
         id = -1
@@ -231,20 +253,24 @@ class Form_Receivables(QWidget):
         if index.isValid():
             id = self.modCurrentDayRec.TabelFieldInfo.getOnlyData(
                 [index.row(), 1])
-        self.QinfoCustomerRecorder = JPQueryFieldInfo(
+        # 刷新左下
+        self.tableinfoCustomerRecorder = JPQueryFieldInfo(
             self.SQLCustomerRecorder.format(CustomerID=id))
-        self.QinfoCustomerArrearsList = JPQueryFieldInfo(
-            self.SQLCustomerArrearsList.format(CustomerID=id))
         self.modCustomerRecorder = JPTableViewModelReadOnly(
-            self.ui.tabCustomerRecorder, self.QinfoCustomerRecorder)
-        self.modCustomerArrearsList = JPTableViewModelReadOnly(
-            self.ui.tabCustomerArrearsList, self.QinfoCustomerArrearsList)
-        self.ui.tabCurrentDayRec.setModel(self.modCurrentDayRec)
-        self.ui.tabCurrentDayRec.resizeColumnsToContents()
+            self.ui.tabCustomerRecorder, self.tableinfoCustomerRecorder)
         self.ui.tabCustomerRecorder.setModel(self.modCustomerRecorder)
         self.ui.tabCustomerRecorder.resizeColumnsToContents()
+
+        # 刷新右下
+        self.tableinfoCustomerArrearsList = JPQueryFieldInfo(
+            self.SQLCustomerArrearsList.format(CustomerID=id))
+        self.modCustomerArrearsList = JPTableViewModelReadOnly(
+            self.ui.tabCustomerArrearsList, self.tableinfoCustomerArrearsList)
         self.ui.tabCustomerArrearsList.setModel(self.modCustomerArrearsList)
         self.ui.tabCustomerArrearsList.resizeColumnsToContents()
+
+        # self.ui.tabCurrentDayRec.setModel(self.modCurrentDayRec)
+        # self.ui.tabCurrentDayRec.resizeColumnsToContents()
 
 
 class RecibidoEdit(JPFormModelMain):
@@ -338,3 +364,170 @@ class RecibidoEdit(JPFormModelMain):
     def onAfterSaveData(self, data):
         self.ui.butSave.setEnabled(False)
         self.ListForm.dateChanged(data)
+
+
+class FormReport_Rec_print(JPReport):
+    def __init__(self,
+                 curdate,
+                 cur_tab,
+                 tongji_tab,
+                 PaperSize=QPrinter.A4,
+                 Orientation=QPrinter.Orientation(0)):
+        super().__init__(PaperSize, Orientation)
+
+        self.font_YaHei = QFont("微软雅黑")
+        self.font_YaHei_8 = QFont(self.font_YaHei)
+        self.font_YaHei_8.setPointSize(8)
+        self.font_YaHei_10 = QFont(self.font_YaHei)
+        self.font_YaHei_10.setPointSize(20)
+        self.font_YaHei_10.setBold(True)
+        rpt = self
+        rpt.ReportHeader.AddItem(1,
+                                 0,
+                                 0,
+                                 820,
+                                 40,
+                                 'Daily Report收款日报表[{}]'.format(curdate),
+                                 Bolder=False,
+                                 AlignmentFlag=(Qt.AlignCenter),
+                                 Font=self.font_YaHei_10)
+
+        title = [
+            '流水号\nID', '客户编号\nClienteID', '客户名\nCliente', '收款日期\nDate',
+            '收款额\nAmount', '收款人\nfPayee', '收款方式\nModoPago'
+        ]
+        fns = [fld.FieldName for fld in cur_tab.Fields]
+        cols = len(cur_tab.Fields)
+        al_c = Qt.AlignCenter
+        al_r = (Qt.AlignVCenter | Qt.AlignRight)
+        al_l = (Qt.AlignVCenter | Qt.AlignLeft)
+        rpt.SetMargins(30, 60, 30, 30)
+        rpt.ReportHeader.AddPrintLables(
+            0,
+            50,
+            50,
+            Texts=title,
+            Widths=[60, 100, 200, 140, 120, 100, 100],
+            Aligns=[al_c] * cols)
+        rpt.Detail.AddPrintFields(
+            0,
+            0,
+            25,
+            FieldNames=fns[0:4],
+            Widths=[60, 100, 200, 140],
+            Aligns=[al_c, al_c, al_l, al_c])
+        rpt.Detail.AddPrintFields(
+            500,
+            0,
+            25,
+            FieldNames=fns[4:5],
+            Widths=[120],
+            Aligns=[al_r],
+            FormatString='{:,.2f}')
+        rpt.Detail.AddPrintFields(
+            620,
+            0,
+            25,
+            FieldNames=fns[5:],
+            Widths=[100, 100],
+            Aligns=[al_c, al_c])
+
+        sum_j = 0
+        for i in range(len(cur_tab)):
+            sum_j += cur_tab.getOnlyData([i, 4])
+
+        rpt.ReportFooter.AddPrintLables(0,
+                                        0,
+                                        25,
+                                        Texts=["合计Sum",JPGetDisplayText(sum_j)," "],
+                                        Widths=[500, 120, 200],
+                                        Aligns=[al_c] * 3,
+                                        FillColor = QColor(128, 128, 128))  
+
+        title = [
+            '收款方式\nPaymentMethod', '收款合计\nCollection of receipts',
+            '收款笔数\nNumber of Payments Received]'
+        ]
+        fns = [fld.FieldName for fld in tongji_tab.Fields]
+        cols = len(tongji_tab.Fields)
+        rpt.ReportFooter.AddPrintLables(0,
+                                        45,
+                                        50,
+                                        Texts=title,
+                                        Widths=[200, 200, 300],
+                                        Aligns=[al_c] * cols)
+        sum_j = 0
+        count = 0
+        for r in range(len(tongji_tab)):
+            rpt.ReportFooter.AddItem(1,
+                                     0,
+                                     95 + r * 25,
+                                     200,
+                                     25,
+                                     tongji_tab.getDispText([r, 0]),
+                                     AlignmentFlag=al_c)
+            rpt.ReportFooter.AddItem(1,
+                                     200,
+                                     95 + r * 25,
+                                     200,
+                                     25,
+                                     tongji_tab.getDispText([r, 1]),
+                                     AlignmentFlag=al_r)
+            rpt.ReportFooter.AddItem(1,
+                                     400,
+                                     95 + r * 25,
+                                     300,
+                                     25,
+                                     tongji_tab.getDispText([r, 2]),
+                                     AlignmentFlag=al_c)
+            sum_j = sum_j + tongji_tab.getOnlyData([r, 1])
+            count = count + tongji_tab.getOnlyData([r, 2])
+        rs = len(tongji_tab)
+        rpt.ReportFooter.AddItem(1,
+                                 0,
+                                 95 + rs * 25,
+                                 200,
+                                 25,
+                                 '合计Sum',
+                                 AlignmentFlag=al_c,FillColor = QColor(128, 128, 128))
+        rpt.ReportFooter.AddItem(1,
+                                 200,
+                                 95 + rs * 25,
+                                 200,
+                                 25,
+                                 JPGetDisplayText(sum_j),
+                                 AlignmentFlag=al_r,FillColor = QColor(128, 128, 128))
+        rpt.ReportFooter.AddItem(1,
+                                 400,
+                                 95 + rs * 25,
+                                 300,
+                                 25,
+                                 JPGetDisplayText(count),
+                                 AlignmentFlag=al_c,FillColor = QColor(128, 128, 128))
+
+        self.PageFooter.AddItem(4,
+                                10,
+                                0,
+                                100,
+                                20,
+                                '',
+                                FormatString='Page: {Page}/{Pages}',
+                                Bolder=False,
+                                AlignmentFlag=Qt.AlignLeft,
+                                Font=self.font_YaHei_8)
+        self.PageFooter.AddItem(5,
+                                0,
+                                0,
+                                840,
+                                20,
+                                '',
+                                FormatString="PrintTime: %Y-%m-%d %H:%M:%S",
+                                Bolder=False,
+                                AlignmentFlag=Qt.AlignRight,
+                                Font=self.font_YaHei_8)
+        self.DataSource = [
+            cur_tab.getRowValueDict(i) for i in range(len(cur_tab))
+        ]
+
+    def onFormat(self, SectionType, CurrentPage, RowDate=None):
+        return False

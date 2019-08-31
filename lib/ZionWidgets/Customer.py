@@ -14,7 +14,7 @@ from lib.ZionPublc import JPDb
 from Ui.Ui_FormCustomer import Ui_Form as Ui_Form_List
 from Ui.Ui_FormCustomerEdit import Ui_Form as Ui_Form_Edit
 from lib.JPDatabase.Query import JPQueryFieldInfo
-
+from lib.JPSearch import Form_Search
 
 # class myJPTableViewModelReadOnly(JPTableViewModelReadOnly):
 #     def __init__(self, tableView, tabelFieldInfo):
@@ -35,7 +35,23 @@ class Form_Customer(QWidget):
         self.ui = Ui_Form_List()
         self.ui.setupUi(self)
         mainform.addForm(self)
-
+        self.list_sql = """
+            select 
+                fCustomerID as `ID`, 
+                fCustomerName as `客户名称Cliente`, 
+                fNUIT as `税号NUIT`, 
+                fCity as `城市City`, 
+                fContato as `联系人Contato`, 
+                fCelular as `手机Celular`, 
+                fTelefone as `电话Telefone`, 
+                fEmail as `电子邮件Email`, 
+                fWeb as `主页Web`, 
+                fEndereco as `地址Endereco`, 
+                fFax as `传真Fax` 
+            from  t_customer 
+            {wherestring}
+            order by fCustomerName
+            """
         medit_sql = """
             select 
             fCustomerID as `ID`, 
@@ -67,27 +83,25 @@ class Form_Customer(QWidget):
         else:
             return -1
 
-    def actionClick(self):
-        sql = """
-            select 
-                fCustomerID as `ID`, 
-                fCustomerName as `客户名称Cliente`, 
-                fNUIT as `税号NUIT`, 
-                fCity as `城市City`, 
-                fContato as `联系人Contato`, 
-                fCelular as `手机Celular`, 
-                fTelefone as `电话Telefone`, 
-                fEmail as `电子邮件Email`, 
-                fWeb as `主页Web`, 
-                fEndereco as `地址Endereco`, 
-                fFax as `传真Fax` 
-            from  t_customer 
-            where fCustomerName like '%{}%'
-            order by fCustomerName
-            """
+    def actionClick(self, where_sql=None):
+        #wherestring = "where fCustomerName like '%{key}%' or fNUIT like '%{key}%'"
+        wherestring = """where (
+            fCustomerName like '%{key}%' or
+            fNUIT like '%{key}%' or
+            fCity like '%{key}%' or
+            fContato like '%{key}%' or
+            fCelular like '%{key}%' or
+            fTelefone like '%{key}%' or
+            fEmail like '%{key}%' or
+            fWeb like '%{key}%' or
+            fEndereco like '%{key}%' or
+            fFax like '%{key}%' 
+        )"""
         txt = self.ui.lineEdit.text()
         txt = txt if txt else ''
-        sql = sql.format(txt)
+        wherestring = wherestring.format(key=txt)
+        sql = where_sql if where_sql else self.list_sql.format(
+            wherestring=wherestring)
 
         tv = self.ui.tableView
         self.dataInfo = JPTabelFieldInfo(sql)
@@ -117,6 +131,12 @@ class Form_Customer(QWidget):
         index = self.ui.tableView.selectionModel().currentIndex()
         if index.isValid():
             return self.mod.TabelFieldInfo.getOnlyData([index.row(), 0])
+
+    @pyqtSlot()
+    def on_CmdSearch_clicked(self):
+        frm = Form_Search(self.dataInfo, self.list_sql.format(wherestring=''))
+        frm.whereStringCreated.connect(self.actionClick)
+        frm.exec_()
 
     @pyqtSlot()
     def on_CmdNew_clicked(self):
@@ -175,6 +195,7 @@ class Form_Customer(QWidget):
                                 QMessageBox.Yes) == QMessageBox.Yes:
             JPDb().executeTransaction(sql.format(uid))
             self.refreshTable()
+
 
 class EditForm_Customer(JPFormModelMain):
     def __init__(self, sql_main, PKValue, edit_mode, flags=Qt.WindowFlags()):
