@@ -174,26 +174,13 @@ class Form_Receivables(QWidget):
     # def on_SelectDate_dateChanged(self, *args):
     #     return
 
-    def __setEnabled(self, frm):
-        frm.ui.fCustomerID.setEditable(True)
-        frm.ui.fCity.setEnabled(False)
-        frm.ui.fNUIT.setEnabled(False)
-        frm.ui.fEndereco.setEnabled(False)
-        frm.ui.fEndereco.setEnabled(False)
-        frm.ui.fCelular.setEnabled(False)
-        frm.ui.fTelefone.setEnabled(False)
-        frm.ui.fAmountPayable.setEnabled(False)
-        frm.ui.fAmountPaid.setEnabled(False)
-        frm.ui.fArrears.setEnabled(False)
-        frm.ui.fPayeeID.setEnabled(False)
-
     @pyqtSlot()
     def on_CmdEdit_clicked(self):
         frm = RecibidoEdit()
         frm.ListForm = self
         frm.ui.fAmountCollected.setDoubleValidator(-100000000.0, 100000000.0,
                                                    2)
-        self.__setEnabled(frm)
+
         frm.exec_()
 
     @pyqtSlot()
@@ -201,7 +188,7 @@ class Form_Receivables(QWidget):
         frm = RecibidoEdit()
         frm.ListForm = self
         frm.ui.fAmountCollected.setDoubleValidator(0.01, 100000000.0, 2)
-        self.__setEnabled(frm)
+
         frm.exec_()
 
     @pyqtSlot()
@@ -294,8 +281,24 @@ class RecibidoEdit(JPFormModelMain):
         self.ui.fID.hide()
         self.readData()
         self.ui.fPayeeID.refreshValueNotRaiseEvent(JPUser().currentUserID())
+        self.__setEnabled()
+        self.ui.fCustomerID.currentIndexChanged.connect(self.__setEnabled)
         self.ui.butPrint.hide()
         self.ui.butPDF.hide()
+
+
+    def __setEnabled(self):
+        self.ui.fCustomerID.setEditable(True)
+        self.ui.fCity.setEnabled(False)
+        self.ui.fNUIT.setEnabled(False)
+        self.ui.fEndereco.setEnabled(False)
+        self.ui.fEndereco.setEnabled(False)
+        self.ui.fCelular.setEnabled(False)
+        self.ui.fTelefone.setEnabled(False)
+        self.ui.fAmountPayable.setEnabled(False)
+        self.ui.fAmountPaid.setEnabled(False)
+        self.ui.fArrears.setEnabled(False)
+        self.ui.fPayeeID.setEnabled(False)
 
     def onGetFieldsRowSources(self):
         pub = JPPub()
@@ -409,40 +412,38 @@ class FormReport_Rec_print(JPReport):
             Texts=title,
             Widths=[60, 100, 200, 140, 120, 100, 100],
             Aligns=[al_c] * cols)
-        rpt.Detail.AddPrintFields(
-            0,
-            0,
-            25,
-            FieldNames=fns[0:4],
-            Widths=[60, 100, 200, 140],
-            Aligns=[al_c, al_c, al_l, al_c])
-        rpt.Detail.AddPrintFields(
-            500,
-            0,
-            25,
-            FieldNames=fns[4:5],
-            Widths=[120],
-            Aligns=[al_r],
-            FormatString='{:,.2f}')
-        rpt.Detail.AddPrintFields(
-            620,
-            0,
-            25,
-            FieldNames=fns[5:],
-            Widths=[100, 100],
-            Aligns=[al_c, al_c])
+        rpt.Detail.AddPrintFields(0,
+                                  0,
+                                  25,
+                                  FieldNames=fns[0:4],
+                                  Widths=[60, 100, 200, 140],
+                                  Aligns=[al_c, al_c, al_l, al_c])
+        rpt.Detail.AddPrintFields(500,
+                                  0,
+                                  25,
+                                  FieldNames=fns[4:5],
+                                  Widths=[120],
+                                  Aligns=[al_r],
+                                  FormatString='{:,.2f}')
+        rpt.Detail.AddPrintFields(620,
+                                  0,
+                                  25,
+                                  FieldNames=fns[5:],
+                                  Widths=[100, 100],
+                                  Aligns=[al_c, al_c])
 
         sum_j = 0
         for i in range(len(cur_tab)):
             sum_j += cur_tab.getOnlyData([i, 4])
 
-        rpt.ReportFooter.AddPrintLables(0,
-                                        0,
-                                        25,
-                                        Texts=["合计Sum",JPGetDisplayText(sum_j)," "],
-                                        Widths=[500, 120, 200],
-                                        Aligns=[al_c] * 3,
-                                        FillColor = QColor(128, 128, 128))  
+        rpt.ReportFooter.AddPrintLables(
+            0,
+            0,
+            25,
+            Texts=["合计Sum", JPGetDisplayText(sum_j), " "],
+            Widths=[500, 120, 200],
+            Aligns=[al_c] * 3,
+            FillColor=QColor(128, 128, 128))
 
         title = [
             '收款方式\nPaymentMethod', '收款合计\nCollection of receipts',
@@ -489,21 +490,24 @@ class FormReport_Rec_print(JPReport):
                                  200,
                                  25,
                                  '合计Sum',
-                                 AlignmentFlag=al_c,FillColor = QColor(128, 128, 128))
+                                 AlignmentFlag=al_c,
+                                 FillColor=QColor(128, 128, 128))
         rpt.ReportFooter.AddItem(1,
                                  200,
                                  95 + rs * 25,
                                  200,
                                  25,
                                  JPGetDisplayText(sum_j),
-                                 AlignmentFlag=al_r,FillColor = QColor(128, 128, 128))
+                                 AlignmentFlag=al_r,
+                                 FillColor=QColor(128, 128, 128))
         rpt.ReportFooter.AddItem(1,
                                  400,
                                  95 + rs * 25,
                                  300,
                                  25,
                                  JPGetDisplayText(count),
-                                 AlignmentFlag=al_c,FillColor = QColor(128, 128, 128))
+                                 AlignmentFlag=al_c,
+                                 FillColor=QColor(128, 128, 128))
 
         self.PageFooter.AddItem(4,
                                 10,

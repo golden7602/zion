@@ -4,24 +4,26 @@ import re
 from decimal import Decimal
 from os import getcwd
 from sys import path as jppath
+
 jppath.append(getcwd())
 
 from PyQt5.QtCore import (QDate, QModelIndex, QObject, Qt, QVariant,
                           pyqtSignal, pyqtSlot)
-from PyQt5.QtWidgets import (QAbstractItemView, QDialog, QMenu, QMessageBox,
-                             QTableView)
+from PyQt5.QtGui import QIcon
+from PyQt5.QtWidgets import (QAbstractItemView, QDialog, QItemDelegate, QMenu,
+                             QMessageBox, QPushButton, QTableView)
 
 import lib.JPMvc.JPDelegate as myDe
 from lib.JPDatabase.Database import JPDb
 from lib.JPDatabase.Query import (JPQueryFieldInfo, JPTabelFieldInfo,
                                   JPTabelRowData)
+from lib.JPException import JPExceptionFieldNull, JPExceptionRowDataNull
 from lib.JPFunction import JPRound
 from lib.JPMvc import JPWidgets
 from lib.JPMvc.JPModel import (JPTableViewModelEditForm,
                                JPTableViewModelReadOnly)
 from lib.JPPrintReport import JPReport
 from lib.ZionPublc import JPPub
-from lib.JPException import JPExceptionFieldNull, JPExceptionRowDataNull
 
 
 class JPEditFormDataMode():
@@ -109,6 +111,7 @@ class JPFormModelMain(QDialog):
     def setFormulas(self, *args):
         """setFormulas(str1...)
         设置计算公式，从个公式之间用逗号分开"""
+
     def onDateChangeEvent(self, obj, value):
         """窗体数据变更事件，obj是变更的控件"""
         return
@@ -194,8 +197,6 @@ class JPFormModelMain(QDialog):
             for obj in self.ObjectDict.values():
                 obj.setEnabled(False)
             return
-        # for obj in self.ObjectDict.values():
-        #     obj.setReadOnly(not can_edit)
         self.__setReadOnlyFields()
         self.__setFieldsDisabled()
 
@@ -234,7 +235,7 @@ class JPFormModelMain(QDialog):
         """保存数据后执行，请覆盖"""
         return
 
-    @pyqtSlot()   
+    @pyqtSlot()
     def onBefortSaveData(self):
         """函数返回值为False时取消保存"""
         return True
@@ -272,19 +273,6 @@ class JPFormModelMain(QDialog):
         mti = self.mainTableFieldsInfo
         ds = mti.DataRows[0].Datas
         st = self.EditMode
-        # 空值检查
-        # for fld in mti.Fields:
-        #     if fld.IsPrimarykey or fld.Auto_Increment:
-        #         continue
-        #     if fld.NotNull:
-        #         if self.ObjectDict[fld.FieldName].getSqlValue() == 'Null':
-        #             raise ValueError(fld)
-        #             msg = '字段【{fn}】的值不能为空！\n'
-        #             msg = msg + 'Field [{fn}] cannot be empty!'.format(
-        #                 fn=fld.FieldName)
-        #             QMessageBox.warning(appform, '提示', msg, QMessageBox.Ok,
-        #                                 QMessageBox.Ok)
-        # # 空值检查完成
         TN = mti.TableName
 
         sql_i = 'INSERT INTO ' + TN + ' ({}) VALUES ({});\n'
@@ -322,6 +310,52 @@ class JPFormModelMain(QDialog):
             return sqls
 
 
+class MyButtonDelegate(QItemDelegate):
+    def __init__(self, parent=None):
+        super(MyButtonDelegate, self).__init__(parent)
+
+    def paint(self, painter, option, index):
+        if not self.parent().indexWidget(index) and (
+                index.row() != index.model().rowCount() - 1):
+            widget = QPushButton(self.tr(''),
+                                 self.parent(),
+                                 clicked=self.parent().parent().cellButtonClicked)
+            fn = 'del_line.ico'
+            icon = QIcon(getcwd() + "\\res\\ico\\" + fn)
+            widget.setIcon(icon)
+            if self.parent().parent().isReadOnlyMode:
+                widget.setEnabled(False)
+            self.parent().setIndexWidget(index, widget)
+
+    def createEditor(self, parent, option, index):
+        """有这个空函数覆盖父类的函数，才能使该列不可编辑"""
+        return
+
+    def setEditorData(self, editor, index):
+        return
+
+    def setModelData(self, editor, model, index):
+        return
+
+class myJPTableViewModelEditForm(JPTableViewModelEditForm):
+    def __init__(self, tableView, tabelFieldInfo):
+        super().__init__(tableView, tabelFieldInfo)
+
+    def headerData(self, col:int, QtOrientation, role=Qt.DisplayRole):
+        if col==0 and QtOrientation==Qt.Horizontal and role==Qt.DisplayRole:
+            return "Del"
+        else:
+            return super().headerData(col, QtOrientation, role=role)
+
+class myJPTableViewModelReadOnly(JPTableViewModelReadOnly):
+    def __init__(self, tableView, tabelFieldInfo):
+        super().__init__(tableView, tabelFieldInfo)
+
+    def headerData(self, col:int, QtOrientation, role=Qt.DisplayRole):
+        if col==0 and QtOrientation==Qt.Horizontal and role==Qt.DisplayRole:
+            return "Del"
+        else:
+            return super().headerData(col, QtOrientation, role=role)
 class JPFormModelMainHasSub(JPFormModelMain):
     def __init__(self,
                  Ui,
@@ -336,6 +370,7 @@ class JPFormModelMainHasSub(JPFormModelMain):
                          edit_mode=edit_mode,
                          flags=flags)
         self.subSQL = sql_sub
+        
 
     def setSQL(self, sql_main, sql_sub):
         super().setSQL(sql_main)
@@ -344,6 +379,11 @@ class JPFormModelMainHasSub(JPFormModelMain):
     def readData(self):
         super().readData()
         self.__readSubData()
+
+    def cellButtonClicked(self, *args):
+        index =  self.ui.tableView.selectionModel().currentIndex()
+        #self.Model.TabelFieldInfo.DataRows[index.row() + 1].setData(1, "")
+        self.subModel.removeRows(index.row(), 1, index)
 
     def setEditState(self, can_edit: bool = False):
         super().setEditState(can_edit)
@@ -375,30 +415,25 @@ class JPFormModelMainHasSub(JPFormModelMain):
         if em is None:
             raise ValueError("没有指定子窗体的编辑模式！")
         # 建立子窗体模型
-        # self.subTableFieldsInfo = JPTabelFieldInfo(
-        #     self.subSQL, True if em == JFDM.New else None)
-        # tfi = self.subTableFieldsInfo
         if self.isNewMode:
             tfi = JPTabelFieldInfo(self.subSQL, False)
             if len(tfi.DeleteRows) == 0:
                 tfi.addRow()
-            self.SubModel = JPTableViewModelEditForm(tv, tfi)
+            self.subModel = myJPTableViewModelEditForm(tv, tfi)
         if self.isReadOnlyMode:
             tfi = JPQueryFieldInfo(self.subSQL.format(self.PKValue))
-            self.SubModel = JPTableViewModelReadOnly(tv, tfi)
+            self.subModel = myJPTableViewModelReadOnly(tv, tfi)
         if self.isEditMode:
             tfi = JPTabelFieldInfo(self.subSQL.format(self.PKValue))
-            self.SubModel = JPTableViewModelEditForm(tv, tfi)
+            self.subModel = myJPTableViewModelEditForm(tv, tfi)
+
+        # 检查第一列是不是子表主键
+        if tfi.Fields[0].IsPrimarykey is False:
+            errtxt = "setSQL()方法第二个参数中Sql语句，第一列必须是主键字段。\n{}"
+            errtxt = errtxt.format(self.subSQL)
+            QMessageBox.warning(self, "错误", errtxt)
         self.subTableFieldsInfo = tfi
-
-        # if em == JFDM.New and len(tfi.DeleteRows) == 0:
-        #     tfi.addRow()
-        # if em == JFDM.ReadOnly:
-        #     self.SubModel = JPTableViewModelReadOnly(tv, tfi)
-        # if em in [JFDM.Edit, JFDM.New]:
-        #     self.SubModel = JPTableViewModelEditForm(tv, tfi)
-
-        smd = self.SubModel
+        smd = self.subModel
         tv.setModel(smd)
 
         smd.dataChanged.connect(self._emitDataChange)
@@ -411,7 +446,8 @@ class JPFormModelMainHasSub(JPFormModelMain):
         for col in self.__readOnlyColumns:
             tv.setItemDelegateForColumn(col, myDe.JPDelegate_ReadOnly(tv))
         self.__hideColumns = self.onGetHiddenColumns()
-        for col in self.__hideColumns:
+        # 设置隐藏列，第0列不隐藏（将显示删除按钮）
+        for col in [c for c in self.__hideColumns if c > 0]:
             tv.setColumnHidden(col, True)
         self.__columnWidths = self.onGetColumnWidths()
         for i, w in enumerate(self.__columnWidths):
@@ -426,40 +462,42 @@ class JPFormModelMainHasSub(JPFormModelMain):
         temp = self.AfterSetDataBeforeInsterRowEvent
         smd.AfterSetDataBeforeInsterRowEvent = temp
         # 添加右键菜单
-        if self.EditMode != JFDM.ReadOnly:
-            tv.setContextMenuPolicy(Qt.CustomContextMenu)
-            tv.customContextMenuRequested.connect(self.__right_menu)
+        #self.ui.tableView.cellButtonClicked=self.cellButtonClicked
+        tv.setItemDelegateForColumn(0, MyButtonDelegate(tv))
+        # if self.EditMode != JFDM.ReadOnly:
+        #     tv.setContextMenuPolicy(Qt.CustomContextMenu)
+        #     tv.customContextMenuRequested.connect(self.__right_menu)
 
-    def __right_menu(self, pos):
-        menu = QMenu()
-        tv = self.ui.tableView
-        mod = self.SubModel
-        opt1 = menu.addAction("AddNew增加")
-        opt2 = menu.addAction("Delete删除")
-        index = self.ui.tableView.selectionModel().currentIndex().row()
-        opt1.setEnabled(False)
-        opt2.setEnabled((index == -1 or index !=
-                         (len(mod.TabelFieldInfo) - 1)))
-        action = menu.exec_(tv.mapToGlobal(pos))
-        if action == opt1:
-            mod.insertRows(len(mod.DataRows))
-            tv.selectRow(mod.rowCount() - 1)
-            return
-        elif action == opt2:
-            mod.removeRows(tv.selectionModel().currentIndex().row())
-            return
-        else:
-            return
+    #def __right_menu(self, pos):
+    # menu = QMenu()
+    # tv = self.ui.tableView
+    # mod = self.subModel
+    # opt1 = menu.addAction("AddNew增加")
+    # opt2 = menu.addAction("Delete删除")
+    # index = self.ui.tableView.selectionModel().currentIndex().row()
+    # opt1.setEnabled(False)
+    # opt2.setEnabled((index == -1 or index !=
+    #                  (len(mod.TabelFieldInfo) - 1)))
+    # action = menu.exec_(tv.mapToGlobal(pos))
+    # if action == opt1:
+    #     mod.insertRows(len(mod.DataRows))
+    #     tv.selectRow(mod.rowCount() - 1)
+    #     return
+    # elif action == opt2:
+    #     mod.removeRows(tv.selectionModel().currentIndex().row())
+    #     return
+    # else:
+    #     return
 
     def getColumnSum(self, col: int):
-        return self.SubModel.getColumnSum(col)
+        return self.subModel.getColumnSum(col)
 
     def onGetColumnRowSources(self, *args):
         return []
 
     def onGetHiddenColumns(self, ):
         """设置隐藏列的列号，如有多个列，请设置一个列表"""
-        return []
+        return [0]
 
     def onGetColumnWidths(self, ):
         return []

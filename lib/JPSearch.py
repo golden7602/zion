@@ -4,16 +4,17 @@ import re
 from decimal import Decimal
 from os import getcwd
 from sys import path as jppath
+
 jppath.append(getcwd())
 
 from PyQt5.QtCore import (QAbstractItemModel, QDate, QModelIndex, QObject, Qt,
                           QVariant, pyqtSignal, pyqtSlot)
 from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtWidgets import (QAbstractItemView, QApplication, QComboBox,
-                             QDateEdit, QDialog, QHBoxLayout, QLineEdit, QMenu,
-                             QMessageBox, QPushButton, QStyledItemDelegate,
-                             QStyleOptionViewItem, QTableView, QWidget,
-                             QItemDelegate)
+                             QDateEdit, QDialog, QHBoxLayout, QItemDelegate,
+                             QLineEdit, QMenu, QMessageBox, QPushButton,
+                             QStyledItemDelegate, QStyleOptionViewItem,
+                             QTableView, QWidget)
 
 import lib.JPMvc.JPDelegate as myDe
 from lib.JPDatabase.Database import JPDb
@@ -28,6 +29,10 @@ from lib.JPMvc.JPModel import (JPTableViewModelEditForm,
 from lib.JPPrintReport import JPReport
 from lib.ZionPublc import JPPub
 from Ui.Ui_FormSearch import Ui_DlgSearch
+
+jppath.append(getcwd())
+
+
 
 
 class myJPTableViewModelEditForm(JPTableViewModelEditForm):
@@ -47,7 +52,6 @@ class myJPTableViewModelEditForm(JPTableViewModelEditForm):
 
     def _whenDataChange(self, index):
         pass
-
 
     def checkOnRow_(self, row):
         ro = Qt.EditRole
@@ -113,6 +117,16 @@ class MyButtonDelegate(QItemDelegate):
             icon = QIcon(getcwd() + "\\res\\ico\\" + fn)
             widget.setIcon(icon)
             self.parent().setIndexWidget(index, widget)
+
+    def createEditor(self, parent, option, index):
+        """有这个空函数覆盖父类的函数，才能使该列不可编辑"""
+        return
+
+    def setEditorData(self, editor, index):
+        return
+
+    def setModelData(self, editor, model, index):
+        return
 
 
 class JDFieldComboBox(QStyledItemDelegate):
@@ -521,12 +535,14 @@ class Form_Search(QDialog):
         widths = [30, 50, 50, 150, 150, 100, 100, 50]
         for i, w in enumerate(widths):
             self.tv.setColumnWidth(i, w)
-        lst_gx = [['', ''],['And', 'And'], ['Or', 'Or'], ['Not', 'Not']]
+        lst_gx = [['', ''], ['And', 'And'], ['Or', 'Or'], ['Not', 'Not']]
         self.de_sy = myDe.JPDelegate_ComboBox(self.tv, lst_gx)
-        self.de_kh_left = myDe.JPDelegate_ComboBox(self.tv,
-                                                   [['', ''],['(', '('], ])
+        self.de_kh_left = myDe.JPDelegate_ComboBox(self.tv, [
+            ['', ''],
+            ['(', '('],
+        ])
         self.de_kh_right = myDe.JPDelegate_ComboBox(self.tv,
-                                                    [['', ''],[')', ')'] ])
+                                                    [['', ''], [')', ')']])
         self.de_field = JDFieldComboBox(tabinfo)
         self.de_field.setDialog(self)
         self.tv.setItemDelegateForColumn(3, self.de_field)
@@ -537,7 +553,7 @@ class Form_Search(QDialog):
         self.tv.cellButtonClicked = self.cellButtonClicked
         self.tv.setItemDelegateForColumn(0, MyButtonDelegate(self.tv))
         self.setDelegate127(0)
-        self.tv.setCurrentIndex(self.Model.createIndex(0,3))
+        self.tv.setCurrentIndex(self.Model.createIndex(0, 3))
 
     def setDelegate127(self, r):
         if r == 0:
@@ -594,15 +610,13 @@ class Form_Search(QDialog):
         sql = sql.format(txt=txt, base_sql=self.BaseSQL)
         self.whereStringCreated.emit(sql)
         self.close()
-        
+
         return
 
     def cellButtonClicked(self, *args):
         index = self.tv.selectionModel().currentIndex()
-        self.Model.TabelFieldInfo.DataRows[index.row()+1].setData(1, "")
+        self.Model.TabelFieldInfo.DataRows[index.row() + 1].setData(1, "")
         self.Model.removeRows(index.row(), 1, index)
-        
-
 
     def fieldChange(self, index, data):
 
@@ -659,7 +673,7 @@ if __name__ == "__main__":
                         fSubmited AS fSubmited,
                         fEntry_Name as 录入Entry
                 FROM v_order AS o"""
-    aaa=JPTabelFieldInfo(sql_0)
+    aaa = JPTabelFieldInfo(sql_0)
     s = Form_Search(JPTabelFieldInfo(sql_0, True), sql_0)
     s.exec_()
 

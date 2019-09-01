@@ -1,23 +1,21 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'e:\Zion\zion\Ui\FormReceivableEdit.ui'
+# Form implementation generated from reading ui file 'c:\Users\win10\Desktop\Zion\zion\Ui\FormReceivableEdit.ui'
 #
 # Created by: PyQt5 UI code generator 5.11.3
 #
 # WARNING! All changes made in this file will be lost!
-
 from os import getcwd
 from sys import path as jppath
 jppath.append(getcwd())
 from PyQt5 import QtCore, QtGui
 from lib.JPMvc import JPWidgets as QtWidgets
 
-
 class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
-        Form.resize(762, 489)
-        Form.setMaximumSize(QtCore.QSize(762, 500))
+        Form.resize(886, 480)
+        Form.setMaximumSize(QtCore.QSize(1000, 500))
         font = QtGui.QFont()
         font.setFamily("Arial")
         font.setPointSize(10)
@@ -131,7 +129,9 @@ class Ui_Form(object):
         self.gridLayout.addWidget(self.label_16, 1, 5, 1, 1)
         self.fAmountPayable = QtWidgets.QLineEdit(Form)
         self.fAmountPayable.setMinimumSize(QtCore.QSize(0, 25))
+        self.fAmountPayable.setMaximumSize(QtCore.QSize(130, 16777215))
         self.fAmountPayable.setSizeIncrement(QtCore.QSize(0, 25))
+        self.fAmountPayable.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.fAmountPayable.setClearButtonEnabled(True)
         self.fAmountPayable.setObjectName("fAmountPayable")
         self.gridLayout.addWidget(self.fAmountPayable, 3, 2, 1, 1)
@@ -194,15 +194,18 @@ class Ui_Form(object):
         self.fAmountPaid = QtWidgets.QLineEdit(Form)
         self.fAmountPaid.setMinimumSize(QtCore.QSize(0, 25))
         self.fAmountPaid.setSizeIncrement(QtCore.QSize(0, 25))
+        self.fAmountPaid.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.fAmountPaid.setClearButtonEnabled(True)
         self.fAmountPaid.setObjectName("fAmountPaid")
         self.gridLayout.addWidget(self.fAmountPaid, 3, 4, 1, 1)
         self.fCustomerID = QtWidgets.QComboBox(Form)
+        self.fCustomerID.setMaximumSize(QtCore.QSize(130, 16777215))
         self.fCustomerID.setObjectName("fCustomerID")
         self.gridLayout.addWidget(self.fCustomerID, 0, 2, 1, 1)
         self.fArrears = QtWidgets.QLineEdit(Form)
         self.fArrears.setMinimumSize(QtCore.QSize(0, 25))
         self.fArrears.setSizeIncrement(QtCore.QSize(0, 25))
+        self.fArrears.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.fArrears.setClearButtonEnabled(True)
         self.fArrears.setObjectName("fArrears")
         self.gridLayout.addWidget(self.fArrears, 3, 6, 1, 1)
@@ -247,6 +250,7 @@ class Ui_Form(object):
         self.gridLayout.addWidget(self.label_10, 2, 0, 1, 1)
         self.fCelular = QtWidgets.QLineEdit(Form)
         self.fCelular.setMinimumSize(QtCore.QSize(0, 25))
+        self.fCelular.setMaximumSize(QtCore.QSize(130, 16777215))
         self.fCelular.setSizeIncrement(QtCore.QSize(0, 25))
         self.fCelular.setReadOnly(True)
         self.fCelular.setClearButtonEnabled(True)
@@ -315,7 +319,7 @@ class Ui_Form(object):
 
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
-        Form.setWindowTitle(_translate("Form", "Order"))
+        Form.setWindowTitle(_translate("Form", "Receivable"))
         self.label_23.setText(_translate("Form", "收款记录"))
         self.label_24.setText(_translate("Form", "Collection records"))
         self.label_25.setText(_translate("Form", "(ESTE DOCUMENTO É DO USO INTERNO)"))
@@ -348,3 +352,4 @@ if __name__ == "__main__":
     ui.setupUi(Form)
     Form.show()
     sys.exit(app.exec_())
+

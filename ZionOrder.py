@@ -92,8 +92,12 @@ class JPMainWindow(QMainWindow):
         self.ProgressBar.hide()
 
         def treeViewItemClicked(item, i):
-            self.ui.label_FunPath.setText(item.FullPath)
-            self.getStackedWidget(item.jpData)
+            try:
+                self.ui.label_FunPath.setText(item.FullPath)
+                self.getStackedWidget(item.jpData)
+            except AttributeError as e:
+                pass
+
 
         self.ui.treeWidget.itemClicked[QTreeWidgetItem, int].connect(
             treeViewItemClicked)

@@ -278,13 +278,13 @@ class EditForm_Order(JPFormModelMainHasSub):
             self.ObjectDict['fTax'].refreshValueRaiseEvent(None, True)
 
     def onGetHiddenColumns(self):
-        return [0, 1]
+        return [1]
 
     def onGetReadOnlyColumns(self):
         return [7]
 
     def onGetColumnWidths(self):
-        return [0, 0, 60, 300, 100, 100, 100, 100]
+        return [50, 0, 60, 300, 100, 100, 100, 100]
 
     def onGetFieldsRowSources(self):
         pub = JPPub()
