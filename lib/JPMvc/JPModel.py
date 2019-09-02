@@ -135,6 +135,10 @@ class JPTableViewModelBase(QAbstractTableModel):
             except Exception:
                 pass
 
+    def AfterInsterRowEvent(self):
+        """增加一行后执行"""
+        return
+
     def setData(self, Index: QModelIndex, Any,
                 role: int = Qt.EditRole) -> bool:
         t_inof = self.TabelFieldInfo
@@ -150,6 +154,7 @@ class JPTableViewModelBase(QAbstractTableModel):
         if isinstance(tempv, bool):
             if tempv:
                 self.insertRows(self.rowCount())
+                self.AfterInsterRowEvent()
         else:
             strErr = 'AfterSetDataBeforeInsterRowEvent函数的返回值必须为逻辑值！'
             raise TypeError(strErr)

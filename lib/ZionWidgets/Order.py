@@ -152,6 +152,7 @@ class JPFuncForm_Order(JPFunctionForm):
         self.setEditFormSQL(m_sql, s_sql)
 
     def getEditForm(self, sql_main, edit_mode, sql_sub, PKValue):
+
         frm = EditForm_Order(sql_main=sql_main,
                              edit_mode=edit_mode,
                              sql_sub=sql_sub,
@@ -220,6 +221,34 @@ class JPFuncForm_Order(JPFunctionForm):
             db.executeTransaction([sql, sql1.format(pk_v=cu_id)])
             self.refreshListForm()
 
+    @pyqtSlot()
+    def on_CmdEdit_clicked(self):
+        cu_id = self.getCurrentSelectPKValue()
+        if not cu_id:
+            return
+        info = self.model.TabelFieldInfo
+        submitted = info.getOnlyData([
+            self.tableView.selectionModel().currentIndex().row(),
+            self.fSubmited_column
+        ])
+        if submitted == 1:
+            msg = '记录【{cu_id}】已经提交，不能修改!\nThe order [{cu_id}] '
+            msg = msg + 'has been submitted, can not edit it!'
+            msg = msg.replace("{cu_id}", str(cu_id))
+            QMessageBox.warning(self, '提示', msg, QMessageBox.Ok,
+                                QMessageBox.Ok)
+            return
+        frm = self.getEditForm(sql_main=self.SQL_EditForm_Main,
+                               sql_sub=self.SQL_EditForm_Sub,
+                               edit_mode=JPEditFormDataMode.Edit,
+                               PKValue=cu_id)
+        frm.setListForm(self)
+        frm.afterSaveData.connect(self.refreshListForm)
+        self.__EditForm = None
+        self.__EditForm = frm
+        self.afterCreateEditForm.emit(JPEditFormDataMode.Edit)
+        frm.exec_()
+
 
 class EditForm_Order(JPFormModelMainHasSub):
     def __init__(self,
@@ -284,7 +313,7 @@ class EditForm_Order(JPFormModelMainHasSub):
         return [7]
 
     def onGetColumnWidths(self):
-        return [50, 0, 60, 300, 100, 100, 100, 100]
+        return [25, 0, 60, 300, 100, 100, 100, 100]
 
     def onGetFieldsRowSources(self):
         pub = JPPub()

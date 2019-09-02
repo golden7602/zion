@@ -69,7 +69,7 @@ class JPFuncForm_PrintingOrder(JPFunctionForm):
         super().setListFormSQL(sql_1, sql_2)
         self.tableView.setColumnHidden(23, True)
         self.tableView.setColumnHidden(24, True)
-        self.fSubmited_column = 13
+        self.fSubmited_column = 24
         m_sql = """
                 SELECT fOrderID, fCelular, fRequiredDeliveryDate, fContato
                     , fTelefone, fVendedorID, fCustomerID, fOrderDate
@@ -135,6 +135,34 @@ class JPFuncForm_PrintingOrder(JPFunctionForm):
         exp = JPExpExcelFromTabelFieldInfo(self.model.TabelFieldInfo,
                                            self.MainForm)
         exp.run()
+
+    @pyqtSlot()
+    def on_CmdEdit_clicked(self):
+        cu_id = self.getCurrentSelectPKValue()
+        if not cu_id:
+            return
+        info = self.model.TabelFieldInfo
+        submitted = info.getOnlyData([
+            self.tableView.selectionModel().currentIndex().row(),
+            self.fSubmited_column
+        ])
+        if submitted == 1:
+            msg = '记录【{cu_id}】已经提交，不能修改!\nThe order [{cu_id}] '
+            msg = msg + 'has been submitted, can not edit it!'
+            msg = msg.replace("{cu_id}", str(cu_id))
+            QMessageBox.warning(self, '提示', msg, QMessageBox.Ok,
+                                QMessageBox.Ok)
+            return
+        frm = self.getEditForm(sql_main=self.SQL_EditForm_Main,
+                               sql_sub=self.SQL_EditForm_Sub,
+                               edit_mode=JPEditFormDataMode.Edit,
+                               PKValue=cu_id)
+        frm.setListForm(self)
+        frm.afterSaveData.connect(self.refreshListForm)
+        self.__EditForm = None
+        self.__EditForm = frm
+        self.afterCreateEditForm.emit(JPEditFormDataMode.Edit)
+        frm.exec_()
 
 
 class myHistoryView(JPTableViewModelReadOnly):

@@ -11,7 +11,8 @@ from PyQt5.QtCore import (QDate, QModelIndex, QObject, Qt, QVariant,
                           pyqtSignal, pyqtSlot)
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import (QAbstractItemView, QDialog, QItemDelegate, QMenu,
-                             QMessageBox, QPushButton, QTableView)
+                             QMessageBox, QPushButton, QTableView,
+                             QStyleOptionViewItem)
 
 import lib.JPMvc.JPDelegate as myDe
 from lib.JPDatabase.Database import JPDb
@@ -111,7 +112,6 @@ class JPFormModelMain(QDialog):
     def setFormulas(self, *args):
         """setFormulas(str1...)
         设置计算公式，从个公式之间用逗号分开"""
-
     def onDateChangeEvent(self, obj, value):
         """窗体数据变更事件，obj是变更的控件"""
         return
@@ -280,7 +280,7 @@ class JPFormModelMain(QDialog):
         row_st = mti.DataRows[0].State
         if (row_st == JPTabelRowData.New_None
                 or row_st == JPTabelRowData.OriginalValue):
-            return ''
+            return []
         if st == JPEditFormDataMode.New:
             for fld in mti.Fields:
                 if fld.IsPrimarykey:
@@ -317,15 +317,20 @@ class MyButtonDelegate(QItemDelegate):
     def paint(self, painter, option, index):
         if not self.parent().indexWidget(index) and (
                 index.row() != index.model().rowCount() - 1):
-            widget = QPushButton(self.tr(''),
-                                 self.parent(),
-                                 clicked=self.parent().parent().cellButtonClicked)
+            widget = QPushButton(
+                self.tr(''),
+                self.parent(),
+                clicked=self.parent().parent().cellButtonClicked)
             fn = 'del_line.ico'
             icon = QIcon(getcwd() + "\\res\\ico\\" + fn)
             widget.setIcon(icon)
             if self.parent().parent().isReadOnlyMode:
                 widget.setEnabled(False)
             self.parent().setIndexWidget(index, widget)
+        else:
+            widget = self.parent().indexWidget(index)
+            if widget:
+                widget.setGeometry(option.rect)
 
     def createEditor(self, parent, option, index):
         """有这个空函数覆盖父类的函数，才能使该列不可编辑"""
@@ -337,25 +342,40 @@ class MyButtonDelegate(QItemDelegate):
     def setModelData(self, editor, model, index):
         return
 
+    def updateEditorGeometry(self, editor,
+                             StyleOptionViewItem: QStyleOptionViewItem,
+                             index: QModelIndex):
+        editor.setGeometry(StyleOptionViewItem.rect)
+
+
+
 class myJPTableViewModelEditForm(JPTableViewModelEditForm):
     def __init__(self, tableView, tabelFieldInfo):
         super().__init__(tableView, tabelFieldInfo)
 
-    def headerData(self, col:int, QtOrientation, role=Qt.DisplayRole):
-        if col==0 and QtOrientation==Qt.Horizontal and role==Qt.DisplayRole:
+    def headerData(self, col: int, QtOrientation, role=Qt.DisplayRole):
+        if (col == 0 and QtOrientation == Qt.Horizontal
+                and role == Qt.DisplayRole):
             return "Del"
         else:
             return super().headerData(col, QtOrientation, role=role)
+
+    def afterSaveData(self):
+        self.tableView.setItemDelegateForColumn(0, self.deleteRowDelegate)
+
 
 class myJPTableViewModelReadOnly(JPTableViewModelReadOnly):
     def __init__(self, tableView, tabelFieldInfo):
         super().__init__(tableView, tabelFieldInfo)
 
-    def headerData(self, col:int, QtOrientation, role=Qt.DisplayRole):
-        if col==0 and QtOrientation==Qt.Horizontal and role==Qt.DisplayRole:
+    def headerData(self, col: int, QtOrientation, role=Qt.DisplayRole):
+        if (col == 0 and QtOrientation == Qt.Horizontal
+                and role == Qt.DisplayRole):
             return "Del"
         else:
             return super().headerData(col, QtOrientation, role=role)
+
+
 class JPFormModelMainHasSub(JPFormModelMain):
     def __init__(self,
                  Ui,
@@ -370,7 +390,6 @@ class JPFormModelMainHasSub(JPFormModelMain):
                          edit_mode=edit_mode,
                          flags=flags)
         self.subSQL = sql_sub
-        
 
     def setSQL(self, sql_main, sql_sub):
         super().setSQL(sql_main)
@@ -381,7 +400,7 @@ class JPFormModelMainHasSub(JPFormModelMain):
         self.__readSubData()
 
     def cellButtonClicked(self, *args):
-        index =  self.ui.tableView.selectionModel().currentIndex()
+        index = self.ui.tableView.selectionModel().currentIndex()
         #self.Model.TabelFieldInfo.DataRows[index.row() + 1].setData(1, "")
         self.subModel.removeRows(index.row(), 1, index)
 
@@ -394,19 +413,24 @@ class JPFormModelMainHasSub(JPFormModelMain):
         self.ui.tableView.setEditTriggers(st[can_edit])
 
     def getSqls(self, pk_role=None):
-
+        curpk = self.PKValue if self.isNewMode else ""
+        updatePKSQL = [f"SELECT '{curpk}' as `UpdatePK`"]
+        result = []
         # 以下返回主表的保存语句
         mainSaveSQLs = super().getSqls(pk_role=pk_role)
-        if mainSaveSQLs:
-            sql2 = mainSaveSQLs[0:len(mainSaveSQLs) - 1]
-            sql_r = mainSaveSQLs[len(mainSaveSQLs) - 1:]
-        else:
-            return
         subSaveSQls = self.__getSubSQLs()
-        if pk_role:
-            return sql2 + subSaveSQls + sql_r
-        else:
-            return mainSaveSQLs + subSaveSQls
+        # 判断编辑类型,整理返回结果
+        if self.isNewMode:
+            if not mainSaveSQLs:
+                sql_save, sql_pk = '', ''
+                print("主表保存语句结果为空")
+            else:
+                sql_save = mainSaveSQLs[0:len(mainSaveSQLs) - 1]
+                sql_pk = mainSaveSQLs[len(mainSaveSQLs) - 1:]
+            result = sql_save + subSaveSQls + sql_pk
+        elif self.isEditMode:
+            result = mainSaveSQLs + subSaveSQls + updatePKSQL
+        return result
 
     def __readSubData(self):
         tv = self.ui.tableView
@@ -461,33 +485,8 @@ class JPFormModelMainHasSub(JPFormModelMain):
             smd.TabelFieldInfo.Fields[i].Formula = f
         temp = self.AfterSetDataBeforeInsterRowEvent
         smd.AfterSetDataBeforeInsterRowEvent = temp
-        # 添加右键菜单
-        #self.ui.tableView.cellButtonClicked=self.cellButtonClicked
-        tv.setItemDelegateForColumn(0, MyButtonDelegate(tv))
-        # if self.EditMode != JFDM.ReadOnly:
-        #     tv.setContextMenuPolicy(Qt.CustomContextMenu)
-        #     tv.customContextMenuRequested.connect(self.__right_menu)
-
-    #def __right_menu(self, pos):
-    # menu = QMenu()
-    # tv = self.ui.tableView
-    # mod = self.subModel
-    # opt1 = menu.addAction("AddNew增加")
-    # opt2 = menu.addAction("Delete删除")
-    # index = self.ui.tableView.selectionModel().currentIndex().row()
-    # opt1.setEnabled(False)
-    # opt2.setEnabled((index == -1 or index !=
-    #                  (len(mod.TabelFieldInfo) - 1)))
-    # action = menu.exec_(tv.mapToGlobal(pos))
-    # if action == opt1:
-    #     mod.insertRows(len(mod.DataRows))
-    #     tv.selectRow(mod.rowCount() - 1)
-    #     return
-    # elif action == opt2:
-    #     mod.removeRows(tv.selectionModel().currentIndex().row())
-    #     return
-    # else:
-    #     return
+        self.subModel.deleteRowDelegate = MyButtonDelegate(tv)
+        tv.setItemDelegateForColumn(0, self.subModel.deleteRowDelegate)
 
     def getColumnSum(self, col: int):
         return self.subModel.getColumnSum(col)

@@ -388,7 +388,7 @@ class FormReport_Rec_print(JPReport):
         rpt.ReportHeader.AddItem(1,
                                  0,
                                  0,
-                                 820,
+                                 720,
                                  40,
                                  'Daily Report收款日报表[{}]'.format(curdate),
                                  Bolder=False,
@@ -396,11 +396,14 @@ class FormReport_Rec_print(JPReport):
                                  Font=self.font_YaHei_10)
 
         title = [
-            '流水号\nID', '客户编号\nClienteID', '客户名\nCliente', '收款日期\nDate',
+            '流水号\nID', '客户名\nCliente', '收款日期\nDate',
             '收款额\nAmount', '收款人\nfPayee', '收款方式\nModoPago'
         ]
-        fns = [fld.FieldName for fld in cur_tab.Fields]
-        cols = len(cur_tab.Fields)
+        fns = [
+            fld.FieldName for fld in cur_tab.Fields
+            if fld.FieldName != 'fCustomerID'
+        ]
+        cols = len(cur_tab.Fields)-1
         al_c = Qt.AlignCenter
         al_r = (Qt.AlignVCenter | Qt.AlignRight)
         al_l = (Qt.AlignVCenter | Qt.AlignLeft)
@@ -410,25 +413,25 @@ class FormReport_Rec_print(JPReport):
             50,
             50,
             Texts=title,
-            Widths=[60, 100, 200, 140, 120, 100, 100],
+            Widths=[60, 200, 140, 120, 100, 100],
             Aligns=[al_c] * cols)
         rpt.Detail.AddPrintFields(0,
                                   0,
                                   25,
-                                  FieldNames=fns[0:4],
-                                  Widths=[60, 100, 200, 140],
-                                  Aligns=[al_c, al_c, al_l, al_c])
-        rpt.Detail.AddPrintFields(500,
+                                  FieldNames=fns[0:3],
+                                  Widths=[60, 200, 140],
+                                  Aligns=[al_c, al_l, al_c])
+        rpt.Detail.AddPrintFields(400,
                                   0,
                                   25,
-                                  FieldNames=fns[4:5],
+                                  FieldNames=fns[3:4],
                                   Widths=[120],
                                   Aligns=[al_r],
                                   FormatString='{:,.2f}')
-        rpt.Detail.AddPrintFields(620,
+        rpt.Detail.AddPrintFields(520,
                                   0,
                                   25,
-                                  FieldNames=fns[5:],
+                                  FieldNames=fns[4:],
                                   Widths=[100, 100],
                                   Aligns=[al_c, al_c])
 
@@ -441,7 +444,7 @@ class FormReport_Rec_print(JPReport):
             0,
             25,
             Texts=["合计Sum", JPGetDisplayText(sum_j), " "],
-            Widths=[500, 120, 200],
+            Widths=[400, 120, 200],
             Aligns=[al_c] * 3,
             FillColor=QColor(128, 128, 128))
 
@@ -522,7 +525,7 @@ class FormReport_Rec_print(JPReport):
         self.PageFooter.AddItem(5,
                                 0,
                                 0,
-                                840,
+                                720,
                                 20,
                                 '',
                                 FormatString="PrintTime: %Y-%m-%d %H:%M:%S",
