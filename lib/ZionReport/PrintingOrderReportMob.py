@@ -34,6 +34,11 @@ class PrintOrder_report_Mob(JPReport):
         self.font_YaHei_10.setPointSize(10)
         self.font_YaHei_10.setBold(True)
 
+
+        self.Arial_Black =QFont("Arial Black")
+        self.Arial_Black.setPointSize(8)
+        self.Arial_Black.setBold(True)
+
     def init_ReportHeader_title(self,
                                 title1="NOTA DE PAGAMENTO",
                                 title2="(ESTE DOCUMENTO É DO USO INTERNO)"):
@@ -609,19 +614,16 @@ class PrintOrder_report_Mob(JPReport):
                    Font=self.font_YaHei_8)
         RF.AddItem(1, 540, 125, 100, 0, '')
 
-        noteStr = JPDb().getOnConfigValue('Note_PrintingOrder', str)+'{}'
-        noteFont = QFont(self.font_YaHei_8)
-        noteFont.setBold(True)
-        RF.AddItem(3,
+        noteStr = JPDb().getOnConfigValue('Note_PrintingOrder', str)
+        RF.AddItem(1,
                    0,
                    130,
                    650,
                    60,
-                   "fNote1",
-                   FormatString=noteStr,
+                   noteStr,
                    Bolder=False,
                    AlignmentFlag=(Qt.AlignLeft | Qt.TextWordWrap),
-                   Font=noteFont)
+                   Font=self.Arial_Black)
         # RF.AddItem(1,
         #            10,
         #            140,

@@ -205,7 +205,7 @@ class Order_report(Order_report_Mob):
     def PrintCurrentReport(self, OrderID: str):
         self.init_data(OrderID)
         self.init_ReportHeader_title(
-            title1="Cotação", title2="(ESTE DOCUMENTO É DO USO INTERNO)")
+            title1="报价单Cotação", title2="(ESTE DOCUMENTO É DO USO INTERNO)")
         self.init_ReportHeader()
         self.init_ReportHeader_Individualization()
         self.init_PageHeader()
