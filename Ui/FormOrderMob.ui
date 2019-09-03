@@ -55,7 +55,7 @@
         <string/>
        </property>
        <property name="pixmap">
-        <pixmap>../res/Zions_100.png</pixmap>
+        <pixmap>../res/tmLogo100.png</pixmap>
        </property>
        <property name="scaledContents">
         <bool>true</bool>
@@ -608,6 +608,9 @@
          <width>0</width>
          <height>25</height>
         </size>
+       </property>
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;可输入客户名称或税号中的部分或全部进行快速过滤&lt;/p&gt;&lt;p&gt;Enter part or all of the customer name or tax number for quick filtering&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="placeholderText" stdset="0">
         <string>Please select a cliente.</string>

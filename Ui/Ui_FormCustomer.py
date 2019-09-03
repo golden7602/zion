@@ -58,6 +58,7 @@ class Ui_Form(object):
         _translate = QtCore.QCoreApplication.translate
         Form.setWindowTitle(_translate("Form", "Form"))
         self.label.setText(_translate("Form", "Find："))
+        self.lineEdit.setToolTip(_translate("Form", "<html><head/><body><p><span style=\" font-size:11pt;\">可输入客户信息中名称、税号、电话等任何字段的部分内容进行快速查询</span></p></body></html>"))
 
 
 if __name__ == "__main__":

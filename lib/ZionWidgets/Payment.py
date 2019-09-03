@@ -8,6 +8,22 @@ from lib.ZionReport.OrderReportMob import Order_report_Mob
 from lib.JPPrintReport import JPPrintSectionType
 from PyQt5.QtWidgets import QMessageBox
 from lib.ZionPublc import JPDb, JPPub, JPUser
+from lib.JPMvc.JPModel import JPTableViewModelReadOnly
+from PyQt5.QtGui import QColor
+
+
+class myJPTableViewModelReadOnly(JPTableViewModelReadOnly):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def data(self, index, role=Qt.DisplayRole):
+        c = index.column()
+        if c == 4 and role == Qt.TextAlignmentRole:
+            return Qt.AlignCenter
+        elif c == 4 and role == Qt.TextColorRole:
+            return QColor(Qt.blue)
+        else:
+            return super().data(index, role)
 
 
 class JPFuncForm_Payment(ZionFuncForm):
@@ -36,11 +52,11 @@ class JPFuncForm_Payment(ZionFuncForm):
                         AND fOrderDate{date}
                         AND (fConfirmed={ch1}
                         OR fConfirmed={ch2})
-                ORDER BY  forderID DESC"""
+                ORDER BY  forderDate DESC,fOrderID DESC"""
         sql_2 = sql_0 + """
                 WHERE fCanceled=0
                         AND fSubmited=1
-                ORDER BY  forderID DESC"""
+                ORDER BY  forderDate DESC,fOrderID DESC"""
         self.backgroundWhenValueIsTrueFieldName = ['fConfirmed1']
         self.setListFormSQL(sql_1, sql_2)
         self.checkBox_1.setText('Confirmed')
@@ -48,6 +64,9 @@ class JPFuncForm_Payment(ZionFuncForm):
         self.checkBox_1.setChecked(False)
         self.checkBox_2.setChecked(True)
         self.tableView.setColumnHidden(13, True)
+
+    def onGetModelClass(self):
+        return myJPTableViewModelReadOnly
 
     @pyqtSlot()
     def on_butPrint_clicked(self):

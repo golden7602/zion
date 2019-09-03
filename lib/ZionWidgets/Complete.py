@@ -110,7 +110,7 @@ class JPFuncForm_Complete(_myFuncForm):
         self.tableView.setColumnHidden(5, True)
         self.tableView.setColumnHidden(12, True)
 
-    def getModelClass(self):
+    def onGetModelClass(self):
         return _myMod
 
     @pyqtSlot()
@@ -181,7 +181,7 @@ class EditForm_Order(JPFormModelMainHasSub):
                          flags=flags)
         self.setPkRole(1)
         self.ui.label_logo.setPixmap(QPixmap(getcwd() +
-                                             "\\res\\Zions_100.png"))
+                                             "\\res\\tmLogo100.png"))
         hideObject(self.ui)
         self.readData()
 
@@ -199,7 +199,7 @@ class EditForm_PrintingOrder(JPFormModelMain):
                          sql_main,
                          PKValue=PKValue,
                          edit_mode=edit_mode)
-        pix = QPixmap(getcwd() + "\\res\\Zions_100.png")
+        pix = QPixmap(getcwd() + "\\res\\tmLogo100.png")
         self.ui.label_logo.setPixmap(pix)
         hideObject(self.ui)
         self.readData()

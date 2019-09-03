@@ -20,6 +20,20 @@ from lib.JPMvc.JPModel import JPTableViewModelReadOnly
 from lib.JPExcel.JPExportToExcel import JPExpExcelFromTabelFieldInfo
 
 
+class myJPTableViewModelReadOnly(JPTableViewModelReadOnly):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def data(self, index, role=Qt.DisplayRole):
+        c = index.column()
+        if c == 4 and role == Qt.TextAlignmentRole:
+            return Qt.AlignCenter
+        elif c == 4 and role == Qt.TextColorRole:
+            return QColor(Qt.blue)
+        else:
+            return super().data(index, role)
+
+
 class JPFuncForm_PrintingOrder(JPFunctionForm):
     def __init__(self, MainForm):
         super().__init__(MainForm)
@@ -95,6 +109,9 @@ class JPFuncForm_PrintingOrder(JPFunctionForm):
         frm.ui.fEntryID.setEnabled(False)
         frm.ui.fEndereco.setEnabled(False)
         return frm
+
+    def onGetModelClass(self):
+        return myJPTableViewModelReadOnly
 
     @pyqtSlot()
     def on_CmdSubmit_clicked(self):
@@ -190,7 +207,7 @@ class EditForm_PrintingOrder(JPFormModelMain):
                          sql_main,
                          PKValue=PKValue,
                          edit_mode=edit_mode)
-        pix = QPixmap(getcwd() + "\\res\\Zions_100.png")
+        pix = QPixmap(getcwd() + "\\res\\tmLogo100.png")
         self.ui.label_logo.setPixmap(pix)
         self.setPkRole(5)
         self.cacuTax = True
@@ -280,7 +297,7 @@ class EditForm_PrintingOrder(JPFormModelMain):
             self.ui.listPrintingOrder.setModel(mod)
             self.ui.listPrintingOrder.resizeColumnsToContents()
             self.ui.listPrintingOrder.setEnabled(
-                    len(tab) > 0 and self.isEditMode)
+                len(tab) > 0 and self.isEditMode)
 
             beginNum = tab.getOnlyData([0, 4]) if len(tab.DataRows) > 0 else 0
             beginNum += 1
@@ -320,7 +337,7 @@ class EditForm_PrintingOrder(JPFormModelMain):
         # 检查数据库中是否存在同客户同类型未确认的单据
         # 如果有，则清除当前控件的输入，提示信息并退出
         db = JPDb()
-        orderSQL=" ORDER BY fNumerEnd DESC"
+        orderSQL = " ORDER BY fNumerEnd DESC"
         if self.isNewMode:
             where = """ WHERE fCustomerID={uid} and fEspecieID={tid} and fConfirmed={zt}"""
             sql = 'select fOrderID from t_order'
@@ -339,20 +356,20 @@ class EditForm_PrintingOrder(JPFormModelMain):
 
                 num_sql = self.sql_base + where.format(
                     uid=obj_cus.Value(), tid=obj_esp.Value(), zt=1)
-                self.setNumberNeedControl(num_sql+orderSQL)
+                self.setNumberNeedControl(num_sql + orderSQL)
             return
 
         # 需要管理情况下：
         # 编辑状态
         if self.isEditMode or self.isReadOnlyMode:
             where = """ WHERE fCustomerID={uid} and fEspecieID={tid} and fConfirmed={zt}
-                    and fOrderID<>'{id}'"""
+                    and fOrderID<'{id}'"""
             where = where.format(uid=obj_cus.Value(),
                                  tid=obj_esp.Value(),
                                  zt=1,
                                  id=self.ui.fOrderID.Value())
             num_sql = self.sql_base + where
-            self.setNumberNeedControl(num_sql+orderSQL)
+            self.setNumberNeedControl(num_sql + orderSQL)
 
     def cacu_amount(self, obj):
         nm = obj.objectName()

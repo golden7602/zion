@@ -31,7 +31,7 @@ class Ui_Form(object):
         self.label_logo.setMinimumSize(QtCore.QSize(329, 60))
         self.label_logo.setMaximumSize(QtCore.QSize(329, 60))
         self.label_logo.setText("")
-        self.label_logo.setPixmap(QtGui.QPixmap("../res/Zions_100.png"))
+        self.label_logo.setPixmap(QtGui.QPixmap("../res/tmLogo100.png"))
         self.label_logo.setScaledContents(True)
         self.label_logo.setObjectName("label_logo")
         self.horizontalLayout_6.addWidget(self.label_logo)

@@ -5,7 +5,6 @@
 # Created by: PyQt5 UI code generator 5.11.3
 #
 # WARNING! All changes made in this file will be lost!
-
 from os import getcwd
 from sys import path as jppath
 jppath.append(getcwd())
@@ -31,7 +30,7 @@ class Ui_Form(object):
         self.label_logo.setMinimumSize(QtCore.QSize(329, 60))
         self.label_logo.setMaximumSize(QtCore.QSize(329, 60))
         self.label_logo.setText("")
-        self.label_logo.setPixmap(QtGui.QPixmap("../res/Zions_100.png"))
+        self.label_logo.setPixmap(QtGui.QPixmap("../res/tmLogo100.png"))
         self.label_logo.setScaledContents(True)
         self.label_logo.setObjectName("label_logo")
         self.horizontalLayout_6.addWidget(self.label_logo)
@@ -442,6 +441,7 @@ class Ui_Form(object):
         self.label_11.setText(_translate("Form", "联系人Contato:"))
         self.label_6.setText(_translate("Form", "客户名Cliente:"))
         self.label_10.setText(_translate("Form", "手机Celular:"))
+        self.fCustomerID.setToolTip(_translate("Form", "<html><head/><body><p>可输入客户名称或税号中的部分或全部进行快速过滤</p><p>Enter part or all of the customer name or tax number for quick filtering</p></body></html>"))
         self.fCustomerID.setProperty("placeholderText", _translate("Form", "Please select a cliente."))
         self.label_3.setText(_translate("Form", "日期Date:"))
         self.fOrderDate.setDisplayFormat(_translate("Form", "yyyy-MM-dd"))

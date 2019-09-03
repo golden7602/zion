@@ -12,6 +12,21 @@ from PyQt5.QtPrintSupport import QPrinter
 from lib.JPPrintReport import JPPrintSectionType, JPReport
 from lib.ZionPublc import JPPub, JPDb
 from lib.ZionWidgets.ZionFunc import ZionFuncForm
+from lib.JPMvc.JPModel import JPTableViewModelReadOnly
+
+
+class myJPTableViewModelReadOnly(JPTableViewModelReadOnly):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def data(self, index, role=Qt.DisplayRole):
+        c = index.column()
+        if c in (3, 5, 7, 9) and role == Qt.TextAlignmentRole:
+            return Qt.AlignCenter
+        elif c == 3 and role == Qt.TextColorRole:
+            return QColor(Qt.red)
+        else:
+            return super().data(index, role)
 
 
 class JPFuncForm_Adjustment(ZionFuncForm):
@@ -69,6 +84,9 @@ class JPFuncForm_Adjustment(ZionFuncForm):
         self.setListFormSQL(sql_1, sql_2)
         self.tableView.setColumnHidden(13, True)
 
+    def onGetModelClass(self):
+        return myJPTableViewModelReadOnly
+
     @pyqtSlot()
     def on_CmdCancel_clicked(self):
         cu_id = self.getCurrentSelectPKValue()
@@ -91,7 +109,12 @@ class JPFuncForm_Adjustment(ZionFuncForm):
     def onAfterCreatedForm(self, cur_tp, form):
         for nm in form.ObjectDict.keys():
             form.ObjectDict[nm].setEnabled(False)
-        form.ui.fPrice.setEnabled(True)
-        form.ui.fTax.setEnabled(True)
+        try:
+            if form.isEditMode:
+                form.ui.fPrice.setEnabled(True)
+                form.ui.fTax.setEnabled(True)
+        except Exception as identifier:
+            pass
+
 
         return super().onAfterCreatedForm(cur_tp, form)

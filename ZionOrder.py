@@ -61,9 +61,13 @@ class JPMainWindow(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.ui.label_Title.setText("Zion OrderM")
+        self.ui.label_Title.setText("ColorPro OrderM")
+        self.setWindowTitle("ColorPro OrderM")
         setWidgetIconByName(self.ui.ChangeUser)
         setWidgetIconByName(self.ui.ChangePassword)
-        pic = QPixmap(getcwd() + "\\res\\Zions_100.png")
+        #pic = QPixmap(getcwd() + "\\res\\tmLogo100.png")
+        pic = QPixmap(getcwd() + "\\res\\tmLogo100.png")
+
         self.ui.label_logo.setPixmap(pic)
 
         def onUserChanged(args):

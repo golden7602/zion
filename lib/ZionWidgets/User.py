@@ -267,7 +267,7 @@ class EditForm_User(JPFormModelMain):
                          PKValue=PKValue,
                          edit_mode=edit_mode,
                          flags=flags)
-        pix = QPixmap(getcwd() + "\\res\\Zions_100.png")
+        pix = QPixmap(getcwd() + "\\res\\tmLogo100.png")
         self.ui.label_logo.setPixmap(pix)
         self.readData()
         self.ui.butPrint.hide()

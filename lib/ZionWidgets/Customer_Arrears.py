@@ -11,7 +11,7 @@ from lib.JPDatabase.Query import JPTabelFieldInfo
 from lib.JPFunction import JPDateConver, setButtonIcon
 from lib.JPMvc.JPEditFormModel import JPEditFormDataMode, JPFormModelMain
 from lib.JPMvc.JPModel import JPTableViewModelEditForm
-from lib.ZionPublc import JPDb,JPPub
+from lib.ZionPublc import JPDb, JPPub
 from Ui.Ui_FormCustomer_Arrears import Ui_Form as Ui_Form_List
 from lib.JPDatabase.Query import JPQueryFieldInfo
 from lib.JPExcel.JPExportToExcel import JPExpExcelFromTabelFieldInfo
@@ -27,8 +27,9 @@ class Form_FormCustomer_Arrears(QWidget):
         icon = QIcon(getcwd() + "\\res\\ico\\search.png")
         action = self.ui.lineEdit.addAction(icon, QLineEdit.TrailingPosition)
         action.triggered.connect(self.actionClick)
-
         self.actionClick()
+
+
 
     def actionClick(self):
         sql = """
@@ -36,9 +37,9 @@ class Form_FormCustomer_Arrears(QWidget):
                 c.fCustomerName as `客户名称Cliente`, 
                 c.fNUIT as `税号NUIT`, 
                 c.fCity as `城市City`,
-                QDD.dd AS 订单应付金额OrderPayable,
-                QSK.sk AS Aeceivables收款, 
-                QDD.dd - QSK.sk AS Arrears欠款
+                if(isnull(QDD.dd),null,QDD.dd)  AS 订单应付金额OrderPayable,
+                if(isnull(QSK.sk),null,QSK.sk)  AS Aeceivables收款, 
+                if(if(isnull(QDD.dd),0,QDD.dd)-if(isnull(QSK.sk),0,QSK.sk)=0,null,if(isnull(QDD.dd),0,QDD.dd)-if(isnull(QSK.sk),0,QSK.sk)) AS Arrears欠款
             FROM t_customer c
                 LEFT JOIN (
                     SELECT fCustomerID, SUM(fAmountCollected) AS sk
@@ -55,10 +56,15 @@ class Form_FormCustomer_Arrears(QWidget):
                 ) QDD
                 ON QDD.fCustomerID = c.fCustomerID
             WHERE NOT (isnull(QDD.dd)
-            AND isnull(QSK.sk)) AND c.fCustomerName like '%{}%'"""
+            AND isnull(QSK.sk)) AND {wherestring}"""
+        wherestring = """(
+            fCustomerName like '%{key}%' or
+            fNUIT like '%{key}%'
+        )"""
         txt = self.ui.lineEdit.text()
         txt = txt if txt else ''
-        sql = sql.format(txt)
+        wherestring = wherestring.format(key=txt)
+        sql = sql.format(wherestring=wherestring)
 
         tv = self.ui.tableView
         self.dataInfo = JPTabelFieldInfo(sql)
@@ -130,5 +136,6 @@ class Form_FormCustomer_Arrears(QWidget):
 
     @pyqtSlot()
     def on_CmdExportToExcel_clicked(self):
-        exp = JPExpExcelFromTabelFieldInfo(self.mod.TabelFieldInfo, JPPub().MainForm)
+        exp = JPExpExcelFromTabelFieldInfo(self.mod.TabelFieldInfo,
+                                           JPPub().MainForm)
         exp.run()

@@ -276,7 +276,7 @@ class RecibidoEdit(JPFormModelMain):
                          PKValue=None,
                          edit_mode=JPEditFormDataMode.New,
                          flags=Qt.WindowFlags())
-        pix = QPixmap(getcwd() + "\\res\\Zions_100.png")
+        pix = QPixmap(getcwd() + "\\res\\tmLogo100.png")
         self.ui.label_logo.setPixmap(pix)
         self.ui.fID.hide()
         self.readData()
@@ -285,10 +285,11 @@ class RecibidoEdit(JPFormModelMain):
         self.ui.fCustomerID.currentIndexChanged.connect(self.__setEnabled)
         self.ui.butPrint.hide()
         self.ui.butPDF.hide()
+        self.ui.fCustomerID.setEditable(True)
 
 
     def __setEnabled(self):
-        self.ui.fCustomerID.setEditable(True)
+        self.ui.fCustomerID.setEnabled(True)
         self.ui.fCity.setEnabled(False)
         self.ui.fNUIT.setEnabled(False)
         self.ui.fEndereco.setEnabled(False)
@@ -310,16 +311,6 @@ class RecibidoEdit(JPFormModelMain):
     def onGetPrintReport(self):
         return  #PrintOrder_report_Mob()
 
-    # # def onGetReadOnlyFields(self):
-    # #     return [
-    # #         'fAmountPayable', 'fAmountPaid', 'fArrears', 'fSucursal',
-    # #         'fTelefone', 'fCelular', "fEntryID", "fEndereco", 'fCity', 'fNUIT'
-    # #     ]
-    # def onGetDisableFields(self):
-    #     return [
-    #         'fNUIT', 'fCity', 'fEndereco', 'fCelular', 'fContato', 'fTelefone',
-    #         'fAmountPayable', 'fAmountPaid', 'fArrears'
-    #     ]
 
     def onDateChangeEvent(self, obj, value):
         nm = obj.objectName()
@@ -407,7 +398,7 @@ class FormReport_Rec_print(JPReport):
         al_c = Qt.AlignCenter
         al_r = (Qt.AlignVCenter | Qt.AlignRight)
         al_l = (Qt.AlignVCenter | Qt.AlignLeft)
-        rpt.SetMargins(30, 60, 30, 30)
+        rpt.SetMargins(30, 30, 30, 30)
         rpt.ReportHeader.AddPrintLables(
             0,
             50,

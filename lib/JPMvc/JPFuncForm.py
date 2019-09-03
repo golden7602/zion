@@ -116,7 +116,7 @@ class JPFunctionForm(QWidget):
         """指定编辑窗体语句，返回两个参数，第一个是主表SQL，第二个是子表SQL，可省略"""
         return None, None
 
-    def getModelClass(self):
+    def onGetModelClass(self):
         '''此类可以重写，改写列表Model的行为,必须返回一个模型类
         重写时可以在重载方法中内部定义模型类并继承自已有模型类，将该类返回
         '''
@@ -180,7 +180,7 @@ class JPFunctionForm(QWidget):
             self.currentSQL = sql
             self.MainForm.ProgressBar.show()
             self.MainForm.Label.setText('Reading')
-            self.model = self.getModelClass()(self.ui.tableView, info)
+            self.model = self.onGetModelClass()(self.ui.tableView, info)
             self.model.readingRow.connect(self.__refreshProcessBar)
             self.MainForm.ProgressBar.setRange(0, len(info))
             self.ui.tableView.setModel(self.model)

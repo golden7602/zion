@@ -19,6 +19,7 @@ from lib.ZionReport.OrderReportMob import Order_report_Mob
 from Ui.Ui_FormOrderMob import Ui_Form
 from lib.JPFunction import JPRound
 from lib.JPExcel.JPExportToExcel import JPExpExcelFromTabelFieldInfo
+from PyQt5.QtGui import QColor
 
 
 class OrderMod(JPTableViewModelReadOnly):
@@ -32,43 +33,18 @@ class OrderMod(JPTableViewModelReadOnly):
         r = index.row()
         c = index.column()
         tab = self.TabelFieldInfo
-        curid = tab.DataRows[r].Datas[0]
+        curid = tab.getOnlyData((r, 0))  # DataRows[r].Datas[0]
 
-        # if role == Qt.FontRole and c == 15:
-        #     return self.tabFont
-
-        # if role == Qt.DisplayRole and c == 15:
-        #     # 如果主表只有一行
-        #     if len(tab) == 1:
-        #         return "─"
-        #     # 如果是主表第一行
-        #     if r == 0:
-        #         if curid != tab.DataRows[1].Datas[0]:
-        #             return "─"
-        #         else:
-        #             return "┌"
-        #     # 如果是主表最后一行
-        #     if r == (len(tab)-1):
-        #         if curid == tab.DataRows[r-1].Datas[0]:
-        #             return "└"
-        #         else:
-        #             return "─"
-        #     # 如果是中间行
-        #     nxtid = tab.DataRows[r+1].Datas[0]
-        #     preid = tab.DataRows[r-1].Datas[0]
-        #     if curid == nxtid and curid == preid:
-        #         return "├"
-        #     if curid == nxtid and curid != preid:
-        #         return "┌"
-        #     if curid != nxtid and curid == preid:
-        #         return "└"
-        #     if curid != nxtid and curid != preid:
-        #         return "─"
-
-        if role == Qt.DisplayRole and r > 0 and c <= 14:
-            if curid == tab.DataRows[r - 1].Datas[0]:
-                return ""
-        return super().data(index, role=role)
+        if role == Qt.DisplayRole and r > 0 and c <= 14 and curid == tab.getOnlyData(
+            (r - 1, 0)):
+            # tab.DataRows[r - 1].Datas[0]:
+            return ""
+        elif c == 4 and role == Qt.TextAlignmentRole:
+            return Qt.AlignCenter
+        elif c == 4 and role == Qt.TextColorRole:
+            return QColor(Qt.blue)
+        else:
+            return super().data(index, role=role)
 
 
 class JPFuncForm_Order(JPFunctionForm):
@@ -164,7 +140,7 @@ class JPFuncForm_Order(JPFunctionForm):
         frm.ui.fEndereco.setEnabled(False)
         return frm
 
-    def getModelClass(self):
+    def onGetModelClass(self):
         return OrderMod
 
     @pyqtSlot()
@@ -266,7 +242,7 @@ class EditForm_Order(JPFormModelMainHasSub):
         self.setPkRole(1)
         self.cacuTax = True
         self.ui.label_logo.setPixmap(QPixmap(getcwd() +
-                                             "\\res\\Zions_100.png"))
+                                             "\\res\\tmLogo100.png"))
         self.ui.fTax.keyPressEvent = self.__onTaxKeyPress
         self.readData()
         if self.isNewMode:
@@ -359,7 +335,8 @@ class EditForm_Order(JPFormModelMainHasSub):
         self.ui.fPayable.refreshValueNotRaiseEvent(fPayable, True)
 
     def onAfterSaveData(self, data):
-        self.ui.fOrderID.refreshValueNotRaiseEvent(data, True)
+        if self.isNewMode:
+            self.ui.fOrderID.refreshValueNotRaiseEvent(data, True)
 
     def AfterSetDataBeforeInsterRowEvent(self, row_data, Index):
         # 用于判断可否有加行

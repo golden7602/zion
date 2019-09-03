@@ -38,7 +38,7 @@ class Ui_MainWindow(object):
         self.label_logo.setMinimumSize(QtCore.QSize(0, 70))
         self.label_logo.setMaximumSize(QtCore.QSize(450, 70))
         self.label_logo.setText("")
-        self.label_logo.setPixmap(QtGui.QPixmap("../res/Zions_100.png"))
+        self.label_logo.setPixmap(QtGui.QPixmap("../res/tmLogo100.png"))
         self.label_logo.setScaledContents(True)
         self.label_logo.setWordWrap(False)
         self.label_logo.setObjectName("label_logo")

@@ -16,7 +16,7 @@ class Order_report_Mob(JPReport):
         super().__init__(PaperSize, Orientation)
         self.SetMargins(30, 60, 30, 30)
         self.Copys = 2
-        self.logo = QPixmap(getcwd() + "\\res\\Zions_100.png")
+        self.logo = QPixmap(getcwd() + "\\res\\tmLogo100.png")
         self.FillColor = QColor(128, 128, 128)
 
         self.font_Algerian = QFont("Algerian")

@@ -109,7 +109,7 @@ class JPFuncForm_Quotation(JPFunctionForm):
                 """
         self.setEditFormSQL(m_sql, s_sql)
 
-    def getModelClass(self):
+    def onGetModelClass(self):
         return _myMod
 
     def getEditForm(self, sql_main, edit_mode, sql_sub, PKValue):
