@@ -40,13 +40,11 @@ class Form_Customer(QWidget):
                 fCustomerID as `ID`, 
                 fCustomerName as `客户名称Cliente`, 
                 fNUIT as `税号NUIT`, 
+                fEndereco as `地址Endereco`,
                 fCity as `城市City`, 
                 fContato as `联系人Contato`, 
                 fCelular as `手机Celular`, 
-                fTelefone as `电话Telefone`, 
                 fEmail as `电子邮件Email`, 
-                fWeb as `主页Web`, 
-                fEndereco as `地址Endereco`, 
                 fFax as `传真Fax` 
             from  t_customer 
             {wherestring}
@@ -57,15 +55,13 @@ class Form_Customer(QWidget):
             fCustomerID as `ID`, 
             fCustomerName as `客户名称Cliente`, 
             fNUIT as `税号NUIT`, 
+            fEndereco,
             fCity,
             fContato,
             fCelular,
-            fTelefone, 
             fEmail,
-            fWeb,
-            fEndereco,
-            fFax, 
-            fAreaCode
+            fNote,
+            fFax
             from  t_customer
             where fCustomerID={} 
             order by fCustomerName"""
@@ -88,14 +84,12 @@ class Form_Customer(QWidget):
         #wherestring = "where fCustomerName like '%{key}%' or fNUIT like '%{key}%'"
         wherestring = """where (
             fCustomerName like '%{key}%' or
+            fEndereco like '%{key}%' or
             fNUIT like '%{key}%' or
             fCity like '%{key}%' or
             fContato like '%{key}%' or
             fCelular like '%{key}%' or
-            fTelefone like '%{key}%' or
             fEmail like '%{key}%' or
-            fWeb like '%{key}%' or
-            fEndereco like '%{key}%' or
             fFax like '%{key}%' 
         )"""
         txt = self.ui.lineEdit.text()
@@ -211,6 +205,7 @@ class EditForm_Customer(JPFormModelMain):
         self.ui.butPrint.hide()
         self.ui.butPDF.hide()
         self.ui.fCustomerID.setEnabled(False)
+        self.ui.fCustomerName.setFocus()
 
     def onFirstHasDirty(self):
         self.ui.butSave.setEnabled(True)

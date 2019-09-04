@@ -280,7 +280,7 @@ class Order_Printingreport(PrintOrder_report_Mob):
         RF.AddItem(1, 540, 125, 100, 0, '')
         noteStr = JPDb().getOnConfigValue('Bank_Account', str).split('\n')
 
-        self.Arial_Black = QFont("Arial Black")
+        self.Arial_Black = QFont("Arial")
         self.Arial_Black.setPointSize(8)
         self.Arial_Black.setBold(True)
 

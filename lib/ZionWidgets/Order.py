@@ -354,8 +354,13 @@ class EditForm_Order(JPFormModelMainHasSub):
 
     @pyqtSlot()
     def on_butPrint_clicked(self):
-        rpt = Order_report()
-        rpt.PrintCurrentReport(self.ui.fOrderID.Value())
+        try:
+            rpt = Order_report()
+            rpt.PrintCurrentReport(self.ui.fOrderID.Value())
+        except Exception as identifier:
+            msg = "打印过程出错，错误信息为：{}".format(str(identifier))
+            QMessageBox.warning(self, '提示', msg, QMessageBox.Ok,
+                                QMessageBox.Ok)
 
 
 class Order_report(Order_report_Mob):

@@ -175,36 +175,37 @@ class Order_report_Mob(JPReport):
                    "fCity",
                    Font=self.font_YaHei_8,
                    AlignmentFlag=Qt.AlignLeft | Qt.AlignVCenter)
+
         # 第4行
-        RH.AddItem(1,
-                   0,
-                   115,
-                   90,
-                   20,
-                   "地址Endereco:",
-                   Font=self.font_YaHei_8,
-                   AlignmentFlag=Qt.AlignCenter)
-        RH.AddItem(3,
-                   90,
-                   115,
-                   400,
-                   20,
-                   "fEndereco",
-                   Font=self.font_YaHei_8,
-                   AlignmentFlag=Qt.AlignLeft | Qt.AlignVCenter)
-        RH.AddItem(3,
-                   490,
-                   115,
-                   160,
-                   20,
-                   "fSucursal1",
-                   Font=self.font_YaHei_8,
-                   AlignmentFlag=Qt.AlignLeft,
-                   FormatString="Sucursal:{}")
+        # RH.AddItem(1,
+        #            0,
+        #            115,
+        #            90,
+        #            20,
+        #            " ",
+        #            Font=self.font_YaHei_8,
+        #            AlignmentFlag=Qt.AlignCenter)
+        # RH.AddItem(1,
+        #            90,
+        #            115,
+        #            400,
+        #            20,
+        #            " ",
+        #            Font=self.font_YaHei_8,
+        #            AlignmentFlag=Qt.AlignLeft | Qt.AlignVCenter)
+        # RH.AddItem(3,
+        #            490,
+        #            115,
+        #            160,
+        #            20,
+        #            "fSucursal1",
+        #            Font=self.font_YaHei_8,
+        #            AlignmentFlag=Qt.AlignLeft,
+        #            FormatString="Sucursal:{}")
         # 第5行
         RH.AddItem(1,
                    0,
-                   135,
+                   115,
                    90,
                    20,
                    "联系人Contato:",
@@ -212,7 +213,7 @@ class Order_report_Mob(JPReport):
                    AlignmentFlag=Qt.AlignCenter)
         RH.AddItem(3,
                    90,
-                   135,
+                   115,
                    90,
                    20,
                    "fContato",
@@ -220,7 +221,7 @@ class Order_report_Mob(JPReport):
                    AlignmentFlag=Qt.AlignLeft | Qt.AlignVCenter)
         RH.AddItem(1,
                    180,
-                   135,
+                   115,
                    130,
                    20,
                    "手机Celular:",
@@ -228,7 +229,7 @@ class Order_report_Mob(JPReport):
                    AlignmentFlag=Qt.AlignCenter)
         RH.AddItem(3,
                    310,
-                   135,
+                   115,
                    90,
                    20,
                    "fCelular",
@@ -236,7 +237,7 @@ class Order_report_Mob(JPReport):
                    AlignmentFlag=Qt.AlignLeft | Qt.AlignVCenter)
         RH.AddItem(1,
                    400,
-                   135,
+                   115,
                    90,
                    20,
                    "电话Tel:",
@@ -244,7 +245,7 @@ class Order_report_Mob(JPReport):
                    AlignmentFlag=Qt.AlignCenter)
         RH.AddItem(3,
                    490,
-                   135,
+                   115,
                    160,
                    20,
                    "fTelefone",
@@ -267,7 +268,7 @@ class Order_report_Mob(JPReport):
         RH = self.ReportHeader
         RH.AddPrintLables(
             0,
-            155,
+            135,
             20, [
                 "#", "数量Qtd", "名称Descrição", "长Comp.", "宽Larg.",
                 "单价P. Unitario", "金额Total"
