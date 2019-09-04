@@ -25,6 +25,11 @@ class _JPDelegate_Base(QStyledItemDelegate):
 
     def __init__(self, parent: QObject = None):
         super().__init__(parent)
+        try:
+            # 关闭中文输入法
+            self.setAttribute(Qt.WA_InputMethodEnabled,False)
+        except Exception as identifier:
+            pass
 
     @abc.abstractmethod
     def createEditor(self, parent: QWidget, option: QStyleOptionViewItem,

@@ -312,17 +312,23 @@ class EditForm_PrintingOrder(JPFormModelMain):
     def tryNumberControl(self, obj):
         obj_cus = self.ui.fCustomerID
         obj_esp = self.ui.fEspecieID
+        obj_fSucursal = self.ui.fSucursal
 
         nm = obj.objectName()
         if nm == 'fCustomerID':
-            sql = '''select fCelular, fContato, fTelefone 
-                from t_customer where fCustomerID={}'''
+            sql = '''select fCelular, fContato, fTelefone ,fNUIT,fEndereco,fCity
+            from t_customer where fCustomerID={}'''
             sql = sql.format(self.ui.fCustomerID.Value())
             tab = JPQueryFieldInfo(sql)
-            objs = [self.ui.fCelular, self.ui.fContato, self.ui.fTelefone]
-            for i, obj in enumerate(objs):
-                obj.refreshValueNotRaiseEvent(tab.getOnlyData([0, i]), True)
-
+            self.ui.fCelular.refreshValueNotRaiseEvent(tab.getOnlyData([0, 0]),
+                                                       True)
+            self.ui.fContato.refreshValueNotRaiseEvent(tab.getOnlyData([0, 1]),
+                                                       True)
+            self.ui.fTelefone.refreshValueNotRaiseEvent(
+                tab.getOnlyData([0, 2]), True)
+            self.ui.fNUIT.setText(tab.getOnlyData([0, 3]))
+            self.ui.fEndereco.setText(tab.getOnlyData([0, 4]))
+            self.ui.fCity.setText(tab.getOnlyData([0, 5]))
         # 判断是否需要单据管理,不需要管理则退出
         if obj_cus.currentIndex() == -1 or obj_esp.currentIndex() == -1:
             self.setNumberNeedControl(False)
@@ -339,33 +345,45 @@ class EditForm_PrintingOrder(JPFormModelMain):
         db = JPDb()
         orderSQL = " ORDER BY fNumerEnd DESC"
         if self.isNewMode:
-            where = """ WHERE fCustomerID={uid} and fEspecieID={tid} and fConfirmed={zt}"""
+            where = """ 
+            WHERE fCustomerID={uid} 
+                and fEspecieID={tid}
+                and fSucursal={fgs}
+                and fConfirmed={zt}
+            """
             sql = 'select fOrderID from t_order'
-            sql = sql + where.format(
-                uid=obj_cus.Value(), tid=obj_esp.Value(), zt=0)
+            sql = sql + where.format(uid=obj_cus.Value(),
+                                     tid=obj_esp.Value(),
+                                     fgs=obj_fSucursal.Value(),
+                                     zt=0)
             bc, result = db.executeTransaction(sql)
             if result:
-                txt = '选择的客户名下有同类型但不确认的单据，不能增加新单据!\n'
+                txt = '选择的客户名(相同分公司类型)下有同类型但不确认的单据，不能增加新单据!\n'
                 txt = txt + 'There are identical but uncertain documents '
                 txt = txt + 'under the name of the selected customer, '
                 txt = txt + 'and no new documents can be added'
                 QMessageBox.information(self, "提示", txt)
-                obj.setCurrentIndex(-1)
+                if obj.objectName!='fSucursal':
+                    obj.setCurrentIndex(-1)
                 return
             else:
 
                 num_sql = self.sql_base + where.format(
-                    uid=obj_cus.Value(), tid=obj_esp.Value(), zt=1)
+                    uid=obj_cus.Value(),
+                    tid=obj_esp.Value(),
+                    fgs=obj_fSucursal.Value(),
+                    zt=1)
                 self.setNumberNeedControl(num_sql + orderSQL)
             return
 
         # 需要管理情况下：
         # 编辑状态
         if self.isEditMode or self.isReadOnlyMode:
-            where = """ WHERE fCustomerID={uid} and fEspecieID={tid} and fConfirmed={zt}
+            where = """ WHERE fCustomerID={uid} and fEspecieID={tid} and fSucursal={fgs} and fConfirmed={zt}
                     and fOrderID<'{id}'"""
             where = where.format(uid=obj_cus.Value(),
                                  tid=obj_esp.Value(),
+                                 fgs=obj_fSucursal.Value(),
                                  zt=1,
                                  id=self.ui.fOrderID.Value())
             num_sql = self.sql_base + where
@@ -410,7 +428,7 @@ class EditForm_PrintingOrder(JPFormModelMain):
 
     def onDateChangeEvent(self, obj, value):
         nm = obj.objectName()
-        if nm in ('fCustomerID', 'fEspecieID'):
+        if nm in ('fCustomerID', 'fEspecieID', 'fSucursal'):
             self.tryNumberControl(obj)
         if nm in ('fQuant', 'fPrice', 'fDesconto', "fTax"):
             self.cacu_amount(obj)
