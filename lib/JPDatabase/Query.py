@@ -10,7 +10,7 @@ from lib.JPDatabase.Database import JPDb
 from lib.JPDatabase.Field import JPFieldInfo
 from PyQt5.QtWidgets import QMessageBox
 from lib.JPFunction import JPGetDisplayText
-from lib.ZionPublc import JPPub
+#from lib.ZionPublc import JPPub
 
 
 class JPTabelRowData(object):

@@ -140,7 +140,6 @@ class JPUser(QObject):
     def INIT(self):
         self.reFreshAllUser()
 
-
     def __refreshCurrentUserRight(self):
         db = JPDb()
         uid = self.currentUserID()
@@ -204,24 +203,10 @@ class JPPub(QObject):
         if self.MainForm is None:
             super().__init__()
             self.user = JPUser()
-            db = JPDb()
-            sql = '''select fCustomerName,fCustomerID,fNUIT,
-                    fCity,fContato from t_customer'''
-            self.customerList = db.getDataList(sql)
-            sql = '''select fCustomerName,fCustomerID,
-                fNUIT,fCity,fContato from t_customer'''
-            self.__allCustomerList = db.getDataList(sql)
+            self.db = JPDb()
+            self.INITCustomer()
+            self.INITEnum()
 
-            def getEnumDict() -> dict:
-                sql = '''select fTypeID,fTitle,fItemID,fSpare1,
-                        fSpare2,fNote from t_enumeration'''
-                rows = db.getDataList(sql)
-                return {
-                    k: [row1[1:] for row1 in rows if row1[0] == k]
-                    for k in set(row[0] for row in rows)
-                }
-
-            self.__EnumDict = getEnumDict()
             sql = """
                 SELECT fNMID, fMenuText, fParentId, fCommand, fObjectName, fIcon,
                         cast(fIsCommandButton AS SIGNED) AS fIsCommandButton
@@ -229,7 +214,24 @@ class JPPub(QObject):
                 WHERE fEnabled=1 AND fNMID>1
                 ORDER BY fDispIndex
                 """
-            self.__sysNavigationMenusDict = db.getDict(sql)
+            self.__sysNavigationMenusDict = self.db.getDict(sql)
+
+    def INITEnum(self):
+        def getEnumDict() -> dict:
+            sql = '''select fTypeID,fTitle,fItemID,fSpare1,
+                        fSpare2,fNote from t_enumeration'''
+            rows = self.db.getDataList(sql)
+            return {
+                k: [row1[1:] for row1 in rows if row1[0] == k]
+                for k in set(row[0] for row in rows)
+            }
+
+        self.__EnumDict = getEnumDict()
+
+    def INITCustomer(self):
+        sql = '''select fCustomerName,fCustomerID,
+                fNUIT,fCity,fContato from t_customer'''
+        self.__allCustomerList = self.db.getDataList(sql)
 
     def getEnumList(self, enum_type_id: int):
         return self.__EnumDict[enum_type_id]

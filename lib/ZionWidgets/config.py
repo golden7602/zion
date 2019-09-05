@@ -3,7 +3,7 @@ from sys import path as jppath
 jppath.append(getcwd())
 
 from Ui.Ui_FormConfig import Ui_Dialog
-from PyQt5.QtWidgets import QDialog
+from PyQt5.QtWidgets import QDialog,  QMessageBox
 from lib.ZionPublc import JPPub
 from PyQt5.QtCore import Qt
 from lib.JPDatabase.Database import JPDb
@@ -24,10 +24,11 @@ class Form_Config(QDialog):
     def accept(self):
         txt = self.ui.Note_PrintingOrder.toPlainText()
         txt = txt if txt else ''
-        txt1 = self.ui.Note_PrintingOrder.toPlainText()
+        txt1 = self.ui.Bank_Account.toPlainText()
         txt1 = txt1 if txt else ''
         try:
             JPDb().saveConfigVale('Note_PrintingOrder', txt, str)
             JPDb().saveConfigVale('Bank_Account', txt1, str)
+            QMessageBox.information(self, '完成', '保存数据完成！\nSave data complete!')
         except Exception as e:
             pass

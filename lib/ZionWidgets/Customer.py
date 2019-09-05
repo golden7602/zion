@@ -10,11 +10,12 @@ from lib.JPDatabase.Query import JPTabelFieldInfo
 from lib.JPFunction import JPDateConver, setButtonIcon
 from lib.JPMvc.JPEditFormModel import JPEditFormDataMode, JPFormModelMain
 from lib.JPMvc.JPModel import JPTableViewModelReadOnly
-from lib.ZionPublc import JPDb
+from lib.ZionPublc import JPDb,JPPub
 from Ui.Ui_FormCustomer import Ui_Form as Ui_Form_List
 from Ui.Ui_FormCustomerEdit import Ui_Form as Ui_Form_Edit
 from lib.JPDatabase.Query import JPQueryFieldInfo
 from lib.JPSearch import Form_Search
+
 
 # class myJPTableViewModelReadOnly(JPTableViewModelReadOnly):
 #     def __init__(self, tableView, tabelFieldInfo):
@@ -72,7 +73,6 @@ class Form_Customer(QWidget):
         self.SQL_EditForm_Main = medit_sql
         self.actionClick()
 
-
     def __getUID(self):
         r = self.ui.tableView.currentIndex()
         if r:
@@ -104,9 +104,24 @@ class Form_Customer(QWidget):
         tv.setModel(self.mod)
         tv.resizeColumnsToContents()
 
-    def refreshTable(self):
+    def _locationRow(self, id):
+        tab = self.dataInfo
+        c = tab.PrimarykeyFieldIndex
+        id=int(id)
+        target = [
+            i for i, r in enumerate(tab.DataRows)
+            if tab.getOnlyData([i, c]) == id
+        ]
+        if target:
+            index = self.mod.createIndex(target[0], c)
+            self.ui.tableView.setCurrentIndex(index)
+            return
+
+    def refreshTable(self, ID=None):
         self.ui.lineEdit.setText(None)
         self.actionClick()
+        if ID:
+            self._locationRow(ID)
 
     def addButtons(self, btnNames: list):
         for item in btnNames:
@@ -118,9 +133,12 @@ class Form_Customer(QWidget):
         QMetaObject.connectSlotsByName(self)
 
     def getEditForm(self, sql_main, edit_mode, sql_sub, PKValue):
-        return EditForm_Customer(sql_main=sql_main,
-                                 edit_mode=edit_mode,
-                                 PKValue=PKValue)
+        frm = EditForm_Customer(sql_main=sql_main,
+                                edit_mode=edit_mode,
+                                PKValue=PKValue)
+        frm.afterSaveData.connect(self.refreshTable)
+        frm.setListForm(self)
+        return frm
 
     def getCurrentSelectPKValue(self):
         index = self.ui.tableView.selectionModel().currentIndex()
@@ -135,29 +153,30 @@ class Form_Customer(QWidget):
 
     @pyqtSlot()
     def on_CmdNew_clicked(self):
-        self.__EditForm = None
 
-        self.__EditForm = self.getEditForm(sql_main=self.SQL_EditForm_Main,
-                                           sql_sub=None,
-                                           edit_mode=JPEditFormDataMode.New,
-                                           PKValue=None)
-        self.__EditForm.setListForm(self)
-        self.__EditForm.afterSaveData.connect(self.refreshTable)
-        self.__EditForm.exec_()
+        frm = self.getEditForm(sql_main=self.SQL_EditForm_Main,
+                               sql_sub=None,
+                               edit_mode=JPEditFormDataMode.New,
+                               PKValue=None)
+        frm.setListForm(self)
+        frm.afterSaveData.connect(self.refreshTable)
+        self.__EditForm = frm
+        frm.exec_()
 
     @pyqtSlot()
     def on_CmdEdit_clicked(self):
         cu_id = self.getCurrentSelectPKValue()
         if not cu_id:
             return
-        self.__EditForm = None
-        self.__EditForm = self.getEditForm(sql_main=self.SQL_EditForm_Main,
-                                           sql_sub=None,
-                                           edit_mode=JPEditFormDataMode.Edit,
-                                           PKValue=cu_id)
-        self.__EditForm.setListForm(self)
-        self.__EditForm.afterSaveData.connect(self.refreshTable)
-        self.__EditForm.exec_()
+
+        frm = self.getEditForm(sql_main=self.SQL_EditForm_Main,
+                               sql_sub=None,
+                               edit_mode=JPEditFormDataMode.Edit,
+                               PKValue=cu_id)
+        frm.setListForm(self)
+        frm.afterSaveData.connect(self.refreshTable)
+        self.__EditForm = frm
+        frm.exec_()
 
     @pyqtSlot()
     def on_CmdDelete_clicked(self):
@@ -213,13 +232,15 @@ class EditForm_Customer(JPFormModelMain):
     @pyqtSlot()
     def on_butSave_clicked(self):
         try:
-            lst = self.getSqls(self.PKRole)
+            lst0 = self.getSqls(self.PKRole)
+            lst = lst0 + [JPDb().LAST_INSERT_ID_SQL()]
             isOK, result = JPDb().executeTransaction(lst)
             if isOK:
                 self.ui.butSave.setEnabled(False)
-                self.afterSaveData.emit(result)
+                self.afterSaveData.emit(str(result))
                 QMessageBox.information(self, '完成',
                                         '保存数据完成！\nSave data complete!')
+                JPPub().INITCustomer()
         except Exception as e:
             msgBox = QMessageBox(QMessageBox.Critical, u'提示', str(e))
             msgBox.exec_()

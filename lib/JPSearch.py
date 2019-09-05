@@ -73,7 +73,7 @@ class myJPTableViewModelEditForm(JPTableViewModelEditForm):
                 return True
         return False
 
-    def AfterSetDataBeforeInsterRowEvent(self, row_data, Index):
+    def afterSetDataBeforeInsterRowEvent(self, row_data, Index):
         return self.checkOnRow_(Index.model().rowCount() - 1)
 
     def data(self, index, role=Qt.DisplayRole):

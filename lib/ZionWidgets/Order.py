@@ -19,7 +19,7 @@ from lib.ZionReport.OrderReportMob import Order_report_Mob
 from Ui.Ui_FormOrderMob import Ui_Form
 from lib.JPFunction import JPRound
 from lib.JPExcel.JPExportToExcel import JPExpExcelFromTabelFieldInfo
-from PyQt5.QtGui import QColor
+from PyQt5.QtGui import QColor, QIcon
 
 
 class OrderMod(JPTableViewModelReadOnly):
@@ -239,6 +239,7 @@ class EditForm_Order(JPFormModelMainHasSub):
                          sql_sub=sql_sub,
                          edit_mode=edit_mode,
                          flags=flags)
+
         self.setPkRole(1)
         self.cacuTax = True
         self.ui.label_logo.setPixmap(QPixmap(getcwd() +
@@ -338,7 +339,11 @@ class EditForm_Order(JPFormModelMainHasSub):
         if self.isNewMode:
             self.ui.fOrderID.refreshValueNotRaiseEvent(data, True)
 
-    def AfterSetDataBeforeInsterRowEvent(self, row_data, Index):
+    # def afterInsterRowEvent(self):
+    #     index = self.subModel.createIndex(self.subModel.rowCount(), 2)
+    #     self.ui.tableView.setCurrentIndex(index)
+
+    def afterSetDataBeforeInsterRowEvent(self, row_data, Index):
         # 用于判断可否有加行
         if row_data is None:
             return False

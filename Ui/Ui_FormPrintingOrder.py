@@ -5,12 +5,12 @@
 # Created by: PyQt5 UI code generator 5.11.3
 #
 # WARNING! All changes made in this file will be lost!
+
 from os import getcwd
 from sys import path as jppath
 jppath.append(getcwd())
 from PyQt5 import QtCore, QtGui
 from lib.JPMvc import JPWidgets as QtWidgets
-
 
 class Ui_Form(object):
     def setupUi(self, Form):
@@ -103,7 +103,7 @@ class Ui_Form(object):
         self.horizontalLayout_3.addWidget(self.butSave)
         self.butPrint = QtWidgets.QPushButton(Form)
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap("../res/ico/printer.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap("../res/ico/Print.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.butPrint.setIcon(icon1)
         self.butPrint.setIconSize(QtCore.QSize(16, 16))
         self.butPrint.setObjectName("butPrint")
@@ -632,3 +632,4 @@ if __name__ == "__main__":
     ui.setupUi(Form)
     Form.show()
     sys.exit(app.exec_())
+

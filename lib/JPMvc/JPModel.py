@@ -135,7 +135,7 @@ class JPTableViewModelBase(QAbstractTableModel):
             except Exception:
                 pass
 
-    def AfterInsterRowEvent(self):
+    def afterInsterRowEvent(self):
         """增加一行后执行"""
         return
 
@@ -149,14 +149,15 @@ class JPTableViewModelBase(QAbstractTableModel):
         # 执行重载函数，判断行数据是否合法
         # 给函数参数的值 是最后一行的数据list
         row_data = t_inof.getRowData(len(t_inof.DataRows) - 1)
-        tempv = self.AfterSetDataBeforeInsterRowEvent(row_data, Index)
+        tempv = self.afterSetDataBeforeInsterRowEvent(row_data, Index)
+
 
         if isinstance(tempv, bool):
             if tempv:
                 self.insertRows(self.rowCount())
-                self.AfterInsterRowEvent()
+                self.afterInsterRowEvent()
         else:
-            strErr = 'AfterSetDataBeforeInsterRowEvent函数的返回值必须为逻辑值！'
+            strErr = 'afterSetDataBeforeInsterRowEvent函数的返回值必须为逻辑值！'
             raise TypeError(strErr)
         # 回车向右
         r, c = Index.row(), Index.column()
@@ -168,7 +169,7 @@ class JPTableViewModelBase(QAbstractTableModel):
         self.dataChanged[QModelIndex, object].emit(Index, Any)
         return True
 
-    def AfterSetDataBeforeInsterRowEvent(self, row_data,
+    def afterSetDataBeforeInsterRowEvent(self, row_data,
                                          Index: QModelIndex) -> True:
         '''子窗体更新数据后,执行此事件，可重载，返回值必须为逻辑值
         不重载时，默认不增加行，返回True时增加行

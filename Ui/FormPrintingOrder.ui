@@ -258,7 +258,7 @@
          </property>
          <property name="icon">
           <iconset>
-           <normaloff>../res/ico/printer.png</normaloff>../res/ico/printer.png</iconset>
+           <normaloff>../res/ico/Print.png</normaloff>../res/ico/Print.png</iconset>
          </property>
          <property name="iconSize">
           <size>

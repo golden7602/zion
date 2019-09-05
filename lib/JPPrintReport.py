@@ -373,7 +373,20 @@ class _jpSectionReportFooter(_SectionAutoPaging):
         super().__init__()
 
     def Print(self, painter):
-        super().Print(painter)
+        #super().Print(painter)
+        rpt = self.Report
+        curSecH = self.SectionHeight
+        if rpt.onFormat(self.SectionType, rpt._CurrentPage) or len(self) == 0:
+            return
+
+        # 判断页面剩余空间能否容纳页脚节高度及页脚高度，不能则分页
+        if rpt.PageValidHeight < (rpt._SectionPrintBeginY + curSecH +
+                                    rpt.PageFooter.SectionHeight):
+            rpt.NewPage(painter)
+            rpt._SectionPrintBeginY = rpt.PageHeader.SectionHeight
+        for item in self.Items:
+            item.Print(painter, rpt.Margins, rpt._SectionPrintBeginY)
+        rpt._SectionPrintBeginY += curSecH
 
 
 class _jpSectionDetail(_jpPrintSection):
@@ -902,10 +915,14 @@ class JPReport(object):
         self.PageCount += 1
         self.PageFooter.Print(painter)
         self.PageHeader.Print(painter)
+
         self.__ExecNewPageTimes += 1
+        print("self.__ExecNewPageTimes=" + str(self.__ExecNewPageTimes))
 
     def __PrintOrCalcOneCopy(self, painter):
         """打印或计算一次报表"""
+        # 重新打印或计算页码时，总页码清零 这是2019.09.05最后加上的
+        self.PageCount = 0
         self.NewPage(painter)
         self.PageFooter.Print(painter)
         self.ReportHeader.Print(painter)
@@ -943,4 +960,5 @@ class JPReport(object):
         # 后台用用户定义的纸型及边距计算一次页码，注意过程中不用真正绘制
         dialog = QPrintPreviewDialog(self.Printer)
         dialog.paintRequested.connect(self.PrintPreview)
+
         dialog.exec_()

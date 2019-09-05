@@ -287,14 +287,14 @@ class Order_Printingreport(PrintOrder_report_Mob):
         for i, txt in enumerate(noteStr):
             RF.AddItem(1,
                        5,
-                       150 + i * 20,
+                       135 + i * 15,
                        650,
                        20,
                        txt,
                        Bolder=False,
                        AlignmentFlag=(Qt.AlignLeft | Qt.TextWordWrap),
                        Font=self.Arial_Black)
-        RF.AddItem(1, 0, 150, 650 , len(noteStr) * 20, " ", Bolder=True)
+        RF.AddItem(1, 0, 135, 650 , len(noteStr) * 15, " ", Bolder=True)
         # RF.AddItem(3,
         #            0,
         #            130,

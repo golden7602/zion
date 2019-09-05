@@ -190,9 +190,11 @@ class JPMainWindow(QMainWindow):
 
 
 if __name__ == "__main__":
+    # import qdarkstyle
     QApplication.setAttribute(Qt.AA_EnableHighDpiScaling)
     QApplication.setStyle('Fusion')
     app = QApplication(argv)
+    # app.setStyleSheet(qdarkstyle.load_stylesheet_pyqt5())
     db = JPDb()
     db.setDatabaseType(JPDbType.MySQL)
     MainWindow = JPMainWindow()

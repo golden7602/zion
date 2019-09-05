@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'e:\Zion\Ui\FormEnumEdit.ui'
+# Form implementation generated from reading ui file 'e:\Zion\zion\Ui\FormEnumEdit.ui'
 #
 # Created by: PyQt5 UI code generator 5.11.3
 #
 # WARNING! All changes made in this file will be lost!
-
 from os import getcwd
 from sys import path as jppath
 jppath.append(getcwd())
@@ -88,7 +87,7 @@ class Ui_Form(object):
         self.fTitle = QtWidgets.QLineEdit(Form)
         self.fTitle.setMinimumSize(QtCore.QSize(0, 25))
         self.fTitle.setSizeIncrement(QtCore.QSize(0, 25))
-        self.fTitle.setReadOnly(True)
+        self.fTitle.setReadOnly(False)
         self.fTitle.setPlaceholderText("")
         self.fTitle.setClearButtonEnabled(True)
         self.fTitle.setObjectName("fTitle")
@@ -139,7 +138,7 @@ class Ui_Form(object):
         self.fSpare1 = QtWidgets.QLineEdit(Form)
         self.fSpare1.setMinimumSize(QtCore.QSize(0, 25))
         self.fSpare1.setSizeIncrement(QtCore.QSize(0, 25))
-        self.fSpare1.setReadOnly(True)
+        self.fSpare1.setReadOnly(False)
         self.fSpare1.setClearButtonEnabled(True)
         self.fSpare1.setObjectName("fSpare1")
         self.gridLayout.addWidget(self.fSpare1, 2, 2, 1, 1)
@@ -193,7 +192,7 @@ class Ui_Form(object):
 
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
-        Form.setWindowTitle(_translate("Form", "Order"))
+        Form.setWindowTitle(_translate("Form", "Enumeration"))
         self.label_23.setText(_translate("Form", "枚举管理"))
         self.label_24.setText(_translate("Form", "Enumeration "))
         self.label_9.setText(_translate("Form", "文本Text:"))

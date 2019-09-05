@@ -163,6 +163,7 @@ class QLineEdit(QLineEdit_, __JPWidgetBase):
         self.passWordConver = None
         self.Validator = None
         self.textChanged[str].connect(self.__onlyRefreshDisplayText)
+        self.setAttribute(Qt.WA_InputMethodEnabled, False)
 
     def getSqlValue(self) -> str:
         t = self.text()
@@ -214,7 +215,6 @@ class QLineEdit(QLineEdit_, __JPWidgetBase):
     def _setFieldInfo(self, fld: JPFieldType, raiseEvent=True):
         self.FieldInfo = fld
         st = self.MainModel.isReadOnlyMode
-
         if not self.MainModel.isNewMode:
             self.__setDisplayText()
         # 设置验证器
@@ -292,6 +292,7 @@ class QLineEdit(QLineEdit_, __JPWidgetBase):
 class QTextEdit(QTextEdit_, __JPWidgetBase):
     def __init__(self, parent):
         super().__init__(parent)
+        self.setAttribute(Qt.WA_InputMethodEnabled, False)
         self.textChanged.connect(self.refreshValueNotRaiseEvent)
 
     def getSqlValue(self) -> str:
@@ -330,9 +331,15 @@ class QTextEdit(QTextEdit_, __JPWidgetBase):
 class QComboBox(QComboBox_, __JPWidgetBase):
     def __init__(self, parent):
         super().__init__(parent)
-        #super().setEditable(False)
         self.BindingData = []
         self.currentIndexChanged[int].connect(self._onValueChange)
+        self.setAttribute(Qt.WA_InputMethodEnabled, False)
+
+    # def inputMethodQuery(self, InputMethodQuery):
+    #     if InputMethodQuery == Qt.ImEnabled:
+    #         return False
+    #     else:
+    #         super().inputMethodQuery(InputMethodQuery)
 
     def getSqlValue(self) -> str:
         if self.count() == 0:
@@ -385,6 +392,7 @@ class QComboBox(QComboBox_, __JPWidgetBase):
             qcom.setCompletionMode(QCompleter.PopupCompletion)
             qcom.setFilterMode(Qt.MatchContains)
             self.setCompleter(qcom)
+
         else:
             super().setEditable(state)
 
@@ -413,6 +421,7 @@ class QComboBox(QComboBox_, __JPWidgetBase):
 class QDateEdit(QDateEdit_, __JPWidgetBase):
     def __init__(self, parent):
         super().__init__(parent)
+        self.setAttribute(Qt.WA_InputMethodEnabled, False)
         self.__RaiseEvent = False
         self.dateChanged.connect(self._onValueChange)
 

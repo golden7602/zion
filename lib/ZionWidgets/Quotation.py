@@ -304,14 +304,15 @@ class Order_report(Order_report_Mob):
         for i, txt in enumerate(noteStr):
             RF.AddItem(1,
                        5,
-                       150 + i * 20,
+                       135 + i * 15,
                        650,
                        20,
                        txt,
                        Bolder=False,
                        AlignmentFlag=(Qt.AlignLeft | Qt.TextWordWrap),
                        Font=self.Arial_Black)
-        RF.AddItem(1, 0, 150, 650 , len(noteStr) * 20, " ", Bolder=True)
+        # 下面的框要删除，因为跨页
+        RF.AddItem(1, 0, 135, 650 , len(noteStr) * 15, " ", Bolder=True)
 
 
 

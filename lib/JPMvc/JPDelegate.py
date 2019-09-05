@@ -25,11 +25,11 @@ class _JPDelegate_Base(QStyledItemDelegate):
 
     def __init__(self, parent: QObject = None):
         super().__init__(parent)
-        try:
-            # 关闭中文输入法
-            self.setAttribute(Qt.WA_InputMethodEnabled,False)
-        except Exception as identifier:
-            pass
+        #try:
+        # 关闭中文输入法
+
+        # except Exception as identifier:
+        #     pass
 
     @abc.abstractmethod
     def createEditor(self, parent: QWidget, option: QStyleOptionViewItem,
@@ -76,6 +76,7 @@ class JPDelegate_LineEdit(_JPDelegate_Base):
     def createEditor(self, parent: QWidget, option: QStyleOptionViewItem,
                      index: QModelIndex) -> QWidget:
         wdgt = QLineEdit(parent)
+        wdgt.setAttribute(Qt.WA_InputMethodEnabled, False)
         if self.__ValueType == JPFieldType.Int:
             wdgt.setValidator(QIntValidator())
         if self.__ValueType == JPFieldType.Float:
@@ -115,7 +116,7 @@ class JPDelegate_ComboBox(_JPDelegate_Base):
     def createEditor(self, parent: QWidget, option: QStyleOptionViewItem,
                      index: QModelIndex) -> QWidget:
         wdgt = QComboBox(parent)
-
+        wdgt.setAttribute(Qt.WA_InputMethodEnabled, False)
         for row in self.RowSource:
             wdgt.addItem(row[0], row[1])
         return wdgt

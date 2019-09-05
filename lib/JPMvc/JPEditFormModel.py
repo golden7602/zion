@@ -348,7 +348,6 @@ class MyButtonDelegate(QItemDelegate):
         editor.setGeometry(StyleOptionViewItem.rect)
 
 
-
 class myJPTableViewModelEditForm(JPTableViewModelEditForm):
     def __init__(self, tableView, tabelFieldInfo):
         super().__init__(tableView, tabelFieldInfo)
@@ -390,6 +389,13 @@ class JPFormModelMainHasSub(JPFormModelMain):
                          edit_mode=edit_mode,
                          flags=flags)
         self.subSQL = sql_sub
+        self.ui = Ui
+        try:
+            self.ui.butSave.setIcon(QIcon(getcwd() + "\\res\\ico\\save.png"))
+            self.ui.butPrint.setIcon(QIcon(getcwd() + "\\res\\ico\\print.png"))
+            self.ui.butPDF.setIcon(QIcon(getcwd() + "\\res\\ico\\pdf.png"))
+        except Exception as identifier:
+            pass
 
     def setSQL(self, sql_main, sql_sub):
         super().setSQL(sql_main)
@@ -483,10 +489,15 @@ class JPFormModelMainHasSub(JPFormModelMain):
         # 设置字段计算公式
         for i, f in self.onGetColumnFormulas():
             smd.TabelFieldInfo.Fields[i].Formula = f
-        temp = self.AfterSetDataBeforeInsterRowEvent
-        smd.AfterSetDataBeforeInsterRowEvent = temp
+        temp = self.afterSetDataBeforeInsterRowEvent
+        smd.afterSetDataBeforeInsterRowEvent = temp
+        temp1 = self.afterInsterRowEvent
+        smd.afterInsterRowEvent = temp1
         self.subModel.deleteRowDelegate = MyButtonDelegate(tv)
         tv.setItemDelegateForColumn(0, self.subModel.deleteRowDelegate)
+
+    def afterInsterRowEvent(self):
+        return
 
     def getColumnSum(self, col: int):
         return self.subModel.getColumnSum(col)
@@ -518,7 +529,7 @@ class JPFormModelMainHasSub(JPFormModelMain):
         """
         return []
 
-    def AfterSetDataBeforeInsterRowEvent(self, row_data,
+    def afterSetDataBeforeInsterRowEvent(self, row_data,
                                          Index: QModelIndex) -> True:
         '''子窗体更新数据后,执行此事件，可重载，返回值必须为逻辑值
         不重载时，默认不增加行，返回True时增加行

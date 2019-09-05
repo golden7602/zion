@@ -109,6 +109,10 @@ class JPDb(object):
             sql3 = "SELECT @PK as NewID;"
             return [sql1, sql2, sql3]
 
+    def LAST_INSERT_ID_SQL(self):
+        if self.__db_type == JPDbType.MySQL:
+            return 'SELECT LAST_INSERT_ID()'
+
     def getDataList(self, sql: str) -> list:
         if self.__db_type == JPDbType.MySQL:
             cur = self.currentConn.cursor()
@@ -207,7 +211,7 @@ class JPDb(object):
         if not (vCls in tp.keys()):
             raise ValueError("给定参数类型不在列表中")
         sql = "update sysconfig set {tp}='{value}' where fName='{name}'"
-        sql=sql.format(tp=tp[vCls],value=value,name=name)
+        sql = sql.format(tp=tp[vCls], value=value, name=name)
         r, r2 = self.executeTransaction(sql)
         if not r:
             raise ValueError("保存参数值错误")

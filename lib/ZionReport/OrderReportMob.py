@@ -503,28 +503,9 @@ class Order_report_Mob(JPReport):
                    Bolder=False,
                    AlignmentFlag=Qt.AlignRight,
                    Font=self.font_YaHei_8)
+        
         RF.AddItem(1, 540, 125, 100, 0, '')
 
-        # RF.AddItem(1,
-        #            10,
-        #            140,
-        #            180,
-        #            20,
-        #            '客户签名Assinatura do cliente:',
-        #            Bolder=False,
-        #            AlignmentFlag=Qt.AlignLeft,
-        #            Font=self.font_YaHei_8)
-        # RF.AddItem(1, 170, 155, 100, 0, '')
-        # RF.AddItem(1,
-        #            390,
-        #            140,
-        #            180,
-        #            20,
-        #            '联系电话Número de contato:',
-        #            Bolder=False,
-        #            AlignmentFlag=Qt.AlignLeft,
-        #            Font=self.font_YaHei_8)
-        # RF.AddItem(1, 540, 155, 100, 0, '')
         self.PageFooter.AddItem(4,
                                 10,
                                 0,

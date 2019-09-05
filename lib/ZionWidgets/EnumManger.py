@@ -12,7 +12,7 @@ from Ui.Ui_FormEnumEdit import Ui_Form as Ui_Form_Edit
 from lib.JPDatabase.Query import JPQueryFieldInfo, JPTabelFieldInfo
 from lib.JPMvc.JPModel import (JPTableViewModelReadOnly)
 from lib.JPMvc.JPEditFormModel import JPFormModelMain, JPEditFormDataMode
-from lib.ZionPublc import JPDb
+from lib.ZionPublc import JPDb,JPPub
 
 
 class _myReadOnlyMod(JPTableViewModelReadOnly):
@@ -38,7 +38,7 @@ class Form_EnumManger(QWidget):
                 FROM t_enumeration_type
                 ORDER BY fTypeID
         """
-        self.UI = ui
+        self.ui = ui
         #ui.butSave.setHidden(True)
         self.tab1 = ui.tabelViewType
         self.tab2 = ui.tabelViewEnum
@@ -57,7 +57,7 @@ class Form_EnumManger(QWidget):
 
         self.setTab2Column()
         self.refreshTabEnum()
-        self.UI.butNew.clicked.connect(self.but_New)
+        self.ui.butNew.clicked.connect(self.but_New)
 
     def type_selected(self, index1, index2):
         self.CurrentTypeID = self.tabinfo1.getOnlyData([index1.row(), 0])
@@ -92,8 +92,9 @@ class Form_EnumManger(QWidget):
         frm.afterSaveData.connect(self.refreshsub)
         frm.exec_()
 
-    def refreshsub(self):
+    def refreshsub(self, ID):
         self.refreshTabEnum(self.CurrentTypeID)
+        self._locationRow(ID)
 
     def setTab2Column(self):
         self.tab2.setColumnHidden(0, True)
@@ -102,6 +103,22 @@ class Form_EnumManger(QWidget):
         self.tab2.setColumnWidth(3, 100)
         self.tab2.setColumnWidth(4, 100)
         self.tab2.setColumnWidth(5, 300)
+
+    def _locationRow(self, id):
+        tab = self.tabinfo2
+        c = tab.PrimarykeyFieldIndex
+        id = int(id)
+        target = [
+            i for i, r in enumerate(tab.DataRows)
+            if tab.getOnlyData([i, c]) == id
+        ]
+        if target:
+            index = self.mod2.createIndex(target[0], c)
+            self.ui.tabelViewEnum.setCurrentIndex(index)
+            return
+
+
+
 
 
 class EditForm_Enum(JPFormModelMain):
@@ -134,3 +151,18 @@ class EditForm_Enum(JPFormModelMain):
     def onFirstHasDirty(self):
         self.ui.butSave.setEnabled(True)
 
+    @pyqtSlot()
+    def on_butSave_clicked(self):
+        try:
+            lst0 = self.getSqls(self.PKRole)
+            lst = lst0 + [JPDb().LAST_INSERT_ID_SQL()]
+            isOK, result = JPDb().executeTransaction(lst)
+            if isOK:
+                self.ui.butSave.setEnabled(False)
+                self.afterSaveData.emit(str(result))
+                QMessageBox.information(self, '完成',
+                                        '保存数据完成！\nSave data complete!')
+                JPPub().INITEnum()
+        except Exception as e:
+            msgBox = QMessageBox(QMessageBox.Critical, u'提示', str(e))
+            msgBox.exec_()
