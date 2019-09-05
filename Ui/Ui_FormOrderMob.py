@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'e:\Zion\zion\Ui\FormOrderMob.ui'
+# Form implementation generated from reading ui file 'c:\Users\win10\Desktop\Zion\zion\Ui\FormOrderMob.ui'
 #
 # Created by: PyQt5 UI code generator 5.11.3
 #
@@ -238,7 +238,7 @@ class Ui_Form(object):
         self.fCity = QtWidgets.QLineEdit(Form)
         self.fCity.setMinimumSize(QtCore.QSize(0, 25))
         self.fCity.setSizeIncrement(QtCore.QSize(0, 25))
-        self.fCity.setClearButtonEnabled(True)
+        self.fCity.setClearButtonEnabled(False)
         self.fCity.setObjectName("fCity")
         self.gridLayout.addWidget(self.fCity, 1, 6, 1, 1)
         self.fSucursal = QtWidgets.QCheckBox(Form)
@@ -255,7 +255,7 @@ class Ui_Form(object):
         self.fEndereco.setMinimumSize(QtCore.QSize(0, 25))
         self.fEndereco.setSizeIncrement(QtCore.QSize(0, 25))
         self.fEndereco.setPlaceholderText("")
-        self.fEndereco.setClearButtonEnabled(True)
+        self.fEndereco.setClearButtonEnabled(False)
         self.fEndereco.setObjectName("fEndereco")
         self.gridLayout.addWidget(self.fEndereco, 2, 2, 1, 1)
         self.label_5 = QtWidgets.QLabel(Form)
@@ -465,3 +465,4 @@ if __name__ == "__main__":
     ui.setupUi(Form)
     Form.show()
     sys.exit(app.exec_())
+

@@ -313,14 +313,15 @@ class QTextEdit(QTextEdit_, __JPWidgetBase):
     def Value(self):
         return self.FieldInfo.Value
 
-    def refreshValueNotRaiseEvent(self, *Value):
-        if Value:
-            self.FieldInfo.Value = Value[0]
-        else:
-            self.FieldInfo.Value = self.toPlainText()
+    def refreshValueNotRaiseEvent(self, *args):
+        if args:
+            self.FieldInfo.Value = args[0]
+            if len(args)==2:
+                if args[1]:
+                    self.setPlainText(str(args[0]) if args[0] else '')
 
     def refreshValueRaiseEvent(self, *Value):
-        self.refreshValueNotRaiseEvent(Value)
+        self.refreshValueNotRaiseEvent(Value,True)
         super()._onValueChange(self.FieldInfo.Value)
 
     def focusOutEvent(self, e):

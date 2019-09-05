@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'e:\Zion\zion\Ui\FormPrintingOrder.ui'
+# Form implementation generated from reading ui file 'c:\Users\win10\Desktop\Zion\zion\Ui\FormPrintingOrder.ui'
 #
 # Created by: PyQt5 UI code generator 5.11.3
 #
 # WARNING! All changes made in this file will be lost!
-
 from os import getcwd
 from sys import path as jppath
 jppath.append(getcwd())
 from PyQt5 import QtCore, QtGui
 from lib.JPMvc import JPWidgets as QtWidgets
+
 
 class Ui_Form(object):
     def setupUi(self, Form):
@@ -192,7 +192,7 @@ class Ui_Form(object):
         self.fEndereco.setMinimumSize(QtCore.QSize(0, 25))
         self.fEndereco.setSizeIncrement(QtCore.QSize(0, 25))
         self.fEndereco.setPlaceholderText("")
-        self.fEndereco.setClearButtonEnabled(True)
+        self.fEndereco.setClearButtonEnabled(False)
         self.fEndereco.setObjectName("fEndereco")
         self.gridLayout.addWidget(self.fEndereco, 2, 2, 1, 1)
         self.label_21 = QtWidgets.QLabel(Form)
@@ -275,7 +275,7 @@ class Ui_Form(object):
         self.fCity.setEnabled(False)
         self.fCity.setMinimumSize(QtCore.QSize(0, 25))
         self.fCity.setSizeIncrement(QtCore.QSize(0, 25))
-        self.fCity.setClearButtonEnabled(True)
+        self.fCity.setClearButtonEnabled(False)
         self.fCity.setObjectName("fCity")
         self.gridLayout.addWidget(self.fCity, 1, 6, 1, 1)
         self.fEspecieID = QtWidgets.QComboBox(Form)

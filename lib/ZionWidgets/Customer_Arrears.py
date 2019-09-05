@@ -2,19 +2,33 @@ from os import getcwd
 from sys import path as jppath
 jppath.append(getcwd())
 
-from PyQt5.QtCore import QDate, QMetaObject, pyqtSlot, Qt, QModelIndex
-from PyQt5.QtGui import QPixmap, QIcon
-from PyQt5.QtWidgets import (QMessageBox, QPushButton, QWidget, QLineEdit,
-                             QAction)
+from PyQt5.QtCore import QDate, QMetaObject, QModelIndex, Qt, pyqtSlot
+from PyQt5.QtGui import QIcon, QPixmap,QColor
+from PyQt5.QtWidgets import (QAction, QLineEdit, QMessageBox, QPushButton,
+                             QWidget)
 
-from lib.JPDatabase.Query import JPTabelFieldInfo
-from lib.JPFunction import JPDateConver, setButtonIcon
-from lib.JPMvc.JPEditFormModel import JPEditFormDataMode, JPFormModelMain
-from lib.JPMvc.JPModel import JPTableViewModelEditForm
-from lib.ZionPublc import JPDb, JPPub
-from Ui.Ui_FormCustomer_Arrears import Ui_Form as Ui_Form_List
 from lib.JPDatabase.Query import JPQueryFieldInfo
 from lib.JPExcel.JPExportToExcel import JPExpExcelFromTabelFieldInfo
+from lib.JPFunction import JPDateConver, setButtonIcon
+from lib.JPMvc.JPEditFormModel import JPEditFormDataMode, JPFormModelMain
+from lib.JPMvc.JPModel import JPTableViewModelReadOnly
+from lib.ZionPublc import JPDb, JPPub
+from Ui.Ui_FormCustomer_Arrears import Ui_Form as Ui_Form_List
+
+
+class myJPTableViewModelReadOnly(JPTableViewModelReadOnly):
+    def __init__(self, tableView, tabelFieldInfo):
+        super().__init__(tableView, tabelFieldInfo)
+
+    def data(self, index, role=Qt.DisplayRole):
+        c = index.column()
+        r = index.row()
+        if c == 1 and role == Qt.TextAlignmentRole:
+            return Qt.AlignCenter
+        elif r == 0 and role == Qt.TextColorRole:
+            return QColor(Qt.blue)
+        else:
+            return super().data(index, role)
 
 
 class Form_FormCustomer_Arrears(QWidget):
@@ -28,8 +42,6 @@ class Form_FormCustomer_Arrears(QWidget):
         action = self.ui.lineEdit.addAction(icon, QLineEdit.TrailingPosition)
         action.triggered.connect(self.actionClick)
         self.actionClick()
-
-
 
     def actionClick(self):
         sql = """
@@ -67,8 +79,8 @@ class Form_FormCustomer_Arrears(QWidget):
         sql = sql.format(wherestring=wherestring)
 
         tv = self.ui.tableView
-        self.dataInfo = JPTabelFieldInfo(sql)
-        self.mod = JPTableViewModelEditForm(tv, self.dataInfo)
+        self.dataInfo = JPQueryFieldInfo(sql)
+        self.mod = JPTableViewModelReadOnly(tv, self.dataInfo)
         tv.setModel(self.mod)
         tv.resizeColumnsToContents()
 
@@ -87,41 +99,65 @@ class Form_FormCustomer_Arrears(QWidget):
 
     def refreshOrder(self):
         sql = """
-        SELECT fOrderID as 订单号码OrderID,
-            fOrderDate as 日期OrderDate,
-            fPrice as '单价P. Unitario' ,
-            fQuant AS '数量Qtd',
-            fAmount as 金额SubTotal,
-            fDesconto as 折扣Desconto,
-            fTax as 税金IVA,
-            fPayable as `应付金额Valor a Pagar`
-        FROM t_order
-        WHERE fCustomerID={uid}
-        ORDER BY  fOrderDate Desc"""
+            SELECT * 
+            FROM   (SELECT forderid   AS 订单号码OrderID, 
+                        forderdate AS 日期OrderDate, 
+                        fprice     AS '单价P. Unitario', 
+                        fquant     AS '数量Qtd', 
+                        famount    AS 金额SubTotal, 
+                        fdesconto  AS 折扣Desconto, 
+                        ftax       AS 税金IVA, 
+                        fpayable   AS `应付金额Valor a Pagar` 
+                    FROM   t_order 
+                    WHERE  fcustomerid = {uid} 
+                        AND fconfirmed = 1 
+                    UNION ALL 
+                    SELECT ''             AS 订单号码OrderID, 
+                        '合计Sum'    AS 日期OrderDate, 
+                        ''             AS '单价P. Unitario', 
+                        ''             AS '数量Qtd', 
+                        Sum(famount)   AS 金额SubTotal, 
+                        Sum(fdesconto) AS 折扣Desconto, 
+                        Sum(ftax)      AS 税金IVA, 
+                        Sum(fpayable)  AS `应付金额Valor a Pagar` 
+                    FROM   t_order 
+                    WHERE  fcustomerid = {uid}
+                        AND fconfirmed = 1) AS Q1 
+            ORDER  BY Q1.日期orderdate DESC 
+        """
         tv = self.ui.tableView_order
         sql = sql.format(uid=self.__getUID())
-        self.dataInfo_order = JPTabelFieldInfo(sql)
-        self.mod_order = JPTableViewModelEditForm(tv, self.dataInfo_order)
+        self.dataInfo_order = JPQueryFieldInfo(sql)
+        self.mod_order = myJPTableViewModelReadOnly(tv, self.dataInfo_order)
         tv.setModel(self.mod_order)
         tv.resizeColumnsToContents()
 
     def refreshRec(self):
-        sql = """SELECT fID as 流水号ID,
-            fReceiptDate as 收款日期ReceiptDate,
-            e.fTitle AS 收款方式ModoPago,
-            fAmountCollected as 收款额AmountCollected,
-            u.fUsername as 收款人fPayee
-        FROM t_receivables AS r
-        LEFT JOIN t_enumeration AS e
-            ON r.fPaymentMethodID=e.fItemID
-        LEFT JOIN sysusers AS u
-            ON r.fPayeeID=u.fUserID
-        WHERE r.fCustomerID={uid}
-        ORDER BY  r.fReceiptDate desc"""
+        sql = """SELECT * 
+                    FROM   (SELECT fid              AS 流水号ID, 
+                                freceiptdate     AS 收款日期ReceiptDate, 
+                                e.ftitle         AS 收款方式ModoPago, 
+                                famountcollected AS 收款额AmountCollected, 
+                                u.fusername      AS 收款人fPayee 
+                            FROM   t_receivables r 
+                                LEFT JOIN t_enumeration e 
+                                        ON r.fpaymentmethodid = e.fitemid 
+                                LEFT JOIN sysusers u 
+                                        ON r.fpayeeid = u.fuserid 
+                            WHERE  r.fcustomerid = {uid} 
+                            UNION ALL 
+                            SELECT ''                    AS 流水号ID, 
+                                '合计Sum'           AS 收款日期ReceiptDate, 
+                                ''                    AS 收款方式ModoPago, 
+                                Sum(famountcollected) AS 收款额AmountCollected, 
+                                ''                    AS 收款人fPayee 
+                            FROM   t_receivables r 
+                            WHERE  r.fcustomerid = {uid}) Q1 
+                    ORDER  BY Q1.收款日期receiptdate DESC """
         tv = self.ui.tableView_rec
         sql = sql.format(uid=self.__getUID())
-        self.dataInfo_rec = JPTabelFieldInfo(sql)
-        self.mod_rec = JPTableViewModelEditForm(tv, self.dataInfo_rec)
+        self.dataInfo_rec = JPQueryFieldInfo(sql)
+        self.mod_rec = myJPTableViewModelReadOnly(tv, self.dataInfo_rec)
         tv.setModel(self.mod_rec)
         tv.resizeColumnsToContents()
 

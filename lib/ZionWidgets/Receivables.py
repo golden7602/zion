@@ -188,7 +188,7 @@ class Form_Receivables(QWidget):
         frm = RecibidoEdit()
         frm.ListForm = self
         frm.ui.fAmountCollected.setDoubleValidator(0.01, 100000000.0, 2)
-
+        frm.ui.fNote.refreshValueNotRaiseEvent('DIBOTO', True)
         frm.exec_()
 
     @pyqtSlot()
@@ -286,7 +286,7 @@ class RecibidoEdit(JPFormModelMain):
         self.ui.butPrint.hide()
         self.ui.butPDF.hide()
         self.ui.fCustomerID.setEditable(True)
-
+        self.ui.fArrears.setEnabled(True)
 
     def __setEnabled(self):
         self.ui.fCustomerID.setEnabled(True)
@@ -298,7 +298,7 @@ class RecibidoEdit(JPFormModelMain):
         self.ui.fTelefone.setEnabled(False)
         self.ui.fAmountPayable.setEnabled(False)
         self.ui.fAmountPaid.setEnabled(False)
-        self.ui.fArrears.setEnabled(False)
+        #self.ui.fArrears.setEnabled(False)
         self.ui.fPayeeID.setEnabled(False)
 
     def onGetFieldsRowSources(self):
@@ -310,7 +310,6 @@ class RecibidoEdit(JPFormModelMain):
 
     def onGetPrintReport(self):
         return  #PrintOrder_report_Mob()
-
 
     def onDateChangeEvent(self, obj, value):
         nm = obj.objectName()
@@ -387,25 +386,24 @@ class FormReport_Rec_print(JPReport):
                                  Font=self.font_YaHei_10)
 
         title = [
-            '流水号\nID', '客户名\nCliente', '收款日期\nDate',
-            '收款额\nAmount', '收款人\nfPayee', '收款方式\nModoPago'
+            '流水号\nID', '客户名\nCliente', '收款日期\nDate', '收款额\nAmount',
+            '收款人\nfPayee', '收款方式\nModoPago'
         ]
         fns = [
             fld.FieldName for fld in cur_tab.Fields
             if fld.FieldName != 'fCustomerID'
         ]
-        cols = len(cur_tab.Fields)-1
+        cols = len(cur_tab.Fields) - 1
         al_c = Qt.AlignCenter
         al_r = (Qt.AlignVCenter | Qt.AlignRight)
         al_l = (Qt.AlignVCenter | Qt.AlignLeft)
         rpt.SetMargins(30, 30, 30, 30)
-        rpt.ReportHeader.AddPrintLables(
-            0,
-            50,
-            50,
-            Texts=title,
-            Widths=[60, 200, 140, 120, 100, 100],
-            Aligns=[al_c] * cols)
+        rpt.ReportHeader.AddPrintLables(0,
+                                        50,
+                                        50,
+                                        Texts=title,
+                                        Widths=[60, 200, 140, 120, 100, 100],
+                                        Aligns=[al_c] * cols)
         rpt.Detail.AddPrintFields(0,
                                   0,
                                   25,
