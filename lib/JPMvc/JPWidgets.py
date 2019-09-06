@@ -19,7 +19,8 @@ from lib.JPDatabase.Database import JPDb
 from lib.JPDatabase.Field import JPFieldType
 from lib.JPDatabase.Query import JPTabelRowData
 from lib.JPFunction import JPBooleanString, JPDateConver, JPGetDisplayText
-from PyQt5.QtGui import (QValidator, QDoubleValidator, QIntValidator)
+from PyQt5.QtGui import (QValidator, QDoubleValidator, QIntValidator, QPalette,
+                         QColor)
 import re
 
 from lib.JPException import JPExceptionFieldNull
@@ -83,12 +84,15 @@ class __JPWidgetBase(QObject):
         self.__FieldInfo: JPFieldType = None
         self.MainModel = None
         self.RowsData = None
-
+        self.setAutoFillBackground(True)
+        print(QLineEdit_.fontInfo())
+        #self.fontInfo().pointSize()
+        #self.fontInfo().family()
     def setRedStyleSheet(self):
         s = """
-        border-width: 2px;
-        border-style: solid;
-        border-color: rgb(255, 0, 0);"""
+        QComboBox{background:rgb(255, 192, 203)}
+        QLineEdit{background:rgb(255, 192, 203)}
+        """
         self.setStyleSheet(s)
 
     def _onValueChange(self, value):
@@ -114,7 +118,8 @@ class __JPWidgetBase(QObject):
         self.__FieldInfo = fld
 
     def getNullValue(self):
-        # 检查空值
+        # 检查空值.更改颜色
+        print(self.styleSheet())
         fld = self.FieldInfo
         if fld.IsPrimarykey or fld.Auto_Increment:
             return
@@ -123,6 +128,16 @@ class __JPWidgetBase(QObject):
                 return 'Null'
             else:
                 t = fld.Title if fld.Title else fld.FieldName
+                # palette1 = QPalette()
+                # palette1.setColor(self.backgroundRole(), QColor(255, 192, 203))
+                # if isinstance(self, QComboBox_):
+                #     if self.isEditable():
+                #         self.lineEdit().setAutoFillBackground(True)
+                #         self.lineEdit().setPalette(palette1)
+                #     else:
+                #         self.setPalette(palette1)
+                # else:
+                #     self.setPalette(palette1)
                 self.setRedStyleSheet()
                 raise JPExceptionFieldNull(t)
 
@@ -316,12 +331,12 @@ class QTextEdit(QTextEdit_, __JPWidgetBase):
     def refreshValueNotRaiseEvent(self, *args):
         if args:
             self.FieldInfo.Value = args[0]
-            if len(args)==2:
+            if len(args) == 2:
                 if args[1]:
                     self.setPlainText(str(args[0]) if args[0] else '')
 
     def refreshValueRaiseEvent(self, *Value):
-        self.refreshValueNotRaiseEvent(Value,True)
+        self.refreshValueNotRaiseEvent(Value, True)
         super()._onValueChange(self.FieldInfo.Value)
 
     def focusOutEvent(self, e):

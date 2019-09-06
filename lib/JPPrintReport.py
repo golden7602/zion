@@ -810,7 +810,7 @@ class JPReport(object):
         return True
 
     def onBeforePrint(self, Copys, Sec, CurrentPrintDataRow, obj):
-        """一个条目的打印前事件,可以给此方法指定一个函数
+        """一个条目的打印前事件,可以重写此方法
         传递参数：
         1、当前Copy数；2、当前打印的节；3、当前打印的行数据(对于Detail节)
         4、当前打印对象 

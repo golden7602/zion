@@ -111,9 +111,21 @@ class JPFuncForm_Order(JPFunctionForm):
         self.fSubmited_column = 13
 
         m_sql = """
-                SELECT fOrderID, fOrderDate, fVendedorID, fRequiredDeliveryDate
-                    , fCustomerID, fContato, fCelular, fTelefone, fAmount, fTax
-                    , fPayable, fDesconto, fNote,fEntryID,fSucursal
+                SELECT fOrderID as 订单号码OrderID
+                    , fOrderDate as 日期OrderDate
+                    , fVendedorID
+                    , fRequiredDeliveryDate as 交货日期RequiredDeliveryDate
+                    , fCustomerID  as 客户名Cliente
+                    , fContato
+                    , fCelular
+                    , fTelefone
+                    , fAmount
+                    , fTax
+                    , fPayable
+                    , fDesconto
+                    , fNote
+                    ,fEntryID
+                    ,fSucursal
                 FROM t_order
                 WHERE fOrderID = '{}'
                 """

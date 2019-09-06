@@ -41,6 +41,8 @@ class Form_FormCustomer_Arrears(QWidget):
         icon = QIcon(getcwd() + "\\res\\ico\\search.png")
         action = self.ui.lineEdit.addAction(icon, QLineEdit.TrailingPosition)
         action.triggered.connect(self.actionClick)
+        self.ui.lineEdit.returnPressed.connect(self.actionClick)
+        self.ui.lineEdit.setAttribute(Qt.WA_InputMethodEnabled, False)
         self.actionClick()
 
     def actionClick(self):

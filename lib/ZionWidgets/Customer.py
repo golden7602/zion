@@ -68,7 +68,10 @@ class Form_Customer(QWidget):
             order by fCustomerName"""
         icon = QIcon(getcwd() + "\\res\\ico\\search.png")
         action = self.ui.lineEdit.addAction(icon, QLineEdit.TrailingPosition)
+        self.ui.lineEdit.returnPressed.connect(self.actionClick)
+        self.ui.lineEdit.setAttribute(Qt.WA_InputMethodEnabled, False)
         action.triggered.connect(self.actionClick)
+
 
         self.SQL_EditForm_Main = medit_sql
         self.actionClick()

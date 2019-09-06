@@ -85,12 +85,31 @@ class JPFuncForm_PrintingOrder(JPFunctionForm):
         self.tableView.setColumnHidden(24, True)
         self.fSubmited_column = 24
         m_sql = """
-                SELECT fOrderID, fCelular, fRequiredDeliveryDate, fContato
-                    , fTelefone, fVendedorID, fCustomerID, fOrderDate
-                    , fSucursal, fQuant, fNumerBegin, fNumerEnd
-                    , fPrice, fLogo, fEspecieID, fAvistaID, fTamanhoID
-                    , fNrCopyID, fPagePerVolumn, fNote, fAmount, fDesconto
-                    , fTax, fPayable,fEntryID
+                SELECT fOrderID
+                , fCelular
+                , fRequiredDeliveryDate
+                , fContato
+                , fTelefone
+                , fVendedorID as 销售Vendedor
+                , fCustomerID
+                , fOrderDate
+                , fSucursal
+                , fQuant
+                , fNumerBegin
+                , fNumerEnd
+                , fPrice
+                , fLogo
+                , fEspecieID
+                , fAvistaID
+                , fTamanhoID
+                , fNrCopyID
+                , fPagePerVolumn
+                , fNote
+                , fAmount
+                , fDesconto
+                , fTax
+                , fPayable
+                , fEntryID
                 FROM t_order
                 WHERE fOrderID = '{}'
                 """
