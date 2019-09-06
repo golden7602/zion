@@ -34,8 +34,7 @@ class PrintOrder_report_Mob(JPReport):
         self.font_YaHei_10.setPointSize(10)
         self.font_YaHei_10.setBold(True)
 
-
-        self.Arial_Black =QFont("Arial Black")
+        self.Arial_Black = QFont("Arial Black")
         self.Arial_Black.setPointSize(8)
         self.Arial_Black.setBold(True)
 
@@ -131,7 +130,8 @@ class PrintOrder_report_Mob(JPReport):
                    20,
                    "fCustomerName",
                    Font=self.font_YaHei_8,
-                   AlignmentFlag=Qt.AlignLeft)
+                   AlignmentFlag=(Qt.AlignLeft | Qt.AlignVCenter),
+                   FormatString=" {}")
         RH.AddItem(1,
                    400,
                    75,
@@ -147,7 +147,8 @@ class PrintOrder_report_Mob(JPReport):
                    20,
                    "fVendedor",
                    Font=self.font_YaHei_8,
-                   AlignmentFlag=Qt.AlignLeft)
+                   AlignmentFlag=(Qt.AlignLeft | Qt.AlignVCenter),
+                   FormatString=" {}")
         # 第3行
         RH.AddItem(1,
                    0,
@@ -164,7 +165,8 @@ class PrintOrder_report_Mob(JPReport):
                    20,
                    "fNUIT",
                    Font=self.font_YaHei_8,
-                   AlignmentFlag=Qt.AlignLeft)
+                   AlignmentFlag=(Qt.AlignLeft | Qt.AlignVCenter),
+                   FormatString=" {}")
         RH.AddItem(1,
                    400,
                    95,
@@ -180,7 +182,8 @@ class PrintOrder_report_Mob(JPReport):
                    20,
                    "fCity",
                    Font=self.font_YaHei_8,
-                   AlignmentFlag=Qt.AlignLeft)
+                   AlignmentFlag=(Qt.AlignLeft | Qt.AlignVCenter),
+                   FormatString=" {}")
         # 第4行
         RH.AddItem(1,
                    0,
@@ -197,7 +200,8 @@ class PrintOrder_report_Mob(JPReport):
                    20,
                    "fEndereco",
                    Font=self.font_YaHei_8,
-                   AlignmentFlag=Qt.AlignLeft)
+                   AlignmentFlag=(Qt.AlignLeft | Qt.AlignVCenter),
+                   FormatString=" {}")
         RH.AddItem(3,
                    490,
                    115,
@@ -205,8 +209,8 @@ class PrintOrder_report_Mob(JPReport):
                    20,
                    "fSucursal1",
                    Font=self.font_YaHei_8,
-                   AlignmentFlag=Qt.AlignLeft,
-                   FormatString="Sucursal:{}")
+                   AlignmentFlag=(Qt.AlignLeft | Qt.AlignVCenter),
+                   FormatString=" Sucursal: {}")
         # 第5行
         RH.AddItem(1,
                    0,
@@ -219,43 +223,46 @@ class PrintOrder_report_Mob(JPReport):
         RH.AddItem(3,
                    90,
                    135,
-                   90,
+                   150,
                    20,
                    "fContato",
                    Font=self.font_YaHei_8,
-                   AlignmentFlag=Qt.AlignLeft)
+                   AlignmentFlag=(Qt.AlignLeft | Qt.AlignVCenter),
+                   FormatString=" {}")
         RH.AddItem(1,
-                   180,
+                   240,
                    135,
-                   130,
+                   80,
                    20,
                    "手机Celular:",
                    Font=self.font_YaHei_8,
                    AlignmentFlag=Qt.AlignCenter)
         RH.AddItem(3,
-                   310,
+                   320,
                    135,
-                   90,
+                   80,
                    20,
                    "fCelular",
                    Font=self.font_YaHei_8,
-                   AlignmentFlag=Qt.AlignLeft)
+                   AlignmentFlag=(Qt.AlignLeft | Qt.AlignVCenter),
+                   FormatString=" {}")
         RH.AddItem(1,
                    400,
                    135,
-                   90,
+                   130,
                    20,
                    "电话Tel:",
                    Font=self.font_YaHei_8,
                    AlignmentFlag=Qt.AlignCenter)
         RH.AddItem(3,
-                   490,
+                   530,
                    135,
-                   160,
+                   120,
                    20,
                    "fTelefone",
                    Font=self.font_YaHei_8,
-                   AlignmentFlag=Qt.AlignLeft)
+                   AlignmentFlag=(Qt.AlignLeft | Qt.AlignVCenter),
+                   FormatString=" {}")
 
         # 第6行
         RH.AddItem(1,
@@ -269,43 +276,46 @@ class PrintOrder_report_Mob(JPReport):
         RH.AddItem(3,
                    90,
                    155,
-                   90,
+                   150,
                    20,
                    "fEspecie",
                    Font=self.font_YaHei_8,
-                   AlignmentFlag=Qt.AlignLeft)
+                   AlignmentFlag=(Qt.AlignLeft | Qt.AlignVCenter),
+                   FormatString=" {}")
         RH.AddItem(1,
-                   180,
+                   240,
                    155,
-                   130,
+                   80,
                    20,
                    "数量Quant:",
                    Font=self.font_YaHei_8,
                    AlignmentFlag=Qt.AlignCenter)
         RH.AddItem(3,
-                   310,
+                   320,
                    155,
-                   90,
+                   80,
                    20,
                    "fQuant",
                    Font=self.font_YaHei_8,
-                   AlignmentFlag=Qt.AlignLeft)
+                   AlignmentFlag=(Qt.AlignLeft | Qt.AlignVCenter),
+                   FormatString=" {}")
         RH.AddItem(1,
                    400,
                    155,
-                   90,
+                   130,
                    20,
                    "单价Price:",
                    Font=self.font_YaHei_8,
                    AlignmentFlag=Qt.AlignCenter)
         RH.AddItem(3,
-                   490,
+                   530,
                    155,
-                   160,
+                   120,
                    20,
                    "fPrice",
                    Font=self.font_YaHei_8,
-                   AlignmentFlag=Qt.AlignLeft)
+                   AlignmentFlag=(Qt.AlignRight | Qt.AlignVCenter),
+                   FormatString='{:,.2f} ')
 
         # 第7行
         RH.AddItem(1,
@@ -319,43 +329,46 @@ class PrintOrder_report_Mob(JPReport):
         RH.AddItem(3,
                    90,
                    175,
-                   90,
+                   150,
                    20,
                    "fAvista",
                    Font=self.font_YaHei_8,
-                   AlignmentFlag=Qt.AlignLeft)
+                   AlignmentFlag=(Qt.AlignLeft | Qt.AlignVCenter),
+                   FormatString=" {}")
         RH.AddItem(1,
-                   180,
+                   240,
                    175,
-                   130,
+                   80,
                    20,
                    "联数Nr.Copy:",
                    Font=self.font_YaHei_8,
                    AlignmentFlag=Qt.AlignCenter)
         RH.AddItem(3,
-                   310,
+                   320,
                    175,
-                   90,
+                   80,
                    20,
                    "fNrCopy",
                    Font=self.font_YaHei_8,
-                   AlignmentFlag=Qt.AlignLeft)
+                   AlignmentFlag=(Qt.AlignLeft | Qt.AlignVCenter),
+                   FormatString=" {}")
         RH.AddItem(1,
                    400,
                    175,
-                   90,
+                   130,
                    20,
                    "每本页数 Page/Vol:",
                    Font=self.font_YaHei_8,
                    AlignmentFlag=Qt.AlignCenter)
         RH.AddItem(3,
-                   490,
+                   530,
                    175,
-                   80,
+                   40,
                    20,
                    "fPagePerVolumn",
                    Font=self.font_YaHei_8,
-                   AlignmentFlag=Qt.AlignLeft)
+                   AlignmentFlag=(Qt.AlignLeft | Qt.AlignVCenter),
+                   FormatString=" {}")
         RH.AddItem(3,
                    570,
                    175,
@@ -363,8 +376,8 @@ class PrintOrder_report_Mob(JPReport):
                    20,
                    "fLogo1",
                    Font=self.font_YaHei_8,
-                   AlignmentFlag=Qt.AlignLeft,
-                   FormatString="Logo:{}")
+                   AlignmentFlag=(Qt.AlignLeft | Qt.AlignVCenter),
+                   FormatString=" Logo: {}")
 
         # 第8行
         RH.AddItem(1,
@@ -382,23 +395,25 @@ class PrintOrder_report_Mob(JPReport):
                    20,
                    "fTamanho",
                    Font=self.font_YaHei_8,
-                   AlignmentFlag=Qt.AlignLeft)
+                   AlignmentFlag=(Qt.AlignLeft | Qt.AlignVCenter),
+                   FormatString=" {}")
         RH.AddItem(1,
                    180,
                    195,
-                   130,
+                   140,
                    20,
                    "起始号码Numeracao:",
                    Font=self.font_YaHei_8,
                    AlignmentFlag=Qt.AlignCenter)
         RH.AddItem(3,
-                   310,
+                   320,
                    195,
-                   340,
+                   330,
                    20,
                    "Numeracao",
                    Font=self.font_YaHei_8,
-                   AlignmentFlag=Qt.AlignLeft)
+                   AlignmentFlag=(Qt.AlignLeft | Qt.AlignVCenter),
+                   FormatString=" {}")
 
         # 联次信息
         tempItem = RH.AddItem(1,
@@ -410,7 +425,7 @@ class PrintOrder_report_Mob(JPReport):
                               Bolder=False,
                               Transform=True,
                               Font=self.font_YaHei_8,
-                              AlignmentFlag=Qt.AlignLeft)
+                              AlignmentFlag=(Qt.AlignLeft | Qt.AlignVCenter))
 
     def init_PageHeader(self,
                         title1="NOTA DE PAGAMENTO",
@@ -512,7 +527,7 @@ class PrintOrder_report_Mob(JPReport):
                    "fNote1",
                    FormatString='备注Note:\n{}',
                    Font=self.font_YaHei_8,
-                   AlignmentFlag=Qt.AlignLeft)
+                   AlignmentFlag=(Qt.AlignLeft | Qt.AlignVCenter))
         RF.AddItem(1,
                    430,
                    0,
@@ -520,15 +535,15 @@ class PrintOrder_report_Mob(JPReport):
                    20,
                    "金额合计SubTotal:",
                    Font=self.font_YaHei_8,
-                   AlignmentFlag=Qt.AlignRight)
+                   AlignmentFlag=(Qt.AlignRight | Qt.AlignVCenter))
         RF.AddItem(3,
                    570,
                    0,
                    80,
                    20,
                    "fAmount",
-                   FormatString='{:,.2f}',
-                   AlignmentFlag=Qt.AlignRight,
+                   FormatString='{:,.2f} ',
+                   AlignmentFlag=(Qt.AlignRight | Qt.AlignVCenter),
                    Font=self.font_YaHei_8)
         RF.AddItem(1,
                    430,
@@ -536,7 +551,7 @@ class PrintOrder_report_Mob(JPReport):
                    140,
                    20,
                    "折扣Desconto:",
-                   AlignmentFlag=Qt.AlignRight,
+                   AlignmentFlag=(Qt.AlignRight | Qt.AlignVCenter),
                    Font=self.font_YaHei_8)
         RF.AddItem(3,
                    570,
@@ -544,8 +559,8 @@ class PrintOrder_report_Mob(JPReport):
                    80,
                    20,
                    "fDesconto",
-                   AlignmentFlag=Qt.AlignRight,
-                   FormatString='{:,.2f}',
+                   AlignmentFlag=(Qt.AlignRight | Qt.AlignVCenter),
+                   FormatString='{:,.2f} ',
                    Font=self.font_YaHei_8)
         RF.AddItem(1,
                    430,
@@ -553,7 +568,7 @@ class PrintOrder_report_Mob(JPReport):
                    140,
                    20,
                    "税金IVA:",
-                   AlignmentFlag=Qt.AlignRight,
+                   AlignmentFlag=(Qt.AlignRight | Qt.AlignVCenter),
                    Font=self.font_YaHei_8)
         RF.AddItem(3,
                    570,
@@ -561,8 +576,8 @@ class PrintOrder_report_Mob(JPReport):
                    80,
                    20,
                    "fTax",
-                   FormatString='{:,.2f}',
-                   AlignmentFlag=Qt.AlignRight,
+                   FormatString='{:,.2f} ',
+                   AlignmentFlag=(Qt.AlignRight | Qt.AlignVCenter),
                    Font=self.font_YaHei_8)
         RF.AddItem(1,
                    430,
@@ -571,15 +586,15 @@ class PrintOrder_report_Mob(JPReport):
                    20,
                    "应付金额Valor a Pagar:",
                    Font=self.font_YaHei_8,
-                   AlignmentFlag=Qt.AlignRight)
+                   AlignmentFlag=(Qt.AlignRight | Qt.AlignVCenter))
         RF.AddItem(3,
                    570,
                    60,
                    80,
                    20,
                    "fPayable",
-                   FormatString='{:,.2f}',
-                   AlignmentFlag=Qt.AlignRight,
+                   FormatString='{:,.2f} ',
+                   AlignmentFlag=(Qt.AlignRight | Qt.AlignVCenter),
                    Font=self.font_YaHei_8)
 
         # 签字部分
@@ -590,7 +605,7 @@ class PrintOrder_report_Mob(JPReport):
                    20,
                    '制作人 Productor:',
                    Bolder=False,
-                   AlignmentFlag=Qt.AlignRight,
+                   AlignmentFlag=(Qt.AlignRight | Qt.AlignVCenter),
                    Font=self.font_YaHei_8)
         RF.AddItem(1, 100, 125, 100, 0, '')
         RF.AddItem(1,
@@ -600,7 +615,7 @@ class PrintOrder_report_Mob(JPReport):
                    20,
                    '审核人 Aprovar:',
                    Bolder=False,
-                   AlignmentFlag=Qt.AlignRight,
+                   AlignmentFlag=(Qt.AlignRight | Qt.AlignVCenter),
                    Font=self.font_YaHei_8)
         RF.AddItem(1, 320, 125, 100, 0, '')
         RF.AddItem(1,
@@ -610,7 +625,7 @@ class PrintOrder_report_Mob(JPReport):
                    20,
                    '会计Caixa:',
                    Bolder=False,
-                   AlignmentFlag=Qt.AlignRight,
+                   AlignmentFlag=(Qt.AlignRight | Qt.AlignVCenter),
                    Font=self.font_YaHei_8)
         RF.AddItem(1, 540, 125, 100, 0, '')
 
@@ -631,7 +646,7 @@ class PrintOrder_report_Mob(JPReport):
         #            20,
         #            '客户签名Assinatura do cliente:',
         #            Bolder=False,
-        #            AlignmentFlag=Qt.AlignLeft,
+        #            AlignmentFlag=(Qt.AlignLeft|Qt.AlignVCenter),
         #            Font=self.font_YaHei_8)
         # RF.AddItem(1, 170, 155, 100, 0, '')
         # RF.AddItem(1,
@@ -641,7 +656,7 @@ class PrintOrder_report_Mob(JPReport):
         #            20,
         #            '联系电话Número de contato:',
         #            Bolder=False,
-        #            AlignmentFlag=Qt.AlignLeft,
+        #            AlignmentFlag=(Qt.AlignLeft|Qt.AlignVCenter),
         #            Font=self.font_YaHei_8)
         # RF.AddItem(1, 540, 155, 100, 0, '')
         self.PageFooter.AddItem(4,
@@ -652,7 +667,7 @@ class PrintOrder_report_Mob(JPReport):
                                 '',
                                 FormatString='Page: {Page}/{Pages}',
                                 Bolder=False,
-                                AlignmentFlag=Qt.AlignLeft,
+                                AlignmentFlag=(Qt.AlignLeft | Qt.AlignVCenter),
                                 Font=self.font_YaHei_8)
         self.PageFooter.AddItem(5,
                                 110,
@@ -662,7 +677,8 @@ class PrintOrder_report_Mob(JPReport):
                                 '',
                                 FormatString="PrintTime: %Y-%m-%d %H:%M:%S",
                                 Bolder=False,
-                                AlignmentFlag=Qt.AlignRight,
+                                AlignmentFlag=(Qt.AlignRight
+                                               | Qt.AlignVCenter),
                                 Font=self.font_YaHei_8)
 
     # 修改联次

@@ -134,7 +134,9 @@ class Form_Receivables(QWidget):
                     fReceiptDate as 收款日期ReceiptDate,
                     fAmountCollected as 收款额AmountCollected,
                     fPayee as 收款人fPayee,
-                    fPaymentMethod AS 收款方式ModoPago
+                    fPaymentMethod AS 收款方式ModoPago,
+                    fNote as 备注Note
+                    
             FROM v_receivables as r           
             WHERE 
                 r.fReceiptDate = STR_TO_DATE('{dateString}', '%Y-%m-%d') 
@@ -368,61 +370,79 @@ class FormReport_Rec_print(JPReport):
                  Orientation=QPrinter.Orientation(0)):
         super().__init__(PaperSize, Orientation)
 
-        self.font_YaHei = QFont("微软雅黑")
+        self.font_YaHei = QFont("Arial")
         self.font_YaHei_8 = QFont(self.font_YaHei)
         self.font_YaHei_8.setPointSize(8)
         self.font_YaHei_10 = QFont(self.font_YaHei)
         self.font_YaHei_10.setPointSize(20)
         self.font_YaHei_10.setBold(True)
         rpt = self
+
+        rpt.logo = QPixmap(getcwd() + "\\res\\tmLogo100.png")
+        rpt.ReportHeader.AddItem(2, 0, 0, 274, 50, rpt.logo)
         rpt.ReportHeader.AddItem(1,
+                                 274,
                                  0,
-                                 0,
-                                 720,
-                                 40,
-                                 'Daily Report收款日报表[{}]'.format(curdate),
+                                 446,
+                                 60,
+                                 'de vendas diárias 收款日报表',
                                  Bolder=False,
                                  AlignmentFlag=(Qt.AlignCenter),
                                  Font=self.font_YaHei_10)
 
+        rpt.ReportHeader.AddItem(1,
+                            0,
+                            50,
+                            720,
+                            20,
+                            'Date:{}'.format(curdate),
+                            Bolder=False,
+                            AlignmentFlag=(Qt.AlignRight),
+                            Font=self.font_YaHei_8)
+
         title = [
-            '流水号\nID', '客户名\nCliente', '收款日期\nDate', '收款额\nAmount',
-            '收款人\nfPayee', '收款方式\nModoPago'
+            '流水号\nID', '客户名\nCliente', '收款额\nAmount',
+            '收款人\nfPayee', '收款方式\nModoPago','备注\nNote'
         ]
+
         fns = [
-            fld.FieldName for fld in cur_tab.Fields
-            if fld.FieldName != 'fCustomerID'
+            'fID', 'fCustomerName', 'fAmountCollected', 'fPayee',
+            'fPaymentMethod', 'fNote'
         ]
-        cols = len(cur_tab.Fields) - 1
+        cols = 6
         al_c = Qt.AlignCenter
         al_r = (Qt.AlignVCenter | Qt.AlignRight)
         al_l = (Qt.AlignVCenter | Qt.AlignLeft)
         rpt.SetMargins(30, 30, 30, 30)
         rpt.ReportHeader.AddPrintLables(0,
-                                        50,
-                                        50,
+                                        72,
+                                        40,
                                         Texts=title,
                                         Widths=[60, 200, 140, 120, 100, 100],
                                         Aligns=[al_c] * cols)
-        rpt.Detail.AddPrintFields(0,
-                                  0,
-                                  25,
-                                  FieldNames=fns[0:3],
-                                  Widths=[60, 200, 140],
-                                  Aligns=[al_c, al_l, al_c])
-        rpt.Detail.AddPrintFields(400,
-                                  0,
-                                  25,
-                                  FieldNames=fns[3:4],
-                                  Widths=[120],
-                                  Aligns=[al_r],
-                                  FormatString='{:,.2f}')
-        rpt.Detail.AddPrintFields(520,
-                                  0,
-                                  25,
-                                  FieldNames=fns[4:],
-                                  Widths=[100, 100],
-                                  Aligns=[al_c, al_c])
+
+        rpt.Detail.AddItem(3, 0, 0, 60, 25, fns[0], AlignmentFlag=al_c)
+        rpt.Detail.AddItem(3, 60, 0, 200, 25, fns[1], AlignmentFlag=al_l)
+        rpt.Detail.AddItem(3,
+                           260,
+                           0,
+                           140,
+                           25,
+                           fns[2],
+                           AlignmentFlag=al_r,
+                           FormatString='{:,.2f}')
+        rpt.Detail.AddItem(3, 400, 0, 120, 25, fns[3], AlignmentFlag=al_c)
+        rpt.Detail.AddItem(3, 520, 0, 100, 25, fns[4], AlignmentFlag=al_c)
+        rpt.Detail.AddItem(3,
+                           620,
+                           0,
+                           100,
+                           25,
+                           fns[5],
+                           AlignmentFlag=al_l,
+                           FormatString=' {}')
+
+
 
         sum_j = 0
         for i in range(len(cur_tab)):
@@ -445,31 +465,31 @@ class FormReport_Rec_print(JPReport):
         cols = len(tongji_tab.Fields)
         rpt.ReportFooter.AddPrintLables(0,
                                         45,
-                                        50,
+                                        40,
                                         Texts=title,
-                                        Widths=[200, 200, 300],
+                                        Widths=[240, 240, 240],
                                         Aligns=[al_c] * cols)
         sum_j = 0
         count = 0
         for r in range(len(tongji_tab)):
             rpt.ReportFooter.AddItem(1,
                                      0,
-                                     95 + r * 25,
-                                     200,
+                                     85 + r * 25,
+                                     240,
                                      25,
                                      tongji_tab.getDispText([r, 0]),
                                      AlignmentFlag=al_c)
             rpt.ReportFooter.AddItem(1,
-                                     200,
-                                     95 + r * 25,
-                                     200,
+                                     240,
+                                     85 + r * 25,
+                                     240,
                                      25,
                                      tongji_tab.getDispText([r, 1]),
                                      AlignmentFlag=al_r)
             rpt.ReportFooter.AddItem(1,
-                                     400,
-                                     95 + r * 25,
-                                     300,
+                                     480,
+                                     85 + r * 25,
+                                     240,
                                      25,
                                      tongji_tab.getDispText([r, 2]),
                                      AlignmentFlag=al_c)
@@ -478,24 +498,24 @@ class FormReport_Rec_print(JPReport):
         rs = len(tongji_tab)
         rpt.ReportFooter.AddItem(1,
                                  0,
-                                 95 + rs * 25,
-                                 200,
+                                 85 + rs * 25,
+                                 240,
                                  25,
                                  '合计Sum',
                                  AlignmentFlag=al_c,
                                  FillColor=QColor(128, 128, 128))
         rpt.ReportFooter.AddItem(1,
-                                 200,
-                                 95 + rs * 25,
-                                 200,
+                                 240,
+                                 85 + rs * 25,
+                                 240,
                                  25,
                                  JPGetDisplayText(sum_j),
                                  AlignmentFlag=al_r,
                                  FillColor=QColor(128, 128, 128))
         rpt.ReportFooter.AddItem(1,
-                                 400,
-                                 95 + rs * 25,
-                                 300,
+                                 480,
+                                 85 + rs * 25,
+                                 240,
                                  25,
                                  JPGetDisplayText(count),
                                  AlignmentFlag=al_c,

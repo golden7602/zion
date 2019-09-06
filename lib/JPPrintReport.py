@@ -169,6 +169,7 @@ class _jpPrintField(_jpPrintItem):
                     new_v = Ori_v
                 return self.FormatString.format(Ori_v)
             else:
+                print("数据源中没有找到字段'{}'".format(self.PrintObject))
                 return ''
         except (KeyError, TypeError):
             return ''
@@ -764,6 +765,7 @@ class _jpPrintGroup(object):
 
 
 class JPReport(object):
+
     """报表类"""
     def __init__(self, PaperSize, Orientation):
         _jpPrintSection.Report = self

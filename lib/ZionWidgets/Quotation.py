@@ -17,6 +17,7 @@ from lib.ZionPublc import JPDb
 from lib.ZionReport.OrderReportMob import Order_report_Mob
 from lib.JPMvc.JPEditFormModel import JPEditFormDataMode
 from lib.JPMvc.JPModel import JPTableViewModelReadOnly
+from PyQt5.QtPrintSupport import QPrinter
 
 
 class _myMod(JPTableViewModelReadOnly):
@@ -113,16 +114,16 @@ class JPFuncForm_Quotation(JPFunctionForm):
         return _myMod
 
     def getEditForm(self, sql_main, edit_mode, sql_sub, PKValue):
-        frm=Edit_Order_Quotation(sql_main=sql_main,
-                                    edit_mode=edit_mode,
-                                    sql_sub=sql_sub,
-                                    PKValue=PKValue)
+        frm = Edit_Order_Quotation(sql_main=sql_main,
+                                   edit_mode=edit_mode,
+                                   sql_sub=sql_sub,
+                                   PKValue=PKValue)
         frm.ui.fOrderID.setEnabled(False)
         frm.ui.fCity.setEnabled(False)
         frm.ui.fNUIT.setEnabled(False)
         frm.ui.fEntryID.setEnabled(False)
-        frm.ui.fEndereco.setEnabled(False) 
-        return frm              
+        frm.ui.fEndereco.setEnabled(False)
+        return frm
 
     @pyqtSlot()
     def on_CmdOrder_clicked(self):
@@ -139,15 +140,13 @@ class JPFuncForm_Quotation(JPFunctionForm):
                 , fContato, fCelular, fTelefone, fAmount, fTax
                 , fPayable, fDesconto, fNote, fEntryID, fSucursal
                 FROM t_quotation
-                WHERE fOrderID = '{id}';""".format(id=cu_id),
-        """
+                WHERE fOrderID = '{id}';""".format(id=cu_id), """
         INSERT INTO t_order_detail (fOrderID, fQuant, fProductName
             , fLength, fWidth, fPrice, fAmount)
             SELECT @PK, fQuant, fProductName, fLength, fWidth
                 , fPrice, fAmount
             FROM t_quotation_detail
-            WHERE fOrderID = '{id}';""".format(id=cu_id),
-        """
+            WHERE fOrderID = '{id}';""".format(id=cu_id), """
         UPDATE t_quotation SET fCreatedOrder=1 WHERE fOrderID = '{id}';
         """.format(id=cu_id)
         ]
@@ -312,10 +311,7 @@ class Order_report(Order_report_Mob):
                        AlignmentFlag=(Qt.AlignLeft | Qt.TextWordWrap),
                        Font=self.Arial_Black)
         # 下面的框要删除，因为跨页
-        RF.AddItem(1, 0, 135, 650 , len(noteStr) * 15, " ", Bolder=True)
-
-
-
+        RF.AddItem(1, 0, 135, 650, len(noteStr) * 15, " ", Bolder=True)
         self.PageFooter.AddItem(4,
                                 10,
                                 0,
@@ -361,4 +357,8 @@ class Order_report(Order_report_Mob):
         self.init_PageHeader()
         self.init_Detail()
         self.init_ReportFooter()
+        # 大于6行自动更改纸型
+        if len(self.DataSource) > 6:
+            self.PaperSize = QPrinter.A4
+            self.Orientation = QPrinter.Orientation(0)
         super().BeginPrint()

@@ -3,7 +3,7 @@ from sys import path as jppath
 jppath.append(getcwd())
 
 from PyQt5.QtCore import Qt, QDate, pyqtSlot, QVariant  #, QMetaObject, pyqtSlot
-from PyQt5.QtGui import QColor, QFont
+from PyQt5.QtGui import QColor, QFont, QPixmap
 from PyQt5.QtWidgets import QWidget, QAbstractItemView
 from lib.JPMvc.JPModel import JPTableViewModelReadOnly
 from Ui.Ui_FormReport_Day import Ui_Form
@@ -214,31 +214,27 @@ class FormReport_Day_print(JPReport):
         self.font_YaHei_10.setPointSize(20)
         self.font_YaHei_10.setBold(True)
         rpt = self
+        rpt.logo = QPixmap(getcwd() + "\\res\\tmLogo100.png")
+        rpt.ReportHeader.AddItem(2, 0, 0, 274, 50, rpt.logo)
         rpt.ReportHeader.AddItem(1,
+                                 274,
                                  0,
-                                 0,
-                                 100 * 13,
+                                 110 * 13 - 274,
                                  40,
-                                 'Zion Year Report收款年报表',
+                                 'Year Report 收款年报表',
                                  Bolder=False,
                                  AlignmentFlag=(Qt.AlignCenter),
                                  Font=self.font_YaHei_10)
-        self.ReportHeader.AddItem(1,
-                                  0,
-                                  20,
-                                  200,
-                                  20,
-                                  '基于Base on: {}'.format(baseon),
-                                  Bolder=False,
-                                  AlignmentFlag=(Qt.AlignLeft))
-        self.ReportHeader.AddItem(1,
-                                  100 * 11,
-                                  20,
-                                  200,
-                                  20,
-                                  '年度Year: {}'.format(myyear),
-                                  Bolder=False,
-                                  AlignmentFlag=(Qt.AlignRight))
+        self.ReportHeader.AddItem(
+            1,
+            274,
+            30,
+            110 * 13 - 274,
+            20,
+            '基于Base on: {baseon}  年度Year: {myyear}'.format(baseon=baseon,
+                                                           myyear=myyear),
+            Bolder=False,
+            AlignmentFlag=(Qt.AlignRight))
 
         title = [fld.Title for fld in flds]
         fns = [fld.FieldName for fld in flds]
@@ -247,40 +243,41 @@ class FormReport_Day_print(JPReport):
         al_r = (Qt.AlignVCenter | Qt.AlignRight)
         rpt.SetMargins(30, 60, 30, 30)
         rpt.ReportHeader.AddPrintLables(0,
-                                        50,
+                                        60,
                                         50,
                                         Texts=title,
-                                        Widths=[100] * cols,
+                                        Widths=[110] * cols,
                                         Aligns=[al_c] * cols)
         rpt.Detail.AddPrintFields(0,
                                   0,
                                   25,
                                   FieldNames=[fns[0]],
-                                  Widths=[100],
+                                  Widths=[110],
                                   Aligns=[al_c])
         for i in range(1, cols):
             rpt.Detail.AddItem(3,
-                               i * 100,
+                               i * 110,
                                0,
-                               100,
+                               110,
                                25,
                                fns[i],
+                               Font=QFont('Times New Roman', 12),
                                AlignmentFlag=al_r,
-                               FormatString='{:,.2f}')
+                               FormatString='{:,.2f} ')
         self.PageFooter.AddItem(4,
                                 10,
                                 0,
-                                100,
+                                110,
                                 20,
                                 '',
                                 FormatString='Page: {Page}/{Pages}',
                                 Bolder=False,
-                                AlignmentFlag=Qt.AlignLeft,
+                                AlignmentFlag=(Qt.AlignLeft | Qt.AlignVCenter),
                                 Font=self.font_YaHei_8)
         self.PageFooter.AddItem(5,
-                                100 * 10,
+                                110 * 10,
                                 0,
-                                100 * 3,
+                                110 * 3,
                                 20,
                                 '',
                                 FormatString="PrintTime: %Y-%m-%d %H:%M:%S",
