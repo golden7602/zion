@@ -652,6 +652,15 @@ class JPFormModelMainHasSub(JPFormModelMain):
                         sqls.append(
                             sql_u.format(','.join(temp), sub_pk_name,
                                          sub_pk_value))
+        # 检查有无删除的记录
+        s_pk = tfi.PrimarykeyFieldName
+        i_pk = tfi.PrimarykeyFieldIndex
+        sql_del = "Delete from " + TN + " where " + s_pk + " in ({pk})"
+        d_r = tfi.DeleteRows
+        if d_r:
+            for i in range(len(d_r)):
+                sqls.append(sql_del.format(pk=d_r[i].Datas[i_pk]))
+                
         return sqls
 
     @pyqtSlot()
