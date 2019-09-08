@@ -453,8 +453,8 @@ class FormReport_Rec_print(JPReport):
             0,
             25,
             Texts=["合计Sum", JPGetDisplayText(sum_j), " "],
-            Widths=[400, 120, 200],
-            Aligns=[al_c] * 3,
+            Widths=[260, 140, 320],
+            Aligns=[al_c,al_r,al_c],
             FillColor=QColor(128, 128, 128))
 
         title = [

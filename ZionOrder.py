@@ -102,7 +102,6 @@ class JPMainWindow(QMainWindow):
             except AttributeError as e:
                 pass
 
-
         self.ui.treeWidget.itemClicked[QTreeWidgetItem, int].connect(
             treeViewItemClicked)
 

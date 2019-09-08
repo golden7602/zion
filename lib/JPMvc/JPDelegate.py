@@ -7,17 +7,21 @@
 
 import abc
 import datetime
-import sys
 import os
+import sys
 sys.path.append(os.getcwd())
-from lib.JPFunction import JPBooleanString, JPDateConver
-from PyQt5.QtCore import (QAbstractItemModel, QModelIndex, QObject, Qt, QDate,
+
+from PyQt5.QtCore import (QAbstractItemModel, QDate, QModelIndex, QObject, Qt,
                           pyqtSignal)
-from PyQt5.QtWidgets import (QPushButton, QStyledItemDelegate,
-                             QStyleOptionViewItem, QWidget, QLineEdit,
-                             QComboBox, QDateEdit)
+from PyQt5.QtGui import QDoubleValidator, QIntValidator
+from PyQt5.QtWidgets import (QComboBox, QDateEdit, QLineEdit, QPushButton,
+                             QStyledItemDelegate, QStyleOptionViewItem,
+                             QWidget)
+
 from lib.JPDatabase.Field import JPFieldType
-from PyQt5.QtGui import (QDoubleValidator, QIntValidator)
+from lib.JPFunction import JPBooleanString, JPDateConver
+
+
 
 
 class _JPDelegate_Base(QStyledItemDelegate):

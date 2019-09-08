@@ -62,6 +62,13 @@ class JPFormModelMain(QDialog):
             self.ui.butSave.setEnabled(False)
             self.ui.butPrint.setEnabled(False)
             self.ui.butPDF.setEnabled(False)
+        try:
+            self.ui.butSave.setIcon(QIcon(getcwd() + "\\res\\ico\\save.png"))
+            self.ui.butPrint.setIcon(QIcon(getcwd() + "\\res\\ico\\print.png"))
+            self.ui.butPDF.setIcon(QIcon(getcwd() + "\\res\\ico\\pdf.png"))
+        except Exception as identifier:
+            pass
+
 
     def setPkRole(self, role: int):
         self.PKRole = role
@@ -266,8 +273,6 @@ class JPFormModelMain(QDialog):
     def getSqls(self, pk_role: int = None):
         """返回主表的SQL语句，如果有检查空值错误，则引发一个错误，错误信息中包含字段名"""
         sqls = []
-        pb = JPPub()
-        # appform = pb.MainForm
         nm_lst = []
         v_lst = []
         mti = self.mainTableFieldsInfo
@@ -390,12 +395,6 @@ class JPFormModelMainHasSub(JPFormModelMain):
                          flags=flags)
         self.subSQL = sql_sub
         self.ui = Ui
-        try:
-            self.ui.butSave.setIcon(QIcon(getcwd() + "\\res\\ico\\save.png"))
-            self.ui.butPrint.setIcon(QIcon(getcwd() + "\\res\\ico\\print.png"))
-            self.ui.butPDF.setIcon(QIcon(getcwd() + "\\res\\ico\\pdf.png"))
-        except Exception as identifier:
-            pass
 
     def setSQL(self, sql_main, sql_sub):
         super().setSQL(sql_main)

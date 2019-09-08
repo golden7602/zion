@@ -3,27 +3,30 @@
 import abc
 import datetime
 import os
+import re
 import sys
 sys.path.append(os.getcwd())
 
-# from collections import OrderedDict
-
 from PyQt5 import QtWidgets as QtWidgets_
+from PyQt5.QtCore import QDate, QObject, Qt, pyqtSignal
+from PyQt5.QtGui import (QColor, QDoubleValidator, QIntValidator, QPalette,
+                         QValidator)
+from PyQt5.QtWidgets import QCheckBox as QCheckBox_
+from PyQt5.QtWidgets import QComboBox as QComboBox_
+from PyQt5.QtWidgets import QCompleter
+from PyQt5.QtWidgets import QDateEdit as QDateEdit_
+from PyQt5.QtWidgets import QLineEdit as QLineEdit_
+from PyQt5.QtWidgets import QMessageBox
+from PyQt5.QtWidgets import QTextEdit as QTextEdit_
+from PyQt5.QtWidgets import QWidget as QWidget_
 
-from PyQt5.QtCore import QDate, pyqtSignal, Qt, QObject
-from PyQt5.QtWidgets import (QCheckBox as QCheckBox_, QComboBox as QComboBox_,
-                             QDateEdit as QDateEdit_, QLineEdit as QLineEdit_,
-                             QTextEdit as QTextEdit_, QWidget as QWidget_,
-                             QCompleter, QMessageBox)
 from lib.JPDatabase.Database import JPDb
 from lib.JPDatabase.Field import JPFieldType
 from lib.JPDatabase.Query import JPTabelRowData
-from lib.JPFunction import JPBooleanString, JPDateConver, JPGetDisplayText
-from PyQt5.QtGui import (QValidator, QDoubleValidator, QIntValidator, QPalette,
-                         QColor)
-import re
-
 from lib.JPException import JPExceptionFieldNull
+from lib.JPFunction import JPBooleanString, JPDateConver, JPGetDisplayText
+
+# from collections import OrderedDict
 
 
 def __getattr__(name):
@@ -84,16 +87,28 @@ class __JPWidgetBase(QObject):
         self.__FieldInfo: JPFieldType = None
         self.MainModel = None
         self.RowsData = None
-        self.setAutoFillBackground(True)
-        print(QLineEdit_.fontInfo())
-        #self.fontInfo().pointSize()
-        #self.fontInfo().family()
+        #self.setAutoFillBackground(True)
+
+    @property
+    def _clearStyleSheetText(self):
+        txt = "font-family: {font_name};font-size:{px}px;".format(
+            font_name=self.fontInfo().family(), px=self.fontInfo().pixelSize())
+        print(self.objectName() + "=" + txt)
+        return txt 
+
     def setRedStyleSheet(self):
-        s = """
-        QComboBox{background:rgb(255, 192, 203)}
-        QLineEdit{background:rgb(255, 192, 203)}
-        """
+        bk = "{background:rgb(255, 192, 203)}"
+        s = f'''
+        QComboBox{bk}
+        QLineEdit{bk}
+        QDateEdit{bk}
+        QTextEdit{bk}
+        QCheckBox{bk}
+        '''
         self.setStyleSheet(s)
+
+    def clearStyleSheet(self):
+        self.setStyleSheet(self._clearStyleSheetText)
 
     def _onValueChange(self, value):
         self.RowsData.setData(self.FieldInfo._index, self.Value())
@@ -102,6 +117,8 @@ class __JPWidgetBase(QObject):
 
     def setMainModel(self, QWidget: QWidget_):
         self.MainModel = QWidget
+        if self.MainModel.isReadOnlyMode:
+            self.setFocusPolicy(Qt.NoFocus)
 
     def setRowsData(self, rd: JPTabelRowData):
         self.RowsData = rd
@@ -128,16 +145,6 @@ class __JPWidgetBase(QObject):
                 return 'Null'
             else:
                 t = fld.Title if fld.Title else fld.FieldName
-                # palette1 = QPalette()
-                # palette1.setColor(self.backgroundRole(), QColor(255, 192, 203))
-                # if isinstance(self, QComboBox_):
-                #     if self.isEditable():
-                #         self.lineEdit().setAutoFillBackground(True)
-                #         self.lineEdit().setPalette(palette1)
-                #     else:
-                #         self.setPalette(palette1)
-                # else:
-                #     self.setPalette(palette1)
                 self.setRedStyleSheet()
                 raise JPExceptionFieldNull(t)
 
@@ -186,7 +193,7 @@ class QLineEdit(QLineEdit_, __JPWidgetBase):
             return "'{}'".format(self.passWordConver(t))
         if t is None or len(t) == 0:
             return self.getNullValue()
-        self.setStyleSheet('')
+        self.clearStyleSheet()
         if self.FieldInfo.TypeCode in (JPFieldType.Int, JPFieldType.Float):
             return "'{}'".format(t.replace(',', ''))
         return "'{}'".format(t)
@@ -314,16 +321,12 @@ class QTextEdit(QTextEdit_, __JPWidgetBase):
         t = self.toPlainText()
         if t is None or len(t) == 0:
             return self.getNullValue()
-        self.setStyleSheet('')
+        self.clearStyleSheet()
         return "'{}'".format(t)
 
     def _setFieldInfo(self, fld: JPFieldType, raiseEvent=True):
         self.FieldInfo = fld
         self.setPlainText(fld.Value)
-        # # 设置编辑状态
-        # self.setReadOnly(self.MainModel.isReadOnlyMode)
-        # if not self.MainModel.isNewMode:
-        #     self.setPlainText(fld.Value)
 
     def Value(self):
         return self.FieldInfo.Value
@@ -351,19 +354,13 @@ class QComboBox(QComboBox_, __JPWidgetBase):
         self.currentIndexChanged[int].connect(self._onValueChange)
         self.setAttribute(Qt.WA_InputMethodEnabled, False)
 
-    # def inputMethodQuery(self, InputMethodQuery):
-    #     if InputMethodQuery == Qt.ImEnabled:
-    #         return False
-    #     else:
-    #         super().inputMethodQuery(InputMethodQuery)
-
     def getSqlValue(self) -> str:
         if self.count() == 0:
             return self.getNullValue()
         if self.currentData():
             tempV = self.BindingData[self.currentIndex()]
             if tempV:
-                self.setStyleSheet('')
+                self.clearStyleSheet()
                 return "'{}'".format(tempV)
             else:
                 return self.getNullValue()
@@ -429,10 +426,6 @@ class QComboBox(QComboBox_, __JPWidgetBase):
         self.__setCurrentData(fld.Value)
         self.currentIndexChanged[int].connect(self._onValueChange)
 
-    # def keyPressEvent(self, event):
-    #     return
-    #     QComboBox_.keyPressEvent(self, event)
-
 
 class QDateEdit(QDateEdit_, __JPWidgetBase):
     def __init__(self, parent):
@@ -479,7 +472,7 @@ class QCheckBox(QCheckBox_, __JPWidgetBase):
     def getSqlValue(self) -> str:
         if self.checkState() is None:
             return self.getNullValue()
-        self.setStyleSheet('')
+        self.clearStyleSheet()
         return '1' if self.checkState() == 2 else '0'
 
     def _onValueChange(self):
