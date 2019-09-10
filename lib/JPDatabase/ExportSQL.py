@@ -18,8 +18,10 @@ class CreateSQL_MySQL(QObject):
     def getSql(self, tablename):
 
         sql = "select * from {fn}".format(fn=tablename)
-        cur = JPDb().currentConn.cursor()
+        con = JPDb().currentConn
+        cur = con.cursor()
         cur.execute(sql)
+        con.commit()
         tab = cur._result.rows
         c_col = len(cur._result.fields)
         fns = ['`{}`'.format(r.name) for r in cur._result.fields]

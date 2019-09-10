@@ -7,15 +7,14 @@ from PyQt5.QtGui import QPixmap, QIcon
 from PyQt5.QtWidgets import QMessageBox, QPushButton, QWidget, QLineEdit
 
 from lib.JPDatabase.Query import JPTabelFieldInfo
-from lib.JPFunction import JPDateConver, setButtonIcon
+from lib.JPFunction import JPDateConver
 from lib.JPMvc.JPEditFormModel import JPEditFormDataMode, JPFormModelMain
 from lib.JPMvc.JPModel import JPTableViewModelReadOnly
-from lib.ZionPublc import JPDb,JPPub
+from lib.ZionPublc import JPDb, JPPub
 from Ui.Ui_FormCustomer import Ui_Form as Ui_Form_List
 from Ui.Ui_FormCustomerEdit import Ui_Form as Ui_Form_Edit
 from lib.JPDatabase.Query import JPQueryFieldInfo
 from lib.JPSearch import Form_Search
-
 
 # class myJPTableViewModelReadOnly(JPTableViewModelReadOnly):
 #     def __init__(self, tableView, tabelFieldInfo):
@@ -35,6 +34,7 @@ class Form_Customer(QWidget):
         super().__init__()
         self.ui = Ui_Form_List()
         self.ui.setupUi(self)
+        self.MainForm = mainform
         mainform.addForm(self)
         self.list_sql = """
             select 
@@ -66,12 +66,12 @@ class Form_Customer(QWidget):
             from  t_customer
             where fCustomerID={} 
             order by fCustomerName"""
-        icon = QIcon(getcwd() + "\\res\\ico\\search.png")
+        
+        icon = QIcon(JPPub().MainForm.icoPath.format("search.png"))
         action = self.ui.lineEdit.addAction(icon, QLineEdit.TrailingPosition)
         self.ui.lineEdit.returnPressed.connect(self.actionClick)
         self.ui.lineEdit.setAttribute(Qt.WA_InputMethodEnabled, False)
         action.triggered.connect(self.actionClick)
-
 
         self.SQL_EditForm_Main = medit_sql
         self.actionClick()
@@ -110,7 +110,7 @@ class Form_Customer(QWidget):
     def _locationRow(self, id):
         tab = self.dataInfo
         c = tab.PrimarykeyFieldIndex
-        id=int(id)
+        id = int(id)
         target = [
             i for i, r in enumerate(tab.DataRows)
             if tab.getOnlyData([i, c]) == id
@@ -126,14 +126,15 @@ class Form_Customer(QWidget):
         if ID:
             self._locationRow(ID)
 
-    def addButtons(self, btnNames: list):
-        for item in btnNames:
-            btn = QPushButton(item['fMenuText'])
-            btn.setObjectName(item['fObjectName'])
-            setButtonIcon(btn, item['fIcon'])
-            btn.setEnabled(item['fHasRight'])
-            self.ui.horizontalLayout_Button.addWidget(btn)
-        QMetaObject.connectSlotsByName(self)
+    # def addButtons(self, btnNames: list):
+    #     for item in btnNames:
+    #         btn = QPushButton(item['fMenuText'])
+    #         btn.setObjectName(item['fObjectName'])
+    #         btn.setIcon(QIcon(self.MainForm.icoPath.format(item['fIcon'])))
+    #         #setButtonIcon(btn, item['fIcon'])
+    #         btn.setEnabled(item['fHasRight'])
+    #         self.ui.horizontalLayout_Button.addWidget(btn)
+    #     QMetaObject.connectSlotsByName(self)
 
     def getEditForm(self, sql_main, edit_mode, sql_sub, PKValue):
         frm = EditForm_Customer(sql_main=sql_main,
@@ -221,8 +222,10 @@ class EditForm_Customer(JPFormModelMain):
                          PKValue=PKValue,
                          edit_mode=edit_mode,
                          flags=flags)
-        pix = QPixmap(getcwd() + "\\res\\tmLogo100.png")
-        self.ui.label_logo.setPixmap(pix)
+        JPPub().MainForm.addLogoToLabel(self.ui.label_logo)
+        JPPub().MainForm.addOneButtonIcon(self.ui.butSave, 'save.png')
+        JPPub().MainForm.addOneButtonIcon(self.ui.butCancel, 'cancel.png')
+
         self.readData()
         self.ui.butPrint.hide()
         self.ui.butPDF.hide()

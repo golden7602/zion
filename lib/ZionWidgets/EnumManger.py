@@ -12,7 +12,7 @@ from Ui.Ui_FormEnumEdit import Ui_Form as Ui_Form_Edit
 from lib.JPDatabase.Query import JPQueryFieldInfo, JPTabelFieldInfo
 from lib.JPMvc.JPModel import (JPTableViewModelReadOnly)
 from lib.JPMvc.JPEditFormModel import JPFormModelMain, JPEditFormDataMode
-from lib.ZionPublc import JPDb,JPPub
+from lib.ZionPublc import JPDb, JPPub
 
 
 class _myReadOnlyMod(JPTableViewModelReadOnly):
@@ -39,7 +39,7 @@ class Form_EnumManger(QWidget):
                 ORDER BY fTypeID
         """
         self.ui = ui
-        #ui.butSave.setHidden(True)
+        mainform.addOneButtonIcon(ui.butNew, "new.png")
         self.tab1 = ui.tabelViewType
         self.tab2 = ui.tabelViewEnum
         self.mainform = mainform
@@ -116,9 +116,6 @@ class Form_EnumManger(QWidget):
             index = self.mod2.createIndex(target[0], c)
             self.ui.tabelViewEnum.setCurrentIndex(index)
             return
-
-
-
 
 
 class EditForm_Enum(JPFormModelMain):

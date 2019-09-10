@@ -23,7 +23,7 @@
    </font>
   </property>
   <property name="windowTitle">
-   <string>Order</string>
+   <string>User Information</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <property name="spacing">
@@ -428,20 +428,6 @@
         </size>
        </property>
       </spacer>
-     </item>
-     <item>
-      <widget class="QPushButton" name="butPDF">
-       <property name="text">
-        <string>PushButton</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="butPrint">
-       <property name="text">
-        <string>PushButton</string>
-       </property>
-      </widget>
      </item>
      <item>
       <widget class="QPushButton" name="butSave">

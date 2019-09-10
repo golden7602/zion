@@ -74,9 +74,11 @@ class JPDb(object):
     # 生成一个空对象
     def getFeildsInfoAndData(self, sql) -> JPFieldInfo:
         if self.__db_type == JPDbType.MySQL:
-            cur = self.currentConn.cursor()
+            con = cur = self.currentConn
+            cur = con.cursor()
             try:
                 cur.execute(sql)
+                con.commit()
             except Exception as e:
                 raise ValueError('SQL语句或表名格式不正确!\n{}\n'.format(sql) + str(e))
 
@@ -115,9 +117,11 @@ class JPDb(object):
 
     def getDataList(self, sql: str) -> list:
         if self.__db_type == JPDbType.MySQL:
-            cur = self.currentConn.cursor()
+            con = cur = self.currentConn
+            cur = con.cursor()
             try:
                 cur.execute(sql)
+                con.commit()
             except Exception as e:
                 raise ValueError('SQL语句或表名格式不正确!\n{}\n'.format(sql) + str(e))
         return [list(r) for r in cur._result.rows]
@@ -128,9 +132,11 @@ class JPDb(object):
         Decimal 转换成了Float,datetime转换成了QDate
         '''
         if self.__db_type == JPDbType.MySQL:
-            cur = self.currentConn.cursor()
+            con = self.currentConn
+            cur = con.cursor()
             try:
                 cur.execute(sql)
+                con.commit()
             except Exception as e:
                 raise ValueError('SQL语句或表名格式不正确!\n{}\n'.format(sql) + str(e))
 

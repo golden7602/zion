@@ -40,9 +40,9 @@
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
       <widget class="QWidget" name="widget_Button" native="true">
-       <layout class="QHBoxLayout" name="horizontalLayout_Button">
+       <layout class="QHBoxLayout" name="Layout_Button">
         <property name="spacing">
-         <number>0</number>
+         <number>2</number>
         </property>
         <property name="leftMargin">
          <number>0</number>

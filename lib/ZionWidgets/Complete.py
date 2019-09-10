@@ -15,9 +15,8 @@ from lib.ZionWidgets.ZionFunc import ZionFuncForm
 from lib.JPMvc.JPModel import JPTableViewModelReadOnly
 from lib.JPMvc.JPFuncForm import JPFunctionForm
 from lib.JPMvc.JPEditFormModel import JPFormModelMain, JPFormModelMainHasSub
-
-from Ui.Ui_FormPrintingOrder import Ui_Form as Ui_Form_PrintOrder
-from Ui.Ui_FormOrderMob import Ui_Form as Ui_Form_Order
+from lib.ZionWidgets.EditFormOrderOrPrintingOrder import JPFormPrintingOrder
+from lib.ZionWidgets.EditFormOrderOrPrintingOrder import JPFormOrder
 
 
 class _myMod(JPTableViewModelReadOnly):
@@ -34,7 +33,7 @@ class _myMod(JPTableViewModelReadOnly):
                 return QColor(Qt.blue)
         return super().data(Index, role)
 
-    
+
 class _myFuncForm(JPFunctionForm):
     def __init__(self, parent):
         super().__init__(parent)
@@ -173,7 +172,7 @@ class EditForm_Order(JPFormModelMainHasSub):
                  sql_sub,
                  edit_mode,
                  flags=Qt.WindowFlags()):
-        super().__init__(Ui_Form_Order(),
+        super().__init__(JPFormOrder(),
                          sql_main=sql_main,
                          PKValue=PKValue,
                          sql_sub=sql_sub,
@@ -195,7 +194,7 @@ class EditForm_Order(JPFormModelMainHasSub):
 
 class EditForm_PrintingOrder(JPFormModelMain):
     def __init__(self, sql_main, sql_sub=None, edit_mode=None, PKValue=None):
-        super().__init__(Ui_Form_PrintOrder(),
+        super().__init__(JPFormPrintingOrder(),
                          sql_main,
                          PKValue=PKValue,
                          edit_mode=edit_mode)

@@ -14,7 +14,7 @@ from lib.JPMvc.JPFuncForm import JPFunctionForm, JPEditFormDataMode
 from lib.JPPrintReport import JPPrintSectionType
 from lib.ZionPublc import JPPub, JPUser
 from lib.ZionReport.PrintingOrderReportMob import PrintOrder_report_Mob
-from Ui.Ui_FormPrintingOrder import Ui_Form
+from lib.ZionWidgets.EditFormOrderOrPrintingOrder import JPFormPrintingOrder
 from lib.JPFunction import JPRound
 from lib.JPMvc.JPModel import JPTableViewModelReadOnly
 from lib.JPExcel.JPExportToExcel import JPExpExcelFromTabelFieldInfo
@@ -222,12 +222,11 @@ class myHistoryView(JPTableViewModelReadOnly):
 
 class EditForm_PrintingOrder(JPFormModelMain):
     def __init__(self, sql_main, sql_sub=None, edit_mode=None, PKValue=None):
-        super().__init__(Ui_Form(),
+        super().__init__(JPFormPrintingOrder(),
                          sql_main,
                          PKValue=PKValue,
                          edit_mode=edit_mode)
-        pix = QPixmap(getcwd() + "\\res\\tmLogo100.png")
-        self.ui.label_logo.setPixmap(pix)
+        JPPub().MainForm.addLogoToLabel(self.ui.label_logo)
         self.setPkRole(5)
         self.cacuTax = True
         self.NumberControl = False
@@ -252,6 +251,8 @@ class EditForm_PrintingOrder(JPFormModelMain):
         self.ui.fRequiredDeliveryDate.FieldInfo.NotNull = True
         self.ui.fVendedorID.FieldInfo.NotNull = True
         self.ui.fNrCopyID.FieldInfo.NotNull = True
+
+        self.ui.fCustomerID.setFocus()
 
     def __onTaxKeyPress(self, KeyEvent: QKeyEvent):
         if (KeyEvent.modifiers() == Qt.AltModifier
@@ -382,7 +383,7 @@ class EditForm_PrintingOrder(JPFormModelMain):
                 txt = txt + 'under the name of the selected customer, '
                 txt = txt + 'and no new documents can be added'
                 QMessageBox.information(self, "提示", txt)
-                if obj.objectName!='fSucursal':
+                if obj.objectName()!='fSucursal':
                     obj.setCurrentIndex(-1)
                 return
             else:
@@ -474,8 +475,6 @@ class Order_Printingreport(PrintOrder_report_Mob):
             title1="NOTA DE PAGAMENTO",
             title2="(ESTE DOCUMENTO É DO USO INTERNO)")
         self.init_ReportHeader()
-        #        self.init_ReportHeader_Individualization()
         self.init_PageHeader()
-        #        self.init_Detail()
         self.init_ReportFooter()
         super().BeginPrint()

@@ -3,13 +3,13 @@ from sys import path as jppath
 jppath.append(getcwd())
 
 from PyQt5.QtCore import QDate, QMetaObject, QModelIndex, Qt, pyqtSlot
-from PyQt5.QtGui import QIcon, QPixmap,QColor
+from PyQt5.QtGui import QIcon, QPixmap, QColor
 from PyQt5.QtWidgets import (QAction, QLineEdit, QMessageBox, QPushButton,
                              QWidget)
 
 from lib.JPDatabase.Query import JPQueryFieldInfo
 from lib.JPExcel.JPExportToExcel import JPExpExcelFromTabelFieldInfo
-from lib.JPFunction import JPDateConver, setButtonIcon
+from lib.JPFunction import JPDateConver
 from lib.JPMvc.JPEditFormModel import JPEditFormDataMode, JPFormModelMain
 from lib.JPMvc.JPModel import JPTableViewModelReadOnly
 from lib.ZionPublc import JPDb, JPPub
@@ -36,9 +36,10 @@ class Form_FormCustomer_Arrears(QWidget):
         super().__init__()
         self.ui = Ui_Form_List()
         self.ui.setupUi(self)
+        self.MainForm = mainform
         mainform.addForm(self)
 
-        icon = QIcon(getcwd() + "\\res\\ico\\search.png")
+        icon = QIcon(JPPub().MainForm.icoPath.format("search.png"))
         action = self.ui.lineEdit.addAction(icon, QLineEdit.TrailingPosition)
         action.triggered.connect(self.actionClick)
         self.ui.lineEdit.returnPressed.connect(self.actionClick)
@@ -163,14 +164,7 @@ class Form_FormCustomer_Arrears(QWidget):
         tv.setModel(self.mod_rec)
         tv.resizeColumnsToContents()
 
-    def addButtons(self, btnNames: list):
-        for item in btnNames:
-            btn = QPushButton(item['fMenuText'])
-            btn.setObjectName(item['fObjectName'])
-            setButtonIcon(btn, item['fIcon'])
-            btn.setEnabled(item['fHasRight'])
-            self.ui.horizontalLayout_Button.addWidget(btn)
-        QMetaObject.connectSlotsByName(self)
+
 
     @pyqtSlot()
     def on_CmdExportToExcel_clicked(self):

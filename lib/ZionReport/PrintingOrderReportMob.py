@@ -8,6 +8,7 @@ from PyQt5.QtGui import QColor, QFont, QPainter, QPixmap
 from PyQt5.QtCore import Qt
 from lib.JPDatabase.Database import JPDb
 from configparser import ConfigParser
+from lib.ZionPublc import JPPub
 
 
 class PrintOrder_report_Mob(JPReport):
@@ -17,7 +18,8 @@ class PrintOrder_report_Mob(JPReport):
         super().__init__(PaperSize, Orientation)
         self.SetMargins(30, 60, 30, 20)
         self.Copys = 2
-        self.logo = QPixmap(getcwd() + "\\res\\tmLogo100.png")
+        self.logo = JPPub().MainForm.logoPixmap
+        #self.logo = QPixmap(getcwd() + "\\res\\tmLogo100.png")
         self.FillColor = QColor(128, 128, 128)
 
         self.font_Algerian = QFont("Algerian")

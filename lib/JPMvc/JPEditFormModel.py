@@ -36,6 +36,7 @@ class JPEditFormDataMode():
 
 class JPFormModelMain(QDialog):
     afterSaveData = pyqtSignal([str])
+    firstHasDirty = pyqtSignal()
 
     def __init__(self,
                  Ui,
@@ -58,16 +59,14 @@ class JPFormModelMain(QDialog):
         self.EditMode = edit_mode
         self.PKValue = PKValue
         self.ui.butSave.setEnabled(False)
+        self.firstHasDirty.connect(self.onFirstHasDirty)
         if self.EditMode != JPEditFormDataMode.ReadOnly:
-            self.ui.butSave.setEnabled(False)
-            self.ui.butPrint.setEnabled(False)
-            self.ui.butPDF.setEnabled(False)
-        try:
-            self.ui.butSave.setIcon(QIcon(getcwd() + "\\res\\ico\\save.png"))
-            self.ui.butPrint.setIcon(QIcon(getcwd() + "\\res\\ico\\print.png"))
-            self.ui.butPDF.setIcon(QIcon(getcwd() + "\\res\\ico\\pdf.png"))
-        except Exception as identifier:
-            pass
+            try:
+                self.ui.butSave.setEnabled(False)
+                self.ui.butPrint.setEnabled(False)
+                self.ui.butPDF.setEnabled(False)
+            except Exception as e:
+                print(str(e))
 
 
     def setPkRole(self, role: int):
@@ -103,6 +102,12 @@ class JPFormModelMain(QDialog):
     def onGetMainFormFieldsRowSources(self):
         """设置主窗体字段的数据源"""
         return []
+
+    def onFirstHasDirty(self):
+        if self.isNewMode or self.isEditMode:
+            self.ui.butSave.setEnabled(True)
+            """第一次出现脏数据时引执行此事件，请覆盖"""
+        return
 
     @property
     def isReadOnlyMode(self):
@@ -146,12 +151,7 @@ class JPFormModelMain(QDialog):
         # 第一次存在脏数据时，发送一个信号
         if self.__dirty is False:
             self.__dirty = True
-            self.ui.butSave.setEnabled(True)
-            self.onFirstHasDirty()
-
-    def onFirstHasDirty(self):
-        """第一次出现脏数据时引执行此事件，请覆盖"""
-        return
+            self.firstHasDirty.emit()
 
     def setSQL(self, sql: str):
         self.mainSQL = sql
@@ -177,7 +177,7 @@ class JPFormModelMain(QDialog):
                     v.setRowsData(tf.DataRows[0])
                     v.setMainModel(self)
                     v.setFieldInfo(fld_dict[k])
-        #self.setEditState()
+        # self.setEditState()
 
     def __setReadOnlyFields(self):
         # 设置只读字段
@@ -255,9 +255,13 @@ class JPFormModelMain(QDialog):
                 isOK, result = JPDb().executeTransaction(lst)
                 if isOK:
                     self.onAfterSaveData(result)
-                    self.ui.butSave.setEnabled(False)
-                    self.ui.butPrint.setEnabled(True)
-                    self.ui.butPDF.setEnabled(True)
+                    try:
+                        self.ui.butSave.setEnabled(False)
+                        self.ui.butPrint.setEnabled(True)
+                        self.ui.butPDF.setEnabled(True)
+                    except Exception as e:
+                        print(str(e))
+
                     # self.MainModle.setEditState(False)
                     self.afterSaveData.emit(result)
                     QMessageBox.information(self, '完成',
@@ -368,6 +372,8 @@ class myJPTableViewModelEditForm(JPTableViewModelEditForm):
         self.tableView.setItemDelegateForColumn(0, self.deleteRowDelegate)
 
 
+
+
 class myJPTableViewModelReadOnly(JPTableViewModelReadOnly):
     def __init__(self, tableView, tabelFieldInfo):
         super().__init__(tableView, tabelFieldInfo)
@@ -424,6 +430,11 @@ class JPFormModelMainHasSub(JPFormModelMain):
         # 以下返回主表的保存语句
         mainSaveSQLs = super().getSqls(pk_role=pk_role)
         subSaveSQls = self.__getSubSQLs()
+
+        # 当为新增状态且子表无有效行时，引发错误
+        if self.isNewMode and not subSaveSQls:
+            raise KeyError('明细表没有输入有效数据!\nThe list did not enter valid data!')
+
         # 判断编辑类型,整理返回结果
         if self.isNewMode:
             if not mainSaveSQLs:
@@ -454,7 +465,11 @@ class JPFormModelMainHasSub(JPFormModelMain):
             self.subModel = myJPTableViewModelReadOnly(tv, tfi)
         if self.isEditMode:
             tfi = JPTabelFieldInfo(self.subSQL.format(self.PKValue))
+            tfi.addRow()
             self.subModel = myJPTableViewModelEditForm(tv, tfi)
+
+        if self.isNewMode or self.isEditMode:
+            self.subModel.firstHasDirty.connect(self.onFirstHasDirty)
 
         # 检查第一列是不是子表主键
         if tfi.Fields[0].IsPrimarykey is False:
@@ -659,7 +674,7 @@ class JPFormModelMainHasSub(JPFormModelMain):
         if d_r:
             for i in range(len(d_r)):
                 sqls.append(sql_del.format(pk=d_r[i].Datas[i_pk]))
-                
+
         return sqls
 
     @pyqtSlot()
@@ -669,9 +684,13 @@ class JPFormModelMainHasSub(JPFormModelMain):
             isOK, result = JPDb().executeTransaction(lst)
             if isOK:
                 self.onAfterSaveData(result)
-                self.ui.butSave.setEnabled(False)
-                self.ui.butPrint.setEnabled(True)
-                self.ui.butPDF.setEnabled(True)
+                try:
+                    self.ui.butSave.setEnabled(False)
+                    self.ui.butPrint.setEnabled(True)
+                    self.ui.butPDF.setEnabled(True)
+                except Exception as e:
+                    print(str(e))
+
                 # self.MainModle.setEditState(False)
                 self.afterSaveData.emit(result)
                 QMessageBox.information(self, '完成',

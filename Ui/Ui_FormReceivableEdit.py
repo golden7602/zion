@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'c:\Users\win10\Desktop\Zion\zion\Ui\FormReceivableEdit.ui'
+# Form implementation generated from reading ui file 'e:\Zion\zion\Ui\FormReceivableEdit.ui'
 #
 # Created by: PyQt5 UI code generator 5.11.3
 #
@@ -304,20 +304,14 @@ class Ui_Form(object):
         self.butSave.setIconSize(QtCore.QSize(16, 16))
         self.butSave.setObjectName("butSave")
         self.horizontalLayout_3.addWidget(self.butSave)
-        self.butPrint = QtWidgets.QPushButton(Form)
+        self.butCancel = QtWidgets.QPushButton(Form)
+        self.butCancel.setEnabled(True)
         icon1 = QtGui.QIcon()
         icon1.addPixmap(QtGui.QPixmap("../res/ico/printer.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.butPrint.setIcon(icon1)
-        self.butPrint.setIconSize(QtCore.QSize(16, 16))
-        self.butPrint.setObjectName("butPrint")
-        self.horizontalLayout_3.addWidget(self.butPrint)
-        self.butPDF = QtWidgets.QPushButton(Form)
-        icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap("../res/ico/pdf.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.butPDF.setIcon(icon2)
-        self.butPDF.setIconSize(QtCore.QSize(16, 16))
-        self.butPDF.setObjectName("butPDF")
-        self.horizontalLayout_3.addWidget(self.butPDF)
+        self.butCancel.setIcon(icon1)
+        self.butCancel.setIconSize(QtCore.QSize(16, 16))
+        self.butCancel.setObjectName("butCancel")
+        self.horizontalLayout_3.addWidget(self.butCancel)
         spacerItem5 = QtWidgets.QSpacerItem(20, 20, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_3.addItem(spacerItem5)
         self.verticalLayout.addLayout(self.horizontalLayout_3)
@@ -349,8 +343,7 @@ class Ui_Form(object):
         self.label_12.setText(_translate("Form", "电话Tel:"))
         self.label_15.setText(_translate("Form", "欠款金额Arrears:"))
         self.butSave.setText(_translate("Form", "Save"))
-        self.butPrint.setText(_translate("Form", "Print"))
-        self.butPDF.setText(_translate("Form", "PDF"))
+        self.butCancel.setText(_translate("Form", "Cancel"))
 
 
 if __name__ == "__main__":
@@ -361,4 +354,3 @@ if __name__ == "__main__":
     ui.setupUi(Form)
     Form.show()
     sys.exit(app.exec_())
-

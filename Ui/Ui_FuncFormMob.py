@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'c:\Users\win10\Desktop\Zion\zion\Ui\FuncFormMob.ui'
+# Form implementation generated from reading ui file 'e:\Zion\zion\Ui\FuncFormMob.ui'
 #
 # Created by: PyQt5 UI code generator 5.11.3
 #
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-
 
 class Ui_Form(object):
     def setupUi(self, Form):
@@ -27,10 +26,10 @@ class Ui_Form(object):
         self.horizontalLayout_2.setSpacing(0)
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
         self.Layout_Button = QtWidgets.QHBoxLayout()
+        self.Layout_Button.setSpacing(2)
         self.Layout_Button.setObjectName("Layout_Button")
         self.horizontalLayout_2.addLayout(self.Layout_Button)
-        spacerItem = QtWidgets.QSpacerItem(20, 20, QtWidgets.QSizePolicy.Fixed,
-                                           QtWidgets.QSizePolicy.Minimum)
+        spacerItem = QtWidgets.QSpacerItem(20, 20, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_2.addItem(spacerItem)
         self.label_2 = QtWidgets.QLabel(self.widget)
         font = QtGui.QFont()
@@ -42,9 +41,7 @@ class Ui_Form(object):
         self.comboBox.setMinimumSize(QtCore.QSize(100, 0))
         self.comboBox.setObjectName("comboBox")
         self.horizontalLayout_2.addWidget(self.comboBox)
-        spacerItem1 = QtWidgets.QSpacerItem(20, 20,
-                                            QtWidgets.QSizePolicy.Fixed,
-                                            QtWidgets.QSizePolicy.Minimum)
+        spacerItem1 = QtWidgets.QSpacerItem(20, 20, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_2.addItem(spacerItem1)
         self.checkBox_1 = QtWidgets.QCheckBox(self.widget)
         self.checkBox_1.setObjectName("checkBox_1")
@@ -52,17 +49,13 @@ class Ui_Form(object):
         self.checkBox_2 = QtWidgets.QCheckBox(self.widget)
         self.checkBox_2.setObjectName("checkBox_2")
         self.horizontalLayout_2.addWidget(self.checkBox_2)
-        spacerItem2 = QtWidgets.QSpacerItem(40, 20,
-                                            QtWidgets.QSizePolicy.Expanding,
-                                            QtWidgets.QSizePolicy.Minimum)
+        spacerItem2 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_2.addItem(spacerItem2)
         self.verticalLayout.addWidget(self.widget)
         self.tableView = QtWidgets.QTableView(Form)
-        self.tableView.setEditTriggers(
-            QtWidgets.QAbstractItemView.SelectedClicked)
+        self.tableView.setEditTriggers(QtWidgets.QAbstractItemView.SelectedClicked)
         self.tableView.setAlternatingRowColors(True)
-        self.tableView.setSelectionBehavior(
-            QtWidgets.QAbstractItemView.SelectRows)
+        self.tableView.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
         self.tableView.setObjectName("tableView")
         self.tableView.verticalHeader().setDefaultSectionSize(25)
         self.tableView.verticalHeader().setMinimumSectionSize(23)
@@ -87,3 +80,4 @@ if __name__ == "__main__":
     ui.setupUi(Form)
     Form.show()
     sys.exit(app.exec_())
+

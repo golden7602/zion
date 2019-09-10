@@ -13,6 +13,7 @@ from lib.JPFunction import findButtonAndSetIcon
 from lib.JPPrintReport import JPReport
 from PyQt5.QtPrintSupport import QPrinter
 from lib.JPExcel.JPExportToExcel import JPExpExcelFromTabelFieldInfo
+from lib.ZionPublc import JPPub
 
 
 class _myMod(JPTableViewModelReadOnly):
@@ -59,7 +60,9 @@ class Form_Repoet_Day(QWidget):
         self.ui.setupUi(self)
         self.MainForm = mainform
         mainform.addForm(self)
-        findButtonAndSetIcon(self)
+        mainform.addOneButtonIcon(self.ui.CmdPrint, 'print.png')
+        mainform.addOneButtonIcon(self.ui.CmdPDF, 'pdf.png')
+        mainform.addOneButtonIcon(self.ui.CmdExportToExcel, 'exportToexcel.png')
         year_sql = """
                 select year(fOrderDate) as y  
                 from t_order union select year(fReceiptDate) 
@@ -214,7 +217,7 @@ class FormReport_Day_print(JPReport):
         self.font_YaHei_10.setPointSize(20)
         self.font_YaHei_10.setBold(True)
         rpt = self
-        rpt.logo = QPixmap(getcwd() + "\\res\\tmLogo100.png")
+        rpt.logo = JPPub().MainForm.logoPixmap
         rpt.ReportHeader.AddItem(2, 0, 0, 274, 50, rpt.logo)
         rpt.ReportHeader.AddItem(1,
                                  274,

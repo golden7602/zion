@@ -33,20 +33,23 @@ class JPTableViewModelBase(QAbstractTableModel):
         super().__init__()
         self.TabelFieldInfo = tabelFieldInfo
         self.tableView = None
-        self.__dirty = False
+        self._dirty = False
         self.__isCalculating = False
         self.__readingRow = -1
 
-    def __setdirty(self, state: bool = True):
+
+
+
+    def _setdirty(self, state: bool = True):
         # 第一次存在脏数据时，发送一个信号
-        if self.__dirty is False and state is True:
-            self.__dirty = True
+        if self._dirty is False and state is True:
+            self._dirty = True
             self.firstHasDirty.emit()
 
     @property
     def dirty(self) -> bool:
         """返回模型中是否有脏数据"""
-        return self.__dirty
+        return self._dirty
 
     def setTabelFieldInfo(self, tabelFieldInfo: JPTabelFieldInfo):
         tabelFieldInfo.Data = [
@@ -143,14 +146,13 @@ class JPTableViewModelBase(QAbstractTableModel):
                 role: int = Qt.EditRole) -> bool:
         t_inof = self.TabelFieldInfo
         t_inof.setData(Index, Any)
-        self.__setdirty()
+        self._setdirty()
         if self.__isCalculating is False:
             self.__formulaCacu(Index.row())
         # 执行重载函数，判断行数据是否合法
         # 给函数参数的值 是最后一行的数据list
         row_data = t_inof.getRowData(len(t_inof.DataRows) - 1)
         tempv = self.afterSetDataBeforeInsterRowEvent(row_data, Index)
-
 
         if isinstance(tempv, bool):
             if tempv:
@@ -235,7 +237,7 @@ class JPTableViewModelBase(QAbstractTableModel):
         self.beginRemoveRows(QModelIndex(), position, position + rows - 1)
         self.TabelFieldInfo.deleteRow(position)
         self.endRemoveRows()
-        self.__setdirty()
+        self._setdirty()
         return True
 
     def setColumnsDetegate(self):

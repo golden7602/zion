@@ -107,14 +107,32 @@ class JPFuncForm_Adjustment(ZionFuncForm):
         super().on_CmdEdit_clicked()
 
     def onAfterCreatedForm(self, cur_tp, form):
-        for nm in form.ObjectDict.keys():
-            form.ObjectDict[nm].setEnabled(False)
-        try:
-            if form.isEditMode:
-                form.ui.fPrice.setEnabled(True)
-                form.ui.fTax.setEnabled(True)
-        except Exception as identifier:
-            pass
+        if form.OrderType == "CP":
+            form.setWindowTitle("Order Adjustment")
+            form.ui.fOrderID.setEnabled(False)
+            form.ui.fCelular.setEnabled(False)
+            form.ui.fRequiredDeliveryDate.setEnabled(True)
+            form.ui.fContato.setEnabled(False)
+            form.ui.fTelefone.setEnabled(False)
+            form.ui.fCustomerID.setEnabled(True)
+            form.ui.fOrderDate.setEnabled(False)
+            form.ui.fSucursal.setEnabled(True)
+            form.ui.fVendedorID.setEnabled(True)
+            form.ui.fEntryID.setEnabled(False)
+            form.ui.fNote.setEnabled(True)
+            form.ui.fAmount.setEnabled(False)
+            form.ui.fDesconto.setEnabled(True)
+            form.ui.fTax.setEnabled(True)
+            form.ui.fPayable.setEnabled(False)
+
+        if  form.OrderType == "TP":
+            form.setWindowTitle("PrintingOrder Adjustment")
+            for nm in form.ObjectDict.keys():
+                print(f'form.ui.{nm}.setEnabled(ZT)')
+                form.ObjectDict[nm].setEnabled(False)
+            form.ui.fPrice.setEnabled(True)
+            form.ui.fTax.setEnabled(True)
+
 
 
         return super().onAfterCreatedForm(cur_tp, form)

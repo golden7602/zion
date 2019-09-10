@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'c:\Users\win10\Desktop\Zion\zion\Ui\FormUserEdit.ui'
+# Form implementation generated from reading ui file 'e:\Zion\zion\Ui\FormUserEdit.ui'
 #
 # Created by: PyQt5 UI code generator 5.11.3
 #
 # WARNING! All changes made in this file will be lost!
-
 from os import getcwd
 from sys import path as jppath
 jppath.append(getcwd())
@@ -162,12 +161,6 @@ class Ui_Form(object):
         self.horizontalLayout.setObjectName("horizontalLayout")
         spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout.addItem(spacerItem)
-        self.butPDF = QtWidgets.QPushButton(Form)
-        self.butPDF.setObjectName("butPDF")
-        self.horizontalLayout.addWidget(self.butPDF)
-        self.butPrint = QtWidgets.QPushButton(Form)
-        self.butPrint.setObjectName("butPrint")
-        self.horizontalLayout.addWidget(self.butPrint)
         self.butSave = QtWidgets.QPushButton(Form)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap("../res/ico/save.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
@@ -192,7 +185,7 @@ class Ui_Form(object):
 
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
-        Form.setWindowTitle(_translate("Form", "Order"))
+        Form.setWindowTitle(_translate("Form", "User Information"))
         self.label_18.setText(_translate("Form", "用户信息"))
         self.label_19.setText(_translate("Form", "User Information"))
         self.label.setText(_translate("Form", "有效Enabled："))
@@ -202,8 +195,6 @@ class Ui_Form(object):
         self.label_7.setText(_translate("Form", "昵称Nickname"))
         self.label_13.setText(_translate("Form", "用户编号UserID:"))
         self.label_9.setText(_translate("Form", "姓名Name:"))
-        self.butPDF.setText(_translate("Form", "PushButton"))
-        self.butPrint.setText(_translate("Form", "PushButton"))
         self.butSave.setText(_translate("Form", "Save"))
         self.butCancel.setText(_translate("Form", "Cancel"))
 
@@ -216,4 +207,3 @@ if __name__ == "__main__":
     ui.setupUi(Form)
     Form.show()
     sys.exit(app.exec_())
-

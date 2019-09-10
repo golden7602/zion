@@ -2,22 +2,24 @@ from os import getcwd
 from sys import path as jppath
 jppath.append(getcwd())
 
-from Ui.Ui_FormReceivables import Ui_Form
-from PyQt5.QtWidgets import QDialog, QMessageBox, QWidget, QPushButton
-from PyQt5.QtCore import QDate, QMetaObject, pyqtSlot, Qt, QModelIndex
-from lib.JPDatabase.Query import JPQueryFieldInfo
-from lib.JPMvc.JPModel import JPTableViewModelReadOnly
-from lib.JPFunction import JPDateConver, findButtonAndSetIcon, setButtonIcon
-from lib.JPMvc.JPEditFormModel import JPFormModelMain, JPEditFormDataMode
-from Ui.Ui_FormReceivableEdit import Ui_Form as Edit_ui
-from PyQt5.QtGui import QPixmap
-from lib.ZionPublc import JPPub, JPUser
-from lib.JPMvc import JPWidgets
-from lib.JPExcel.JPExportToExcel import JPExpExcelFromManyTabelFieldInfo
-from PyQt5.QtGui import QColor, QFont
-from lib.JPFunction import JPGetDisplayText
-from lib.JPPrintReport import JPReport
+from PyQt5.QtCore import QDate, QMetaObject, QModelIndex, Qt, pyqtSlot
+from PyQt5.QtGui import QColor, QFont, QPixmap, QIcon
 from PyQt5.QtPrintSupport import QPrinter
+from PyQt5.QtWidgets import QDialog, QMessageBox, QPushButton, QWidget
+
+from lib.JPDatabase.Query import JPQueryFieldInfo
+from lib.JPExcel.JPExportToExcel import JPExpExcelFromManyTabelFieldInfo
+from lib.JPFunction import JPDateConver, JPGetDisplayText, findButtonAndSetIcon
+from lib.JPMvc import JPWidgets
+from lib.JPMvc.JPEditFormModel import JPEditFormDataMode, JPFormModelMain
+from lib.JPMvc.JPModel import JPTableViewModelReadOnly
+from lib.JPPrintReport import JPReport
+from lib.ZionPublc import JPPub, JPUser
+from Ui.Ui_FormReceivableEdit import Ui_Form as Edit_ui
+from Ui.Ui_FormReceivables import Ui_Form
+
+
+
 
 
 class Form_Receivables(QWidget):
@@ -26,7 +28,7 @@ class Form_Receivables(QWidget):
         self.MainForm = mainform
         self.ui = Ui_Form()
         self.ui.setupUi(self)
-        findButtonAndSetIcon(self)
+        #findButtonAndSetIcon(self)
         mainform.addForm(self)
         self.SQLCustomerArrearsList = """
             select c.fCustomerID as 客户编号ID,
@@ -163,18 +165,6 @@ class Form_Receivables(QWidget):
     def __formChange(self, *args):
         print(args)
 
-    def addButtons(self, btnNames: list):
-        for item in btnNames:
-            btn = QPushButton(item['fMenuText'])
-            btn.setObjectName(item['fObjectName'])
-            setButtonIcon(btn, item['fIcon'])
-            btn.setEnabled(item['fHasRight'])
-            self.ui.horizontalLayout_3.addWidget(btn)
-        QMetaObject.connectSlotsByName(self)
-
-    # @pyqtSlot()
-    # def on_SelectDate_dateChanged(self, *args):
-    #     return
 
     @pyqtSlot()
     def on_CmdEdit_clicked(self):
@@ -190,7 +180,7 @@ class Form_Receivables(QWidget):
         frm = RecibidoEdit()
         frm.ListForm = self
         frm.ui.fAmountCollected.setDoubleValidator(0.01, 100000000.0, 2)
-        frm.ui.fNote.refreshValueNotRaiseEvent('DIBOTO', True)
+        #frm.ui.fNote.refreshValueNotRaiseEvent('DIBOTO', True)
         frm.exec_()
 
     @pyqtSlot()
@@ -278,15 +268,15 @@ class RecibidoEdit(JPFormModelMain):
                          PKValue=None,
                          edit_mode=JPEditFormDataMode.New,
                          flags=Qt.WindowFlags())
-        pix = QPixmap(getcwd() + "\\res\\tmLogo100.png")
-        self.ui.label_logo.setPixmap(pix)
+        JPPub().MainForm.addLogoToLabel(self.ui.label_logo)
+        JPPub().MainForm.addOneButtonIcon(self.ui.butSave,'save.png')
+        JPPub().MainForm.addOneButtonIcon(self.ui.butCancel, 'cancel.png')
+        self.ui.butCancel.clicked.connect(self.close)
         self.ui.fID.hide()
         self.readData()
         self.ui.fPayeeID.refreshValueNotRaiseEvent(JPUser().currentUserID())
         self.__setEnabled()
         self.ui.fCustomerID.currentIndexChanged.connect(self.__setEnabled)
-        self.ui.butPrint.hide()
-        self.ui.butPDF.hide()
         self.ui.fCustomerID.setEditable(True)
         self.ui.fArrears.setEnabled(True)
 

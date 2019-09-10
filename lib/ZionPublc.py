@@ -7,7 +7,7 @@ from lib.JPDatabase.Database import JPDb
 from lib.JPFunction import Singleton
 from PyQt5.QtWidgets import QTreeWidgetItem, QMessageBox, QDialog
 from PyQt5.QtCore import QThread, pyqtSignal, Qt, QObject
-from PyQt5.QtGui import QIcon
+from PyQt5.QtGui import QIcon, QPixmap
 from Ui.Ui_FormUserLogin import Ui_Dialog as Ui_Dialog_Login
 from Ui.Ui_FormChangePassword import Ui_Dialog as Ui_Dialog_ChnPwd
 from lib.JPFunction import md5_passwd, setWidgetIconByName
@@ -18,9 +18,9 @@ class Form_ChangePassword(QDialog):
         super().__init__(parent=parent, flags=flags)
         self.ui = Ui_Dialog_ChnPwd()
         self.ui.setupUi(self)
-        setWidgetIconByName(self.ui.Login_64)
+        self.ui.Login_64.setPixmap(
+            QPixmap(getcwd() + "\\res\\ico\\{}".format("changepassword.png")))
         self.exec_()
-
     def accept(self):
         def msgbox(msg: str):
             QMessageBox.warning(self, '提示', msg, QMessageBox.Yes,
@@ -59,7 +59,9 @@ class Form_UserLogin(QDialog):
         super().__init__()
         self.ui = Ui_Dialog_Login()
         self.ui.setupUi(self)
-        setWidgetIconByName(self.ui.Login_64)
+        self.ui.Login_64.setPixmap(
+            QPixmap(getcwd() + "\\res\\ico\\{}".format("login_64.png")))
+        #setWidgetIconByName(self.ui.Login_64)
         self.isLogin = isLogin
         us = JPUser()
         for r in [r for r in us.getAllUserList() if r[0] > 1]:

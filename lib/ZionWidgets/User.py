@@ -9,13 +9,13 @@ from PyQt5.QtWidgets import (QMessageBox, QPushButton, QTreeWidgetItem,
 
 from lib.JPDatabase.Database import JPDb
 from lib.JPDatabase.Query import JPTabelFieldInfo
-from lib.JPFunction import JPDateConver, md5_passwd, setButtonIcon
+from lib.JPFunction import JPDateConver, md5_passwd
 from lib.JPMvc.JPEditFormModel import JPEditFormDataMode, JPFormModelMain
 from lib.JPMvc.JPModel import JPTableViewModelReadOnly
 from Ui.Ui_FormUser import Ui_Form as Ui_Form_List
 from Ui.Ui_FormUserEdit import Ui_Form as Ui_Form_Edit
 from PyQt5.QtGui import QColor
-from lib.ZionPublc import JPUser
+from lib.ZionPublc import JPUser, JPPub
 
 
 class myJPTableViewModelReadOnly(JPTableViewModelReadOnly):
@@ -24,8 +24,8 @@ class myJPTableViewModelReadOnly(JPTableViewModelReadOnly):
 
     def data(self, Index, role=Qt.DisplayRole):
         r = Index.row()
-        if role == Qt.TextColorRole and self.TabelFieldInfo.DataRows[
-                r].Datas[5] == "Non":
+        if role == Qt.TextColorRole and self.TabelFieldInfo.DataRows[r].Datas[
+                5] == "Non":
             return QColor(Qt.red)
 
         return super().data(Index, role)
@@ -36,6 +36,7 @@ class Form_User(QWidget):
         super().__init__(mainform)
         self.ui = Ui_Form_List()
         self.ui.setupUi(self)
+        self.MianForm = mainform
         mainform.addForm(self)
         tr = self.ui.treeWidget
         tr.setColumnCount(2)
@@ -148,14 +149,6 @@ class Form_User(QWidget):
         else:
             return True
 
-    def addButtons(self, btnNames: list):
-        for item in btnNames:
-            btn = QPushButton(item['fMenuText'])
-            btn.setObjectName(item['fObjectName'])
-            setButtonIcon(btn, item['fIcon'])
-            btn.setEnabled(item['fHasRight'])
-            self.ui.horizontalLayout_Button.addWidget(btn)
-        QMetaObject.connectSlotsByName(self)
 
     def getEditForm(self, sql_main, edit_mode, sql_sub, PKValue):
         return EditForm_User(sql_main=sql_main,
@@ -229,14 +222,14 @@ def loadTreeview(treeWidget, items, hasCommandButton=False):
             treeWidget._rootItem = root
             self.root = root
             self.items = items
-            self.icopath = getcwd() + "\\res\\ico\\"
+            self.icopath = JPPub().MainForm.icoPath
 
         def addItems(self, parent, items):
             for r in items:
                 item = QTreeWidgetItem(parent)
                 item.setText(0, r["fMenuText"])
                 if r["fIcon"]:
-                    item.setIcon(0, QIcon(self.icopath + r["fIcon"]))
+                    item.setIcon(0, QIcon(self.icopath.format(r["fIcon"])))
                 st = (Qt.Checked if r['fHasRight'] == 1 else Qt.Unchecked)
                 if not r["fDefault"]:
                     item.setCheckState(1, st)
@@ -267,11 +260,10 @@ class EditForm_User(JPFormModelMain):
                          PKValue=PKValue,
                          edit_mode=edit_mode,
                          flags=flags)
-        pix = QPixmap(getcwd() + "\\res\\tmLogo100.png")
-        self.ui.label_logo.setPixmap(pix)
+        JPPub().MainForm.addLogoToLabel(self.ui.label_logo)
+        JPPub().MainForm.addOneButtonIcon(self.ui.butSave, 'save.png')
+        JPPub().MainForm.addOneButtonIcon(self.ui.butCancel, 'cancel.png')
         self.readData()
-        self.ui.butPrint.hide()
-        self.ui.butPDF.hide()
         self.ui.fUserID.setEnabled(False)
         self.ui.fPassword.setEnabled(True)
         self.ui.fPassword.refreshValueNotRaiseEvent("1234", True)

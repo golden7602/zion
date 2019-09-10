@@ -36,7 +36,7 @@
      </property>
      <widget class="QWidget" name="tab1">
       <attribute name="title">
-       <string>Tab 1</string>
+       <string>Bill</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <property name="leftMargin">
@@ -137,7 +137,7 @@
      </widget>
      <widget class="QWidget" name="tab2">
       <attribute name="title">
-       <string>Tab 2</string>
+       <string>other</string>
       </attribute>
      </widget>
     </widget>

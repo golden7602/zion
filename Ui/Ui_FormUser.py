@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'e:\Zion\Ui\FormUser.ui'
+# Form implementation generated from reading ui file 'e:\Zion\zion\Ui\FormUser.ui'
 #
 # Created by: PyQt5 UI code generator 5.11.3
 #
@@ -36,9 +36,9 @@ class Ui_Form(object):
         self.horizontalLayout_3.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout_3.setSpacing(0)
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
-        self.horizontalLayout_Button = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_Button.setObjectName("horizontalLayout_Button")
-        self.horizontalLayout_3.addLayout(self.horizontalLayout_Button)
+        self.Layout_Button = QtWidgets.QHBoxLayout()
+        self.Layout_Button.setObjectName("Layout_Button")
+        self.horizontalLayout_3.addLayout(self.Layout_Button)
         spacerItem = QtWidgets.QSpacerItem(1075, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_3.addItem(spacerItem)
         self.verticalLayout_2.addWidget(self.widget_Button)
@@ -46,6 +46,9 @@ class Ui_Form(object):
         self.splitter.setOrientation(QtCore.Qt.Horizontal)
         self.splitter.setObjectName("splitter")
         self.tableView = QtWidgets.QTableView(self.splitter)
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.tableView.setFont(font)
         self.tableView.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
         self.tableView.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
         self.tableView.setObjectName("tableView")

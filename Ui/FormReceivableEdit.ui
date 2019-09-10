@@ -883,30 +883,16 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="butPrint">
+        <widget class="QPushButton" name="butCancel">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
          <property name="text">
-          <string>Print</string>
+          <string>Cancel</string>
          </property>
          <property name="icon">
           <iconset>
            <normaloff>../res/ico/printer.png</normaloff>../res/ico/printer.png</iconset>
-         </property>
-         <property name="iconSize">
-          <size>
-           <width>16</width>
-           <height>16</height>
-          </size>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="butPDF">
-         <property name="text">
-          <string>PDF</string>
-         </property>
-         <property name="icon">
-          <iconset>
-           <normaloff>../res/ico/pdf.png</normaloff>../res/ico/pdf.png</iconset>
          </property>
          <property name="iconSize">
           <size>

@@ -107,6 +107,14 @@ class JPFuncForm_Payment(ZionFuncForm):
             return
         super().on_CmdEdit_clicked()
 
+    def onAfterCreatedForm(self, cur_tp, form):
+        form.ui.fOrderID.setEnabled(False)
+        form.ui.fOrderDate.setEnabled(False)
+        form.ui.fCustomerID.setEnabled(False)
+        form.ui.fRequiredDeliveryDate.setEnabled(False)
+        form.ui.fEntryID.setEnabled(False)
+
+
 
 class Payment_report(Order_report_Mob):
     def __init__(self):

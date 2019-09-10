@@ -56,6 +56,7 @@ class ZionFuncForm(JPFunctionForm):
               edit_mode=edit_mode,
               sql_sub=sql_sub,
               PKValue=PKValue)
+        F.OrderType = cur_tp
         if edit_mode != JPEditFormDataMode.ReadOnly:
             F.ui.fCustomerID.setEditable(True)
         F.ui.fOrderID.setEnabled(False)

@@ -87,8 +87,8 @@ class Ui_Dialog(object):
         self.label_2.setText(_translate("Dialog", "单据账账户信息Conta Bancaria："))
         self.label_3.setText(_translate("Dialog", "突出显示背景填充颜色Highlight background fill color:"))
         self.butBackColor.setText(_translate("Dialog", "Change"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab1), _translate("Dialog", "Tab 1"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab2), _translate("Dialog", "Tab 2"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab1), _translate("Dialog", "Bill"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab2), _translate("Dialog", "other"))
 
 
 if __name__ == "__main__":

@@ -16,7 +16,7 @@ from lib.JPMvc.JPModel import JPTableViewModelReadOnly
 from lib.JPPrintReport import JPPrintSectionType
 from lib.ZionPublc import JPPub, JPUser
 from lib.ZionReport.OrderReportMob import Order_report_Mob
-from Ui.Ui_FormOrderMob import Ui_Form
+from lib.ZionWidgets.EditFormOrderOrPrintingOrder import JPFormOrder
 from lib.JPFunction import JPRound
 from lib.JPExcel.JPExportToExcel import JPExpExcelFromTabelFieldInfo
 from PyQt5.QtGui import QColor, QIcon
@@ -90,7 +90,7 @@ class JPFuncForm_Order(JPFunctionForm):
                     fWidth AS '宽Larg.',
                     t.fPrice AS '单价P. Unitario', 
                     t.fAmount AS '金额Total'
-                FROM v_order AS o right join t_order_detail as t on o.fOrderID=t.fOrderID"""
+                FROM v_order AS o left join t_order_detail as t on o.fOrderID=t.fOrderID"""
         sql_1 = sql_0 + """
                 WHERE fCanceled=0
                         AND left(o.fOrderID,2)='CP'
@@ -113,7 +113,7 @@ class JPFuncForm_Order(JPFunctionForm):
         m_sql = """
                 SELECT fOrderID as 订单号码OrderID
                     , fOrderDate as 日期OrderDate
-                    , fVendedorID
+                    , fVendedorID as 销售人员Vendedor
                     , fRequiredDeliveryDate as 交货日期RequiredDeliveryDate
                     , fCustomerID  as 客户名Cliente
                     , fContato
@@ -245,17 +245,16 @@ class EditForm_Order(JPFormModelMainHasSub):
                  sql_sub=None,
                  edit_mode=JPEditFormDataMode.ReadOnly,
                  flags=Qt.WindowFlags()):
-        super().__init__(Ui_Form(),
+        super().__init__(JPFormOrder(),
                          sql_main=sql_main,
                          PKValue=PKValue,
                          sql_sub=sql_sub,
                          edit_mode=edit_mode,
                          flags=flags)
 
+        JPPub().MainForm.addLogoToLabel(self.ui.label_logo)
         self.setPkRole(1)
         self.cacuTax = True
-        self.ui.label_logo.setPixmap(QPixmap(getcwd() +
-                                             "\\res\\tmLogo100.png"))
         self.ui.fTax.keyPressEvent = self.__onTaxKeyPress
         self.readData()
         if self.isNewMode:
@@ -263,6 +262,8 @@ class EditForm_Order(JPFormModelMainHasSub):
                 JPUser().currentUserID())
         if edit_mode != JPEditFormDataMode.ReadOnly:
             self.ui.fCustomerID.setEditable(True)
+
+        self.ui.fCustomerID.setFocus()
 
     def __customerIDChanged(self):
         sql = '''select fCelular, fContato, fTelefone ,fNUIT,fEndereco,fCity
@@ -350,10 +351,6 @@ class EditForm_Order(JPFormModelMainHasSub):
     def onAfterSaveData(self, data):
         if self.isNewMode:
             self.ui.fOrderID.refreshValueNotRaiseEvent(data, True)
-
-    # def afterInsterRowEvent(self):
-    #     index = self.subModel.createIndex(self.subModel.rowCount(), 2)
-    #     self.ui.tableView.setCurrentIndex(index)
 
     def afterSetDataBeforeInsterRowEvent(self, row_data, Index):
         # 用于判断可否有加行

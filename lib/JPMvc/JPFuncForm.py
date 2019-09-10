@@ -14,7 +14,6 @@ from PyQt5.QtCore import (QCoreApplication, QSize, Qt, pyqtSlot, QModelIndex,
 from lib.JPDatabase.Query import JPQueryFieldInfo
 from lib.JPMvc.JPModel import JPTableViewModelReadOnly
 from lib.JPMvc.JPEditFormModel import JPEditFormDataMode
-from lib.JPFunction import setButtonIcon
 from lib.JPDatabase.Database import JPDb
 from Ui.Ui_FuncFormMob import Ui_Form
 from lib.JPExcel.JPExportToExcel import clsExportToExcelFromTableWidget
@@ -38,7 +37,7 @@ class JPFunctionForm(QWidget):
         self.backgroundWhenValueIsTrueFieldName = []
         self.ui = Ui_Form()
         self.ui.setupUi(self)
-        parent.addButtons()
+        #parent.addButtons()
         self.comboBox = self.ui.comboBox
         self.checkBox_1 = self.ui.checkBox_1
         self.checkBox_2 = self.ui.checkBox_2
@@ -163,10 +162,10 @@ class JPFunctionForm(QWidget):
             }
             sql = self.SQL_ListForm_Para.format(
                 ch1=ch1, ch2=ch2, date=cb[self.ui.comboBox.currentIndex()])
+            print(sql)
             self.__readSQL(sql)
             if ID:
                 self._locationRow(ID)
-            
 
         # 恢复按钮状态
         for but in dict_but.keys():
@@ -176,21 +175,21 @@ class JPFunctionForm(QWidget):
         self.ui.comboBox.setEnabled(True)
 
     def __readSQL(self, sql):
-            info = JPQueryFieldInfo(sql)
-            self.currentSQL = sql
-            self.MainForm.ProgressBar.show()
-            self.MainForm.Label.setText('Reading')
-            self.model = self.onGetModelClass()(self.ui.tableView, info)
-            self.model.readingRow.connect(self.__refreshProcessBar)
-            self.MainForm.ProgressBar.setRange(0, len(info))
-            self.ui.tableView.setModel(self.model)
-            self.MainForm.Label.setText('')
-            self.MainForm.ProgressBar.hide()
-            self.ui.tableView.selectionModel(
-            ).currentRowChanged[QModelIndex, QModelIndex].connect(
-                self.onCurrentRowChanged)
-            self.ui.tableView.resizeColumnsToContents()
-            self.TableInfo = info
+        info = JPQueryFieldInfo(sql)
+        self.currentSQL = sql
+        self.MainForm.ProgressBar.show()
+        self.MainForm.Label.setText('Reading')
+        self.model = self.onGetModelClass()(self.ui.tableView, info)
+        self.model.readingRow.connect(self.__refreshProcessBar)
+        self.MainForm.ProgressBar.setRange(0, len(info))
+        self.ui.tableView.setModel(self.model)
+        self.MainForm.Label.setText('')
+        self.MainForm.ProgressBar.hide()
+        self.ui.tableView.selectionModel(
+        ).currentRowChanged[QModelIndex, QModelIndex].connect(
+            self.onCurrentRowChanged)
+        self.ui.tableView.resizeColumnsToContents()
+        self.TableInfo = info
 
     def __refreshProcessBar(self, row):
         try:
@@ -227,8 +226,7 @@ class JPFunctionForm(QWidget):
     def on_CmdExportToExcel_clicked(self):
         return
 
-
-    def __whereStringCreated(self,sql):
+    def __whereStringCreated(self, sql):
         self.__readSQL(sql)
 
     @pyqtSlot()
