@@ -24,8 +24,8 @@ class myJPTableViewModelReadOnly(JPTableViewModelReadOnly):
 
     def data(self, Index, role=Qt.DisplayRole):
         r = Index.row()
-        if role == Qt.TextColorRole and self.TabelFieldInfo.DataRows[r].Datas[
-                5] == "Non":
+        if (role == Qt.TextColorRole
+                and self.TabelFieldInfo.DataRows[r].Datas[5] == "Non"):
             return QColor(Qt.red)
 
         return super().data(Index, role)
@@ -88,6 +88,28 @@ class Form_User(QWidget):
         item.dirty = True
         self.ui.treeWidget.dirty = True
 
+        self.ui.treeWidget.itemChanged.disconnect(self.onItemChanged)
+        if item.checkState(1) == Qt.Checked:
+            self.__ChangeParentCheckStateToChecked(item)
+        if item.checkState(1) == Qt.Unchecked:
+            self.__ChangeChildrenCheckStateToUnchecked(item)
+        self.ui.treeWidget.itemChanged.connect(self.onItemChanged)
+
+    def __ChangeChildrenCheckStateToUnchecked(self, item):
+        """递归修改下级为未选中"""
+        for i in range(item.childCount()):
+            item_i = item.child(i)
+            item_i.setCheckState(1, Qt.Unchecked)
+            self.__ChangeChildrenCheckStateToUnchecked(item_i)
+
+    def __ChangeParentCheckStateToChecked(self, item):
+        """递归修改上级为选中"""
+        if item.parent() is self.ui.treeWidget._rootItem:
+            return
+        else:
+            item.parent().setCheckState(1, Qt.Checked)
+            self.__ChangeParentCheckStateToChecked(item.parent())
+
     def on_tableView_currentChanged(self, index1, index2):
         if index2.row() != -1:
             if self.checkDirty():
@@ -114,7 +136,9 @@ class Form_User(QWidget):
         db = JPDb()
         db.executeTransaction(ins_sql.format(uid=uid))
         items = db.getDict(sql.format(uid))
+        self.ui.treeWidget.itemChanged.disconnect(self.onItemChanged)
         loadTreeview(self.ui.treeWidget, items)
+        self.ui.treeWidget.itemChanged.connect(self.onItemChanged)
 
     def getCurrentUID(self, index=None):
         tr = self.ui.tableView
@@ -149,7 +173,6 @@ class Form_User(QWidget):
         else:
             return True
 
-
     def getEditForm(self, sql_main, edit_mode, sql_sub, PKValue):
         return EditForm_User(sql_main=sql_main,
                              edit_mode=edit_mode,
@@ -169,25 +192,26 @@ class Form_User(QWidget):
         frm.ui.fEnabled.refreshValueNotRaiseEvent(2)
         frm.setListForm(self)
         frm.afterSaveData.connect(self.refreshTable)
-        self.__EditForm = None
         self.__EditForm = frm
         frm.exec_()
 
     @pyqtSlot()
     def on_CmdEdit_clicked(self):
-        errt = '编辑用户信息时，必须修改用户密码。\nWhen editing user information, user passwords must be changed '
+        errt = '编辑用户信息时，必须修改用户密码。\n'
+        errt = errt + 'When editing user information, '
+        errt = errt + 'user passwords must be changed'
         QMessageBox.information(None, '提示', errt)
         cu_id = self.getCurrentSelectPKValue()
         if not cu_id:
             return
-        self.__EditForm = None
-        self.__EditForm = self.getEditForm(sql_main=self.SQL_EditForm_Main,
-                                           sql_sub=None,
-                                           edit_mode=JPEditFormDataMode.Edit,
-                                           PKValue=cu_id)
-        self.__EditForm.setListForm(self)
-        self.__EditForm.afterSaveData.connect(self.refreshTable)
-        self.__EditForm.exec_()
+        frm = self.getEditForm(sql_main=self.SQL_EditForm_Main,
+                               sql_sub=None,
+                               edit_mode=JPEditFormDataMode.Edit,
+                               PKValue=cu_id)
+        frm.setListForm(self)
+        frm.afterSaveData.connect(self.refreshTable)
+        self.__EditForm = frm
+        frm.exec_()
 
     @pyqtSlot()
     def on_CmdDelete_clicked(self):
@@ -204,14 +228,13 @@ class Form_User(QWidget):
 
 
 def loadTreeview(treeWidget, items, hasCommandButton=False):
-    class MyThreadReadTree(QThread):  # 加载功能树的线程类
+    class MyThreadReadTree(QThread):
+        """加载功能树的线程类"""
         def __init__(self, treeWidget, items):
             super().__init__()
             treeWidget.clear()
-            tree_title = [
-                "权限分配 Permission Assignment【{}】".format(items[0]['fUsername']),
-                "Right"
-            ]
+            title1 = "权限分配 Permission Assignment【{}】"
+            tree_title = [title1.format(items[0]['fUsername']), "Right"]
             treeWidget.setHeaderLabels(tree_title)
             treeWidget.dirty = False
             root = QTreeWidgetItem(treeWidget)
@@ -260,9 +283,11 @@ class EditForm_User(JPFormModelMain):
                          PKValue=PKValue,
                          edit_mode=edit_mode,
                          flags=flags)
-        JPPub().MainForm.addLogoToLabel(self.ui.label_logo)
-        JPPub().MainForm.addOneButtonIcon(self.ui.butSave, 'save.png')
-        JPPub().MainForm.addOneButtonIcon(self.ui.butCancel, 'cancel.png')
+
+        MF = JPPub().MainForm
+        MF.addLogoToLabel(self.ui.label_logo)
+        MF.addOneButtonIcon(self.ui.butSave, 'save.png')
+        MF.addOneButtonIcon(self.ui.butCancel, 'cancel.png')
         self.readData()
         self.ui.fUserID.setEnabled(False)
         self.ui.fPassword.setEnabled(True)
@@ -273,5 +298,6 @@ class EditForm_User(JPFormModelMain):
         self.ui.butSave.setEnabled(True)
 
     def onAfterSaveData(self, data):
+        # 重新加载一次用户数据
         JPUser().INIT()
         super().onAfterSaveData(data)

@@ -36,6 +36,13 @@ class JPDb(object):
     def setDatabaseType(self, db_type: JPDbType):
         self.__db_type = db_type
 
+    def close(self):
+        """关闭数据库连接"""
+        try:
+            self.__currentConn.close()
+        except Exception as e:
+            print(str(e))
+
     @property
     def currentConn(self) -> mysql_connect:
         notFind = '当前文件夹下没有找到"Config.ini"文件！\n'

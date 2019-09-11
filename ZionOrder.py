@@ -85,46 +85,52 @@ class JPMainWindow(QMainWindow):
         # self.logoPath = ":/logo/res/{}"
         self.icoPath = getcwd() + "\\res\\ico\\{}"
         self.logoPath = getcwd() + "\\res\\{}"
-        self.logoPixmap = QPixmap(self.logoPath.format("tmlogo100.png"))
 
+        # 设置主窗体中按钮图标及Logo
+        self.logoPixmap = QPixmap(self.logoPath.format("tmlogo100.png"))
         self.addOneButtonIcon(self.ui.ChangeUser, "changeuser.png")
         self.addOneButtonIcon(self.ui.ChangePassword, "changepassword.png")
         self.addLogoToLabel(self.ui.label_logo)
 
-        def onUserChanged(args):
-            self.ui.label_UserName.setText(args[1])
-            loadTreeview(self.ui.treeWidget, objUser.currentUserRight(), self)
-            Form_Background(self)
-
+        # 用户及密码修改功能
         objUser = JPUser()
         objUser.INIT()  # 程序开始时只初始化一次
-        objUser.userChange.connect(onUserChanged)
+        objUser.userChange.connect(self.onUserChanged)
         objUser.currentUserID()
         self.ui.ChangeUser.clicked.connect(objUser.changeUser)
         self.ui.ChangePassword.clicked.connect(objUser.changePassword)
-        # MW.setStyleSheet(readQss(os.getcwd() + "\\res\\blackwhite.css"))
-        # 堆叠布局调
+
+        # 堆叠布局
         self.ui.stackedWidget.removeWidget(self.ui.page)
         self.ui.stackedWidget.removeWidget(self.ui.page_2)
+
         # 隐藏树标题
         self.ui.label_FunPath.setText('')
         self.ui.treeWidget.setHeaderHidden(True)
 
+        # 设置状态条中的进度条及标签
         self.Label = QLabel("")
         self.ProgressBar = QProgressBar()
         self.statusBar().addPermanentWidget(self.Label)
         self.statusBar().addPermanentWidget(self.ProgressBar)
         self.ProgressBar.hide()
 
-        def treeViewItemClicked(item, i):
-            try:
-                self.ui.label_FunPath.setText(item.FullPath)
-                self.getStackedWidget(item.jpData)
-            except AttributeError as e:
-                print(str(e))
-
+        # 连接点击了功能树中的节点到函数
         self.ui.treeWidget.itemClicked[QTreeWidgetItem, int].connect(
-            treeViewItemClicked)
+            self.treeViewItemClicked)
+
+    def treeViewItemClicked(self, item, i):
+        # 当点击了功能树中的节点时
+        try:
+            self.ui.label_FunPath.setText(item.FullPath)
+            self.getStackedWidget(item.jpData)
+        except AttributeError as e:
+            print(str(e))
+
+    def onUserChanged(self, args):
+        self.ui.label_UserName.setText(args[1])
+        loadTreeview(self.ui.treeWidget, JPUser().currentUserRight(), self)
+        Form_Background(self)
 
     def addForm(self, form):
         st = self.ui.stackedWidget
@@ -150,8 +156,6 @@ class JPMainWindow(QMainWindow):
                 btn.NMID = m['fNMID']
                 btn.setObjectName(m['fObjectName'])
                 self.addOneButtonIcon(btn, m['fIcon'])
-                # icon = QIcon(self.icoPath.format(m['fIcon']))
-                # frm.ui.btn.setIcon(icon)
                 btn.setEnabled(m['fHasRight'])
                 layout.addWidget(btn)
             QMetaObject.connectSlotsByName(frm)
@@ -183,16 +187,20 @@ class JPMainWindow(QMainWindow):
             frm = classes[self.menu_id](self)
         else:
             frm = Form_Background(self)
-        # 尝试给窗体添加按钮
+
+        # 尝试给窗体添加按钮,要求窗体中有一个名为 “Layout_Button”的布局
         self.addButtons(frm, btns)
         return
+
+    def closeEvent(self, *args):
+        # 关闭主窗体前先关闭数据库游标
+        JPDb().close()
 
 
 if __name__ == "__main__":
     QApplication.setAttribute(Qt.AA_EnableHighDpiScaling)
     QApplication.setStyle('Fusion')
     app = QApplication(argv)
-    # app.setStyleSheet(qdarkstyle.load_stylesheet_pyqt5())
     db = JPDb()
     db.setDatabaseType(JPDbType.MySQL)
     MainWindow = JPMainWindow()

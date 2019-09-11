@@ -2,7 +2,7 @@ from os import getcwd
 from sys import path as jppath
 jppath.append(getcwd())
 
-#from lib.JPDatebase import JPMySqlSingleTableQuery as JPQ, JPDb, getDict
+
 from lib.JPDatabase.Database import JPDb
 from lib.JPFunction import Singleton
 from PyQt5.QtWidgets import QTreeWidgetItem, QMessageBox, QDialog
@@ -61,7 +61,6 @@ class Form_UserLogin(QDialog):
         self.ui.setupUi(self)
         self.ui.Login_64.setPixmap(
             QPixmap(getcwd() + "\\res\\ico\\{}".format("login_64.png")))
-        #setWidgetIconByName(self.ui.Login_64)
         self.isLogin = isLogin
         us = JPUser()
         for r in [r for r in us.getAllUserList() if r[0] > 1]:
@@ -107,6 +106,8 @@ class Form_UserLogin(QDialog):
         if not self.isLogin:
             self.hide()
         else:
+            # 退出程序
+            JPDb().close()
             exit()
 
 
