@@ -196,6 +196,8 @@ class QLineEdit(QLineEdit_, __JPWidgetBase):
         self.clearStyleSheet()
         if self.FieldInfo.TypeCode in (JPFieldType.Int, JPFieldType.Float):
             return "'{}'".format(t.replace(',', ''))
+        if self.FieldInfo.TypeCode == JPFieldType.String:
+            return "'{}'".format(t.replace("'","\\'"))
         return "'{}'".format(t)
 
     def refreshValueNotRaiseEvent(self, v, changeDisplayText: bool = False):
@@ -322,7 +324,8 @@ class QTextEdit(QTextEdit_, __JPWidgetBase):
         if t is None or len(t) == 0:
             return self.getNullValue()
         self.clearStyleSheet()
-        return "'{}'".format(t)
+        return "'{}'".format(t.replace("'","\\'"))
+
 
     def _setFieldInfo(self, fld: JPFieldType, raiseEvent=True):
         self.FieldInfo = fld

@@ -37,7 +37,7 @@ class Form_Backup(QDialog):
 
     def __run(self):
         fileName_choose, filetype = QFileDialog.getSaveFileName(
-            self.MainForm,
+            JPPub().MainForm,
             "Export To SQL File Name",
             getcwd(),  # 起始路径
             "Excel Files (*.sql)")
@@ -51,6 +51,7 @@ class Form_Backup(QDialog):
         bases_sql = "SHOW TABLE STATUS FROM `{}`".format(dbn)
         tab = JPDb().getDict(bases_sql)
         tns = [r['TABLE_NAME'] for r in tab if r['TABLE_COMMENT'] == '']
+        tns=[r for r in tns if not r in ['syssql','syslanguage']]
         views = [r['TABLE_NAME'] for r in tab if r['TABLE_COMMENT'] == 'VIEW']
         recs = 0
         for r in tab:

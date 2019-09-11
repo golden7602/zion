@@ -19,9 +19,6 @@ from Ui.Ui_FormReceivableEdit import Ui_Form as Edit_ui
 from Ui.Ui_FormReceivables import Ui_Form
 
 
-
-
-
 class Form_Receivables(QWidget):
     def __init__(self, mainform):
         super().__init__()
@@ -165,7 +162,6 @@ class Form_Receivables(QWidget):
     def __formChange(self, *args):
         print(args)
 
-
     @pyqtSlot()
     def on_CmdEdit_clicked(self):
         frm = RecibidoEdit()
@@ -269,7 +265,7 @@ class RecibidoEdit(JPFormModelMain):
                          edit_mode=JPEditFormDataMode.New,
                          flags=Qt.WindowFlags())
         JPPub().MainForm.addLogoToLabel(self.ui.label_logo)
-        JPPub().MainForm.addOneButtonIcon(self.ui.butSave,'save.png')
+        JPPub().MainForm.addOneButtonIcon(self.ui.butSave, 'save.png')
         JPPub().MainForm.addOneButtonIcon(self.ui.butCancel, 'cancel.png')
         self.ui.butCancel.clicked.connect(self.close)
         self.ui.fID.hide()
@@ -360,7 +356,7 @@ class FormReport_Rec_print(JPReport):
                  Orientation=QPrinter.Orientation(0)):
         super().__init__(PaperSize, Orientation)
 
-        self.font_YaHei = QFont("Arial")
+        self.font_YaHei = QFont("Microsoft YaHei")
         self.font_YaHei_8 = QFont(self.font_YaHei)
         self.font_YaHei_8.setPointSize(8)
         self.font_YaHei_10 = QFont(self.font_YaHei)
@@ -381,18 +377,18 @@ class FormReport_Rec_print(JPReport):
                                  Font=self.font_YaHei_10)
 
         rpt.ReportHeader.AddItem(1,
-                            0,
-                            50,
-                            720,
-                            20,
-                            'Date:{}'.format(curdate),
-                            Bolder=False,
-                            AlignmentFlag=(Qt.AlignRight),
-                            Font=self.font_YaHei_8)
+                                 0,
+                                 50,
+                                 720,
+                                 20,
+                                 'Date:{}'.format(curdate),
+                                 Bolder=False,
+                                 AlignmentFlag=(Qt.AlignRight),
+                                 Font=self.font_YaHei_8)
 
         title = [
-            '流水号\nID', '客户名\nCliente', '收款额\nAmount',
-            '收款人\nfPayee', '收款方式\nModoPago','备注\nNote'
+            '流水号\nID', '客户名\nCliente', '收款额\nAmount', '收款人\nfPayee',
+            '收款方式\nModoPago', '备注\nNote'
         ]
 
         fns = [
@@ -408,21 +404,51 @@ class FormReport_Rec_print(JPReport):
                                         72,
                                         40,
                                         Texts=title,
-                                        Widths=[60, 200, 140, 120, 100, 100],
+                                        Widths=[60, 260, 100, 100, 100, 100],
                                         Aligns=[al_c] * cols)
 
-        rpt.Detail.AddItem(3, 0, 0, 60, 25, fns[0], AlignmentFlag=al_c)
-        rpt.Detail.AddItem(3, 60, 0, 200, 25, fns[1], AlignmentFlag=al_l)
         rpt.Detail.AddItem(3,
-                           260,
                            0,
-                           140,
+                           0,
+                           60,
+                           25,
+                           fns[0],
+                           AlignmentFlag=al_c,
+                           Font=self.font_YaHei_8)
+        rpt.Detail.AddItem(3,
+                           60,
+                           0,
+                           260,
+                           25,
+                           fns[1],
+                           FormatString=' {}',
+                           AlignmentFlag=al_l,
+                           Font=self.font_YaHei_8)
+        rpt.Detail.AddItem(3,
+                           320,
+                           0,
+                           100,
                            25,
                            fns[2],
                            AlignmentFlag=al_r,
-                           FormatString='{:,.2f}')
-        rpt.Detail.AddItem(3, 400, 0, 120, 25, fns[3], AlignmentFlag=al_c)
-        rpt.Detail.AddItem(3, 520, 0, 100, 25, fns[4], AlignmentFlag=al_c)
+                           FormatString='{:,.2f} ',
+                           Font=self.font_YaHei_8)
+        rpt.Detail.AddItem(3,
+                           420,
+                           0,
+                           100,
+                           25,
+                           fns[3],
+                           AlignmentFlag=al_c,
+                           Font=self.font_YaHei_8)
+        rpt.Detail.AddItem(3,
+                           520,
+                           0,
+                           100,
+                           25,
+                           fns[4],
+                           AlignmentFlag=al_c,
+                           Font=self.font_YaHei_8)
         rpt.Detail.AddItem(3,
                            620,
                            0,
@@ -430,9 +456,8 @@ class FormReport_Rec_print(JPReport):
                            25,
                            fns[5],
                            AlignmentFlag=al_l,
-                           FormatString=' {}')
-
-
+                           FormatString=' {}',
+                           Font=self.font_YaHei_8)
 
         sum_j = 0
         for i in range(len(cur_tab)):
@@ -444,7 +469,7 @@ class FormReport_Rec_print(JPReport):
             25,
             Texts=["合计Sum", JPGetDisplayText(sum_j), " "],
             Widths=[260, 140, 320],
-            Aligns=[al_c,al_r,al_c],
+            Aligns=[al_c, al_r, al_c],
             FillColor=QColor(128, 128, 128))
 
         title = [
@@ -475,14 +500,17 @@ class FormReport_Rec_print(JPReport):
                                      240,
                                      25,
                                      tongji_tab.getDispText([r, 1]),
-                                     AlignmentFlag=al_r)
+                                     FormatString='{} ',
+                                     AlignmentFlag=al_r,
+                                     Font=self.font_YaHei_8)
             rpt.ReportFooter.AddItem(1,
                                      480,
                                      85 + r * 25,
                                      240,
                                      25,
                                      tongji_tab.getDispText([r, 2]),
-                                     AlignmentFlag=al_c)
+                                     AlignmentFlag=al_c,
+                                     Font=self.font_YaHei_8)
             sum_j = sum_j + tongji_tab.getOnlyData([r, 1])
             count = count + tongji_tab.getOnlyData([r, 2])
         rs = len(tongji_tab)
@@ -501,7 +529,8 @@ class FormReport_Rec_print(JPReport):
                                  25,
                                  JPGetDisplayText(sum_j),
                                  AlignmentFlag=al_r,
-                                 FillColor=QColor(128, 128, 128))
+                                 FillColor=QColor(128, 128, 128),
+                                 Font=self.font_YaHei_8)
         rpt.ReportFooter.AddItem(1,
                                  480,
                                  85 + rs * 25,
@@ -509,7 +538,33 @@ class FormReport_Rec_print(JPReport):
                                  25,
                                  JPGetDisplayText(count),
                                  AlignmentFlag=al_c,
-                                 FillColor=QColor(128, 128, 128))
+                                 FillColor=QColor(128, 128, 128),
+                                 Font=self.font_YaHei_8)
+
+        rpt.ReportFooter.AddItem(1,
+                                 0,
+                                 85 + rs * 25+25,
+                                 240,
+                                 25,
+                                 'Credito',
+                                 AlignmentFlag=al_c
+                                 )
+        rpt.ReportFooter.AddItem(1,
+                                 240,
+                                 85 + rs * 25+25,
+                                 240,
+                                 25,
+                                 " ",
+                                 AlignmentFlag=al_r,
+                                 Font=self.font_YaHei_8)
+        rpt.ReportFooter.AddItem(1,
+                                 480,
+                                 85 + rs * 25+25,
+                                 240,
+                                 25,
+                                 " ",
+                                 AlignmentFlag=al_c,
+                                 Font=self.font_YaHei_8)
 
         self.PageFooter.AddItem(4,
                                 10,

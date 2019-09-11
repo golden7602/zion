@@ -38,7 +38,7 @@ class CreateSQL_MySQL(QObject):
                     vs.append('Null')
                     continue
                 elif isinstance(v, str):
-                    vs.append("'{}'".format(v))
+                    vs.append("'{}'".format(v.replace("'","\\'")))
                 elif isinstance(v, (int, float, Decimal)):
                     vs.append('{}'.format(v))
                 elif isinstance(v, bytes):

@@ -289,7 +289,8 @@ class JPFormModelMain(QDialog):
         row_st = mti.DataRows[0].State
         if (row_st == JPTabelRowData.New_None
                 or row_st == JPTabelRowData.OriginalValue):
-            raise KeyError('没有输入有效数据!No valid data was entered!')
+            if self.isNewMode:
+                raise KeyError('没有输入有效数据!No valid data was entered!')
         if st == JPEditFormDataMode.New:
             for fld in mti.Fields:
                 if fld.IsPrimarykey:
@@ -694,5 +695,5 @@ class JPFormModelMainHasSub(JPFormModelMain):
                 QMessageBox.information(self, '完成',
                                         '保存数据完成！\nSave data complete!')
         except Exception as e:
-            msgBox = QMessageBox(QMessageBox.Critical, u'提示', e.errorString())
+            msgBox = QMessageBox(QMessageBox.Critical, u'提示', str(e))
             msgBox.exec_()
