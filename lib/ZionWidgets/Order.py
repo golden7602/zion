@@ -50,23 +50,7 @@ class OrderMod(JPTableViewModelReadOnly):
 class JPFuncForm_Order(JPFunctionForm):
     def __init__(self, MainForm):
         super().__init__(MainForm)
-        # sql_0 = """
-        #         SELECT fOrderID as 订单号码OrderID,
-        #                 fOrderDate as 日期OrderDate,
-        #                 fCustomerName as 客户名Cliente,
-        #                 fCity as 城市City,
-        #                 fSubmited1 as 提交Submited,
-        #                 fSubmit_Name as 提交人Submitter,
-        #                 fRequiredDeliveryDate as 交货日期RequiredDeliveryDate,
-        #                 fAmount as 金额SubTotal,
-        #                 fDesconto as 折扣Desconto,
-        #                 fTax as 税金IVA,
-        #                 fPayable as `应付金额Valor a Pagar`,
-        #                 fContato as 联系人Contato,
-        #                 fCelular as 手机Celular,
-        #                 fSubmited AS fSubmited,
-        #                 fEntry_Name as 录入Entry
-        #         FROM v_order AS o"""
+        self.MainForm = MainForm
         sql_0 = """
                 SELECT o.fOrderID as 订单号码OrderID,
                     fOrderDate as 日期OrderDate,
@@ -264,6 +248,7 @@ class EditForm_Order(JPFormModelMainHasSub):
             self.ui.fCustomerID.setEditable(True)
 
         self.ui.fCustomerID.setFocus()
+
 
     def __customerIDChanged(self):
         sql = '''select fCelular, fContato, fTelefone ,fNUIT,fEndereco,fCity

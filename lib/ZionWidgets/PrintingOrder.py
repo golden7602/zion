@@ -242,6 +242,7 @@ class EditForm_PrintingOrder(JPFormModelMain):
             self.onDateChangeEvent(self.ui.fCustomerID, None)
 
         # 设置必输入字段
+        self.ui.fCustomerID.FieldInfo.NotNull = True
         self.ui.fEspecieID.FieldInfo.NotNull = True
         self.ui.fAvistaID.FieldInfo.NotNull = True
         self.ui.fQuant.FieldInfo.NotNull = True

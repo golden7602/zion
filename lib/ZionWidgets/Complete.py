@@ -1,22 +1,27 @@
+from functools import reduce
 from os import getcwd
 from sys import path as jppath
 jppath.append(getcwd())
 
-from functools import reduce
-
-from PyQt5.QtCore import Qt, QModelIndex, pyqtSlot
+from PyQt5.QtCore import QModelIndex, Qt, pyqtSlot
 from PyQt5.QtGui import QColor, QFont, QPainter, QPixmap
-from PyQt5.QtWidgets import QDialog, QMessageBox, QWidget
 from PyQt5.QtPrintSupport import QPrinter
+from PyQt5.QtWidgets import QDialog, QMessageBox, QWidget
 
-from lib.JPPrintReport import JPPrintSectionType, JPReport
-from lib.ZionPublc import JPPub, JPDb, JPUser
-from lib.ZionWidgets.ZionFunc import ZionFuncForm
-from lib.JPMvc.JPModel import JPTableViewModelReadOnly
-from lib.JPMvc.JPFuncForm import JPFunctionForm
+from lib.JPDatabase.Query import JPQueryFieldInfo
+from lib.JPExcel.JPExportToExcel import JPExpExcelFromTabelFieldInfo
 from lib.JPMvc.JPEditFormModel import JPFormModelMain, JPFormModelMainHasSub
-from lib.ZionWidgets.EditFormOrderOrPrintingOrder import JPFormPrintingOrder
-from lib.ZionWidgets.EditFormOrderOrPrintingOrder import JPFormOrder
+from lib.JPMvc.JPFuncForm import JPFunctionForm
+from lib.JPMvc.JPModel import JPTableViewModelReadOnly
+from lib.JPPrintReport import JPPrintSectionType, JPReport
+from lib.ZionPublc import JPDb, JPPub, JPUser
+from lib.ZionWidgets.EditFormOrderOrPrintingOrder import (JPFormOrder,
+                                                          JPFormPrintingOrder)
+from lib.ZionWidgets.ZionFunc import ZionFuncForm
+
+
+
+
 
 
 class _myMod(JPTableViewModelReadOnly):
@@ -47,7 +52,7 @@ class _myFuncForm(JPFunctionForm):
                 WHERE fOrderID = '{}'
                 """
         self.CP_s_sql = """
-                SELECT fQuant AS '数量Qtd',
+                SELECT fID, fQuant AS '数量Qtd',
                     fProductName AS '名称Descrição',
                     fLength AS '长Comp.', fWidth AS '宽Larg.'
                 FROM t_order_detail
@@ -149,20 +154,20 @@ class JPFuncForm_Complete(_myFuncForm):
         # self.onAfterCreatedForm(cur_tp, F)
         return F
 
+    @pyqtSlot()
+    def on_CmdExportToExcel_clicked(self):
+        if self.model.rowCount()==0:
+            return
+        exp = JPExpExcelFromTabelFieldInfo(self.model.TabelFieldInfo,
+                                           self.MainForm)
+        exp.run()
+
 
 def hideObject(ui):
     ui.butSave.hide()
     ui.butPrint.hide()
     ui.butPDF.hide()
-    # ui.label.hide()
-    # ui.label_13.hide()
-    # ui.label_14.hide()
-    # ui.label_15.hide()
-    # ui.fAmount.hide()
-    # ui.fDesconto.hide()
-    # ui.fTax.hide()
-    # ui.fPayable.hide()
-    #ui.verticalLayout_2.hide()
+
 
 
 class EditForm_Order(JPFormModelMainHasSub):
@@ -190,6 +195,11 @@ class EditForm_Order(JPFormModelMainHasSub):
         return [('fCustomerID', pub.getCustomerList(), 1),
                 ('fVendedorID', pub.getEnumList(10), 1),
                 ('fEntryID', u_lst, 1)]
+
+
+
+    def onGetColumnWidths(self):
+        return [0, 60, 300, 100, 100]
 
 
 class EditForm_PrintingOrder(JPFormModelMain):

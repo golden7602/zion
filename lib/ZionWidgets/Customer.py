@@ -227,8 +227,6 @@ class EditForm_Customer(JPFormModelMain):
         JPPub().MainForm.addOneButtonIcon(self.ui.butCancel, 'cancel.png')
 
         self.readData()
-        self.ui.butPrint.hide()
-        self.ui.butPDF.hide()
         self.ui.fCustomerID.setEnabled(False)
         self.ui.fCustomerName.setFocus()
 

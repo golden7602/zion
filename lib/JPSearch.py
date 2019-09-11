@@ -308,31 +308,37 @@ class mySYCombobox(QStyledItemDelegate):
             "Tie": "IsEmptyString"
         })
     SY_BOOL = ({
-        "Sy": "`{fieldname}`=1",
-        "En1": 0,
-        "En2": 0,
-        "TiC": "值为是",
-        "Tie": "IsTrue"
-    }, {
-        "Sy": "`{fieldname}`=0",
-        "En1": 0,
-        "En2": 0,
-        "TiC": "值为否",
-        "Tie": "ISFalse"
-    }, {
-        "Sy": "IsNull(`{fieldname}`)",
-        "En1": 0,
-        "En2": 0,
-        "TiC": "为空",
-        "Tie": "IsNull"
-    }, {
-        "Sy": "Not IsNull(`{fieldname}`)",
-        "En1": 0,
-        "En2": 0,
-        "TiC": "不为空",
-        "Tie": "NotNull"
-    })
+            "Sy": "`{fieldname}`=1",
+            "En1": 0,
+            "En2": 0,
+            "TiC": "值为是",
+            "Tie": "IsTrue"
+        }, {
+            "Sy": "`{fieldname}`=0",
+            "En1": 0,
+            "En2": 0,
+            "TiC": "值为否",
+            "Tie": "ISFalse"
+        }, {
+            "Sy": "IsNull(`{fieldname}`)",
+            "En1": 0,
+            "En2": 0,
+            "TiC": "为空",
+            "Tie": "IsNull"
+        }, {
+            "Sy": "Not IsNull(`{fieldname}`)",
+            "En1": 0,
+            "En2": 0,
+            "TiC": "不为空",
+            "Tie": "NotNull"
+        })
     SY_DATE = ({
+        "Sy": "`{fieldname}`='{value1}'",
+        "En1": 1,
+        "En2": 0,
+        "TiC": "等于",
+        "Tie": "Equal"
+    }, {
         "Sy": "`{fieldname}`<'{value1}'",
         "En1": 1,
         "En2": 0,

@@ -61,18 +61,18 @@ class Form_Backup(QDialog):
         for tn in tns:
             file_.write('-- 导出  表 {}.{} 结构'.format(dbn, tn))
             file_.write('\n')
-            file_.write('DROP TABLE IF EXISTS `{}`'.format(tn))
+            file_.write('DROP TABLE IF EXISTS `{}`;'.format(tn))
             file_.write('\n')
-            file_.write(self.__getCr(dbn, tn, False))
+            file_.write(self.__getCr(dbn, tn, False)+";")
             file_.write('\n')
             file_.write(exp.getSql(tn))
             file_.write('\n')
         for vn in views:
             file_.write('-- 导出  视图 {}.{} 结构'.format(dbn, vn))
             file_.write('\n')
-            file_.write('DROP View IF EXISTS `{}`'.format(vn))
+            file_.write('DROP View IF EXISTS `{}`;'.format(vn))
             file_.write('\n')
-            file_.write(self.__getCr(dbn, vn, True))
+            file_.write(self.__getCr(dbn, vn, True)+";")
             file_.write('\n')
         self.ui.progressBar.hide()
 

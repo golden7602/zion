@@ -202,8 +202,10 @@ class JPExpExcelFromTabelFieldInfo(object):
                 row1 = main_row
                 row2 = main_row + sub_rows - 1
                 for col_main in range(mian_cols):
+
                     v = JPGetDisplayText(tab.DataRows[i].Datas[col_main],
-                                         FieldInfo=tab.Fields[i])
+                                         FieldInfo=tab.Fields[col_main])
+
 
                     #print(row1, row2, col_main, col_main)
                     sheet.write_merge(row1, row2, col_main, col_main, v,

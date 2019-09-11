@@ -289,7 +289,7 @@ class JPFormModelMain(QDialog):
         row_st = mti.DataRows[0].State
         if (row_st == JPTabelRowData.New_None
                 or row_st == JPTabelRowData.OriginalValue):
-            return []
+            raise KeyError('没有输入有效数据!No valid data was entered!')
         if st == JPEditFormDataMode.New:
             for fld in mti.Fields:
                 if fld.IsPrimarykey:
@@ -433,7 +433,7 @@ class JPFormModelMainHasSub(JPFormModelMain):
 
         # 当为新增状态且子表无有效行时，引发错误
         if self.isNewMode and not subSaveSQls:
-            raise KeyError('明细表没有输入有效数据!\nThe list did not enter valid data!')
+            raise KeyError('明细表没有输入有效数据!The list did not enter valid data!')
 
         # 判断编辑类型,整理返回结果
         if self.isNewMode:
@@ -690,11 +690,9 @@ class JPFormModelMainHasSub(JPFormModelMain):
                     self.ui.butPDF.setEnabled(True)
                 except Exception as e:
                     print(str(e))
-
-                # self.MainModle.setEditState(False)
                 self.afterSaveData.emit(result)
                 QMessageBox.information(self, '完成',
                                         '保存数据完成！\nSave data complete!')
         except Exception as e:
-            msgBox = QMessageBox(QMessageBox.Critical, u'提示', str(e))
+            msgBox = QMessageBox(QMessageBox.Critical, u'提示', e.errorString())
             msgBox.exec_()
