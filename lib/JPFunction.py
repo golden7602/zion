@@ -6,6 +6,8 @@ from decimal import Decimal
 from functools import singledispatch
 from os import getcwd
 from sys import path as jppath
+import os
+import hashlib
 jppath.append(getcwd())
 
 from PyQt5.QtCore import QDate, Qt, QDateTime
@@ -303,3 +305,19 @@ def _(value, vCls=str):
 def readQss(style):  # Use: win.setStyleSheet(readQss(qssStyle))
     with open(style, 'r') as f:
         return f.read()
+
+
+
+# 生成文件哈希值，用于文件名
+def GetFileMd5(filename):
+    if not os.path.isfile(filename):
+        return
+    myHash = hashlib.md5()
+    f = open(filename, 'rb')
+    while True:
+        b = f.read(8096)
+        if not b:
+            break
+        myHash.update(b)
+    f.close()
+    return myHash.hexdigest()

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from os import getcwd
 from sys import path as jppath
 jppath.append(getcwd())
@@ -233,7 +234,7 @@ class JPPub(QObject):
 
     def INITCustomer(self):
         sql = '''select fCustomerName,fCustomerID,
-                fNUIT,fCity,fContato from t_customer'''
+                fNUIT,fCity,fContato,fTaxRegCer from t_customer'''
         self.__allCustomerList = self.db.getDataList(sql)
 
     def getEnumList(self, enum_type_id: int):

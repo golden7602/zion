@@ -6,7 +6,6 @@
 #
 # WARNING! All changes made in this file will be lost!
 
-
 from os import getcwd
 from sys import path as jppath
 jppath.append(getcwd())
@@ -187,8 +186,10 @@ class Ui_Form(object):
         self.fNote.setObjectName("fNote")
         self.gridLayout.addWidget(self.fNote, 9, 1, 1, 2)
         self.label_Tax_Registration = QtWidgets.QLabel(Form)
-        self.label_Tax_Registration.setMinimumSize(QtCore.QSize(200, 0))
+        self.label_Tax_Registration.setMinimumSize(QtCore.QSize(200, 242))
+        self.label_Tax_Registration.setMaximumSize(QtCore.QSize(200, 242))
         self.label_Tax_Registration.setStyleSheet("border-width: 0.7px;border-style: solid")
+        self.label_Tax_Registration.setScaledContents(True)
         self.label_Tax_Registration.setAlignment(QtCore.Qt.AlignCenter)
         self.label_Tax_Registration.setObjectName("label_Tax_Registration")
         self.gridLayout.addWidget(self.label_Tax_Registration, 0, 2, 8, 1)
@@ -203,6 +204,10 @@ class Ui_Form(object):
         self.verticalLayout_2.addWidget(self.line_2)
         self.horizontalLayout = QtWidgets.QHBoxLayout()
         self.horizontalLayout.setObjectName("horizontalLayout")
+        self.fTaxRegCer = QtWidgets.QLineEdit(Form)
+        self.fTaxRegCer.setEnabled(True)
+        self.fTaxRegCer.setObjectName("fTaxRegCer")
+        self.horizontalLayout.addWidget(self.fTaxRegCer)
         spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout.addItem(spacerItem)
         self.butSave = QtWidgets.QPushButton(Form)

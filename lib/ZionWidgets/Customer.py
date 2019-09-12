@@ -1,10 +1,12 @@
-from os import getcwd
+import os
 from sys import path as jppath
-jppath.append(getcwd())
+from shutil import copyfile as myCopy
+jppath.append(os.getcwd())
 
 from PyQt5.QtCore import QDate, QMetaObject, pyqtSlot, Qt, QModelIndex
 from PyQt5.QtGui import QPixmap, QIcon
-from PyQt5.QtWidgets import QMessageBox, QPushButton, QWidget, QLineEdit
+from PyQt5.QtWidgets import (QMessageBox, QPushButton, QWidget, QLineEdit,
+                             QFileDialog, QItemDelegate)
 
 from lib.JPDatabase.Query import JPTabelFieldInfo
 from lib.JPFunction import JPDateConver
@@ -15,18 +17,71 @@ from Ui.Ui_FormCustomer import Ui_Form as Ui_Form_List
 from Ui.Ui_FormCustomerEdit import Ui_Form as Ui_Form_Edit
 from lib.JPDatabase.Query import JPQueryFieldInfo
 from lib.JPSearch import Form_Search
+from threading import Thread
+from lib.JPConfigInfo import ConfigInfo
+from lib.ZionWidgets.ViewPic import Form_ViewPic
+from lib.JPFunction import GetFileMd5
 
-# class myJPTableViewModelReadOnly(JPTableViewModelReadOnly):
-#     def __init__(self, tableView, tabelFieldInfo):
-#         super().__init__(tableView, tabelFieldInfo)
 
-#     def data(self, Index, role=Qt.DisplayRole):
-#         r = Index.row()
-#         if role == Qt.TextColorRole and self.TabelFieldInfo.DataRows[r].Datas[
-#                 5] == "Non":
-#             return QColor(Qt.red)
+class MyCopyFileError(Exception):
+    def __init__(self, from_path, to_path, old_msg, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        errstr = "保存文件过程中出现错误,但数据已经成功保存！"
+        errstr = errstr + 'An error occurred while saving the file\n'
+        errstr = errstr + f'From:{from_path}\n'
+        errstr = errstr + f'To:{to_path}\n'
+        errstr = errstr + old_msg
+        self.errstr = errstr
 
-#         return super().data(Index, role)
+    def __str__(self):
+        return self.errstr
+
+
+class myJPTableViewModelReadOnly(JPTableViewModelReadOnly):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def data(self, index, role=Qt.DisplayRole):
+        c = index.column()
+        if c == 9 and role == Qt.DisplayRole:
+            return ''
+        else:
+            return super().data(index, role)
+
+
+class MyButtonDelegate(QItemDelegate):
+    def __init__(self, parent=None, dataInfo=None):
+        super(MyButtonDelegate, self).__init__(parent)
+        self.dataInfo = dataInfo
+        self.icon = JPPub().MainForm.getIcon('rosette.ico')
+
+    def paint(self, painter, option, index):
+        curCer = self.dataInfo.DataRows[index.row()].Datas[9]
+        if not self.parent().indexWidget(index) and curCer:
+            widget = QPushButton(
+                self.tr(''),
+                self.parent(),
+                clicked=self.parent().parent().cellButtonClicked)
+            widget.setIcon(self.icon)
+            self.parent().setIndexWidget(index, widget)
+        else:
+            widget = self.parent().indexWidget(index)
+            if widget:
+                widget.setGeometry(option.rect)
+
+    def createEditor(self, parent, option, index):
+        """有这个空函数覆盖父类的函数，才能使该列不可编辑"""
+        return
+
+    def setEditorData(self, editor, index):
+        return
+
+    def setModelData(self, editor, model, index):
+        return
+
+    def updateEditorGeometry(self, editor, StyleOptionViewItem,
+                             index: QModelIndex):
+        editor.setGeometry(StyleOptionViewItem.rect)
 
 
 class Form_Customer(QWidget):
@@ -46,7 +101,8 @@ class Form_Customer(QWidget):
                 fContato as `联系人Contato`, 
                 fCelular as `手机Celular`, 
                 fEmail as `电子邮件Email`, 
-                fFax as `传真Fax` 
+                fFax as `传真Fax` ,
+                fTaxRegCer as TaxCert
             from  t_customer 
             {wherestring}
             order by fCustomerName
@@ -62,11 +118,12 @@ class Form_Customer(QWidget):
             fCelular,
             fEmail,
             fNote,
-            fFax
+            fFax,
+            fTaxRegCer
             from  t_customer
             where fCustomerID={} 
             order by fCustomerName"""
-        
+
         icon = QIcon(JPPub().MainForm.icoPath.format("search.png"))
         action = self.ui.lineEdit.addAction(icon, QLineEdit.TrailingPosition)
         self.ui.lineEdit.returnPressed.connect(self.actionClick)
@@ -83,8 +140,12 @@ class Form_Customer(QWidget):
         else:
             return -1
 
+    def cellButtonClicked(self):
+        r = self.ui.tableView.currentIndex()
+        fn = self.dataInfo.DataRows[r.row()].Datas[9]
+        Form_ViewPic(self, JPPub().MainForm.getTaxCerPixmap(fn))
+
     def actionClick(self, where_sql=None):
-        #wherestring = "where fCustomerName like '%{key}%' or fNUIT like '%{key}%'"
         wherestring = """where (
             fCustomerName like '%{key}%' or
             fEndereco like '%{key}%' or
@@ -103,8 +164,10 @@ class Form_Customer(QWidget):
 
         tv = self.ui.tableView
         self.dataInfo = JPTabelFieldInfo(sql)
-        self.mod = JPTableViewModelReadOnly(tv, self.dataInfo)
+        self.mod = myJPTableViewModelReadOnly(tv, self.dataInfo)
         tv.setModel(self.mod)
+        de = MyButtonDelegate(tv, self.dataInfo)
+        tv.setItemDelegateForColumn(9, de)
         tv.resizeColumnsToContents()
 
     def _locationRow(self, id):
@@ -125,16 +188,6 @@ class Form_Customer(QWidget):
         self.actionClick()
         if ID:
             self._locationRow(ID)
-
-    # def addButtons(self, btnNames: list):
-    #     for item in btnNames:
-    #         btn = QPushButton(item['fMenuText'])
-    #         btn.setObjectName(item['fObjectName'])
-    #         btn.setIcon(QIcon(self.MainForm.icoPath.format(item['fIcon'])))
-    #         #setButtonIcon(btn, item['fIcon'])
-    #         btn.setEnabled(item['fHasRight'])
-    #         self.ui.horizontalLayout_Button.addWidget(btn)
-    #     QMetaObject.connectSlotsByName(self)
 
     def getEditForm(self, sql_main, edit_mode, sql_sub, PKValue):
         frm = EditForm_Customer(sql_main=sql_main,
@@ -226,12 +279,54 @@ class EditForm_Customer(JPFormModelMain):
         JPPub().MainForm.addOneButtonIcon(self.ui.butSave, 'save.png')
         JPPub().MainForm.addOneButtonIcon(self.ui.butCancel, 'cancel.png')
 
+        self.ui.fTaxRegCer.hide()
+
         self.readData()
+        pic = self.ui.label_Tax_Registration
         self.ui.fCustomerID.setEnabled(False)
         self.ui.fCustomerName.setFocus()
+        pic.NewFileName = None
+        self.defPixmap = JPPub().MainForm.getPixmap('big_certificate.png')
+        fn_m = self.mainTableFieldsInfo.DataRows[0].Datas[10]
+        if fn_m:
+            pic.setScaledContents(True)
+            pic.setPixmap(JPPub().MainForm.getTaxCerPixmap(fn_m))
+        else:
+            pic.setScaledContents(False)
+            pic.setPixmap(self.defPixmap)
+
+        if self.isReadOnlyMode:
+            self.ui.btn_SelectPic.setEnabled(False)
 
     def onFirstHasDirty(self):
         self.ui.butSave.setEnabled(True)
+
+    @pyqtSlot()
+    def on_butCancel_clicked(self):
+        self.close()
+
+    @pyqtSlot()
+    def on_btn_SelectPic_clicked(self):
+        fileName_choose, filetype = QFileDialog.getOpenFileName(
+            JPPub().MainForm,
+            "Select a Jpeg File",
+            os.getcwd(),  # 起始路径
+            "Jpeg Files (*.jpg)")
+        if not fileName_choose:
+            return
+        pic = self.ui.label_Tax_Registration
+        pic.NewFileName = fileName_choose
+        r_path, r_file = os.path.split(fileName_choose)
+        fn_split = r_file.split(".")
+        newName = GetFileMd5(fileName_choose)
+        toPath = ConfigInfo().tax_reg_path
+        fn_m = f'tax_reg_{newName}'
+        fn_e = fn_split[len(fn_split) - 1]
+        pic.to_FullPath = f"{toPath}\\{fn_m}.{fn_e}"
+        saveName = f'{fn_m}.{fn_e}'
+        self.ui.fTaxRegCer.refreshValueNotRaiseEvent(saveName, True)
+        pic.setScaledContents(True)
+        pic.setPixmap(QPixmap(fileName_choose))
 
     @pyqtSlot()
     def on_butSave_clicked(self):
@@ -242,9 +337,20 @@ class EditForm_Customer(JPFormModelMain):
             if isOK:
                 self.ui.butSave.setEnabled(False)
                 self.afterSaveData.emit(str(result))
+                self.__SavePic(result)
+                JPPub().INITCustomer()
                 QMessageBox.information(self, '完成',
                                         '保存数据完成！\nSave data complete!')
-                JPPub().INITCustomer()
+
         except Exception as e:
             msgBox = QMessageBox(QMessageBox.Critical, u'提示', str(e))
             msgBox.exec_()
+
+    def __SavePic(self, result):
+        pic = self.ui.label_Tax_Registration
+        if not (pic.to_FullPath and pic.NewFileName):
+            return
+        try:
+            myCopy(pic.NewFileName, pic.to_FullPath)
+        except Exception as e:
+            raise MyCopyFileError(pic.NewFileName, pic.to_FullPath, str(e))

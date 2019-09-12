@@ -380,7 +380,7 @@
      <property name="spacing">
       <number>3</number>
      </property>
-     <item row="0" column="5">
+     <item row="0" column="4">
       <widget class="QLabel" name="label_4">
        <property name="minimumSize">
         <size>
@@ -424,7 +424,7 @@
        </property>
       </widget>
      </item>
-     <item row="3" column="6">
+     <item row="4" column="5">
       <widget class="QLineEdit" name="fTelefone">
        <property name="minimumSize">
         <size>
@@ -443,7 +443,7 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="0">
+     <item row="3" column="0">
       <widget class="QLabel" name="label_9">
        <property name="minimumSize">
         <size>
@@ -465,7 +465,7 @@
        </property>
       </widget>
      </item>
-     <item row="3" column="4">
+     <item row="4" column="3">
       <widget class="QLineEdit" name="fCelular">
        <property name="minimumSize">
         <size>
@@ -484,7 +484,7 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="6">
+     <item row="0" column="5">
       <widget class="QDateEdit" name="fRequiredDeliveryDate">
        <property name="minimumSize">
         <size>
@@ -506,7 +506,7 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="3">
+     <item row="1" column="2">
       <widget class="QLabel" name="label_7">
        <property name="minimumSize">
         <size>
@@ -528,7 +528,7 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="2">
+     <item row="3" column="1">
       <widget class="QLineEdit" name="fEndereco">
        <property name="enabled">
         <bool>false</bool>
@@ -553,7 +553,7 @@
        </property>
       </widget>
      </item>
-     <item row="3" column="0">
+     <item row="4" column="0">
       <widget class="QLabel" name="label_21">
        <property name="minimumSize">
         <size>
@@ -575,7 +575,7 @@
        </property>
       </widget>
      </item>
-     <item row="7" column="0">
+     <item row="8" column="0">
       <widget class="QLabel" name="label_28">
        <property name="minimumSize">
         <size>
@@ -597,7 +597,7 @@
        </property>
       </widget>
      </item>
-     <item row="3" column="5">
+     <item row="4" column="4">
       <widget class="QLabel" name="label_12">
        <property name="minimumSize">
         <size>
@@ -619,7 +619,7 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="4">
+     <item row="1" column="3">
       <widget class="QLineEdit" name="fNUIT">
        <property name="enabled">
         <bool>false</bool>
@@ -660,7 +660,7 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="2">
+     <item row="0" column="1">
       <widget class="QDateEdit" name="fOrderDate">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -688,35 +688,7 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="2">
-      <widget class="QComboBox" name="fCustomerID">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="sizeIncrement">
-        <size>
-         <width>0</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;可输入客户名称或税号中的部分或全部进行快速过滤&lt;/p&gt;&lt;p&gt;Enter part or all of the customer name or tax number for quick filtering&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-       <property name="placeholderText" stdset="0">
-        <string>Please select a cliente.</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="3">
+     <item row="4" column="2">
       <widget class="QLabel" name="label_10">
        <property name="text">
         <string>手机Celular:</string>
@@ -726,7 +698,7 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="5">
+     <item row="1" column="4">
       <widget class="QLabel" name="label_8">
        <property name="text">
         <string>城市City:</string>
@@ -736,7 +708,7 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="3">
+     <item row="3" column="2">
       <widget class="QLabel" name="label_11">
        <property name="minimumSize">
         <size>
@@ -758,7 +730,7 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="4">
+     <item row="3" column="3">
       <widget class="QLineEdit" name="fContato">
        <property name="minimumSize">
         <size>
@@ -777,7 +749,7 @@
        </property>
       </widget>
      </item>
-     <item row="5" column="4">
+     <item row="6" column="3">
       <widget class="QComboBox" name="fTamanhoID">
        <property name="minimumSize">
         <size>
@@ -796,7 +768,7 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="6">
+     <item row="1" column="5">
       <widget class="QLineEdit" name="fCity">
        <property name="enabled">
         <bool>false</bool>
@@ -818,7 +790,7 @@
        </property>
       </widget>
      </item>
-     <item row="3" column="2">
+     <item row="4" column="1">
       <widget class="QComboBox" name="fEspecieID">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -843,7 +815,7 @@
        </property>
       </widget>
      </item>
-     <item row="5" column="0">
+     <item row="6" column="0">
       <widget class="QLabel" name="label_22">
        <property name="minimumSize">
         <size>
@@ -865,7 +837,7 @@
        </property>
       </widget>
      </item>
-     <item row="5" column="2">
+     <item row="6" column="1">
       <widget class="QComboBox" name="fAvistaID">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -890,7 +862,7 @@
        </property>
       </widget>
      </item>
-     <item row="6" column="0">
+     <item row="7" column="0">
       <widget class="QLabel" name="label_23">
        <property name="minimumSize">
         <size>
@@ -912,7 +884,7 @@
        </property>
       </widget>
      </item>
-     <item row="6" column="2">
+     <item row="7" column="1">
       <widget class="QLineEdit" name="fQuant">
        <property name="minimumSize">
         <size>
@@ -931,7 +903,7 @@
        </property>
       </widget>
      </item>
-     <item row="5" column="3">
+     <item row="6" column="2">
       <widget class="QLabel" name="label_24">
        <property name="minimumSize">
         <size>
@@ -953,7 +925,7 @@
        </property>
       </widget>
      </item>
-     <item row="7" column="2">
+     <item row="8" column="1">
       <widget class="QLineEdit" name="fPagePerVolumn">
        <property name="minimumSize">
         <size>
@@ -972,7 +944,7 @@
        </property>
       </widget>
      </item>
-     <item row="7" column="3">
+     <item row="8" column="2">
       <widget class="QLabel" name="label_26">
        <property name="minimumSize">
         <size>
@@ -994,7 +966,7 @@
        </property>
       </widget>
      </item>
-     <item row="6" column="3">
+     <item row="7" column="2">
       <widget class="QLabel" name="label_30">
        <property name="minimumSize">
         <size>
@@ -1016,7 +988,7 @@
        </property>
       </widget>
      </item>
-     <item row="6" column="4">
+     <item row="7" column="3">
       <widget class="QLineEdit" name="fPrice">
        <property name="minimumSize">
         <size>
@@ -1035,7 +1007,7 @@
        </property>
       </widget>
      </item>
-     <item row="6" column="5">
+     <item row="7" column="4">
       <widget class="QLabel" name="label_25">
        <property name="minimumSize">
         <size>
@@ -1057,7 +1029,7 @@
        </property>
       </widget>
      </item>
-     <item row="6" column="6">
+     <item row="7" column="5">
       <widget class="QComboBox" name="fNrCopyID">
        <property name="minimumSize">
         <size>
@@ -1076,7 +1048,7 @@
        </property>
       </widget>
      </item>
-     <item row="5" column="6">
+     <item row="6" column="5">
       <widget class="QComboBox" name="fVendedorID">
        <property name="minimumSize">
         <size>
@@ -1095,7 +1067,7 @@
        </property>
       </widget>
      </item>
-     <item row="5" column="5">
+     <item row="6" column="4">
       <widget class="QLabel" name="label_5">
        <property name="minimumSize">
         <size>
@@ -1117,7 +1089,7 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="3">
+     <item row="0" column="2">
       <widget class="QLabel" name="label_17">
        <property name="text">
         <string>录入人Enter:</string>
@@ -1127,7 +1099,7 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="4">
+     <item row="0" column="3">
       <widget class="QComboBox" name="fEntryID">
        <property name="minimumSize">
         <size>
@@ -1137,7 +1109,7 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="5" colspan="2">
+     <item row="3" column="4" colspan="2">
       <layout class="QHBoxLayout" name="horizontalLayout_10">
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_7">
@@ -1219,7 +1191,7 @@
        </item>
       </layout>
      </item>
-     <item row="7" column="4" colspan="3">
+     <item row="8" column="3" colspan="2">
       <layout class="QHBoxLayout" name="horizontalLayout_8">
        <item>
         <widget class="QLineEdit" name="fNumerBegin">
@@ -1281,6 +1253,60 @@
          </property>
          <property name="clearButtonEnabled">
           <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="1" column="1">
+      <layout class="QHBoxLayout" name="horizontalLayout_12">
+       <property name="spacing">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="QComboBox" name="fCustomerID">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>25</height>
+          </size>
+         </property>
+         <property name="sizeIncrement">
+          <size>
+           <width>0</width>
+           <height>25</height>
+          </size>
+         </property>
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;可输入客户名称或税号中的部分或全部进行快速过滤&lt;/p&gt;&lt;p&gt;Enter part or all of the customer name or tax number for quick filtering&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="placeholderText" stdset="0">
+          <string>Please select a cliente.</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="butTaxCer">
+         <property name="minimumSize">
+          <size>
+           <width>30</width>
+           <height>25</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>30</width>
+           <height>25</height>
+          </size>
+         </property>
+         <property name="text">
+          <string/>
          </property>
         </widget>
        </item>

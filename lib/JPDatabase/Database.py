@@ -1,5 +1,4 @@
 import re
-from configparser import ConfigParser
 from functools import singledispatch
 from os import getcwd, path as ospath
 from sys import path as jppath
@@ -12,6 +11,7 @@ from PyQt5.QtWidgets import QMessageBox
 
 from lib.JPDatabase.Field import JPFieldInfo, JPMySQLFieldInfo
 from lib.JPFunction import Singleton
+from lib.JPConfigInfo import ConfigInfo
 
 
 class JPDbType(object):
@@ -45,27 +45,19 @@ class JPDb(object):
 
     @property
     def currentConn(self) -> mysql_connect:
-        notFind = '当前文件夹下没有找到"Config.ini"文件！\n'
-        notFind = notFind + '"Config.ini" file was not found in the current folder!'
-        linkErr = '连接数据库错误，请检查"config.ini"文件\n'
-        linkErr = linkErr + 'Connecting the database incorrectly, please check the "config.ini" file'
+        mConfigInfo = ConfigInfo()
         if self.__db_type == JPDbType.MySQL:
             if self.__currentConn is None:
-                if ospath.exists(getcwd() + '\\config.ini') is False:
-
-                    QMessageBox.warning(None, '错误', notFind, QMessageBox.Yes,
-                                        QMessageBox.Yes)
-                    exit()
-                config = ConfigParser()
-                config.read("config.ini", encoding="utf-8")
-                kw = dict(config._sections["database"])
                 try:
-                    conn = mysql_connect(host=kw["host"],
-                                         user=kw["user"],
-                                         password=kw["password"],
-                                         database=kw["database"],
-                                         port=int(kw['port']))
+                    conn = mysql_connect(host=mConfigInfo.host,
+                                         user=mConfigInfo.user,
+                                         password=mConfigInfo.password,
+                                         database=mConfigInfo.database,
+                                         port=mConfigInfo.port)
                 except Exception as e:
+                    linkErr = '连接数据库错误，请检查"config.ini"文件\n'
+                    linkErr = linkErr + 'Connecting the database incorrectly, '
+                    linkErr = linkErr + 'please check the "config.ini" file'
                     s = Exception.__repr__(e) + '\n' + linkErr
                     QMessageBox.warning(None, '错误', s, QMessageBox.Yes,
                                         QMessageBox.Yes)

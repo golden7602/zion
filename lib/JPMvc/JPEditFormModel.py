@@ -323,6 +323,7 @@ class JPFormModelMain(QDialog):
 class MyButtonDelegate(QItemDelegate):
     def __init__(self, parent=None):
         super(MyButtonDelegate, self).__init__(parent)
+        self.icon = self.icon = JPPub().MainForm.getIcon('del_line.ico')
 
     def paint(self, painter, option, index):
         if not self.parent().indexWidget(index) and (
@@ -331,9 +332,8 @@ class MyButtonDelegate(QItemDelegate):
                 self.tr(''),
                 self.parent(),
                 clicked=self.parent().parent().cellButtonClicked)
-            fn = 'del_line.ico'
-            icon = QIcon(getcwd() + "\\res\\ico\\" + fn)
-            widget.setIcon(icon)
+
+            widget.setIcon(self.icon)
             if self.parent().parent().isReadOnlyMode:
                 widget.setEnabled(False)
             self.parent().setIndexWidget(index, widget)

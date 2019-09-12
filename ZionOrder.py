@@ -34,6 +34,7 @@ from lib.ZionWidgets.Receivables import Form_Receivables
 from lib.ZionWidgets.Report_Day import Form_Repoet_Day
 from lib.ZionWidgets.User import Form_User
 from Ui.Ui_FormMain import Ui_MainWindow
+from lib.JPConfigInfo import ConfigInfo
 
 
 def loadTreeview(treeWidget, items, MF):
@@ -139,6 +140,17 @@ class JPMainWindow(QMainWindow):
             st.removeWidget(temp)
             del temp
         st.addWidget(form)
+
+    def getTaxCerPixmap(self, fn):
+        toPath = ConfigInfo().tax_reg_path
+        fn_m = f'{toPath}\\{fn}'
+        return QPixmap(fn_m)
+
+    def getIcon(self, icoName):
+        return QIcon(self.icoPath.format(icoName))
+
+    def getPixmap(self, icoName):
+        return QPixmap(self.icoPath.format(icoName))
 
     def addOneButtonIcon(self, btn, icoName):
         icon = QIcon(self.icoPath.format(icoName))

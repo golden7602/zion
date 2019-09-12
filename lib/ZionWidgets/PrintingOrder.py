@@ -18,6 +18,9 @@ from lib.ZionWidgets.EditFormOrderOrPrintingOrder import JPFormPrintingOrder
 from lib.JPFunction import JPRound
 from lib.JPMvc.JPModel import JPTableViewModelReadOnly
 from lib.JPExcel.JPExportToExcel import JPExpExcelFromTabelFieldInfo
+from lib.ZionWidgets.ViewPic import Form_ViewPic
+from lib.JPPrintReport import JPReport
+from PyQt5.QtPrintSupport import QPrinter
 
 
 class myJPTableViewModelReadOnly(JPTableViewModelReadOnly):
@@ -227,6 +230,7 @@ class EditForm_PrintingOrder(JPFormModelMain):
                          PKValue=PKValue,
                          edit_mode=edit_mode)
         JPPub().MainForm.addLogoToLabel(self.ui.label_logo)
+        self.ui.butTaxCer.setIcon(JPPub().MainForm.getIcon('rosette.ico'))
         self.setPkRole(5)
         self.cacuTax = True
         self.NumberControl = False
@@ -235,6 +239,7 @@ class EditForm_PrintingOrder(JPFormModelMain):
         self.ui.fNumerBegin.setEnabled(False)
         self.ui.fNumerEnd.setEnabled(False)
         if self.isNewMode:
+            self.ui.butTaxCer.setEnabled(False)
             uid = JPUser().currentUserID()
             self.ui.fEntryID.refreshValueNotRaiseEvent(uid)
         # 编辑状态下，更新一次历史单据号列表
@@ -337,7 +342,7 @@ class EditForm_PrintingOrder(JPFormModelMain):
 
         nm = obj.objectName()
         if nm == 'fCustomerID':
-            sql = '''select fCelular, fContato, fTelefone ,fNUIT,fEndereco,fCity
+            sql = '''select fCelular, fContato, fTelefone ,fNUIT,fEndereco,fCity,fTaxRegCer
             from t_customer where fCustomerID={}'''
             sql = sql.format(self.ui.fCustomerID.Value())
             tab = JPQueryFieldInfo(sql)
@@ -350,6 +355,10 @@ class EditForm_PrintingOrder(JPFormModelMain):
             self.ui.fNUIT.setText(tab.getOnlyData([0, 3]))
             self.ui.fEndereco.setText(tab.getOnlyData([0, 4]))
             self.ui.fCity.setText(tab.getOnlyData([0, 5]))
+            ID = tab.getOnlyData([0, 6])
+            ZT = True if ID else False
+            self.ui.butTaxCer.setEnabled(ZT)
+            self.ui.butTaxCer.ID = ID
         # 判断是否需要单据管理,不需要管理则退出
         if obj_cus.currentIndex() == -1 or obj_esp.currentIndex() == -1:
             self.setNumberNeedControl(False)
@@ -384,7 +393,7 @@ class EditForm_PrintingOrder(JPFormModelMain):
                 txt = txt + 'under the name of the selected customer, '
                 txt = txt + 'and no new documents can be added'
                 QMessageBox.information(self, "提示", txt)
-                if obj.objectName()!='fSucursal':
+                if obj.objectName() != 'fSucursal':
                     obj.setCurrentIndex(-1)
                 return
             else:
@@ -461,6 +470,25 @@ class EditForm_PrintingOrder(JPFormModelMain):
         rpt = Order_Printingreport()
         rpt.PrintCurrentReport(self.ui.fOrderID.Value())
 
+        ID = self.ui.butTaxCer.ID
+        if ID:
+            msg = '当前客户存在税务登记证，是否需要打印?\n'
+            msg = msg + 'Current customers have tax '
+            msg = msg + 'registration certificates, do you need to print them?'
+            reply = QMessageBox.question(self, '确认', msg,
+                                         QMessageBox.Yes | QMessageBox.No,
+                                         QMessageBox.No)
+            if reply == QMessageBox.No:
+                return
+        pixmap = JPPub().MainForm.getTaxCerPixmap(ID)
+        rpt1 = printTaxCer()
+        rpt1.PrintCurrentReport(pixmap)
+
+    @pyqtSlot()
+    def on_butTaxCer_clicked(self):
+        fn = self.ui.butTaxCer.ID
+        Form_ViewPic(self, JPPub().MainForm.getTaxCerPixmap(fn))
+
 
 class Order_Printingreport(PrintOrder_report_Mob):
     def __init__(self):
@@ -478,4 +506,24 @@ class Order_Printingreport(PrintOrder_report_Mob):
         self.init_ReportHeader()
         self.init_PageHeader()
         self.init_ReportFooter()
+        super().BeginPrint()
+
+
+class printTaxCer(JPReport):
+    def __init__(self,
+                 PaperSize=QPrinter.A4,
+                 Orientation=QPrinter.Orientation(0)):
+        super().__init__(PaperSize, Orientation)
+
+    def onFormat(self, SectionType, CurrentPage, RowDate=None):
+        if (SectionType == JPPrintSectionType.PageHeader and CurrentPage == 1):
+            return True
+
+    def PrintCurrentReport(self, pixmap: str):
+        p = QPrinter()
+        p.setPaperSize(QPrinter.A4)
+        p.setOrientation(QPrinter.Orientation(0))
+        self.SetMargins(0, 0, 0, 0)
+        rect = p.pageRect()
+        self.ReportHeader.AddItem(2, 0, 0, rect.width(), rect.height(), pixmap)
         super().BeginPrint()
