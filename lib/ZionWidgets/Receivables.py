@@ -195,15 +195,16 @@ class Form_Receivables(QWidget):
             return
         p = FormReport_Rec_print(JPDateConver(self.ui.SelectDate.date(),
                                               str), self.tabinfoCurrentDayRec,
-                                 self.tabinfoFangShiTongJi)
+                                 self.tabinfoFangShiTongJi,
+                                 JPDateConver(self.ui.SelectDate.date(), str))
         p.BeginPrint()
 
     def dateChanged(self, s_data):
         str_date = JPDateConver(self.ui.SelectDate.date(), str)
 
         # 设置当前日收款记录（左上）
-        self.tabinfoCurrentDayRec = JPQueryFieldInfo(
-            self.SQLCurrentDayRec.format(dateString=str_date))
+        sql = self.SQLCurrentDayRec.format(dateString=str_date)
+        self.tabinfoCurrentDayRec = JPQueryFieldInfo(sql)
         self.modCurrentDayRec = JPTableViewModelReadOnly(
             self.ui.tabCurrentDayRec, self.tabinfoCurrentDayRec)
         self.ui.tabCurrentDayRec.setModel(self.modCurrentDayRec)
@@ -352,6 +353,7 @@ class FormReport_Rec_print(JPReport):
                  curdate,
                  cur_tab,
                  tongji_tab,
+                 dateString,
                  PaperSize=QPrinter.A4,
                  Orientation=QPrinter.Orientation(0)):
         super().__init__(PaperSize, Orientation)
@@ -468,9 +470,10 @@ class FormReport_Rec_print(JPReport):
             0,
             25,
             Texts=["合计Sum", JPGetDisplayText(sum_j), " "],
-            Widths=[260, 140, 320],
+            Widths=[320, 100, 300],
             Aligns=[al_c, al_r, al_c],
-            FillColor=QColor(128, 128, 128))
+            FillColor=QColor(128, 128, 128),
+            Font=self.font_YaHei_8)
 
         title = [
             '收款方式\nPaymentMethod', '收款合计\nCollection of receipts',
@@ -541,28 +544,48 @@ class FormReport_Rec_print(JPReport):
                                  FillColor=QColor(128, 128, 128),
                                  Font=self.font_YaHei_8)
 
+        sql = """
+            SELECT SUM(fPayable) AS sumPayable, 
+                COUNT(fOrderID) AS countOrderID
+            FROM t_order
+            WHERE (fOrderDate = STR_TO_DATE('{dateString}', '%Y-%m-%d')
+                AND fCanceled = 0
+                AND fConfirmed = 1)""".format(dateString=dateString)
+        tab_sktj = JPQueryFieldInfo(sql)
+        txt_sktj = "当日({})份订单共应收{:,.2f}－当日已收款 {:,.2f}＝当日欠款{:,.2f}"
+        v0 = tab_sktj.getOnlyData([0, 1])
+        v1 = tab_sktj.getOnlyData([0, 0])
+        v2 = sum_j
+        v3 = v1 - v2
+        txt_sktj = txt_sktj.format(v0, v1, v2, v3)
         rpt.ReportFooter.AddItem(1,
                                  0,
-                                 85 + rs * 25+25,
+                                 85 + rs * 25 + 25,
+                                 240,
+                                 25,
+                                 '当日应收({})'.format(v0),
+                                 AlignmentFlag=al_c)
+        rpt.ReportFooter.AddItem(1,
+                                 240,
+                                 85 + rs * 25 + 25,
+                                 480,
+                                 25,
+                                 '{:,.2f}'.format(v1),
+                                 AlignmentFlag=al_c,
+                                 Font=self.font_YaHei_8)
+        rpt.ReportFooter.AddItem(1,
+                                 0,
+                                 85 + rs * 25 + 25 * 2,
                                  240,
                                  25,
                                  'Credito',
-                                 AlignmentFlag=al_c
-                                 )
+                                 AlignmentFlag=al_c)
         rpt.ReportFooter.AddItem(1,
                                  240,
-                                 85 + rs * 25+25,
-                                 240,
-                                 25,
-                                 " ",
-                                 AlignmentFlag=al_r,
-                                 Font=self.font_YaHei_8)
-        rpt.ReportFooter.AddItem(1,
+                                 85 + rs * 25 + 25 * 2,
                                  480,
-                                 85 + rs * 25+25,
-                                 240,
                                  25,
-                                 " ",
+                                 '{:,.2f}'.format(v3),
                                  AlignmentFlag=al_c,
                                  Font=self.font_YaHei_8)
 
