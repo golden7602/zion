@@ -1,25 +1,27 @@
 from functools import reduce
 from os import getcwd
 from sys import path as jppath
+
 jppath.append(getcwd())
 
-from PyQt5.QtCore import pyqtSlot, Qt, QModelIndex
-from PyQt5.QtGui import QPixmap, QFont
+from PyQt5.QtCore import QDate, QModelIndex, Qt, pyqtSlot
+from PyQt5.QtGui import QColor, QFont, QIcon, QPainter, QPixmap
 from PyQt5.QtWidgets import QMessageBox
 
 from lib.JPDatabase.Database import JPDb
 from lib.JPDatabase.Query import JPQueryFieldInfo
-from lib.JPMvc.JPEditFormModel import JPFormModelMainHasSub, JPEditFormDataMode
+from lib.JPExcel.JPExportToExcel import JPExpExcelFromTabelFieldInfo
+from lib.JPFunction import JPRound
+from lib.JPMvc.JPEditFormModel import JPEditFormDataMode, JPFormModelMainHasSub
 from lib.JPMvc.JPFuncForm import JPFunctionForm
 from lib.JPMvc.JPModel import JPTableViewModelReadOnly
-#from lib.JPMvc.JPModel import JPEditFormDataMode, JPFormModelMainSub
 from lib.JPPrintReport import JPPrintSectionType
 from lib.ZionPublc import JPPub, JPUser
 from lib.ZionReport.OrderReportMob import Order_report_Mob
 from lib.ZionWidgets.EditFormOrderOrPrintingOrder import JPFormOrder
-from lib.JPFunction import JPRound
-from lib.JPExcel.JPExportToExcel import JPExpExcelFromTabelFieldInfo
-from PyQt5.QtGui import QColor, QIcon
+
+
+
 
 
 class OrderMod(JPTableViewModelReadOnly):
@@ -28,6 +30,7 @@ class OrderMod(JPTableViewModelReadOnly):
         self.tabFont = QFont("Times", 10)
         self.tabFont.setBold(False)
         self.tabFont.setStretch(150)
+        self.ok_icon=JPPub().MainForm.getIcon('yes.ico')
 
     def data(self, index, role=Qt.DisplayRole):
         r = index.row()
@@ -37,12 +40,13 @@ class OrderMod(JPTableViewModelReadOnly):
 
         if role == Qt.DisplayRole and r > 0 and c <= 14 and curid == tab.getOnlyData(
             (r - 1, 0)):
-            # tab.DataRows[r - 1].Datas[0]:
-            return ""
-        elif c == 4 and role == Qt.TextAlignmentRole:
-            return Qt.AlignCenter
-        elif c == 4 and role == Qt.TextColorRole:
-            return QColor(Qt.blue)
+            return ''
+        elif c == 4:
+            if role == Qt.DecorationRole:
+                if tab.getOnlyData((r,c)):
+                    return self.ok_icon
+            else:
+                return super().data(index, role=role)
         else:
             return super().data(index, role=role)
 
@@ -247,8 +251,18 @@ class EditForm_Order(JPFormModelMainHasSub):
         if edit_mode != JPEditFormDataMode.ReadOnly:
             self.ui.fCustomerID.setEditable(True)
 
+        self.ui.fOrderDate.refreshValueNotRaiseEvent(QDate.currentDate())
+        self.ui.fRequiredDeliveryDate.FieldInfo.NotNull=True
         self.ui.fCustomerID.setFocus()
 
+    # def paintEvent(self, PaintEvent):
+    #     if self.ObjectDict['fCanceled'].text():
+    #         painter = QPainter(self)
+    #         painter.setPen(QColor(255, 0, 0, 128))
+    #         painter.setFont(QFont("Microsoft Yahei", 60))
+    #         painter.begin(self)
+    #         painter.drawText(self.rect(),Qt.AlignCenter, "Canceled")
+    #         painter.end()
 
     def __customerIDChanged(self):
         sql = '''select fCelular, fContato, fTelefone ,fNUIT,fEndereco,fCity

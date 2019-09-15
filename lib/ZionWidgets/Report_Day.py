@@ -97,7 +97,7 @@ class Form_Repoet_Day(QWidget):
                     SELECT MONTH(fReceiptDate) AS m, DAY(fReceiptDate) AS d
                         , SUM(fAmountCollected) AS j1
                     FROM t_receivables
-                    WHERE YEAR(fReceiptDate) = 2019
+                    WHERE YEAR(fReceiptDate) = {}
                     GROUP BY MONTH(fReceiptDate), DAY(fReceiptDate)
                 ) Q1
                 GROUP BY Q1.d WITH ROLLUP
@@ -170,7 +170,7 @@ class Form_Repoet_Day(QWidget):
         l_tab = len(tab)
         for i, r in enumerate(tab.DataRows):
             if i != l_tab - 1:
-                r.Datas[0] = days[i]
+                r.Datas[0] = days[int(r.Datas[0])-1]
 
     def _search(self):
         db = JPDb()

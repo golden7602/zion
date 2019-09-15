@@ -10,7 +10,7 @@ sys.path.append(os.getcwd())
 from PyQt5 import QtWidgets as QtWidgets_
 from PyQt5.QtCore import QDate, QObject, Qt, pyqtSignal
 from PyQt5.QtGui import (QColor, QDoubleValidator, QIntValidator, QPalette,
-                         QValidator)
+                         QValidator,QPainter)
 from PyQt5.QtWidgets import QCheckBox as QCheckBox_
 from PyQt5.QtWidgets import QComboBox as QComboBox_
 from PyQt5.QtWidgets import QCompleter
@@ -41,25 +41,25 @@ class _JPDoubleValidator(QDoubleValidator):
         self.min = v1
         self.max = v2
 
-    def validate(self, vstr, pos):
-        if (vstr is None) or (vstr == ''):
-            return QValidator.Acceptable, vstr, pos
-        str0 = vstr.replace(',', '')
-        if str0 == '':
-            return QValidator.Intermediate, vstr, pos
-        if str0 == "-":
-            if self.min < 0.0:
-                return QValidator.Intermediate, vstr, pos
-            if self.min > 0.0:
-                return QValidator.Invalid, vstr, pos
-        if re.match(r"^-?[1-9]\d*\.?$", str0, flags=(re.I)):
-            return QValidator.Intermediate, vstr, pos
-        else:
-            if re.match(r"^-?[1-9]\d*\.\d{1," + str(self.decima) + r"}$",
-                        str0,
-                        flags=(re.I)):
-                return QValidator.Acceptable, vstr, pos
-        return QValidator.Invalid, vstr, pos
+    # def validate(self, vstr, pos):
+    #     if (vstr is None) or (vstr == ''):
+    #         return QValidator.Acceptable, vstr, pos
+    #     str0 = vstr.replace(',', '')
+    #     if str0 == '' or str0=="0":
+    #         return QValidator.Intermediate, vstr, pos
+    #     if str0 == "-":
+    #         if self.min < 0.0:
+    #             return QValidator.Intermediate, vstr, pos
+    #         if self.min > 0.0:
+    #             return QValidator.Invalid, vstr, pos
+    #     if re.match(r"^-?[1-9]\d*\.?$", str0, flags=(re.I)):
+    #         return QValidator.Intermediate, vstr, pos
+    #     else:
+    #         if re.match(r"^-?[1-9]\d*\.\d{1," + str(self.decima) + r"}$",
+    #                     str0,
+    #                     flags=(re.I)):
+    #             return QValidator.Acceptable, vstr, pos
+    #     return QValidator.Invalid, vstr, pos
 
 
 class _JPIntValidator(QValidator):
@@ -94,7 +94,7 @@ class __JPWidgetBase(QObject):
         txt = "font-family: {font_name};font-size:{px}px;".format(
             font_name=self.fontInfo().family(), px=self.fontInfo().pixelSize())
         print(self.objectName() + "=" + txt)
-        return txt 
+        return txt
 
     def setRedStyleSheet(self):
         bk = "{background:rgb(255, 192, 203)}"
@@ -136,12 +136,11 @@ class __JPWidgetBase(QObject):
 
     def getNullValue(self):
         # 检查空值.更改颜色
-        print(self.styleSheet())
         fld = self.FieldInfo
         if fld.IsPrimarykey or fld.Auto_Increment:
             return
         else:
-            if self.FieldInfo.NotNull is False:
+            if fld.NotNull is False:
                 return 'Null'
             else:
                 t = fld.Title if fld.Title else fld.FieldName
@@ -197,7 +196,7 @@ class QLineEdit(QLineEdit_, __JPWidgetBase):
         if self.FieldInfo.TypeCode in (JPFieldType.Int, JPFieldType.Float):
             return "'{}'".format(t.replace(',', ''))
         if self.FieldInfo.TypeCode == JPFieldType.String:
-            return "'{}'".format(t.replace("'","\\'"))
+            return "'{}'".format(t.replace("'", "\\'"))
         return "'{}'".format(t)
 
     def refreshValueNotRaiseEvent(self, v, changeDisplayText: bool = False):
@@ -255,9 +254,13 @@ class QLineEdit(QLineEdit_, __JPWidgetBase):
         if v:
             self.setText(JPGetDisplayText(v, FieldInfo=self.FieldInfo))
         else:
-            self.setText('')
+            if self.FieldInfo.TypeCode in [JPFieldType.Int,JPFieldType.Float]:
+                self.setText('0')
+            else:
+                self.setText('')
 
     def setDoubleValidator(self, v_Min, v_Max, Decimals: int = 2):
+        print(self.objectName(),v_Min, v_Max, Decimals)
         Validator = _JPDoubleValidator(v_Min, v_Max, Decimals)
         Validator.setRange(float(v_Min), float(v_Max))
         Validator.setDecimals(Decimals)
@@ -324,8 +327,7 @@ class QTextEdit(QTextEdit_, __JPWidgetBase):
         if t is None or len(t) == 0:
             return self.getNullValue()
         self.clearStyleSheet()
-        return "'{}'".format(t.replace("'","\\'"))
-
+        return "'{}'".format(t.replace("'", "\\'"))
 
     def _setFieldInfo(self, fld: JPFieldType, raiseEvent=True):
         self.FieldInfo = fld
@@ -415,6 +417,8 @@ class QComboBox(QComboBox_, __JPWidgetBase):
     def _setFieldInfo(self, fld: JPFieldType, raiseEvent=True):
         self.currentIndexChanged[int].disconnect(self._onValueChange)
         self.FieldInfo = fld
+        self.clear()
+        self.clearEditText()
         if self.FieldInfo.RowSource:
             for r in self.FieldInfo.RowSource:
                 self.addItem(str(r[0]), r)
@@ -438,16 +442,24 @@ class QDateEdit(QDateEdit_, __JPWidgetBase):
         self.dateChanged.connect(self._onValueChange)
 
     def getSqlValue(self) -> str:
+        v=self.date()
+        if self.minimumDate() == v and v == QDate(1752, 9, 14):
+            self.FieldInfo.Value=None
+            return self.getNullValue()
         return "'{}'".format(JPDateConver(self.date(), str))
 
-    def _onValueChange(self):
+    def _onValueChange(self, v):
+        # 当给定的日期和最小允许日期相同时
+        if self.minimumDate() == v and v == QDate(1752, 9, 14):
+            self.setDisplayFormat('')
+            return
         self.FieldInfo.Value = JPDateConver(self.date(), datetime.date)
         if self.__RaiseEvent:
             super()._onValueChange(self.FieldInfo.Value)
 
     def refreshValueNotRaiseEvent(self, value):
         self.__RaiseEvent = False
-        value = value if value else QDate.currentDate()
+        value = value if value else self.minimumDate()
         self.FieldInfo.Value = JPDateConver(value, datetime.date)
         self.setDate(JPDateConver(self.FieldInfo.Value, QDate))
         self.__RaiseEvent = True
@@ -464,6 +476,19 @@ class QDateEdit(QDateEdit_, __JPWidgetBase):
 
     def Value(self):
         return JPDateConver(self.date(), datetime.date)
+
+    def mousePressEvent(self, MouseEvent):
+        self.setDate(QDate.currentDate())
+        super().mousePressEvent(MouseEvent)
+
+    # def paintEvent(self,PaintEvent):
+    #     v=self.date()
+        # if self.minimumDate() == v and v == QDate(1752, 9, 14):
+        #     painter = QPainter(self)
+        #     painter.setPen(QColor(166,66,250))          
+        #     painter.begin(self)
+        #     painter.drawText(120,120,"文字")
+        #     painter.end()   
 
 
 class QCheckBox(QCheckBox_, __JPWidgetBase):

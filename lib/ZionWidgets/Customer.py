@@ -207,7 +207,9 @@ class Form_Customer(QWidget):
         frm = Form_Search(self.dataInfo, self.list_sql.format(wherestring=''))
         frm.whereStringCreated.connect(self.actionClick)
         frm.exec_()
-
+    @pyqtSlot()
+    def on_CmdRefresh_clicked(self):
+        self.actionClick()
     @pyqtSlot()
     def on_CmdNew_clicked(self):
 

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'e:\Zion\zion\Ui\FormOrder_Template.ui'
+# Form implementation generated from reading ui file 'c:\Users\win10\Desktop\Zion\zion\Ui\FormOrder_Template.ui'
 #
 # Created by: PyQt5 UI code generator 5.11.3
 #
@@ -11,7 +11,6 @@ from sys import path as jppath
 jppath.append(getcwd())
 from PyQt5 import QtCore, QtGui
 from lib.JPMvc import JPWidgets as QtWidgets
-
 
 class Ui_Form(object):
     def setupUi(self, Form):
@@ -155,6 +154,7 @@ class Ui_Form(object):
         self.fRequiredDeliveryDate = QtWidgets.QDateEdit(Form)
         self.fRequiredDeliveryDate.setMinimumSize(QtCore.QSize(0, 25))
         self.fRequiredDeliveryDate.setSizeIncrement(QtCore.QSize(0, 25))
+        self.fRequiredDeliveryDate.setAlignment(QtCore.Qt.AlignCenter)
         self.fRequiredDeliveryDate.setCalendarPopup(True)
         self.fRequiredDeliveryDate.setObjectName("fRequiredDeliveryDate")
         self.gridLayout.addWidget(self.fRequiredDeliveryDate, 0, 6, 1, 1)
@@ -223,6 +223,7 @@ class Ui_Form(object):
         self.gridLayout.addWidget(self.label_3, 0, 0, 1, 1)
         self.fOrderDate = QtWidgets.QDateEdit(Form)
         self.fOrderDate.setMaximumSize(QtCore.QSize(16777215, 16777215))
+        self.fOrderDate.setAlignment(QtCore.Qt.AlignCenter)
         self.fOrderDate.setCalendarPopup(True)
         self.fOrderDate.setObjectName("fOrderDate")
         self.gridLayout.addWidget(self.fOrderDate, 0, 2, 1, 1)
@@ -465,3 +466,4 @@ if __name__ == "__main__":
     ui.setupUi(Form)
     Form.show()
     sys.exit(app.exec_())
+

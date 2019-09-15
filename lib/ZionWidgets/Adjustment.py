@@ -5,7 +5,7 @@ jppath.append(getcwd())
 from functools import reduce
 
 from PyQt5.QtCore import Qt, QModelIndex, pyqtSlot
-from PyQt5.QtGui import QColor, QFont, QPainter, QPixmap
+from PyQt5.QtGui import QColor, QFont, QPainter, QPixmap,QPalette,QBrush
 from PyQt5.QtWidgets import QDialog, QMessageBox, QWidget
 from PyQt5.QtPrintSupport import QPrinter
 
@@ -18,15 +18,26 @@ from lib.JPMvc.JPModel import JPTableViewModelReadOnly
 class myJPTableViewModelReadOnly(JPTableViewModelReadOnly):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.ok_icon = JPPub().MainForm.getIcon('yes.ico')
+        self.cancel_icon = JPPub().MainForm.getIcon('cancel.ico')
+        self.delivery_icon = JPPub().MainForm.getIcon('delivery.png')
 
     def data(self, index, role=Qt.DisplayRole):
         c = index.column()
+        r = index.row()
+        tab = self.TabelFieldInfo
         if c in (3, 5, 7, 9) and role == Qt.TextAlignmentRole:
             return Qt.AlignCenter
-        elif c == 3 and role == Qt.TextColorRole:
-            return QColor(Qt.red)
-        else:
-            return super().data(index, role)
+        elif role == Qt.DecorationRole:
+            if c == 3 and tab.getOnlyData((r, 3)):
+                return self.cancel_icon
+            if c == 5 and tab.getOnlyData((r, 5)):
+                return self.ok_icon
+            if c == 7 and tab.getOnlyData((r, 7)):
+                return self.ok_icon
+            if c == 9 and tab.getOnlyData((r, 9)):
+                return self.delivery_icon
+        return super().data(index, role)
 
 
 class JPFuncForm_Adjustment(ZionFuncForm):
@@ -77,12 +88,14 @@ class JPFuncForm_Adjustment(ZionFuncForm):
                 ORDER BY  forderID DESC"""
 
         self.backgroundWhenValueIsTrueFieldName = ['fCanceled']
-        self.checkBox_1.setText('Normal')
-        self.checkBox_2.setText('Cancelled')
+        self.checkBox_1.setText('Cancelled')
+        self.checkBox_2.setText('Normal')
         self.checkBox_1.setChecked(True)
-        self.checkBox_2.setChecked(False)
+        self.checkBox_2.setChecked(True)
         self.setListFormSQL(sql_1, sql_2)
         self.tableView.setColumnHidden(13, True)
+        self.tableView.setColumnHidden(15, True)
+        self.tableView.setColumnHidden(16, True)
 
     def onGetModelClass(self):
         return myJPTableViewModelReadOnly
@@ -125,14 +138,23 @@ class JPFuncForm_Adjustment(ZionFuncForm):
             form.ui.fTax.setEnabled(True)
             form.ui.fPayable.setEnabled(False)
 
-        if  form.OrderType == "TP":
+        if form.OrderType == "TP":
             form.setWindowTitle("PrintingOrder Adjustment")
             for nm in form.ObjectDict.keys():
-                print(f'form.ui.{nm}.setEnabled(ZT)')
                 form.ObjectDict[nm].setEnabled(False)
             form.ui.fPrice.setEnabled(True)
             form.ui.fTax.setEnabled(True)
-
-
-
+        #self.__setFormBack(form)
         return super().onAfterCreatedForm(cur_tp, form)
+    
+    # def __setFormBack(self,form):
+    #     pk = form.ui.fOrderID.text()
+    #     sql = f"select fCanceled from t_order where fOrderID='{pk}'"
+    #     db=JPDb()
+    #     result=db.executeTransaction(sql)
+    #     if result:
+    #         form.setAutoFillBackground(True)
+    #         palette1 = QPalette()
+    #         palette1.setColor(self.backgroundRole(), QColor(255, 192, 203))
+    #         #palette1.setBrush(form.backgroundRole(), QBrush(JPPub().MainForm.getPixmap('cancel.png')))
+    #         form.setPalette(palette1)

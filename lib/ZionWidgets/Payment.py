@@ -15,15 +15,20 @@ from PyQt5.QtGui import QColor
 class myJPTableViewModelReadOnly(JPTableViewModelReadOnly):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.ok_icon=JPPub().MainForm.getIcon('yes.ico')
 
     def data(self, index, role=Qt.DisplayRole):
+        r = index.row()
         c = index.column()
-        if c == 4 and role == Qt.TextAlignmentRole:
-            return Qt.AlignCenter
-        elif c == 4 and role == Qt.TextColorRole:
-            return QColor(Qt.blue)
+        tab = self.TabelFieldInfo
+        if c == 4:
+            if role == Qt.DecorationRole:
+                if tab.getOnlyData((r,c)):
+                    return self.ok_icon
+            else:
+                return super().data(index, role=role)
         else:
-            return super().data(index, role)
+            return super().data(index, role=role)
 
 
 class JPFuncForm_Payment(ZionFuncForm):

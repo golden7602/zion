@@ -68,7 +68,6 @@ class JPFormModelMain(QDialog):
             except Exception as e:
                 print(str(e))
 
-
     def setPkRole(self, role: int):
         self.PKRole = role
 
@@ -124,6 +123,7 @@ class JPFormModelMain(QDialog):
     def setFormulas(self, *args):
         """setFormulas(str1...)
         设置计算公式，从个公式之间用逗号分开"""
+
     def onDateChangeEvent(self, obj, value):
         """窗体数据变更事件，obj是变更的控件"""
         return
@@ -371,8 +371,6 @@ class myJPTableViewModelEditForm(JPTableViewModelEditForm):
 
     def afterSaveData(self):
         self.tableView.setItemDelegateForColumn(0, self.deleteRowDelegate)
-
-
 
 
 class myJPTableViewModelReadOnly(JPTableViewModelReadOnly):

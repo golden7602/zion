@@ -190,9 +190,11 @@ class JPUser(QObject):
         self.userChange.emit([self.__ID, self.Name])
 
     def getAllUserList(self) -> list:
+        self.reFreshAllUser()
         return [r[0:2] for r in self.__AllUser]
 
     def getAllUserEnumList(self) -> list:
+        self.reFreshAllUser()
         return [[r[1], r[0]] for r in self.__AllUser]
 
     def __bool__(self):
@@ -238,9 +240,11 @@ class JPPub(QObject):
         self.__allCustomerList = self.db.getDataList(sql)
 
     def getEnumList(self, enum_type_id: int):
+        self.INITEnum()
         return self.__EnumDict[enum_type_id]
 
     def getCustomerList(self):
+        self.INITCustomer()
         return self.__allCustomerList
 
     def getSysNavigationMenusDict(self):

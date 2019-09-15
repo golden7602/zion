@@ -3,7 +3,7 @@ from os import getcwd
 from sys import path as jppath
 jppath.append(getcwd())
 
-from PyQt5.QtCore import pyqtSlot, Qt, QRect
+from PyQt5.QtCore import pyqtSlot, Qt, QRect,QDate
 from PyQt5.QtGui import QIcon, QIntValidator, QPixmap, QKeyEvent, QColor
 from PyQt5.QtWidgets import QAction, QLineEdit, QMessageBox
 
@@ -26,15 +26,21 @@ from PyQt5.QtPrintSupport import QPrinter
 class myJPTableViewModelReadOnly(JPTableViewModelReadOnly):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.ok_icon=JPPub().MainForm.getIcon('yes.ico')
 
     def data(self, index, role=Qt.DisplayRole):
+        r = index.row()
         c = index.column()
-        if c == 4 and role == Qt.TextAlignmentRole:
-            return Qt.AlignCenter
-        elif c == 4 and role == Qt.TextColorRole:
-            return QColor(Qt.blue)
+        tab = self.TabelFieldInfo
+        if c == 4:
+            if role == Qt.DecorationRole:
+                if tab.getOnlyData((r,c)):
+                    return self.ok_icon
+            else:
+                return super().data(index, role=role)
         else:
-            return super().data(index, role)
+            return super().data(index, role=role)
+
 
 
 class JPFuncForm_PrintingOrder(JPFunctionForm):
@@ -257,7 +263,7 @@ class EditForm_PrintingOrder(JPFormModelMain):
         self.ui.fRequiredDeliveryDate.FieldInfo.NotNull = True
         self.ui.fVendedorID.FieldInfo.NotNull = True
         self.ui.fNrCopyID.FieldInfo.NotNull = True
-
+        self.ui.fOrderDate.refreshValueNotRaiseEvent(QDate.currentDate())
         self.ui.fCustomerID.setFocus()
 
     def __onTaxKeyPress(self, KeyEvent: QKeyEvent):
@@ -380,6 +386,7 @@ class EditForm_PrintingOrder(JPFormModelMain):
                 and fEspecieID={tid}
                 and fSucursal={fgs}
                 and fConfirmed={zt}
+                and fCanceled=0
             """
             sql = 'select fOrderID from t_order'
             sql = sql + where.format(uid=obj_cus.Value(),
@@ -478,11 +485,10 @@ class EditForm_PrintingOrder(JPFormModelMain):
             reply = QMessageBox.question(self, '确认', msg,
                                          QMessageBox.Yes | QMessageBox.No,
                                          QMessageBox.No)
-            if reply == QMessageBox.No:
-                return
-        pixmap = JPPub().MainForm.getTaxCerPixmap(ID)
-        rpt1 = printTaxCer()
-        rpt1.PrintCurrentReport(pixmap)
+            if reply == QMessageBox.Yes:
+                pixmap = JPPub().MainForm.getTaxCerPixmap(ID)
+                rpt1 = printTaxCer()
+                rpt1.PrintCurrentReport(pixmap)
 
     @pyqtSlot()
     def on_butTaxCer_clicked(self):

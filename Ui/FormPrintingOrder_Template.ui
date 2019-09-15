@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>788</width>
+    <width>983</width>
     <height>527</height>
    </rect>
   </property>
@@ -498,6 +498,9 @@
          <height>25</height>
         </size>
        </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
        <property name="displayFormat">
         <string>yyyy-MM-dd</string>
        </property>
@@ -679,6 +682,9 @@
          <width>16777215</width>
          <height>16777215</height>
         </size>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
        </property>
        <property name="displayFormat">
         <string>yyyy-MM-dd</string>

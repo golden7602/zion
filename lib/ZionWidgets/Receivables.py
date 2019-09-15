@@ -134,6 +134,7 @@ class Form_Receivables(QWidget):
                     fAmountCollected as 收款额AmountCollected,
                     fPayee as 收款人fPayee,
                     fPaymentMethod AS 收款方式ModoPago,
+                    fOrderID as 订单号OrderID,
                     fNote as 备注Note
                     
             FROM v_receivables as r           
@@ -176,6 +177,7 @@ class Form_Receivables(QWidget):
         frm = RecibidoEdit()
         frm.ListForm = self
         frm.ui.fAmountCollected.setDoubleValidator(0.01, 100000000.0, 2)
+        frm._currentDate = self.ui.SelectDate.date()
         #frm.ui.fNote.refreshValueNotRaiseEvent('DIBOTO', True)
         frm.exec_()
 
@@ -254,9 +256,10 @@ class RecibidoEdit(JPFormModelMain):
         m_sql = '''SELECT fID, 
                         fCustomerID AS 客户名Cliente, 
                         fPaymentMethodID AS 收款方式ModoPago, 
-                        fReceiptDate, 
+                        fReceiptDate as 收款日期ReceiptDate,
                         fAmountCollected AS 金额Amount,
-                        fPayeeID, fNote
+                        fPayeeID, fNote,
+                        fOrderID as 单据号码OrderID
                         FROM t_receivables
                         WHERE fID = '{}'
                 '''
@@ -271,11 +274,21 @@ class RecibidoEdit(JPFormModelMain):
         self.ui.butCancel.clicked.connect(self.close)
         self.ui.fID.hide()
         self.readData()
-        self.ui.fPayeeID.refreshValueNotRaiseEvent(JPUser().currentUserID())
+        self.ui.fPayeeID.refreshValueNotRaiseEvent(JPUser().currentUserID(), )
         self.__setEnabled()
         self.ui.fCustomerID.currentIndexChanged.connect(self.__setEnabled)
         self.ui.fCustomerID.setEditable(True)
+        self.ui.fOrderID.setEditable(False)
         self.ui.fArrears.setEnabled(True)
+        self.ui.fCustomerID.setFocus()
+
+    @property
+    def _currentDate(self):
+        return self.ui.fReceiptDate.date()
+
+    @_currentDate.setter
+    def _currentDate(self, d):
+        self.ui.fReceiptDate.refreshValueNotRaiseEvent(d)
 
     def __setEnabled(self):
         self.ui.fCustomerID.setEnabled(True)
@@ -295,7 +308,7 @@ class RecibidoEdit(JPFormModelMain):
         u_lst = [[item[1], item[0]] for item in JPUser().getAllUserList()]
         return [('fCustomerID', pub.getCustomerList(), 1),
                 ('fPaymentMethodID', pub.getEnumList(3), 1),
-                ('fPayeeID', u_lst, 1)]
+                ('fPayeeID', u_lst, 1), ('fOrderID', [['DIBOTO']], 0)]
 
     def onGetPrintReport(self):
         return  #PrintOrder_report_Mob()
@@ -306,6 +319,7 @@ class RecibidoEdit(JPFormModelMain):
             self.__customerIDChanged()
 
     def __customerIDChanged(self):
+        # 刷新客户有关信息
         sql = '''
             SELECT fNUIT, fCity, fEndereco, fCelular, fContato
                 , fTelefone, Q0.fAmountPayable  , Q1.fAmountPaid,
@@ -342,6 +356,27 @@ class RecibidoEdit(JPFormModelMain):
                 obj.setMainModel(self)
                 obj.setFieldInfo(fld_dict[nm])
                 obj.refreshValueNotRaiseEvent(tab.getOnlyData([0, i]), True)
+        # 刷新该客户名下当日单据号码
+        sql_orderID = """
+        select 'DIBOTO' as fOrderID
+        union all 
+        select fOrderID from t_order 
+        where fCustomerID={CustomerID} 
+            and fOrderDate=STR_TO_DATE('{dateString}', '%Y-%m-%d')
+            and fConfirmed=1
+            and fSubmited=1
+            and fCanceled=0
+        """
+        sql_orderID = sql_orderID.format(
+            CustomerID=self.ui.fCustomerID.Value(),
+            dateString=JPDateConver(self._currentDate, str))
+        tab = JPQueryFieldInfo(sql_orderID)
+        fld = self.ui.fOrderID.FieldInfo
+        fld.RowSource = [[r.Datas[0]] for r in tab.DataRows]
+        fld.BindingColumn = 0
+        fld.Value = None
+        fld.NotNull = True
+        self.ui.fOrderID.setFieldInfo(fld, False)
 
     def onAfterSaveData(self, data):
         self.ui.butSave.setEnabled(False)
@@ -413,7 +448,7 @@ class FormReport_Rec_print(JPReport):
                            0,
                            0,
                            60,
-                           25,
+                           20,
                            fns[0],
                            AlignmentFlag=al_c,
                            Font=self.font_YaHei_8)
@@ -421,7 +456,7 @@ class FormReport_Rec_print(JPReport):
                            60,
                            0,
                            260,
-                           25,
+                           20,
                            fns[1],
                            FormatString=' {}',
                            AlignmentFlag=al_l,
@@ -430,7 +465,7 @@ class FormReport_Rec_print(JPReport):
                            320,
                            0,
                            100,
-                           25,
+                           20,
                            fns[2],
                            AlignmentFlag=al_r,
                            FormatString='{:,.2f} ',
@@ -439,7 +474,7 @@ class FormReport_Rec_print(JPReport):
                            420,
                            0,
                            100,
-                           25,
+                           20,
                            fns[3],
                            AlignmentFlag=al_c,
                            Font=self.font_YaHei_8)
@@ -447,7 +482,7 @@ class FormReport_Rec_print(JPReport):
                            520,
                            0,
                            100,
-                           25,
+                           20,
                            fns[4],
                            AlignmentFlag=al_c,
                            Font=self.font_YaHei_8)
@@ -455,7 +490,7 @@ class FormReport_Rec_print(JPReport):
                            620,
                            0,
                            100,
-                           25,
+                           20,
                            fns[5],
                            AlignmentFlag=al_l,
                            FormatString=' {}',
@@ -468,126 +503,87 @@ class FormReport_Rec_print(JPReport):
         rpt.ReportFooter.AddPrintLables(
             0,
             0,
-            25,
+            20,
             Texts=["合计Sum", JPGetDisplayText(sum_j), " "],
             Widths=[320, 100, 300],
             Aligns=[al_c, al_r, al_c],
             FillColor=QColor(128, 128, 128),
             Font=self.font_YaHei_8)
 
-        title = [
-            '收款方式\nPaymentMethod', '收款合计\nCollection of receipts',
-            '收款笔数\nNumber of Payments Received]'
-        ]
-        fns = [fld.FieldName for fld in tongji_tab.Fields]
-        cols = len(tongji_tab.Fields)
-        rpt.ReportFooter.AddPrintLables(0,
-                                        45,
-                                        40,
-                                        Texts=title,
-                                        Widths=[240, 240, 240],
-                                        Aligns=[al_c] * cols)
-        sum_j = 0
-        count = 0
-        for r in range(len(tongji_tab)):
-            rpt.ReportFooter.AddItem(1,
-                                     0,
-                                     85 + r * 25,
-                                     240,
-                                     25,
-                                     tongji_tab.getDispText([r, 0]),
-                                     AlignmentFlag=al_c)
-            rpt.ReportFooter.AddItem(1,
-                                     240,
-                                     85 + r * 25,
-                                     240,
-                                     25,
-                                     tongji_tab.getDispText([r, 1]),
-                                     FormatString='{} ',
-                                     AlignmentFlag=al_r,
-                                     Font=self.font_YaHei_8)
-            rpt.ReportFooter.AddItem(1,
-                                     480,
-                                     85 + r * 25,
-                                     240,
-                                     25,
-                                     tongji_tab.getDispText([r, 2]),
-                                     AlignmentFlag=al_c,
-                                     Font=self.font_YaHei_8)
-            sum_j = sum_j + tongji_tab.getOnlyData([r, 1])
-            count = count + tongji_tab.getOnlyData([r, 2])
-        rs = len(tongji_tab)
-        rpt.ReportFooter.AddItem(1,
-                                 0,
-                                 85 + rs * 25,
-                                 240,
-                                 25,
-                                 '合计Sum',
-                                 AlignmentFlag=al_c,
-                                 FillColor=QColor(128, 128, 128))
-        rpt.ReportFooter.AddItem(1,
-                                 240,
-                                 85 + rs * 25,
-                                 240,
-                                 25,
-                                 JPGetDisplayText(sum_j),
-                                 AlignmentFlag=al_r,
-                                 FillColor=QColor(128, 128, 128),
-                                 Font=self.font_YaHei_8)
-        rpt.ReportFooter.AddItem(1,
-                                 480,
-                                 85 + rs * 25,
-                                 240,
-                                 25,
-                                 JPGetDisplayText(count),
-                                 AlignmentFlag=al_c,
-                                 FillColor=QColor(128, 128, 128),
-                                 Font=self.font_YaHei_8)
-
-        sql = """
+        sql_payable = f"""
             SELECT SUM(fPayable) AS sumPayable, 
                 COUNT(fOrderID) AS countOrderID
             FROM t_order
             WHERE (fOrderDate = STR_TO_DATE('{dateString}', '%Y-%m-%d')
                 AND fCanceled = 0
-                AND fConfirmed = 1)""".format(dateString=dateString)
-        tab_sktj = JPQueryFieldInfo(sql)
-        txt_sktj = "当日({})份订单共应收{:,.2f}－当日已收款 {:,.2f}＝当日欠款{:,.2f}"
-        v0 = tab_sktj.getOnlyData([0, 1])
-        v1 = tab_sktj.getOnlyData([0, 0])
-        v2 = sum_j
-        v3 = v1 - v2
-        txt_sktj = txt_sktj.format(v0, v1, v2, v3)
+                AND fConfirmed = 1)
+        """
+        sql_SKFS = f"""
+        select if(isnull(Q.fPaymentMethod),'Sum合计',Q.fPaymentMethod) as skfs,
+            Q.今日收款,Q.今日收款笔数,Q.DIBOTO,Q.DIBOTO笔数,Q.小计Subtotal,Q.笔数小计Subcount
+            from (
+            SELECT fPaymentMethod
+                , SUM(if(fOrderID = 'DIBOTO', NULL, fAmountCollected)) AS 今日收款
+                , COUNT(if(fOrderID = 'DIBOTO', NULL, fAmountCollected)) AS 今日收款笔数
+                , SUM(if(fOrderID = 'DIBOTO', fAmountCollected, NULL)) AS DIBOTO
+                , COUNT(if(fOrderID = 'DIBOTO', fAmountCollected, NULL)) AS DIBOTO笔数
+                , SUM(fAmountCollected) AS 小计Subtotal, COUNT(fAmountCollected) AS 笔数小计Subcount
+            FROM v_receivables
+            WHERE fReceiptDate=STR_TO_DATE('{dateString}', '%Y-%m-%d')
+            GROUP BY fPaymentMethod WITH ROLLUP) as Q        
+        """
+        title_height=20
         rpt.ReportFooter.AddItem(1,
                                  0,
-                                 85 + rs * 25 + 25,
-                                 240,
-                                 25,
-                                 '当日应收({})'.format(v0),
-                                 AlignmentFlag=al_c)
-        rpt.ReportFooter.AddItem(1,
-                                 240,
-                                 85 + rs * 25 + 25,
-                                 480,
-                                 25,
-                                 '{:,.2f}'.format(v1),
-                                 AlignmentFlag=al_c,
-                                 Font=self.font_YaHei_8)
-        rpt.ReportFooter.AddItem(1,
-                                 0,
-                                 85 + rs * 25 + 25 * 2,
-                                 240,
-                                 25,
-                                 'Credito',
-                                 AlignmentFlag=al_c)
-        rpt.ReportFooter.AddItem(1,
-                                 240,
-                                 85 + rs * 25 + 25 * 2,
-                                 480,
-                                 25,
-                                 '{:,.2f}'.format(v3),
-                                 AlignmentFlag=al_c,
-                                 Font=self.font_YaHei_8)
+                                 title_height,
+                                 720,
+                                 30,
+                                 "本日结算方式统计Today's settlement statistics",
+                                 Bolder=False,
+                                 AlignmentFlag=al_c
+                                 )
+        title_height += 30
+        title = ['方式PM', "收当日订单Today's Order Rec", '收欠款DIBOTO', '小计SubTotle']
+        rpt.ReportFooter.AddPrintLables(0,
+                                        title_height,
+                                        25,
+                                        title,
+                                        Widths=[120, 200, 200, 200],
+                                        Aligns=[al_c] * 4,
+                                        Font=self.font_YaHei_8)
+        tongji_tab = JPQueryFieldInfo(sql_SKFS)
+        title_height += 25
+        for r in range(len(tongji_tab)):
+            rpt.ReportFooter.AddItem(1,0,title_height + r*20 ,120,20,tongji_tab.getDispText([r, 0]),FormatString=' {}',AlignmentFlag=al_l,Font=self.font_YaHei_8)
+            rpt.ReportFooter.AddItem(1,120,title_height+r*20,150,20,tongji_tab.getDispText([r, 1]),FormatString='{} ',AlignmentFlag=al_r,Font=self.font_YaHei_8)
+            rpt.ReportFooter.AddItem(1,270,title_height+r*20,50,20,tongji_tab.getDispText([r, 2]),FormatString='{} ',AlignmentFlag=al_r,Font=self.font_YaHei_8)
+            rpt.ReportFooter.AddItem(1,320,title_height+r*20,150,20,tongji_tab.getDispText([r, 3]),FormatString='{} ',AlignmentFlag=al_r,Font=self.font_YaHei_8)
+            rpt.ReportFooter.AddItem(1,470,title_height+r*20,50,20,tongji_tab.getDispText([r, 4]),FormatString='{} ',AlignmentFlag=al_r,Font=self.font_YaHei_8)
+            rpt.ReportFooter.AddItem(1,520,title_height+r*20,150,20,tongji_tab.getDispText([r, 5]),FormatString='{} ',AlignmentFlag=al_r,Font=self.font_YaHei_8)
+            rpt.ReportFooter.AddItem(1,670,title_height+r*20,50,20,tongji_tab.getDispText([r, 6]),FormatString='{} ',AlignmentFlag=al_r,Font=self.font_YaHei_8)
+        title_height+= (len(tongji_tab)-1)*20
+        title_height+=40
+        title = ['总结summary', "当日订单应付Today's Order Payable","收当日订单Today's Order Rec", '欠款Arrears', ]
+        rpt.ReportFooter.AddPrintLables(0,
+                                        title_height,
+                                        25,
+                                        title,
+                                        Widths=[120, 200, 200, 200],
+                                        Aligns=[al_c] * 4,
+                                        Font=self.font_YaHei_8)
+        title_height+=25
+        payable_tab = JPQueryFieldInfo(sql_payable)
+        v1=payable_tab.getOnlyData([0, 0])
+        v2=tongji_tab.getOnlyData([len(tongji_tab)-1, 1])
+        v3='{:,.2f}'.format(v1 if v1 else 0 -v2 if v2 else 0)
+        txt=[" ",payable_tab.getDispText([0, 0]),tongji_tab.getDispText([len(tongji_tab)-1, 1]),v3]
+        rpt.ReportFooter.AddPrintLables(0,
+                                        title_height,
+                                        20,
+                                        txt,
+                                        Widths=[120, 200, 200, 200],
+                                        Aligns=[al_c] * 4,
+                                        Font=self.font_YaHei_8)
 
         self.PageFooter.AddItem(4,
                                 10,

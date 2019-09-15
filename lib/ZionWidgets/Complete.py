@@ -27,16 +27,23 @@ from lib.ZionWidgets.ZionFunc import ZionFuncForm
 class _myMod(JPTableViewModelReadOnly):
     def __init__(self, *args):
         super().__init__(*args)
-        self.f = QFont()
-        self.f.Black = True
-        self.f.setBold(True)
+        self.viewed_icon=JPPub().MainForm.getIcon('watch_variable.ico')
+        self.ok_icon=JPPub().MainForm.getIcon('delivery.png')
         self._getData = self.TabelFieldInfo.getOnlyData
 
-    def data(self, Index, role: int = Qt.DisplayRole):
-        if role == Qt.TextColorRole:
-            if self._getData([Index.row(), 12]) == 1:
-                return QColor(Qt.blue)
-        return super().data(Index, role)
+    def data(self, index, role: int = Qt.DisplayRole):
+        r = index.row()
+        c = index.column()
+        if role == Qt.DecorationRole:
+            if c==11 and  self._getData((r,12)):
+                return self.viewed_icon
+            elif c==3 and self._getData((r,5)):
+                return self.ok_icon
+            return super().data(index, role)
+        elif role == Qt.TextAlignmentRole and (c==3 or c==11) :
+            return Qt.AlignCenter
+        return super().data(index, role)
+        
 
 
 class _myFuncForm(JPFunctionForm):
@@ -108,8 +115,9 @@ class JPFuncForm_Complete(_myFuncForm):
         self.backgroundWhenValueIsTrueFieldName = ['fSubmited']
         self.checkBox_1.setText('finished')
         self.checkBox_2.setText('UnCompleted')
-        self.checkBox_1.setChecked(True)
-        self.checkBox_2.setChecked(False)
+        self.checkBox_1.setChecked(False)
+        self.checkBox_2.setChecked(True)
+        self.ui.comboBox.setCurrentIndex(3)
         self.setListFormSQL(sql_1, sql_2)
         self.tableView.setColumnHidden(5, True)
         self.tableView.setColumnHidden(12, True)
