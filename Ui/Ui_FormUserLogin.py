@@ -1,20 +1,22 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'e:\Zion\Ui\FormUserLogin.ui'
+# Form implementation generated from reading ui file 'e:\Zion\zion\Ui\FormUserLogin.ui'
 #
-# Created by: PyQt5 UI code generator 5.11.3
+# Created by: PyQt5 UI code generator 5.12.3
 #
 # WARNING! All changes made in this file will be lost!
 
+
 from PyQt5 import QtCore, QtGui, QtWidgets
+
 
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
         Dialog.setWindowModality(QtCore.Qt.ApplicationModal)
-        Dialog.resize(379, 217)
-        Dialog.setMinimumSize(QtCore.QSize(379, 176))
-        Dialog.setMaximumSize(QtCore.QSize(379, 300))
+        Dialog.resize(400, 217)
+        Dialog.setMinimumSize(QtCore.QSize(400, 176))
+        Dialog.setMaximumSize(QtCore.QSize(400, 300))
         font = QtGui.QFont()
         font.setFamily("Arial")
         Dialog.setFont(font)
@@ -138,4 +140,3 @@ if __name__ == "__main__":
     ui.setupUi(Dialog)
     Dialog.show()
     sys.exit(app.exec_())
-

@@ -3,7 +3,6 @@ from os import getcwd
 from sys import path as jppath
 jppath.append(getcwd())
 
-
 from lib.JPDatabase.Database import JPDb
 from lib.JPFunction import Singleton
 from PyQt5.QtWidgets import QTreeWidgetItem, QMessageBox, QDialog
@@ -22,6 +21,7 @@ class Form_ChangePassword(QDialog):
         self.ui.Login_64.setPixmap(
             QPixmap(getcwd() + "\\res\\ico\\{}".format("changepassword.png")))
         self.exec_()
+
     def accept(self):
         def msgbox(msg: str):
             QMessageBox.warning(self, '提示', msg, QMessageBox.Yes,
@@ -60,6 +60,11 @@ class Form_UserLogin(QDialog):
         super().__init__()
         self.ui = Ui_Dialog_Login()
         self.ui.setupUi(self)
+        self.ui.Password.setPlaceholderText("Please enter your password!")
+        self.ui.User.lineEdit().setPlaceholderText(
+            "Please enter your username!")
+        self.ui.Password.setClearButtonEnabled(True)
+        self.ui.User.lineEdit().setClearButtonEnabled(True)
         self.ui.Login_64.setPixmap(
             QPixmap(getcwd() + "\\res\\ico\\{}".format("login_64.png")))
         self.isLogin = isLogin
