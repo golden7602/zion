@@ -61,6 +61,7 @@ class Ui_Form(object):
         self.tableView.verticalHeader().setMinimumSectionSize(23)
         self.verticalLayout.addWidget(self.tableView)
 
+
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
@@ -80,4 +81,3 @@ if __name__ == "__main__":
     ui.setupUi(Form)
     Form.show()
     sys.exit(app.exec_())
-

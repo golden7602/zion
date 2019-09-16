@@ -21,16 +21,13 @@ from lib.ZionReport.OrderReportMob import Order_report_Mob
 from lib.ZionWidgets.EditFormOrderOrPrintingOrder import JPFormOrder
 
 
-
-
-
 class OrderMod(JPTableViewModelReadOnly):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.tabFont = QFont("Times", 10)
         self.tabFont.setBold(False)
         self.tabFont.setStretch(150)
-        self.ok_icon=JPPub().MainForm.getIcon('yes.ico')
+        self.ok_icon = JPPub().MainForm.getIcon('yes.ico')
 
     def data(self, index, role=Qt.DisplayRole):
         r = index.row()
@@ -43,7 +40,7 @@ class OrderMod(JPTableViewModelReadOnly):
             return ''
         elif c == 4:
             if role == Qt.DecorationRole:
-                if tab.getOnlyData((r,c)):
+                if tab.getOnlyData((r, c)):
                     return self.ok_icon
             else:
                 return super().data(index, role=role)
@@ -252,17 +249,17 @@ class EditForm_Order(JPFormModelMainHasSub):
             self.ui.fCustomerID.setEditable(True)
 
         self.ui.fOrderDate.refreshValueNotRaiseEvent(QDate.currentDate())
-        self.ui.fRequiredDeliveryDate.FieldInfo.NotNull=True
+        self.ui.fRequiredDeliveryDate.FieldInfo.NotNull = True
         self.ui.fCustomerID.setFocus()
+        self.ui.tableView.keyPressEvent = self.mykeyPressEvent
 
-    # def paintEvent(self, PaintEvent):
-    #     if self.ObjectDict['fCanceled'].text():
-    #         painter = QPainter(self)
-    #         painter.setPen(QColor(255, 0, 0, 128))
-    #         painter.setFont(QFont("Microsoft Yahei", 60))
-    #         painter.begin(self)
-    #         painter.drawText(self.rect(),Qt.AlignCenter, "Canceled")
-    #         painter.end()
+    # 手动增加空行
+    def mykeyPressEvent(self, KeyEvent):
+        if (KeyEvent.modifiers() == Qt.AltModifier
+                and KeyEvent.key() == Qt.Key_D):
+            mod = self.subModel
+            l = len(self.subTableFieldsInfo)
+            mod.insertRows(l, 1, mod.createIndex(0, l))
 
     def __customerIDChanged(self):
         sql = '''select fCelular, fContato, fTelefone ,fNUIT,fEndereco,fCity
@@ -287,7 +284,6 @@ class EditForm_Order(JPFormModelMainHasSub):
     def __onTaxKeyPress(self, KeyEvent):
         if (KeyEvent.modifiers() == Qt.AltModifier
                 and KeyEvent.key() == Qt.Key_Delete):
-            print("alt")
             self.cacuTax = False
             self.ObjectDict['fTax'].refreshValueRaiseEvent(None, True)
         elif (KeyEvent.modifiers() == Qt.AltModifier
@@ -374,6 +370,26 @@ class EditForm_Order(JPFormModelMainHasSub):
             msg = "打印过程出错，错误信息为：{}".format(str(identifier))
             QMessageBox.warning(self, '提示', msg, QMessageBox.Ok,
                                 QMessageBox.Ok)
+
+    @pyqtSlot()
+    def on_butSave_clicked(self):
+        try:
+            lst = self.getSqls(self.PKRole)
+            isOK, result = JPDb().executeTransaction(lst)
+            if isOK:
+                self.onAfterSaveData(result)
+                try:
+                    self.ui.butSave.setEnabled(False)
+                    self.ui.butPrint.setEnabled(True)
+                    self.ui.butPDF.setEnabled(True)
+                except Exception as e:
+                    print(str(e))
+                self.afterSaveData.emit(result)
+                QMessageBox.information(self, '完成',
+                                        '保存数据完成！\nSave data complete!')
+        except Exception as e:
+            msgBox = QMessageBox(QMessageBox.Critical, u'提示', str(e))
+            msgBox.exec_()
 
 
 class Order_report(Order_report_Mob):

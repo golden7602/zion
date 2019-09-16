@@ -1008,6 +1008,9 @@
          <height>25</height>
         </size>
        </property>
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;如果要输入金额为0的单据，请在此处输入0&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
        <property name="clearButtonEnabled">
         <bool>true</bool>
        </property>

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'c:\Users\win10\Desktop\Zion\zion\Ui\FormPrintingOrder_Template.ui'
+# Form implementation generated from reading ui file 'e:\Zion\zion\Ui\FormPrintingOrder_Template.ui'
 #
 # Created by: PyQt5 UI code generator 5.11.3
 #
@@ -11,6 +11,7 @@ from sys import path as jppath
 jppath.append(getcwd())
 from PyQt5 import QtCore, QtGui
 from lib.JPMvc import JPWidgets as QtWidgets
+
 
 class Ui_Form(object):
     def setupUi(self, Form):
@@ -620,6 +621,7 @@ class Ui_Form(object):
         self.label_24.setText(_translate("Form", "尺寸Tamanho:"))
         self.label_26.setText(_translate("Form", "起始号码Numeracao:"))
         self.label_30.setText(_translate("Form", "单价Price:"))
+        self.fPrice.setToolTip(_translate("Form", "<html><head/><body><p>如果要输入金额为0的单据，请在此处输入0</p></body></html>"))
         self.label_25.setText(_translate("Form", "联数Nr.Copy:"))
         self.fNrCopyID.setProperty("placeholderText", _translate("Form", "Please select a cliente."))
         self.label_5.setText(_translate("Form", "销售Vendedor:"))
@@ -644,4 +646,3 @@ if __name__ == "__main__":
     ui.setupUi(Form)
     Form.show()
     sys.exit(app.exec_())
-

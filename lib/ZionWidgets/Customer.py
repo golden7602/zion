@@ -133,6 +133,7 @@ class Form_Customer(QWidget):
         self.SQL_EditForm_Main = medit_sql
         self.actionClick()
 
+
     def __getUID(self):
         r = self.ui.tableView.currentIndex()
         if r:

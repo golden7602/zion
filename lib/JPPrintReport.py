@@ -175,6 +175,19 @@ class _jpPrintField(_jpPrintItem):
             return ''
 
 
+class _jpPrintRowCount(_jpPrintItem):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.__currentRow = 0
+
+    def Print(self, painter, Margins, SectionPrintBeginY, currentRow):
+        self.__currentRow = currentRow
+        super().Print(painter, Margins, SectionPrintBeginY)
+
+    def GetPrintText(self):
+        return str(self.__currentRow)
+
+
 class _jpPrintPixmap(_jpPrintItem):
     def __init__(self, rect, obj, **kwargs):
         img = QPixmap(obj)
@@ -382,7 +395,7 @@ class _jpSectionReportFooter(_SectionAutoPaging):
 
         # 判断页面剩余空间能否容纳页脚节高度及页脚高度，不能则分页
         if rpt.PageValidHeight < (rpt._SectionPrintBeginY + curSecH +
-                                    rpt.PageFooter.SectionHeight):
+                                  rpt.PageFooter.SectionHeight):
             rpt.NewPage(painter)
             rpt._SectionPrintBeginY = rpt.PageHeader.SectionHeight
         for item in self.Items:
@@ -393,8 +406,16 @@ class _jpSectionReportFooter(_SectionAutoPaging):
 class _jpSectionDetail(_jpPrintSection):
     def __init__(self):
         self.SectionType = JPPrintSectionType.Detail
-        # 已经Detail已经打印过的记录数
         super().__init__()
+
+    def addPrintRowCountItem(self, x, y, w, h, **kwargs):
+        """添加一个行号项目，用于打印当前明细数据打印行数"""
+        pitem = _jpPrintRowCount(QRect(x, y, w, h),
+                                 'PrintRowCount',
+                                 Section=self,
+                                 **kwargs)
+        self.Items.append(pitem)
+        return pitem
 
     def Print(self, painter, sec_data={}):
         rpt = self.Report
@@ -407,7 +428,7 @@ class _jpSectionDetail(_jpPrintSection):
                                   rpt.PageFooter.SectionHeight):
             self._RaisePrintError()
         if sec_data:
-            for row in sec_data:
+            for i, row in enumerate(sec_data):
                 self._CurrentPrintRowData = row
                 if rpt.onFormat(self.SectionType, rpt._CurrentPage, row):
                     continue
@@ -417,7 +438,12 @@ class _jpSectionDetail(_jpPrintSection):
                     rpt.NewPage(painter)
                     rpt._SectionPrintBeginY = rpt.PageHeader.SectionHeight
                 for item in self.Items:
-                    item.Print(painter, rpt.Margins, rpt._SectionPrintBeginY)
+                    if isinstance(item, _jpPrintRowCount):
+                        item.Print(painter, rpt.Margins,
+                                   rpt._SectionPrintBeginY, i + 1)
+                    else:
+                        item.Print(painter, rpt.Margins,
+                                   rpt._SectionPrintBeginY)
                 rpt._SectionPrintBeginY += curSecH
 
 
@@ -765,7 +791,6 @@ class _jpPrintGroup(object):
 
 
 class JPReport(object):
-
     """报表类"""
     def __init__(self, PaperSize, Orientation):
         _jpPrintSection.Report = self

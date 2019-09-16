@@ -424,15 +424,15 @@ class FormReport_Rec_print(JPReport):
                                  Font=self.font_YaHei_8)
 
         title = [
-            '序号\nID', '客户名\nCliente', '收款额\nAmount', '收款人\nfPayee',
-            '收款方式\nModoPago', '单据号\nOrderID','备注\nNote'
+            '流水号\nID', '客户名\nCliente', '收款额\nAmount', '收款人\nfPayee',
+            '收款方式\nModoPago', '备注\nNote'
         ]
 
         fns = [
             'fID', 'fCustomerName', 'fAmountCollected', 'fPayee',
-            'fPaymentMethod', 'fOrderID','fNote'
+            'fPaymentMethod', 'fNote'
         ]
-        cols = 7
+        cols = 6
         al_c = Qt.AlignCenter
         al_r = (Qt.AlignVCenter | Qt.AlignRight)
         al_l = (Qt.AlignVCenter | Qt.AlignLeft)
@@ -441,63 +441,57 @@ class FormReport_Rec_print(JPReport):
                                         72,
                                         40,
                                         Texts=title,
-                                        Widths=[40, 200, 80, 80, 80, 160,80],
+                                        Widths=[60, 260, 100, 100, 100, 100],
                                         Aligns=[al_c] * cols)
-        rpt.Detail.addPrintRowCountItem(0,
-                                        0,
-                                        40,
-                                        20,
-                                        AlignmentFlag=al_c,
-                                        Font=self.font_YaHei_8)
+
         rpt.Detail.AddItem(3,
-                           40,
                            0,
-                           200,
+                           0,
+                           60,
+                           20,
+                           fns[0],
+                           AlignmentFlag=al_c,
+                           Font=self.font_YaHei_8)
+        rpt.Detail.AddItem(3,
+                           60,
+                           0,
+                           260,
                            20,
                            fns[1],
                            FormatString=' {}',
                            AlignmentFlag=al_l,
                            Font=self.font_YaHei_8)
         rpt.Detail.AddItem(3,
-                           240,
+                           320,
                            0,
-                           80,
+                           100,
                            20,
                            fns[2],
                            AlignmentFlag=al_r,
                            FormatString='{:,.2f} ',
                            Font=self.font_YaHei_8)
         rpt.Detail.AddItem(3,
-                           320,
+                           420,
                            0,
-                           80,
+                           100,
                            20,
                            fns[3],
                            AlignmentFlag=al_c,
                            Font=self.font_YaHei_8)
         rpt.Detail.AddItem(3,
-                           400,
+                           520,
                            0,
-                           80,
+                           100,
                            20,
                            fns[4],
                            AlignmentFlag=al_c,
                            Font=self.font_YaHei_8)
         rpt.Detail.AddItem(3,
-                           480,
+                           620,
                            0,
-                           160,
+                           100,
                            20,
                            fns[5],
-                           AlignmentFlag=al_l,
-                           FormatString=' {}',
-                           Font=self.font_YaHei_8)
-        rpt.Detail.AddItem(3,
-                           640,
-                           0,
-                           80,
-                           20,
-                           fns[6],
                            AlignmentFlag=al_l,
                            FormatString=' {}',
                            Font=self.font_YaHei_8)
@@ -511,7 +505,7 @@ class FormReport_Rec_print(JPReport):
             0,
             20,
             Texts=["合计Sum", JPGetDisplayText(sum_j), " "],
-            Widths=[240, 80, 400],
+            Widths=[320, 100, 300],
             Aligns=[al_c, al_r, al_c],
             FillColor=QColor(194, 194, 194),
             Font=self.font_YaHei_8)

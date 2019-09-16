@@ -839,6 +839,9 @@
          <pointsize>10</pointsize>
         </font>
        </property>
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;如果要输入单价为金额为0的订单，请在单价处输入0，但这时，明细表只能输入一行，如果要增加行，请先点击表格空白处（取消选中任何单元格），然后按 alt+d。&lt;/p&gt;&lt;p&gt;If you want to enter an order with a unit price of 0, please enter 0 at the unit price. But at this time, the detailed list can only enter one line. If you want to add more rows, please click on the blank of the table (cancel any cells), and then press Alt + D.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
       </widget>
      </item>
      <item>

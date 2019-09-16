@@ -20,7 +20,7 @@ class Order_report_Mob(JPReport):
         self.Copys = 2
         self.logo = JPPub().MainForm.logoPixmap
         #self.logo = QPixmap(getcwd() + "\\res\\tmLogo100.png")
-        self.FillColor = QColor(128, 128, 128)
+        self.FillColor = QColor(194, 194, 194)
 
         self.font_Algerian = QFont("Algerian")
         self.font_Algerian_11 = QFont(self.font_Algerian)

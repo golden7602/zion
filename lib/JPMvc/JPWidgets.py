@@ -10,7 +10,7 @@ sys.path.append(os.getcwd())
 from PyQt5 import QtWidgets as QtWidgets_
 from PyQt5.QtCore import QDate, QObject, Qt, pyqtSignal
 from PyQt5.QtGui import (QColor, QDoubleValidator, QIntValidator, QPalette,
-                         QValidator,QPainter)
+                         QValidator, QPainter)
 from PyQt5.QtWidgets import QCheckBox as QCheckBox_
 from PyQt5.QtWidgets import QComboBox as QComboBox_
 from PyQt5.QtWidgets import QCompleter
@@ -93,7 +93,6 @@ class __JPWidgetBase(QObject):
     def _clearStyleSheetText(self):
         txt = "font-family: {font_name};font-size:{px}px;".format(
             font_name=self.fontInfo().family(), px=self.fontInfo().pixelSize())
-        print(self.objectName() + "=" + txt)
         return txt
 
     def setRedStyleSheet(self):
@@ -249,18 +248,25 @@ class QLineEdit(QLineEdit_, __JPWidgetBase):
         elif tp == JPFieldType.String:
             self.setMaxLength(self.FieldInfo.Length)
 
+    # def keyPressEvent(self, KeyEvent):
+    #     # 限制只能输入数字及小数点
+    #     if self.FieldInfo.TypeCode in [JPFieldType.Int, JPFieldType.Float]:
+    #         if KeyEvent.text() in '.0123456789':
+    #             KeyEvent.accept()
+
+
     def __setDisplayText(self):
         v = self.FieldInfo.Value
         if v:
             self.setText(JPGetDisplayText(v, FieldInfo=self.FieldInfo))
         else:
-            if self.FieldInfo.TypeCode in [JPFieldType.Int,JPFieldType.Float]:
+            if self.FieldInfo.TypeCode in [JPFieldType.Int, JPFieldType.Float]:
                 self.setText('0')
             else:
                 self.setText('')
 
     def setDoubleValidator(self, v_Min, v_Max, Decimals: int = 2):
-        print(self.objectName(),v_Min, v_Max, Decimals)
+        #print(self.objectName(), v_Min, v_Max, Decimals)
         Validator = _JPDoubleValidator(v_Min, v_Max, Decimals)
         Validator.setRange(float(v_Min), float(v_Max))
         Validator.setDecimals(Decimals)
@@ -441,17 +447,26 @@ class QDateEdit(QDateEdit_, __JPWidgetBase):
         self.__RaiseEvent = False
         self.dateChanged.connect(self._onValueChange)
 
-    def getSqlValue(self) -> str:
-        v=self.date()
+    def textFromDateTime(self, *args, **kwargs):
+        # 当日期值为初始值及Qdate最小值时，显示空值
+        v = self.date()
         if self.minimumDate() == v and v == QDate(1752, 9, 14):
-            self.FieldInfo.Value=None
+            return ''
+        else:
+            return super().textFromDateTime(*args, **kwargs)
+
+    def getSqlValue(self) -> str:
+        v = self.date()
+        if self.minimumDate() == v and v == QDate(1752, 9, 14):
+            self.FieldInfo.Value = None
             return self.getNullValue()
+        else:
+            self.clearStyleSheet()
         return "'{}'".format(JPDateConver(self.date(), str))
 
     def _onValueChange(self, v):
-        # 当给定的日期和最小允许日期相同时
+        v = self.date()
         if self.minimumDate() == v and v == QDate(1752, 9, 14):
-            self.setDisplayFormat('')
             return
         self.FieldInfo.Value = JPDateConver(self.date(), datetime.date)
         if self.__RaiseEvent:
@@ -483,12 +498,12 @@ class QDateEdit(QDateEdit_, __JPWidgetBase):
 
     # def paintEvent(self,PaintEvent):
     #     v=self.date()
-        # if self.minimumDate() == v and v == QDate(1752, 9, 14):
-        #     painter = QPainter(self)
-        #     painter.setPen(QColor(166,66,250))          
-        #     painter.begin(self)
-        #     painter.drawText(120,120,"文字")
-        #     painter.end()   
+    # if self.minimumDate() == v and v == QDate(1752, 9, 14):
+    #     painter = QPainter(self)
+    #     painter.setPen(QColor(166,66,250))
+    #     painter.begin(self)
+    #     painter.drawText(120,120,"文字")
+    #     painter.end()
 
 
 class QCheckBox(QCheckBox_, __JPWidgetBase):

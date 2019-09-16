@@ -73,7 +73,7 @@ def loadTreeview(treeWidget, items):
                 item.setText(4, str(r["fNodeBackvolor"]))
                 item.setText(5, str(r["fNodeForeColor"]))
                 item.setText(6, str(r["fNodeFontBold"]))
-                print(self.icopath.format(r["fIcon"]))
+                #print(self.icopath.format(r["fIcon"]))
                 item.setIcon(0, QIcon(self.icopath.format(r["fIcon"])))
                 item.jpData = r
                 item.FullPath = (parent.FullPath + '\\' + r["fMenuText"])

@@ -162,7 +162,7 @@ class JPFunctionForm(QWidget):
             }
             sql = self.SQL_ListForm_Para.format(
                 ch1=ch1, ch2=ch2, date=cb[self.ui.comboBox.currentIndex()])
-            print(sql)
+            #print(sql)
             self.__readSQL(sql)
             if ID:
                 self._locationRow(ID)
