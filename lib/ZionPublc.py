@@ -11,6 +11,7 @@ from PyQt5.QtGui import QIcon, QPixmap
 from Ui.Ui_FormUserLogin import Ui_Dialog as Ui_Dialog_Login
 from Ui.Ui_FormChangePassword import Ui_Dialog as Ui_Dialog_ChnPwd
 from lib.JPFunction import md5_passwd, setWidgetIconByName
+from pickle import (dumps, loads)
 
 
 class Form_ChangePassword(QDialog):
@@ -215,6 +216,7 @@ class JPPub(QObject):
             super().__init__()
             self.user = JPUser()
             self.db = JPDb()
+            self.__ConfigData = None
             self.INITCustomer()
             self.INITEnum()
 
@@ -254,3 +256,23 @@ class JPPub(QObject):
 
     def getSysNavigationMenusDict(self):
         return self.__sysNavigationMenusDict
+
+    def getConfigData(self) -> dict:
+        sql = "select fValue from sysconfig where fName='configValue'"
+        conn = JPDb().currentConn
+        cur = conn.cursor()
+        cur.execute(sql)
+        conn.commit()
+        return loads(cur._result.rows[0][0])
+
+    def saveConfigData(self, data: dict):
+        sql = "update sysconfig set fValue=%s where fName='configValue'"
+        conn = JPDb().currentConn
+        cur = conn.cursor()
+        cur.execute(sql, dumps(data))
+        conn.commit()
+
+    def ConfigData(self, RefResh=False):
+        if RefResh or self.__ConfigData is None:
+            self.__ConfigData=self.getConfigData()
+        return self.__ConfigData

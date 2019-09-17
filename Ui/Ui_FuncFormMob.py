@@ -2,11 +2,13 @@
 
 # Form implementation generated from reading ui file 'e:\Zion\zion\Ui\FuncFormMob.ui'
 #
-# Created by: PyQt5 UI code generator 5.11.3
+# Created by: PyQt5 UI code generator 5.12.3
 #
 # WARNING! All changes made in this file will be lost!
 
+
 from PyQt5 import QtCore, QtGui, QtWidgets
+
 
 class Ui_Form(object):
     def setupUi(self, Form):
@@ -53,6 +55,7 @@ class Ui_Form(object):
         self.horizontalLayout_2.addItem(spacerItem2)
         self.verticalLayout.addWidget(self.widget)
         self.tableView = QtWidgets.QTableView(Form)
+        self.tableView.setStyleSheet("QTreeView::item:hover{background-color:rgb(0,255,0,50)}")
         self.tableView.setEditTriggers(QtWidgets.QAbstractItemView.SelectedClicked)
         self.tableView.setAlternatingRowColors(True)
         self.tableView.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
@@ -60,7 +63,6 @@ class Ui_Form(object):
         self.tableView.verticalHeader().setDefaultSectionSize(25)
         self.tableView.verticalHeader().setMinimumSectionSize(23)
         self.verticalLayout.addWidget(self.tableView)
-
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)

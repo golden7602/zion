@@ -145,6 +145,9 @@
    </item>
    <item>
     <widget class="QTableView" name="tableView">
+     <property name="styleSheet">
+      <string notr="true"/>
+     </property>
      <property name="editTriggers">
       <set>QAbstractItemView::SelectedClicked</set>
      </property>
@@ -154,11 +157,11 @@
      <property name="selectionBehavior">
       <enum>QAbstractItemView::SelectRows</enum>
      </property>
-     <attribute name="verticalHeaderDefaultSectionSize">
-      <number>25</number>
-     </attribute>
      <attribute name="verticalHeaderMinimumSectionSize">
       <number>23</number>
+     </attribute>
+     <attribute name="verticalHeaderDefaultSectionSize">
+      <number>25</number>
      </attribute>
     </widget>
    </item>

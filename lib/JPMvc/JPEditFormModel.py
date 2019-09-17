@@ -123,7 +123,6 @@ class JPFormModelMain(QDialog):
     def setFormulas(self, *args):
         """setFormulas(str1...)
         设置计算公式，从个公式之间用逗号分开"""
-
     def onDateChangeEvent(self, obj, value):
         """窗体数据变更事件，obj是变更的控件"""
         return
@@ -171,11 +170,14 @@ class JPFormModelMain(QDialog):
             for item in temp:
                 tf.setFieldsRowSource(*item)
         fld_dict = tf.getRowFieldsInfoDict(0)
+
         if fld_dict:
             for k, v in self.ObjectDict.items():
                 if k in fld_dict:
                     v.setRowsData(tf.DataRows[0])
                     v.setMainModel(self)
+                    conf = JPPub().ConfigData(False)
+                    v.Null_prompt_bac_color = conf['Null_prompt_bac_color']
                     v.setFieldInfo(fld_dict[k])
         # self.setEditState()
 
@@ -290,7 +292,7 @@ class JPFormModelMain(QDialog):
         if (row_st == JPTabelRowData.New_None
                 or row_st == JPTabelRowData.OriginalValue):
             if self.isNewMode:
-                raise KeyError('没有输入有效数据!No valid data was entered!')
+                raise KeyError('您没有输入有效数据!No valid data was entered!')
         if st == JPEditFormDataMode.New:
             for fld in mti.Fields:
                 if fld.IsPrimarykey:

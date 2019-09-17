@@ -2,11 +2,13 @@
 
 # Form implementation generated from reading ui file 'e:\Zion\zion\Ui\FormConfig.ui'
 #
-# Created by: PyQt5 UI code generator 5.11.3
+# Created by: PyQt5 UI code generator 5.12.3
 #
 # WARNING! All changes made in this file will be lost!
 
+
 from PyQt5 import QtCore, QtGui, QtWidgets
+
 
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
@@ -40,33 +42,39 @@ class Ui_Dialog(object):
         self.verticalLayout_2.addWidget(self.Bank_Account)
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
-        self.label_3 = QtWidgets.QLabel(self.tab1)
-        self.label_3.setObjectName("label_3")
-        self.horizontalLayout_2.addWidget(self.label_3)
-        self.label_BackColor = QtWidgets.QLabel(self.tab1)
-        self.label_BackColor.setMinimumSize(QtCore.QSize(100, 0))
-        self.label_BackColor.setMaximumSize(QtCore.QSize(100, 16777215))
-        self.label_BackColor.setText("")
-        self.label_BackColor.setObjectName("label_BackColor")
-        self.horizontalLayout_2.addWidget(self.label_BackColor)
-        self.butBackColor = QtWidgets.QPushButton(self.tab1)
-        self.butBackColor.setMaximumSize(QtCore.QSize(80, 16777215))
-        self.butBackColor.setFocusPolicy(QtCore.Qt.StrongFocus)
-        self.butBackColor.setAutoFillBackground(False)
-        self.butBackColor.setObjectName("butBackColor")
-        self.horizontalLayout_2.addWidget(self.butBackColor)
-        spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_2.addItem(spacerItem)
         self.verticalLayout_2.addLayout(self.horizontalLayout_2)
         self.tabWidget.addTab(self.tab1, "")
         self.tab2 = QtWidgets.QWidget()
         self.tab2.setObjectName("tab2")
+        self.layoutWidget = QtWidgets.QWidget(self.tab2)
+        self.layoutWidget.setGeometry(QtCore.QRect(11, 10, 430, 26))
+        self.layoutWidget.setObjectName("layoutWidget")
+        self.horizontalLayout_3 = QtWidgets.QHBoxLayout(self.layoutWidget)
+        self.horizontalLayout_3.setContentsMargins(0, 0, 0, 0)
+        self.horizontalLayout_3.setObjectName("horizontalLayout_3")
+        self.label_4 = QtWidgets.QLabel(self.layoutWidget)
+        self.label_4.setObjectName("label_4")
+        self.horizontalLayout_3.addWidget(self.label_4)
+        self.colorpicker = QtWidgets.QPushButton(self.layoutWidget)
+        self.colorpicker.setMinimumSize(QtCore.QSize(25, 0))
+        self.colorpicker.setMaximumSize(QtCore.QSize(25, 16777215))
+        self.colorpicker.setText("")
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap("../res/ico/color_picker.ico"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.colorpicker.setIcon(icon)
+        self.colorpicker.setObjectName("colorpicker")
+        self.horizontalLayout_3.addWidget(self.colorpicker)
+        self.Null_prompt_bac_color = QtWidgets.QWidget(self.layoutWidget)
+        self.Null_prompt_bac_color.setMinimumSize(QtCore.QSize(100, 0))
+        self.Null_prompt_bac_color.setStyleSheet("background-color: rgb(255, 0, 255);")
+        self.Null_prompt_bac_color.setObjectName("Null_prompt_bac_color")
+        self.horizontalLayout_3.addWidget(self.Null_prompt_bac_color)
         self.tabWidget.addTab(self.tab2, "")
         self.verticalLayout.addWidget(self.tabWidget)
         self.horizontalLayout = QtWidgets.QHBoxLayout()
         self.horizontalLayout.setObjectName("horizontalLayout")
-        spacerItem1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout.addItem(spacerItem1)
+        spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout.addItem(spacerItem)
         self.buttonBox = QtWidgets.QDialogButtonBox(Dialog)
         self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
         self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel|QtWidgets.QDialogButtonBox.Ok)
@@ -85,9 +93,8 @@ class Ui_Dialog(object):
         Dialog.setWindowTitle(_translate("Dialog", "Config "))
         self.label.setText(_translate("Dialog", "PrintOrder单据备注内容 PrintOrder Note："))
         self.label_2.setText(_translate("Dialog", "单据账账户信息Conta Bancaria："))
-        self.label_3.setText(_translate("Dialog", "突出显示背景填充颜色Highlight background fill color:"))
-        self.butBackColor.setText(_translate("Dialog", "Change"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab1), _translate("Dialog", "Bill"))
+        self.label_4.setText(_translate("Dialog", "空值提示文背景色Null prompt background color："))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab2), _translate("Dialog", "other"))
 
 
@@ -99,4 +106,3 @@ if __name__ == "__main__":
     ui.setupUi(Dialog)
     Dialog.show()
     sys.exit(app.exec_())
-

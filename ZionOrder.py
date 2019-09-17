@@ -142,6 +142,7 @@ class JPMainWindow(QMainWindow):
         st.addWidget(form)
 
     def getTaxCerPixmap(self, fn):
+        # 税务登记证件保存路径
         toPath = ConfigInfo().tax_reg_path
         fn_m = f'{toPath}\\{fn}'
         return QPixmap(fn_m)

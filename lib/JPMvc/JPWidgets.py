@@ -10,7 +10,7 @@ sys.path.append(os.getcwd())
 from PyQt5 import QtWidgets as QtWidgets_
 from PyQt5.QtCore import QDate, QObject, Qt, pyqtSignal
 from PyQt5.QtGui import (QColor, QDoubleValidator, QIntValidator, QPalette,
-                         QValidator, QPainter)
+                         QValidator, QPainter, QColor)
 from PyQt5.QtWidgets import QCheckBox as QCheckBox_
 from PyQt5.QtWidgets import QComboBox as QComboBox_
 from PyQt5.QtWidgets import QCompleter
@@ -25,8 +25,6 @@ from lib.JPDatabase.Field import JPFieldType
 from lib.JPDatabase.Query import JPTabelRowData
 from lib.JPException import JPExceptionFieldNull
 from lib.JPFunction import JPBooleanString, JPDateConver, JPGetDisplayText
-
-# from collections import OrderedDict
 
 
 def __getattr__(name):
@@ -81,13 +79,20 @@ class _JPIntValidator(QValidator):
         return QValidator.Invalid, str0, pos
 
 
-class __JPWidgetBase(QObject):
+class _JPWidgetBase(QObject):
     def __init__(self, *args):
         super().__init__(*args)
         self.__FieldInfo: JPFieldType = None
         self.MainModel = None
         self.RowsData = None
+        self.Null_prompt_bac_color = QColor(255, 192, 203)
         #self.setAutoFillBackground(True)
+    @staticmethod
+    def getRGBString(color):
+        r = color.red()
+        g = color.green()
+        b = color.blue()
+        return f'rgb({r}, {g}, {b})'
 
     @property
     def _clearStyleSheetText(self):
@@ -96,7 +101,8 @@ class __JPWidgetBase(QObject):
         return txt
 
     def setRedStyleSheet(self):
-        bk = "{background:rgb(255, 192, 203)}"
+        rgb_s = _JPWidgetBase.getRGBString(self.Null_prompt_bac_color)
+        bk = "{background: " + rgb_s + "}"
         s = f'''
         QComboBox{bk}
         QLineEdit{bk}
@@ -177,7 +183,7 @@ class __JPWidgetBase(QObject):
             self.setCheckable(not state)
 
 
-class QLineEdit(QLineEdit_, __JPWidgetBase):
+class QLineEdit(QLineEdit_, _JPWidgetBase):
     def __init__(self, parent):
         super().__init__(parent)
         self.passWordConver = None
@@ -248,12 +254,13 @@ class QLineEdit(QLineEdit_, __JPWidgetBase):
         elif tp == JPFieldType.String:
             self.setMaxLength(self.FieldInfo.Length)
 
-    # def keyPressEvent(self, KeyEvent):
-    #     # 限制只能输入数字及小数点
-    #     if self.FieldInfo.TypeCode in [JPFieldType.Int, JPFieldType.Float]:
-    #         if KeyEvent.text() in '.0123456789':
-    #             KeyEvent.accept()
-
+    def keyPressEvent(self, KeyEvent):
+        # 限制只能输入数字及小数点,不能输入科学计数法的e
+        if self.FieldInfo.TypeCode in [JPFieldType.Int, JPFieldType.Float]:
+            if not KeyEvent.text() in '.0123456789':
+                return
+            else:
+                QLineEdit_.keyPressEvent(self, KeyEvent)
 
     def __setDisplayText(self):
         v = self.FieldInfo.Value
@@ -266,7 +273,7 @@ class QLineEdit(QLineEdit_, __JPWidgetBase):
                 self.setText('')
 
     def setDoubleValidator(self, v_Min, v_Max, Decimals: int = 2):
-        #print(self.objectName(), v_Min, v_Max, Decimals)
+        # print(self.objectName(), v_Min, v_Max, Decimals)
         Validator = _JPDoubleValidator(v_Min, v_Max, Decimals)
         Validator.setRange(float(v_Min), float(v_Max))
         Validator.setDecimals(Decimals)
@@ -322,7 +329,29 @@ class QLineEdit(QLineEdit_, __JPWidgetBase):
         QLineEdit_.focusOutEvent(self, e)
 
 
-class QTextEdit(QTextEdit_, __JPWidgetBase):
+# class _LineEditIntMixin():
+#     __slots__ = ()
+
+#     class _JPIntValidator(QValidator):
+#         def __init__(self, v1, v2):
+#             super().__init__()
+#             self.min = v1
+#             self.max = v2
+
+#         def validate(self, vstr, pos):
+#             if (vstr is None) or (vstr == ''):
+#                 return QValidator.Acceptable, vstr, pos
+#             str0 = vstr.replace(',', '')
+#             mt = re.match(r"^-?[1-9]\d*$", str0, flags=(re.I))
+#             if mt:
+#                 if self.min <= int(str0) <= self.max:
+#                     return QValidator.Acceptable, str0, pos
+#                 elif self.min > int(str0):
+#                     return QValidator.Intermediate, str0, pos
+#             return QValidator.Invalid, str0, pos
+
+
+class QTextEdit(QTextEdit_, _JPWidgetBase):
     def __init__(self, parent):
         super().__init__(parent)
         self.setAttribute(Qt.WA_InputMethodEnabled, False)
@@ -358,7 +387,7 @@ class QTextEdit(QTextEdit_, __JPWidgetBase):
         QTextEdit_.focusOutEvent(self, e)
 
 
-class QComboBox(QComboBox_, __JPWidgetBase):
+class QComboBox(QComboBox_, _JPWidgetBase):
     def __init__(self, parent):
         super().__init__(parent)
         self.BindingData = []
@@ -440,7 +469,7 @@ class QComboBox(QComboBox_, __JPWidgetBase):
         self.currentIndexChanged[int].connect(self._onValueChange)
 
 
-class QDateEdit(QDateEdit_, __JPWidgetBase):
+class QDateEdit(QDateEdit_, _JPWidgetBase):
     def __init__(self, parent):
         super().__init__(parent)
         self.setAttribute(Qt.WA_InputMethodEnabled, False)
@@ -485,8 +514,6 @@ class QDateEdit(QDateEdit_, __JPWidgetBase):
 
     def _setFieldInfo(self, fld: JPFieldType, raiseEvent=True):
         self.FieldInfo = fld
-        # 设置编辑状态
-        # self.setReadOnly(self.MainModel.isReadOnlyMode)
         self.refreshValueNotRaiseEvent(fld.Value)
 
     def Value(self):
@@ -496,17 +523,8 @@ class QDateEdit(QDateEdit_, __JPWidgetBase):
         self.setDate(QDate.currentDate())
         super().mousePressEvent(MouseEvent)
 
-    # def paintEvent(self,PaintEvent):
-    #     v=self.date()
-    # if self.minimumDate() == v and v == QDate(1752, 9, 14):
-    #     painter = QPainter(self)
-    #     painter.setPen(QColor(166,66,250))
-    #     painter.begin(self)
-    #     painter.drawText(120,120,"文字")
-    #     painter.end()
 
-
-class QCheckBox(QCheckBox_, __JPWidgetBase):
+class QCheckBox(QCheckBox_, _JPWidgetBase):
     def __init__(self, parent):
         super().__init__(parent)
         self.__RaiseEvent = False
@@ -538,8 +556,6 @@ class QCheckBox(QCheckBox_, __JPWidgetBase):
     def _setFieldInfo(self, fld: JPFieldType, raiseEvent=True):
         self.FieldInfo = fld
         self.refreshValueNotRaiseEvent(self.FieldInfo.Value)
-        # 设置编辑状态
-        # self.setEnabled(not self.MainModel.isReadOnlyMode)
         self.refreshValueNotRaiseEvent(fld.Value)
 
     def Value(self):
