@@ -257,7 +257,7 @@ class QLineEdit(QLineEdit_, _JPWidgetBase):
     def keyPressEvent(self, KeyEvent):
         # 限制只能输入数字及小数点,不能输入科学计数法的e
         if self.FieldInfo.TypeCode in [JPFieldType.Int, JPFieldType.Float]:
-            if not KeyEvent.text() in '.0123456789':
+            if not KeyEvent.text() in '-.0123456789':
                 return
             else:
                 QLineEdit_.keyPressEvent(self, KeyEvent)

@@ -4,9 +4,11 @@ jppath.append(getcwd())
 
 from Ui.Ui_FormConfig import Ui_Dialog
 from PyQt5.QtWidgets import QDialog, QMessageBox, QColorDialog
+from PyQt5.QtGui import QColor
 from lib.ZionPublc import JPPub
 from PyQt5.QtCore import Qt
 from lib.JPDatabase.Database import JPDb
+from functools import partial
 
 
 class Form_Config(QDialog):
@@ -29,34 +31,57 @@ class Form_Config(QDialog):
         self.ui.Note_PrintingOrder.setText(
             self.configData['Note_PrintingOrder'])
         self.ui.Bank_Account.setText(self.configData['Bank_Account'])
-        color = self.configData['Null_prompt_bac_color']
+
+        color = self.configData.get('Null_prompt_bac_color', QColor(255, 0, 0))
         c_str = Form_Config.getRGBString(color)
         self.ui.Null_prompt_bac_color.setStyleSheet(
             f"background-color: {c_str}")
 
+        color = self.configData.get('PrintHighlightBackgroundColor',
+                                    QColor(194, 194, 194))
+        c_str = Form_Config.getRGBString(color)
+        self.ui.PrintHighlightBackgroundColor.setStyleSheet(
+            f"background-color: {c_str}")
+
+        self.ui.radioButton_AutoShrinkFonts.setChecked(
+            self.configData.get("AutoShrinkFonts", False))
+        self.ui.radioButton_AutoEllipsis.setChecked(
+            self.configData.get("AutoEllipsis", False))
+
         # 事件处理
+
         self.ui.Note_PrintingOrder.textChanged.connect(self.configChanged)
         self.ui.Bank_Account.textChanged.connect(self.configChanged)
-        self.ui.colorpicker.clicked.connect(self.backColorSelect1)
+        self.ui.colorpicker.clicked.connect(
+            partial(self.backColorSelect, self.ui.Null_prompt_bac_color))
+        self.ui.colorpicker_2.clicked.connect(
+            partial(self.backColorSelect,
+                    self.ui.PrintHighlightBackgroundColor))
+        self.ui.radioButton_AutoShrinkFonts.toggled.connect(self.configChanged)
+        self.ui.radioButton_AutoEllipsis.toggled.connect(self.configChanged)
 
         self.exec_()
 
     def configChanged(self):
         self.configData[
-            'Note_PrintingOrder'] = self.ui.Note_PrintingOrder.text()
-        self.configData['Bank_Account'] = self.ui.Bank_Account.text()
+            'Note_PrintingOrder'] = self.ui.Note_PrintingOrder.toPlainText()
+        self.configData['Bank_Account'] = self.ui.Bank_Account.toPlainText()
+        self.configData[
+            'AutoShrinkFonts'] = self.ui.radioButton_AutoShrinkFonts.isChecked(
+            )
+        self.configData[
+            'AutoEllipsis'] = self.ui.radioButton_AutoEllipsis.isChecked()
 
-    def backColorSelect1(self):
+    def backColorSelect(self, obj):
         color = QColorDialog.getColor()
+        key = obj.objectName()
         if color:
             c_str = self.getRGBString(color)
-            self.ui.Null_prompt_bac_color.setStyleSheet(
-                f"background-color: {c_str}")
-            self.configData['Null_prompt_bac_color'] = color
+            obj.setStyleSheet(f"background-color: {c_str}")
+            self.configData[key] = color
 
     def accept(self):
         JPPub().saveConfigData(self.configData)
         JPPub().ConfigData(True)
-        QMessageBox.information(self, '',
-                                '保存数据成功！\nSave datas complete!')
+        QMessageBox.information(self, '', '保存数据成功！\nSave datas complete!')
         self.close()

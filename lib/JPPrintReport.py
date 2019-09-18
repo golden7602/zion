@@ -46,10 +46,15 @@ class _jpPrintItem(metaclass=abc.ABCMeta):
         self.Font = kwargs.get("Font", QFont("Microsoft YaHei", 11))
         self.AlignmentFlag: Qt.AlignmentFlag = kwargs.get(
             "AlignmentFlag", Qt.AlignHCenter)
+        # 是否文本右转90度（纵向打印）
         self.Transform = kwargs.get("Transform", False)
         self.FormatString = kwargs.get("FormatString", '{}')
         self.FillColor = kwargs.get("FillColor", None)
         self.Visible = True
+        # 是否在文本长度超出指定宽度时，自动截断加上省略号
+        self.AutoEllipsis = kwargs.get("AutoEllipsis", False)
+        # 是否在文本长度超出指定宽度时，自动缩小字号
+        self.AutoShrinkFont = kwargs.get("AutoShrinkFont", False)
         self.Tag = kwargs.get("Tag", None)
 
     @abc.abstractmethod
@@ -97,7 +102,29 @@ class _jpPrintItem(metaclass=abc.ABCMeta):
             # 第一个参数Left为调整后距离页面顶端的距离
             p.restore()
         else:
-            p.drawText(rect, self.AlignmentFlag, txt)
+            fm = p.fontMetrics()
+            # 处理长文本省略
+            if self.AutoEllipsis:
+                elidedText = fm.elidedText(txt, 1, rect.width())
+            # 处理长文本自动缩小字体
+            if self.AutoShrinkFont:
+                self.__AutoShrinkFont(p, rect, txt)
+            p.drawText(rect, self.AlignmentFlag,
+                       (elidedText if self.AutoEllipsis else txt))
+
+    def __AutoShrinkFont(self, p: QPainter, rect: QRect, txt: str):
+        # 循环减小字体适应宽度
+        c_Font = p.font()
+        c_Size = c_Font.pointSize()
+        fm = p.fontMetrics()
+        w = fm.width(txt)
+        r_w = rect.width()
+        while w > r_w:
+            c_Size -= 1
+            c_Font.setPointSize(c_Size)
+            p.setFont(c_Font)
+            fm = p.fontMetrics()
+            w = fm.width(txt)
 
 
 class _jpPrintLable(_jpPrintItem):

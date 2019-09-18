@@ -169,7 +169,7 @@ class Form_Receivables(QWidget):
         frm.ListForm = self
         frm.ui.fAmountCollected.setDoubleValidator(-100000000.0, 100000000.0,
                                                    2)
-
+        frm._currentDate = self.ui.SelectDate.date()
         frm.exec_()
 
     @pyqtSlot()
@@ -195,11 +195,14 @@ class Form_Receivables(QWidget):
     def on_CmdDailyRreport_clicked(self):
         if len(self.tabinfoCurrentDayRec) == 0:
             return
-        p = FormReport_Rec_print(JPDateConver(self.ui.SelectDate.date(),
-                                              str), self.tabinfoCurrentDayRec,
-                                 self.tabinfoFangShiTongJi,
-                                 JPDateConver(self.ui.SelectDate.date(), str))
-        p.BeginPrint()
+        try:
+            p = FormReport_Rec_print(
+                JPDateConver(self.ui.SelectDate.date(), str),
+                self.tabinfoCurrentDayRec, self.tabinfoFangShiTongJi,
+                JPDateConver(self.ui.SelectDate.date(), str))
+            p.BeginPrint()
+        except Exception as e:
+            pass
 
     def dateChanged(self, s_data):
         str_date = JPDateConver(self.ui.SelectDate.date(), str)
@@ -279,6 +282,7 @@ class RecibidoEdit(JPFormModelMain):
         self.ui.fCustomerID.currentIndexChanged.connect(self.__setEnabled)
         self.ui.fCustomerID.setEditable(True)
         self.ui.fOrderID.setEditable(False)
+        self.ui.fOrderID.setEnabled(False)
         self.ui.fArrears.setEnabled(True)
         self.ui.fCustomerID.setFocus()
 
@@ -356,6 +360,7 @@ class RecibidoEdit(JPFormModelMain):
                 obj.setMainModel(self)
                 obj.setFieldInfo(fld_dict[nm])
                 obj.refreshValueNotRaiseEvent(tab.getOnlyData([0, i]), True)
+
         # 刷新该客户名下当日单据号码
         sql_orderID = """
         select 'DIBOTO' as fOrderID
@@ -377,6 +382,7 @@ class RecibidoEdit(JPFormModelMain):
         fld.Value = None
         fld.NotNull = True
         self.ui.fOrderID.setFieldInfo(fld, False)
+        self.ui.fOrderID.setEnabled(True)
 
     def onAfterSaveData(self, data):
         self.ui.butSave.setEnabled(False)
@@ -392,7 +398,7 @@ class FormReport_Rec_print(JPReport):
                  PaperSize=QPrinter.A4,
                  Orientation=QPrinter.Orientation(0)):
         super().__init__(PaperSize, Orientation)
-
+        self.configData = JPPub().getConfigData()
         self.font_YaHei = QFont("Microsoft YaHei")
         self.font_YaHei_8 = QFont(self.font_YaHei)
         self.font_YaHei_8.setPointSize(8)
@@ -425,12 +431,12 @@ class FormReport_Rec_print(JPReport):
 
         title = [
             '序号\nID', '客户名\nCliente', '收款额\nAmount', '收款人\nfPayee',
-            '收款方式\nModoPago', '单据号\nOrderID','备注\nNote'
+            '收款方式\nModoPago', '单据号\nOrderID', '备注\nNote'
         ]
 
         fns = [
             'fID', 'fCustomerName', 'fAmountCollected', 'fPayee',
-            'fPaymentMethod', 'fOrderID','fNote'
+            'fPaymentMethod', 'fOrderID', 'fNote'
         ]
         cols = 7
         al_c = Qt.AlignCenter
@@ -441,7 +447,7 @@ class FormReport_Rec_print(JPReport):
                                         72,
                                         40,
                                         Texts=title,
-                                        Widths=[40, 200, 80, 80, 80, 160,80],
+                                        Widths=[40, 210, 80, 80, 100, 120, 90],
                                         Aligns=[al_c] * cols)
         rpt.Detail.addPrintRowCountItem(0,
                                         0,
@@ -449,17 +455,21 @@ class FormReport_Rec_print(JPReport):
                                         20,
                                         AlignmentFlag=al_c,
                                         Font=self.font_YaHei_8)
+        rpt.Detail.AddItem(
+            3,
+            40,
+            0,
+            210,
+            20,
+            fns[1],
+            FormatString=' {}',
+            AlignmentFlag=al_l,
+            # 超出长度省略
+            AutoShrinkFont=self.configData['AutoShrinkFonts'],
+            AutoEllipsis=self.configData['AutoEllipsis'],
+            Font=self.font_YaHei_8)
         rpt.Detail.AddItem(3,
-                           40,
-                           0,
-                           200,
-                           20,
-                           fns[1],
-                           FormatString=' {}',
-                           AlignmentFlag=al_l,
-                           Font=self.font_YaHei_8)
-        rpt.Detail.AddItem(3,
-                           240,
+                           250,
                            0,
                            80,
                            20,
@@ -468,7 +478,7 @@ class FormReport_Rec_print(JPReport):
                            FormatString='{:,.2f} ',
                            Font=self.font_YaHei_8)
         rpt.Detail.AddItem(3,
-                           320,
+                           330,
                            0,
                            80,
                            20,
@@ -476,26 +486,26 @@ class FormReport_Rec_print(JPReport):
                            AlignmentFlag=al_c,
                            Font=self.font_YaHei_8)
         rpt.Detail.AddItem(3,
-                           400,
+                           410,
                            0,
-                           80,
+                           100,
                            20,
                            fns[4],
                            AlignmentFlag=al_c,
                            Font=self.font_YaHei_8)
         rpt.Detail.AddItem(3,
-                           480,
+                           510,
                            0,
-                           160,
+                           120,
                            20,
                            fns[5],
                            AlignmentFlag=al_l,
                            FormatString=' {}',
                            Font=self.font_YaHei_8)
         rpt.Detail.AddItem(3,
-                           640,
+                           630,
                            0,
-                           80,
+                           90,
                            20,
                            fns[6],
                            AlignmentFlag=al_l,
@@ -511,7 +521,7 @@ class FormReport_Rec_print(JPReport):
             0,
             20,
             Texts=["合计Sum", JPGetDisplayText(sum_j), " "],
-            Widths=[240, 80, 400],
+            Widths=[250, 80, 390],
             Aligns=[al_c, al_r, al_c],
             FillColor=QColor(194, 194, 194),
             Font=self.font_YaHei_8)
@@ -559,8 +569,9 @@ class FormReport_Rec_print(JPReport):
         tongji_tab = JPQueryFieldInfo(sql_SKFS)
         title_height += 25
         for r in range(len(tongji_tab)):
-            FillColor = QColor(255, 255, 255) if r < (len(tongji_tab) -
-                                                      1) else QColor(194, 194, 194)
+            FillColor = QColor(255, 255,
+                               255) if r < (len(tongji_tab) - 1) else QColor(
+                                   194, 194, 194)
             rpt.ReportFooter.AddItem(1,
                                      0,
                                      title_height + r * 20,
@@ -648,33 +659,36 @@ class FormReport_Rec_print(JPReport):
                                         Aligns=[al_c] * 3,
                                         Font=self.font_YaHei_8)
         rpt.ReportFooter.AddItem(1,
-                                    0,
-                                    title_height,
-                                    120,
-                                    45,
-                                    '总结\nsummary',
-                                    FormatString='{} ',
-                                    AlignmentFlag=al_c,
-                                    Font=self.font_YaHei_8,
-                                    FillColor=FillColor)
-
+                                 0,
+                                 title_height,
+                                 120,
+                                 45,
+                                 '总结\nsummary',
+                                 FormatString='{} ',
+                                 AlignmentFlag=al_c,
+                                 Font=self.font_YaHei_8,
+                                 FillColor=FillColor)
 
         title_height += 25
         payable_tab = JPQueryFieldInfo(sql_payable)
         v1 = payable_tab.getOnlyData([0, 0])
-        v2 = tongji_tab.getOnlyData([len(tongji_tab) - 1, 1])
+        v2 = tongji_tab.getOnlyData([len(tongji_tab) - 1, 5])
         v3 = '{:,.2f}'.format((v1 if v1 else 0) - (v2 if v2 else 0))
+        t2 = tongji_tab.getDispText([len(tongji_tab) -
+                                     1, 5]) + " " if v2 else "0 "
         txt = [
             payable_tab.getDispText([0, 0]) + " ",
             JPGetDisplayText(len(payable_tab), str) + " ",
-            tongji_tab.getDispText([len(tongji_tab) - 1, 1]) + " ",
-            JPGetDisplayText(len(tongji_tab), str) + " ", v3 + " "
+            t2,
+            # tongji_tab.getDispText([len(tongji_tab) - 1, 5]) + " ",
+            JPGetDisplayText(len(tongji_tab), str) + " ",
+            v3 + " "
         ]
         rpt.ReportFooter.AddPrintLables(120,
                                         title_height,
                                         20,
                                         txt,
-                                        Widths=[ 150, 50, 150, 50, 200],
+                                        Widths=[150, 50, 150, 50, 200],
                                         Aligns=[al_r] * 5,
                                         Font=self.font_YaHei_8,
                                         FillColor=QColor(194, 194, 194))

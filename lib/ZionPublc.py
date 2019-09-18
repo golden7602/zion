@@ -274,5 +274,5 @@ class JPPub(QObject):
 
     def ConfigData(self, RefResh=False):
         if RefResh or self.__ConfigData is None:
-            self.__ConfigData=self.getConfigData()
+            self.__ConfigData = self.getConfigData()
         return self.__ConfigData
