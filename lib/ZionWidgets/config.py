@@ -25,6 +25,7 @@ class Form_Config(QDialog):
         self.ui = Ui_Dialog()
         self.ui.setupUi(self)
         pub.MainForm.addOneButtonIcon(self.ui.colorpicker, 'color_picker.ico')
+        pub.MainForm.addOneButtonIcon(self.ui.colorpicker_2, 'color_picker.ico')
         # 读取信息
         self.configData = pub.getConfigData()
         # 写信息到窗体控件

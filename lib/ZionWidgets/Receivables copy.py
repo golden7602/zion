@@ -507,7 +507,7 @@ class FormReport_Rec_print(JPReport):
             Texts=["合计Sum", JPGetDisplayText(sum_j), " "],
             Widths=[320, 100, 300],
             Aligns=[al_c, al_r, al_c],
-            FillColor=QColor(194, 194, 194),
+            FillColor=JPPub().getConfigData()['PrintHighlightBackgroundColor'],
             Font=self.font_YaHei_8)
 
         sql_payable = f"""
@@ -664,14 +664,15 @@ class FormReport_Rec_print(JPReport):
             tongji_tab.getDispText([len(tongji_tab) - 1, 1]) + " ",
             JPGetDisplayText(len(tongji_tab), str) + " ", v3 + " "
         ]
-        rpt.ReportFooter.AddPrintLables(120,
-                                        title_height,
-                                        20,
-                                        txt,
-                                        Widths=[ 150, 50, 150, 50, 200],
-                                        Aligns=[al_r] * 5,
-                                        Font=self.font_YaHei_8,
-                                        FillColor=QColor(194, 194, 194))
+        rpt.ReportFooter.AddPrintLables(
+            120,
+            title_height,
+            20,
+            txt,
+            Widths=[150, 50, 150, 50, 200],
+            Aligns=[al_r] * 5,
+            Font=self.font_YaHei_8,
+            FillColor=self.BackColor)
         # 页脚
         self.PageFooter.AddItem(4,
                                 10,

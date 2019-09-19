@@ -12,6 +12,7 @@ from Ui.Ui_FormUserLogin import Ui_Dialog as Ui_Dialog_Login
 from Ui.Ui_FormChangePassword import Ui_Dialog as Ui_Dialog_ChnPwd
 from lib.JPFunction import md5_passwd, setWidgetIconByName
 from pickle import (dumps, loads)
+from base64 import b64decode, b64encode
 
 
 class Form_ChangePassword(QDialog):
@@ -263,13 +264,13 @@ class JPPub(QObject):
         cur = conn.cursor()
         cur.execute(sql)
         conn.commit()
-        return loads(cur._result.rows[0][0])
+        return loads(b64decode(cur._result.rows[0][0]))
 
     def saveConfigData(self, data: dict):
         sql = "update sysconfig set fValue=%s where fName='configValue'"
         conn = JPDb().currentConn
         cur = conn.cursor()
-        cur.execute(sql, dumps(data))
+        cur.execute(sql, b64encode(dumps(data)))
         conn.commit()
 
     def ConfigData(self, RefResh=False):

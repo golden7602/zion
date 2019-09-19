@@ -111,7 +111,7 @@ class _JPWidgetBase(QObject):
         QCheckBox{bk}
         '''
         self.setStyleSheet(s)
-
+        print(s)
     def clearStyleSheet(self):
         self.setStyleSheet(self._clearStyleSheetText)
 

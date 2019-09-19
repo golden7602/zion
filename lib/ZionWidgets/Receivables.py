@@ -405,6 +405,7 @@ class FormReport_Rec_print(JPReport):
         self.font_YaHei_10 = QFont(self.font_YaHei)
         self.font_YaHei_10.setPointSize(20)
         self.font_YaHei_10.setBold(True)
+        self.BackColor = JPPub().getConfigData()['PrintHighlightBackgroundColor']
         rpt = self
 
         rpt.logo = QPixmap(getcwd() + "\\res\\tmLogo100.png")
@@ -523,7 +524,7 @@ class FormReport_Rec_print(JPReport):
             Texts=["合计Sum", JPGetDisplayText(sum_j), " "],
             Widths=[250, 80, 390],
             Aligns=[al_c, al_r, al_c],
-            FillColor=QColor(194, 194, 194),
+            FillColor=self.BackColor,
             Font=self.font_YaHei_8)
 
         sql_payable = f"""
@@ -581,7 +582,7 @@ class FormReport_Rec_print(JPReport):
                                      FormatString=' {}',
                                      AlignmentFlag=al_l,
                                      Font=self.font_YaHei_8,
-                                     FillColor=FillColor)
+                                     FillColor=self.BackColor)
             rpt.ReportFooter.AddItem(1,
                                      120,
                                      title_height + r * 20,
@@ -591,7 +592,7 @@ class FormReport_Rec_print(JPReport):
                                      FormatString='{} ',
                                      AlignmentFlag=al_r,
                                      Font=self.font_YaHei_8,
-                                     FillColor=FillColor)
+                                     FillColor=self.BackColor)
             rpt.ReportFooter.AddItem(1,
                                      270,
                                      title_height + r * 20,
@@ -601,7 +602,7 @@ class FormReport_Rec_print(JPReport):
                                      FormatString='{} ',
                                      AlignmentFlag=al_r,
                                      Font=self.font_YaHei_8,
-                                     FillColor=FillColor)
+                                     FillColor=self.BackColor)
             rpt.ReportFooter.AddItem(1,
                                      320,
                                      title_height + r * 20,
@@ -611,7 +612,7 @@ class FormReport_Rec_print(JPReport):
                                      FormatString='{} ',
                                      AlignmentFlag=al_r,
                                      Font=self.font_YaHei_8,
-                                     FillColor=FillColor)
+                                     FillColor=self.BackColor)
             rpt.ReportFooter.AddItem(1,
                                      470,
                                      title_height + r * 20,
@@ -621,7 +622,7 @@ class FormReport_Rec_print(JPReport):
                                      FormatString='{} ',
                                      AlignmentFlag=al_r,
                                      Font=self.font_YaHei_8,
-                                     FillColor=FillColor)
+                                     FillColor=self.BackColor)
             rpt.ReportFooter.AddItem(1,
                                      520,
                                      title_height + r * 20,
@@ -631,7 +632,7 @@ class FormReport_Rec_print(JPReport):
                                      FormatString='{} ',
                                      AlignmentFlag=al_r,
                                      Font=self.font_YaHei_8,
-                                     FillColor=FillColor)
+                                     FillColor=self.BackColor)
             rpt.ReportFooter.AddItem(1,
                                      670,
                                      title_height + r * 20,
@@ -641,7 +642,7 @@ class FormReport_Rec_print(JPReport):
                                      FormatString='{} ',
                                      AlignmentFlag=al_r,
                                      Font=self.font_YaHei_8,
-                                     FillColor=FillColor)
+                                     FillColor=self.BackColor)
 
         # 总结部分
         title_height += (len(tongji_tab) - 1) * 20
@@ -667,7 +668,7 @@ class FormReport_Rec_print(JPReport):
                                  FormatString='{} ',
                                  AlignmentFlag=al_c,
                                  Font=self.font_YaHei_8,
-                                 FillColor=FillColor)
+                                 FillColor=self.BackColor)
 
         title_height += 25
         payable_tab = JPQueryFieldInfo(sql_payable)
@@ -691,7 +692,7 @@ class FormReport_Rec_print(JPReport):
                                         Widths=[150, 50, 150, 50, 200],
                                         Aligns=[al_r] * 5,
                                         Font=self.font_YaHei_8,
-                                        FillColor=QColor(194, 194, 194))
+                                        FillColor=self.BackColor)
         # 页脚
         self.PageFooter.AddItem(4,
                                 10,

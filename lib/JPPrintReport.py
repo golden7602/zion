@@ -34,10 +34,12 @@ class JPPrintError(Exception):
 
 
 class _jpPrintItem(metaclass=abc.ABCMeta):
-    Report = None  # 类属性，打印条目属于的报表对象
-    TotalPagesCalculated = False
+    # Report = None  # 类属性，打印条目属于的报表对象
+    # TotalPagesCalculated = False
 
     def __init__(self, rect, PrintObject, **kwargs):
+        if self.Report is None:
+            raise JPPrintError("Report属性没有设置，无法继续")
         self.Section = kwargs.get("Section", None)
         self.AutoLineBreak = kwargs.get("AutoLineBreak", False)
         self.Rect: QRect = rect
@@ -74,8 +76,9 @@ class _jpPrintItem(metaclass=abc.ABCMeta):
             return
         if self.Visible is False:
             return
-        r1, r2 = _jpPrintItem.Report.onBeforePrint(
-            _jpPrintItem.Report._CurrentCopys, self.Section,
+        
+        r1, r2 = self.Report.onBeforePrint(
+            self.Report._CurrentCopys, self.Section,
             self.Section._GetCurrentPrintDataRow(), self)
         if r1:
             return
@@ -225,8 +228,8 @@ class _jpPrintPixmap(_jpPrintItem):
             return
         if self.Visible is False:
             return
-        r1, r2 = _jpPrintItem.Report.onBeforePrint(
-            _jpPrintItem.Report._CurrentCopys, self.Section,
+        r1, r2 = self.Report.onBeforePrint(
+            self.Report._CurrentCopys, self.Section,
             self.Section._GetCurrentPrintDataRow(), self)
         if r1:
             return
@@ -240,7 +243,7 @@ class _jpPrintPixmap(_jpPrintItem):
 
 class _jpPrintSection(object):
     """本类描述一个打印的节,抽象类，请不要实例化"""
-    Report = None  # 类属性，节所属的报表对象
+    # Report = None  # 类属性，节所属的报表对象
 
     def __init__(self):
         self.Items: _jpPrintItem = []
@@ -823,6 +826,7 @@ class JPReport(object):
         _jpPrintSection.Report = self
         _jpPrintItem.Report = self
         _jpPrintGroup.Report = self
+        _jpPrintItem.TotalPagesCalculated = False
         self.PaperSize = PaperSize
         self.Orientation = Orientation
         self.Margins: QMargins = QMargins(0, 0, 0, 0)
@@ -872,10 +876,10 @@ class JPReport(object):
         """
         return False, None
 
-    def __del__(self):
-        _jpPrintSection.Report = None
-        _jpPrintItem.Report = None
-        _jpPrintGroup.Report = None
+    # def __del__(self):
+    #     _jpPrintSection.Report = None
+    #     _jpPrintItem.Report = None
+    #     _jpPrintGroup.Report = None
 
     @property
     def _SectionPrintBeginY(self):

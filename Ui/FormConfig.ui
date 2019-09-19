@@ -124,7 +124,10 @@
                </size>
               </property>
               <property name="styleSheet">
-               <string notr="true">background-color: rgb(255, 0, 255);</string>
+               <string notr="true">background-color: rgb(255, 0, 255);
+border: 1px inset   ;
+border-color: rgb(194, 194, 194);
+</string>
               </property>
              </widget>
             </item>
@@ -200,7 +203,10 @@
                </size>
               </property>
               <property name="styleSheet">
-               <string notr="true">background-color: rgb(255, 0, 255);</string>
+               <string notr="true">background-color: rgb(255, 0, 255);
+border: 1px inset   ;
+border-color: rgb(194, 194, 194);
+</string>
               </property>
              </widget>
             </item>

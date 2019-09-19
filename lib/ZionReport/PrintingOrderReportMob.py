@@ -20,7 +20,8 @@ class PrintOrder_report_Mob(JPReport):
         self.Copys = 2
         self.logo = JPPub().MainForm.logoPixmap
         #self.logo = QPixmap(getcwd() + "\\res\\tmLogo100.png")
-        self.FillColor = QColor(194, 194, 194)
+        self.FillColor = JPPub().getConfigData(
+        )['PrintHighlightBackgroundColor']
 
         self.font_Algerian = QFont("Algerian")
         self.font_Algerian_11 = QFont(self.font_Algerian)
