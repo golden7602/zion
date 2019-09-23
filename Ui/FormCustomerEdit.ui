@@ -642,6 +642,22 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>fCustomerID</tabstop>
+  <tabstop>fCustomerName</tabstop>
+  <tabstop>fEndereco</tabstop>
+  <tabstop>fNUIT</tabstop>
+  <tabstop>fCelular</tabstop>
+  <tabstop>fEmail</tabstop>
+  <tabstop>fCity</tabstop>
+  <tabstop>fContato</tabstop>
+  <tabstop>fFax</tabstop>
+  <tabstop>fNote</tabstop>
+  <tabstop>btn_SelectPic</tabstop>
+  <tabstop>butSave</tabstop>
+  <tabstop>butCancel</tabstop>
+  <tabstop>fTaxRegCer</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
  <slots>

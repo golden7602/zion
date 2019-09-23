@@ -1735,6 +1735,41 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>butSave</tabstop>
+  <tabstop>butPrint</tabstop>
+  <tabstop>butPDF</tabstop>
+  <tabstop>fOrderDate</tabstop>
+  <tabstop>fEntryID</tabstop>
+  <tabstop>fRequiredDeliveryDate</tabstop>
+  <tabstop>fCustomerID</tabstop>
+  <tabstop>butTaxCer</tabstop>
+  <tabstop>fNUIT</tabstop>
+  <tabstop>fCity</tabstop>
+  <tabstop>fEndereco</tabstop>
+  <tabstop>fContato</tabstop>
+  <tabstop>fSucursal</tabstop>
+  <tabstop>fLogo</tabstop>
+  <tabstop>fEspecieID</tabstop>
+  <tabstop>fCelular</tabstop>
+  <tabstop>fTelefone</tabstop>
+  <tabstop>fAvistaID</tabstop>
+  <tabstop>fTamanhoID</tabstop>
+  <tabstop>fVendedorID</tabstop>
+  <tabstop>fQuant</tabstop>
+  <tabstop>fPrice</tabstop>
+  <tabstop>fNrCopyID</tabstop>
+  <tabstop>fPagePerVolumn</tabstop>
+  <tabstop>fNumerBegin</tabstop>
+  <tabstop>fNumerEnd</tabstop>
+  <tabstop>fNote</tabstop>
+  <tabstop>listPrintingOrder</tabstop>
+  <tabstop>fAmount</tabstop>
+  <tabstop>fDesconto</tabstop>
+  <tabstop>fTax</tabstop>
+  <tabstop>fPayable</tabstop>
+  <tabstop>fOrderID</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
  <slots>

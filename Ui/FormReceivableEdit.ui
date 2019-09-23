@@ -957,6 +957,26 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>fCustomerID</tabstop>
+  <tabstop>fNUIT</tabstop>
+  <tabstop>fEndereco</tabstop>
+  <tabstop>fCity</tabstop>
+  <tabstop>fSucursal</tabstop>
+  <tabstop>fCelular</tabstop>
+  <tabstop>fTelefone</tabstop>
+  <tabstop>fAmountPayable</tabstop>
+  <tabstop>fAmountPaid</tabstop>
+  <tabstop>fPaymentMethodID</tabstop>
+  <tabstop>fPayeeID</tabstop>
+  <tabstop>fReceiptDate</tabstop>
+  <tabstop>fAmountCollected</tabstop>
+  <tabstop>fOrderID</tabstop>
+  <tabstop>fNote</tabstop>
+  <tabstop>butSave</tabstop>
+  <tabstop>butCancel</tabstop>
+  <tabstop>fID</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
  <slots>

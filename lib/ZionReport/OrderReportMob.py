@@ -41,7 +41,7 @@ class Order_report_Mob(JPReport):
                                 title1="NOTA DE PAGAMENTO",
                                 title2="(ESTE DOCUMENTO É DO USO INTERNO)"):
         RH = self.ReportHeader
-        RH.AddItem(2, 0, 0, 274, 50, self.logo)
+        RH.AddItem(2, (0, 0, 274, 50), self.logo)
         RH.AddItem(1,
                    274,
                    0,
@@ -293,7 +293,7 @@ class Order_report_Mob(JPReport):
                         title1="NOTA DE PAGAMENTO",
                         title2="(ESTE DOCUMENTO É DO USO INTERNO)"):
         PH = self.PageHeader
-        PH.AddItem(2, 0, 0, 274, 50, self.logo)
+        PH.AddItem(2, (0, 0, 274, 50), self.logo)
         font_title = QFont("Algerian", 12)
         font_title.setBold(True)
         PH.AddItem(1,
@@ -501,7 +501,7 @@ class Order_report_Mob(JPReport):
                    Bolder=False,
                    AlignmentFlag=(Qt.AlignRight | Qt.AlignVCenter),
                    Font=self.font_YaHei_8)
-        RF.AddItem(1, 100, 125, 100, 0, '')
+        RF.AddItem(1, (100, 125, 100, 0), '')
         RF.AddItem(1,
                    220,
                    110,
@@ -511,7 +511,7 @@ class Order_report_Mob(JPReport):
                    Bolder=False,
                    AlignmentFlag=(Qt.AlignRight | Qt.AlignVCenter),
                    Font=self.font_YaHei_8)
-        RF.AddItem(1, 320, 125, 100, 0, '')
+        RF.AddItem(1, (320, 125, 100, 0), '')
         RF.AddItem(1,
                    420,
                    110,
@@ -522,7 +522,7 @@ class Order_report_Mob(JPReport):
                    AlignmentFlag=(Qt.AlignRight | Qt.AlignVCenter),
                    Font=self.font_YaHei_8)
 
-        RF.AddItem(1, 540, 125, 100, 0, '')
+        RF.AddItem(1, (540, 125, 100, 0), '')
 
         self.PageFooter.AddItem(4,
                                 10,

@@ -111,7 +111,7 @@ class _JPWidgetBase(QObject):
         QCheckBox{bk}
         '''
         self.setStyleSheet(s)
-        print(s)
+
     def clearStyleSheet(self):
         self.setStyleSheet(self._clearStyleSheetText)
 
@@ -250,9 +250,9 @@ class QLineEdit(QLineEdit_, _JPWidgetBase):
         if tp == JPFieldType.Int:
             self.setIntValidator(0, 999999999999)
         elif tp == JPFieldType.Float:
-            self.setDoubleValidator(0.0, 999999999999.99, self.FieldInfo.Scale)
+            self.setDoubleValidator(0.0, 999999999999.99, fld.Scale)
         elif tp == JPFieldType.String:
-            self.setMaxLength(self.FieldInfo.Length)
+            self.setMaxLength(fld.Length)
 
     def keyPressEvent(self, KeyEvent):
         # 限制只能输入数字及小数点,不能输入科学计数法的e
@@ -261,6 +261,8 @@ class QLineEdit(QLineEdit_, _JPWidgetBase):
                 return
             else:
                 QLineEdit_.keyPressEvent(self, KeyEvent)
+        else:
+            QLineEdit_.keyPressEvent(self, KeyEvent)
 
     def __setDisplayText(self):
         v = self.FieldInfo.Value

@@ -1234,6 +1234,30 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>butSave</tabstop>
+  <tabstop>butPrint</tabstop>
+  <tabstop>butPDF</tabstop>
+  <tabstop>fOrderDate</tabstop>
+  <tabstop>fEntryID</tabstop>
+  <tabstop>fRequiredDeliveryDate</tabstop>
+  <tabstop>fCustomerID</tabstop>
+  <tabstop>fNUIT</tabstop>
+  <tabstop>fCity</tabstop>
+  <tabstop>fEndereco</tabstop>
+  <tabstop>fVendedorID</tabstop>
+  <tabstop>fSucursal</tabstop>
+  <tabstop>fContato</tabstop>
+  <tabstop>fCelular</tabstop>
+  <tabstop>fTelefone</tabstop>
+  <tabstop>tableView</tabstop>
+  <tabstop>fNote</tabstop>
+  <tabstop>fAmount</tabstop>
+  <tabstop>fDesconto</tabstop>
+  <tabstop>fTax</tabstop>
+  <tabstop>fPayable</tabstop>
+  <tabstop>fOrderID</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
  <slots>

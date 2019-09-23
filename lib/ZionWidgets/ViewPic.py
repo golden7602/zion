@@ -16,4 +16,5 @@ class Form_ViewPic(QDialog):
         self.ui = Ui_Dialog()
         self.ui.setupUi(self)
         self.ui.label.setPixmap(Pixmap)
-        self.exec_()
+        self.showMaximized()
+        #self.exec_()

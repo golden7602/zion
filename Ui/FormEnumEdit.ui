@@ -523,6 +523,17 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>fTypeID</tabstop>
+  <tabstop>fTitle</tabstop>
+  <tabstop>fSpare1</tabstop>
+  <tabstop>fSpare2</tabstop>
+  <tabstop>fNote</tabstop>
+  <tabstop>butPDF</tabstop>
+  <tabstop>butPrint</tabstop>
+  <tabstop>butSave</tabstop>
+  <tabstop>fItemID</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
  <slots>

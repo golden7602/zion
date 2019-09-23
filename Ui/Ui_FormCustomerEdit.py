@@ -12,6 +12,7 @@ jppath.append(getcwd())
 from PyQt5 import QtCore, QtGui
 from lib.JPMvc import JPWidgets as QtWidgets
 
+
 class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
@@ -230,6 +231,19 @@ class Ui_Form(object):
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
+        Form.setTabOrder(self.fCustomerID, self.fCustomerName)
+        Form.setTabOrder(self.fCustomerName, self.fEndereco)
+        Form.setTabOrder(self.fEndereco, self.fNUIT)
+        Form.setTabOrder(self.fNUIT, self.fCelular)
+        Form.setTabOrder(self.fCelular, self.fEmail)
+        Form.setTabOrder(self.fEmail, self.fCity)
+        Form.setTabOrder(self.fCity, self.fContato)
+        Form.setTabOrder(self.fContato, self.fFax)
+        Form.setTabOrder(self.fFax, self.fNote)
+        Form.setTabOrder(self.fNote, self.btn_SelectPic)
+        Form.setTabOrder(self.btn_SelectPic, self.butSave)
+        Form.setTabOrder(self.butSave, self.butCancel)
+        Form.setTabOrder(self.butCancel, self.fTaxRegCer)
 
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
@@ -260,4 +274,3 @@ if __name__ == "__main__":
     ui.setupUi(Form)
     Form.show()
     sys.exit(app.exec_())
-

@@ -50,13 +50,16 @@ class JPFormModelMain(QDialog):
         self.ui.setupUi(self)
         self.mainSQL = sql_main
         self.PKRole = None
-        self.__dirty = False
         self.__Formulas = []
         self.__ReadOnlyFieldsName = []
         self._loadDdata = None
         self.__ObjectDict = {}
         self.__formulas = []
+        self.dirty = False
         self.EditMode = edit_mode
+        self.isReadOnlyMode = (self.EditMode == JPEditFormDataMode.ReadOnly)
+        self.isEditMode = (self.EditMode == JPEditFormDataMode.Edit)
+        self.isNewMode = (self.EditMode == JPEditFormDataMode.New)
         self.PKValue = PKValue
         self.ui.butSave.setEnabled(False)
         self.firstHasDirty.connect(self.onFirstHasDirty)
@@ -71,7 +74,7 @@ class JPFormModelMain(QDialog):
     def setPkRole(self, role: int):
         self.PKRole = role
 
-    @property
+    # @property
     def ObjectDict(self) -> dict:
         dic = self.__ObjectDict
         if dic:
@@ -90,10 +93,10 @@ class JPFormModelMain(QDialog):
         else:
             raise ValueError("请检查UI文件有没有更换Qwidgets的引用！")
 
-    @property
-    def dirty(self) -> bool:
-        """返回模型中是否有脏数据"""
-        return self.__dirty
+    # @property
+    # def dirty(self) -> bool:
+    #     """返回模型中是否有脏数据"""
+    #     return self.__dirty
 
     def setListForm(self, FunctionForm):
         self.__FunctionForm = FunctionForm
@@ -107,18 +110,6 @@ class JPFormModelMain(QDialog):
             self.ui.butSave.setEnabled(True)
             """第一次出现脏数据时引执行此事件，请覆盖"""
         return
-
-    @property
-    def isReadOnlyMode(self):
-        return self.EditMode == JPEditFormDataMode.ReadOnly
-
-    @property
-    def isEditMode(self):
-        return self.EditMode == JPEditFormDataMode.Edit
-
-    @property
-    def isNewMode(self):
-        return self.EditMode == JPEditFormDataMode.New
 
     def setFormulas(self, *args):
         """setFormulas(str1...)
@@ -136,7 +127,7 @@ class JPFormModelMain(QDialog):
         except Exception:
             raise ValueError("公式解析错误")
         v = None
-        values = {k: v.Value() for k, v in self.ObjectDict.items()}
+        values = {k: v.Value() for k, v in self.ObjectDict().items()}
         fa_v = fRight.format(**values)
         try:
             v = eval(fa_v)
@@ -148,8 +139,8 @@ class JPFormModelMain(QDialog):
     def _emitDataChange(self, obj, value):
         self.onDateChangeEvent(obj, value)
         # 第一次存在脏数据时，发送一个信号
-        if self.__dirty is False:
-            self.__dirty = True
+        if self.dirty is False:
+            self.dirty = True
             self.firstHasDirty.emit()
 
     def setSQL(self, sql: str):
@@ -172,7 +163,7 @@ class JPFormModelMain(QDialog):
         fld_dict = tf.getRowFieldsInfoDict(0)
 
         if fld_dict:
-            for k, v in self.ObjectDict.items():
+            for k, v in self.ObjectDict().items():
                 if k in fld_dict:
                     v.setRowsData(tf.DataRows[0])
                     v.setMainModel(self)
@@ -185,15 +176,15 @@ class JPFormModelMain(QDialog):
         # 设置只读字段
         self.__ReadOnlyFieldsName = self.onGetReadOnlyFields()
         for n in self.__ReadOnlyFieldsName:
-            if n in self.ObjectDict.keys():
-                self.ObjectDict[n].setReadOnly(False)
+            if n in self.ObjectDict().keys():
+                self.ObjectDict()[n].setReadOnly(False)
 
     def __setFieldsDisabled(self):
         tp = (JPWidgets.QLineEdit, JPWidgets.QDateEdit, JPWidgets.QComboBox,
               JPWidgets.QTextEdit, JPWidgets.QCheckBox)
         self.__DisableFieldsName = self.onGetDisableFields()
         if self.isReadOnlyMode:
-            for obj in self.ObjectDict.values():
+            for obj in self.ObjectDict().values():
                 obj.setEnabled(False)
             return
         for n in self.__DisableFieldsName:
@@ -203,7 +194,7 @@ class JPFormModelMain(QDialog):
 
     def setEditState(self, can_edit: bool = False):
         if self.EditMode == JPEditFormDataMode.ReadOnly:
-            for obj in self.ObjectDict.values():
+            for obj in self.ObjectDict().values():
                 obj.setEnabled(False)
             return
         self.__setReadOnlyFields()
@@ -223,17 +214,17 @@ class JPFormModelMain(QDialog):
 
     def setObjectValue(self, obj_name: str, value):
         """按名称设置一个控件的值"""
-        if obj_name in self.ObjectDict:
-            obj = self.ObjectDict[obj_name]
+        if obj_name in self.ObjectDict():
+            obj = self.ObjectDict()[obj_name]
             obj.refreshValueNotRaiseEvent(value, True)
         else:
             raise KeyError(
                 '字段[{}]不在主窗体中未找到，请检查主窗体控件名，或指定的对象名！\n主窗体中的控件有[{}]'.format(
-                    obj_name, ','.join(self.ObjectDict.keys())))
+                    obj_name, ','.join(self.ObjectDict().keys())))
 
     def getObjectValue(self, obj_name: str):
         """返回指定控件的实际值，可用于计算，数值型字段为None时，将返回0"""
-        return self.ObjectDict[obj_name].Value()
+        return self.ObjectDict()[obj_name].Value()
 
     @abc.abstractmethod
     def onGetPrintReport(self) -> JPReport:
@@ -303,7 +294,8 @@ class JPFormModelMain(QDialog):
                         v_lst.append('@PK')
                 else:
                     nm_lst.append(fld.FieldName)
-                    v_lst.append(self.ObjectDict[fld.FieldName].getSqlValue())
+                    v_lst.append(
+                        self.ObjectDict()[fld.FieldName].getSqlValue())
             sqls.append(sql_i.format(",".join(nm_lst), ",".join(v_lst)))
             if pk_role:
                 newPKSQL = JPDb().NewPkSQL(pk_role)
@@ -316,7 +308,8 @@ class JPFormModelMain(QDialog):
                     r_pk_v = fld.sqlValue(ds[fld._index])
                 else:
                     nm_lst.append(fld.FieldName)
-                    v_lst.append(self.ObjectDict[fld.FieldName].getSqlValue())
+                    v_lst.append(
+                        self.ObjectDict()[fld.FieldName].getSqlValue())
             temp = ['{}={}'.format(n, v) for n, v in zip(nm_lst, v_lst)]
             sqls.append(sql_u.format(",".join(temp), r_pk_name, r_pk_v))
             return sqls

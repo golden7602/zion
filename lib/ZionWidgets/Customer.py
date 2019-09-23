@@ -288,6 +288,7 @@ class EditForm_Customer(JPFormModelMain):
         pic = self.ui.label_Tax_Registration
         self.ui.fCustomerID.setEnabled(False)
         self.ui.fCustomerName.setFocus()
+        pic.to_FullPath = None
         pic.NewFileName = None
         self.defPixmap = JPPub().MainForm.getPixmap('big_certificate.png')
         fn_m = self.mainTableFieldsInfo.DataRows[0].Datas[10]

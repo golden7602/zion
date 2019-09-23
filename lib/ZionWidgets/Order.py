@@ -243,7 +243,7 @@ class EditForm_Order(JPFormModelMainHasSub):
         self.ui.fTax.keyPressEvent = self.__onTaxKeyPress
         self.readData()
         if self.isNewMode:
-            self.ObjectDict['fEntryID'].refreshValueNotRaiseEvent(
+            self.ObjectDict()['fEntryID'].refreshValueNotRaiseEvent(
                 JPUser().currentUserID())
         if edit_mode != JPEditFormDataMode.ReadOnly:
             self.ui.fCustomerID.setEditable(True)
@@ -285,11 +285,11 @@ class EditForm_Order(JPFormModelMainHasSub):
         if (KeyEvent.modifiers() == Qt.AltModifier
                 and KeyEvent.key() == Qt.Key_Delete):
             self.cacuTax = False
-            self.ObjectDict['fTax'].refreshValueRaiseEvent(None, True)
+            self.ObjectDict()['fTax'].refreshValueRaiseEvent(None, True)
         elif (KeyEvent.modifiers() == Qt.AltModifier
               and KeyEvent.key() == Qt.Key_T):
             self.cacuTax = True
-            self.ObjectDict['fTax'].refreshValueRaiseEvent(None, True)
+            self.ObjectDict()['fTax'].refreshValueRaiseEvent(None, True)
 
     def onGetHiddenColumns(self):
         return [1]

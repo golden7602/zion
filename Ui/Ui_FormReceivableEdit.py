@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'c:\Users\win10\Desktop\Zion\zion\Ui\FormReceivableEdit.ui'
+# Form implementation generated from reading ui file 'e:\Zion\zion\Ui\FormReceivableEdit.ui'
 #
 # Created by: PyQt5 UI code generator 5.11.3
 #
@@ -11,6 +11,7 @@ from sys import path as jppath
 jppath.append(getcwd())
 from PyQt5 import QtCore, QtGui
 from lib.JPMvc import JPWidgets as QtWidgets
+
 
 class Ui_Form(object):
     def setupUi(self, Form):
@@ -36,14 +37,18 @@ class Ui_Form(object):
         self.label_logo.setScaledContents(True)
         self.label_logo.setObjectName("label_logo")
         self.horizontalLayout_6.addWidget(self.label_logo)
-        spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        spacerItem = QtWidgets.QSpacerItem(40, 20,
+                                           QtWidgets.QSizePolicy.Expanding,
+                                           QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_6.addItem(spacerItem)
         self.verticalLayout_3 = QtWidgets.QVBoxLayout()
         self.verticalLayout_3.setSpacing(0)
         self.verticalLayout_3.setObjectName("verticalLayout_3")
         self.horizontalLayout_5 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_5.setObjectName("horizontalLayout_5")
-        spacerItem1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        spacerItem1 = QtWidgets.QSpacerItem(40, 20,
+                                            QtWidgets.QSizePolicy.Expanding,
+                                            QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_5.addItem(spacerItem1)
         self.label_23 = QtWidgets.QLabel(Form)
         self.label_23.setMinimumSize(QtCore.QSize(0, 30))
@@ -53,7 +58,8 @@ class Ui_Form(object):
         font.setBold(True)
         font.setWeight(75)
         self.label_23.setFont(font)
-        self.label_23.setAlignment(QtCore.Qt.AlignBottom|QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing)
+        self.label_23.setAlignment(QtCore.Qt.AlignBottom | QtCore.Qt.AlignRight
+                                   | QtCore.Qt.AlignTrailing)
         self.label_23.setObjectName("label_23")
         self.horizontalLayout_5.addWidget(self.label_23)
         self.label_24 = QtWidgets.QLabel(Form)
@@ -65,10 +71,14 @@ class Ui_Form(object):
         font.setBold(False)
         font.setWeight(50)
         self.label_24.setFont(font)
-        self.label_24.setAlignment(QtCore.Qt.AlignBottom|QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft)
+        self.label_24.setAlignment(QtCore.Qt.AlignBottom
+                                   | QtCore.Qt.AlignLeading
+                                   | QtCore.Qt.AlignLeft)
         self.label_24.setObjectName("label_24")
         self.horizontalLayout_5.addWidget(self.label_24)
-        spacerItem2 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        spacerItem2 = QtWidgets.QSpacerItem(40, 20,
+                                            QtWidgets.QSizePolicy.Expanding,
+                                            QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_5.addItem(spacerItem2)
         self.verticalLayout_3.addLayout(self.horizontalLayout_5)
         self.label_25 = QtWidgets.QLabel(Form)
@@ -78,11 +88,13 @@ class Ui_Form(object):
         font.setFamily("Algerian")
         font.setPointSize(16)
         self.label_25.setFont(font)
-        self.label_25.setAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignTop)
+        self.label_25.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignTop)
         self.label_25.setObjectName("label_25")
         self.verticalLayout_3.addWidget(self.label_25)
         self.horizontalLayout_6.addLayout(self.verticalLayout_3)
-        spacerItem3 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        spacerItem3 = QtWidgets.QSpacerItem(40, 20,
+                                            QtWidgets.QSizePolicy.Expanding,
+                                            QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_6.addItem(spacerItem3)
         self.verticalLayout_2.addLayout(self.horizontalLayout_6)
         self.line = QtWidgets.QFrame(Form)
@@ -97,35 +109,47 @@ class Ui_Form(object):
         self.label_14 = QtWidgets.QLabel(Form)
         self.label_14.setMinimumSize(QtCore.QSize(0, 25))
         self.label_14.setSizeIncrement(QtCore.QSize(0, 25))
-        self.label_14.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.label_14.setAlignment(QtCore.Qt.AlignRight
+                                   | QtCore.Qt.AlignTrailing
+                                   | QtCore.Qt.AlignVCenter)
         self.label_14.setObjectName("label_14")
         self.gridLayout.addWidget(self.label_14, 3, 3, 1, 1)
         self.label_9 = QtWidgets.QLabel(Form)
         self.label_9.setMinimumSize(QtCore.QSize(0, 25))
         self.label_9.setSizeIncrement(QtCore.QSize(0, 25))
-        self.label_9.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.label_9.setAlignment(QtCore.Qt.AlignRight
+                                  | QtCore.Qt.AlignTrailing
+                                  | QtCore.Qt.AlignVCenter)
         self.label_9.setObjectName("label_9")
         self.gridLayout.addWidget(self.label_9, 1, 0, 1, 1)
         self.label_19 = QtWidgets.QLabel(Form)
         self.label_19.setMinimumSize(QtCore.QSize(0, 25))
         self.label_19.setSizeIncrement(QtCore.QSize(0, 25))
-        self.label_19.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.label_19.setAlignment(QtCore.Qt.AlignRight
+                                   | QtCore.Qt.AlignTrailing
+                                   | QtCore.Qt.AlignVCenter)
         self.label_19.setObjectName("label_19")
         self.gridLayout.addWidget(self.label_19, 4, 5, 1, 1)
         self.label_13 = QtWidgets.QLabel(Form)
         self.label_13.setMinimumSize(QtCore.QSize(0, 25))
         self.label_13.setSizeIncrement(QtCore.QSize(0, 25))
-        self.label_13.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.label_13.setAlignment(QtCore.Qt.AlignRight
+                                   | QtCore.Qt.AlignTrailing
+                                   | QtCore.Qt.AlignVCenter)
         self.label_13.setObjectName("label_13")
         self.gridLayout.addWidget(self.label_13, 3, 0, 1, 1)
         self.label_18 = QtWidgets.QLabel(Form)
         self.label_18.setMinimumSize(QtCore.QSize(0, 25))
         self.label_18.setSizeIncrement(QtCore.QSize(0, 25))
-        self.label_18.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.label_18.setAlignment(QtCore.Qt.AlignRight
+                                   | QtCore.Qt.AlignTrailing
+                                   | QtCore.Qt.AlignVCenter)
         self.label_18.setObjectName("label_18")
         self.gridLayout.addWidget(self.label_18, 4, 3, 1, 1)
         self.label_16 = QtWidgets.QLabel(Form)
-        self.label_16.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.label_16.setAlignment(QtCore.Qt.AlignRight
+                                   | QtCore.Qt.AlignTrailing
+                                   | QtCore.Qt.AlignVCenter)
         self.label_16.setObjectName("label_16")
         self.gridLayout.addWidget(self.label_16, 1, 5, 1, 1)
         self.fPayeeID = QtWidgets.QComboBox(Form)
@@ -140,27 +164,34 @@ class Ui_Form(object):
         self.gridLayout.addWidget(self.fSucursal, 1, 6, 1, 1)
         self.fReceiptDate = QtWidgets.QDateEdit(Form)
         self.fReceiptDate.setAlignment(QtCore.Qt.AlignCenter)
-        self.fReceiptDate.setDateTime(QtCore.QDateTime(QtCore.QDate(1752, 9, 14), QtCore.QTime(0, 0, 0)))
+        self.fReceiptDate.setDateTime(
+            QtCore.QDateTime(QtCore.QDate(1752, 9, 14), QtCore.QTime(0, 0, 0)))
         self.fReceiptDate.setCalendarPopup(True)
         self.fReceiptDate.setObjectName("fReceiptDate")
         self.gridLayout.addWidget(self.fReceiptDate, 4, 6, 1, 1)
         self.label_17 = QtWidgets.QLabel(Form)
         self.label_17.setMinimumSize(QtCore.QSize(0, 25))
         self.label_17.setSizeIncrement(QtCore.QSize(0, 25))
-        self.label_17.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.label_17.setAlignment(QtCore.Qt.AlignRight
+                                   | QtCore.Qt.AlignTrailing
+                                   | QtCore.Qt.AlignVCenter)
         self.label_17.setObjectName("label_17")
         self.gridLayout.addWidget(self.label_17, 4, 0, 1, 1)
         self.label_6 = QtWidgets.QLabel(Form)
         self.label_6.setMinimumSize(QtCore.QSize(0, 25))
         self.label_6.setSizeIncrement(QtCore.QSize(0, 25))
-        self.label_6.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.label_6.setAlignment(QtCore.Qt.AlignRight
+                                  | QtCore.Qt.AlignTrailing
+                                  | QtCore.Qt.AlignVCenter)
         self.label_6.setObjectName("label_6")
         self.gridLayout.addWidget(self.label_6, 0, 0, 1, 1)
         self.fAmountPayable = QtWidgets.QLineEdit(Form)
         self.fAmountPayable.setMinimumSize(QtCore.QSize(0, 25))
         self.fAmountPayable.setMaximumSize(QtCore.QSize(130, 16777215))
         self.fAmountPayable.setSizeIncrement(QtCore.QSize(0, 25))
-        self.fAmountPayable.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.fAmountPayable.setAlignment(QtCore.Qt.AlignRight
+                                         | QtCore.Qt.AlignTrailing
+                                         | QtCore.Qt.AlignVCenter)
         self.fAmountPayable.setClearButtonEnabled(False)
         self.fAmountPayable.setObjectName("fAmountPayable")
         self.gridLayout.addWidget(self.fAmountPayable, 3, 2, 1, 1)
@@ -170,7 +201,9 @@ class Ui_Form(object):
         self.fAmountPaid = QtWidgets.QLineEdit(Form)
         self.fAmountPaid.setMinimumSize(QtCore.QSize(0, 25))
         self.fAmountPaid.setSizeIncrement(QtCore.QSize(0, 25))
-        self.fAmountPaid.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.fAmountPaid.setAlignment(QtCore.Qt.AlignRight
+                                      | QtCore.Qt.AlignTrailing
+                                      | QtCore.Qt.AlignVCenter)
         self.fAmountPaid.setClearButtonEnabled(False)
         self.fAmountPaid.setObjectName("fAmountPaid")
         self.gridLayout.addWidget(self.fAmountPaid, 3, 4, 1, 1)
@@ -180,7 +213,9 @@ class Ui_Form(object):
         self.label_21 = QtWidgets.QLabel(Form)
         self.label_21.setMinimumSize(QtCore.QSize(0, 25))
         self.label_21.setSizeIncrement(QtCore.QSize(0, 25))
-        self.label_21.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.label_21.setAlignment(QtCore.Qt.AlignRight
+                                   | QtCore.Qt.AlignTrailing
+                                   | QtCore.Qt.AlignVCenter)
         self.label_21.setObjectName("label_21")
         self.gridLayout.addWidget(self.label_21, 7, 0, 1, 1)
         self.fTelefone = QtWidgets.QLineEdit(Form)
@@ -203,17 +238,23 @@ class Ui_Form(object):
         self.label_15 = QtWidgets.QLabel(Form)
         self.label_15.setMinimumSize(QtCore.QSize(0, 25))
         self.label_15.setSizeIncrement(QtCore.QSize(0, 25))
-        self.label_15.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.label_15.setAlignment(QtCore.Qt.AlignRight
+                                   | QtCore.Qt.AlignTrailing
+                                   | QtCore.Qt.AlignVCenter)
         self.label_15.setObjectName("label_15")
         self.gridLayout.addWidget(self.label_15, 2, 5, 2, 1)
         self.label_20 = QtWidgets.QLabel(Form)
         self.label_20.setMinimumSize(QtCore.QSize(0, 25))
         self.label_20.setSizeIncrement(QtCore.QSize(0, 25))
-        self.label_20.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.label_20.setAlignment(QtCore.Qt.AlignRight
+                                   | QtCore.Qt.AlignTrailing
+                                   | QtCore.Qt.AlignVCenter)
         self.label_20.setObjectName("label_20")
         self.gridLayout.addWidget(self.label_20, 5, 0, 1, 1)
         self.label_10 = QtWidgets.QLabel(Form)
-        self.label_10.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.label_10.setAlignment(QtCore.Qt.AlignRight
+                                   | QtCore.Qt.AlignTrailing
+                                   | QtCore.Qt.AlignVCenter)
         self.label_10.setObjectName("label_10")
         self.gridLayout.addWidget(self.label_10, 2, 0, 1, 1)
         self.fArrears = QtWidgets.QLineEdit(Form)
@@ -225,7 +266,9 @@ class Ui_Form(object):
         font.setWeight(75)
         self.fArrears.setFont(font)
         self.fArrears.setFocusPolicy(QtCore.Qt.NoFocus)
-        self.fArrears.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.fArrears.setAlignment(QtCore.Qt.AlignRight
+                                   | QtCore.Qt.AlignTrailing
+                                   | QtCore.Qt.AlignVCenter)
         self.fArrears.setReadOnly(True)
         self.fArrears.setClearButtonEnabled(False)
         self.fArrears.setObjectName("fArrears")
@@ -233,7 +276,9 @@ class Ui_Form(object):
         self.label_12 = QtWidgets.QLabel(Form)
         self.label_12.setMinimumSize(QtCore.QSize(0, 25))
         self.label_12.setSizeIncrement(QtCore.QSize(0, 25))
-        self.label_12.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.label_12.setAlignment(QtCore.Qt.AlignRight
+                                   | QtCore.Qt.AlignTrailing
+                                   | QtCore.Qt.AlignVCenter)
         self.label_12.setObjectName("label_12")
         self.gridLayout.addWidget(self.label_12, 2, 3, 1, 1)
         self.fCelular = QtWidgets.QLineEdit(Form)
@@ -248,7 +293,8 @@ class Ui_Form(object):
         self.fOrderID.setObjectName("fOrderID")
         self.gridLayout.addWidget(self.fOrderID, 6, 2, 1, 2)
         self.label = QtWidgets.QLabel(Form)
-        self.label.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.label.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignTrailing
+                                | QtCore.Qt.AlignVCenter)
         self.label.setObjectName("label")
         self.gridLayout.addWidget(self.label, 6, 0, 1, 1)
         self.fEndereco = QtWidgets.QLineEdit(Form)
@@ -260,7 +306,9 @@ class Ui_Form(object):
         self.fEndereco.setObjectName("fEndereco")
         self.gridLayout.addWidget(self.fEndereco, 1, 2, 1, 1)
         self.label_8 = QtWidgets.QLabel(Form)
-        self.label_8.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.label_8.setAlignment(QtCore.Qt.AlignRight
+                                  | QtCore.Qt.AlignTrailing
+                                  | QtCore.Qt.AlignVCenter)
         self.label_8.setObjectName("label_8")
         self.gridLayout.addWidget(self.label_8, 1, 3, 1, 1)
         self.fCity = QtWidgets.QLineEdit(Form)
@@ -279,7 +327,9 @@ class Ui_Form(object):
         self.label_7 = QtWidgets.QLabel(Form)
         self.label_7.setMinimumSize(QtCore.QSize(0, 25))
         self.label_7.setSizeIncrement(QtCore.QSize(0, 25))
-        self.label_7.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.label_7.setAlignment(QtCore.Qt.AlignRight
+                                  | QtCore.Qt.AlignTrailing
+                                  | QtCore.Qt.AlignVCenter)
         self.label_7.setObjectName("label_7")
         self.gridLayout.addWidget(self.label_7, 0, 5, 1, 1)
         self.fCustomerID = QtWidgets.QComboBox(Form)
@@ -303,11 +353,14 @@ class Ui_Form(object):
         self.fID.setReadOnly(True)
         self.fID.setObjectName("fID")
         self.horizontalLayout_3.addWidget(self.fID)
-        spacerItem4 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        spacerItem4 = QtWidgets.QSpacerItem(40, 20,
+                                            QtWidgets.QSizePolicy.Expanding,
+                                            QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_3.addItem(spacerItem4)
         self.butSave = QtWidgets.QPushButton(Form)
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("../res/ico/save.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap("../res/ico/save.png"),
+                       QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.butSave.setIcon(icon)
         self.butSave.setIconSize(QtCore.QSize(16, 16))
         self.butSave.setObjectName("butSave")
@@ -315,25 +368,46 @@ class Ui_Form(object):
         self.butCancel = QtWidgets.QPushButton(Form)
         self.butCancel.setEnabled(True)
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap("../res/ico/printer.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap("../res/ico/printer.png"),
+                        QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.butCancel.setIcon(icon1)
         self.butCancel.setIconSize(QtCore.QSize(16, 16))
         self.butCancel.setObjectName("butCancel")
         self.horizontalLayout_3.addWidget(self.butCancel)
-        spacerItem5 = QtWidgets.QSpacerItem(20, 20, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
+        spacerItem5 = QtWidgets.QSpacerItem(20, 20,
+                                            QtWidgets.QSizePolicy.Fixed,
+                                            QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_3.addItem(spacerItem5)
         self.verticalLayout.addLayout(self.horizontalLayout_3)
         self.verticalLayout_2.addLayout(self.verticalLayout)
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
+        Form.setTabOrder(self.fCustomerID, self.fNUIT)
+        Form.setTabOrder(self.fNUIT, self.fEndereco)
+        Form.setTabOrder(self.fEndereco, self.fCity)
+        Form.setTabOrder(self.fCity, self.fSucursal)
+        Form.setTabOrder(self.fSucursal, self.fCelular)
+        Form.setTabOrder(self.fCelular, self.fTelefone)
+        Form.setTabOrder(self.fTelefone, self.fAmountPayable)
+        Form.setTabOrder(self.fAmountPayable, self.fAmountPaid)
+        Form.setTabOrder(self.fAmountPaid, self.fPaymentMethodID)
+        Form.setTabOrder(self.fPaymentMethodID, self.fPayeeID)
+        Form.setTabOrder(self.fPayeeID, self.fReceiptDate)
+        Form.setTabOrder(self.fReceiptDate, self.fAmountCollected)
+        Form.setTabOrder(self.fAmountCollected, self.fOrderID)
+        Form.setTabOrder(self.fOrderID, self.fNote)
+        Form.setTabOrder(self.fNote, self.butSave)
+        Form.setTabOrder(self.butSave, self.butCancel)
+        Form.setTabOrder(self.butCancel, self.fID)
 
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
         Form.setWindowTitle(_translate("Form", "Receivable"))
         self.label_23.setText(_translate("Form", "收款记录"))
         self.label_24.setText(_translate("Form", "Collection records"))
-        self.label_25.setText(_translate("Form", "(ESTE DOCUMENTO É DO USO INTERNO)"))
+        self.label_25.setText(
+            _translate("Form", "(ESTE DOCUMENTO É DO USO INTERNO)"))
         self.label_14.setText(_translate("Form", "已付金额Amount Paid:"))
         self.label_9.setText(_translate("Form", "地址Endereco:"))
         self.label_19.setText(_translate("Form", "收款日期Data de Pago"))
@@ -349,7 +423,11 @@ class Ui_Form(object):
         self.label_20.setText(_translate("Form", "金额Amount:"))
         self.label_10.setText(_translate("Form", "手机Celular:"))
         self.label_12.setText(_translate("Form", "电话Tel:"))
-        self.fOrderID.setToolTip(_translate("Form", "<html><head/><body><p>仅仅列出本日已经提交、已经确认、且未作废的订单</p><p>List only orders submitted, confirmed and not cancelled today.</p></body></html>"))
+        self.fOrderID.setToolTip(
+            _translate(
+                "Form",
+                "<html><head/><body><p>仅仅列出本日已经提交、已经确认、且未作废的订单</p><p>List only orders submitted, confirmed and not cancelled today.</p></body></html>"
+            ))
         self.label.setText(_translate("Form", "对应单号OrderID:"))
         self.label_8.setText(_translate("Form", "城市City:"))
         self.label_7.setText(_translate("Form", "税号NUIT:"))
@@ -365,4 +443,3 @@ if __name__ == "__main__":
     ui.setupUi(Form)
     Form.show()
     sys.exit(app.exec_())
-
