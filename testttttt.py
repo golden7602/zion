@@ -1,74 +1,60 @@
-import sys
-from PyQt5.QtWidgets import QMainWindow,QApplication,QWidget,QHBoxLayout,QLabel
-from PyQt5.QtGui import QIcon,QPixmap,QImage
-from PyQt5 import QtCore
-from PIL import Image
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+from PyQt5.QtCore import QPropertyAnimation
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QPushButton
 
-class FirstMainWin(QWidget):
-
-    def __init__(self):
-        super(QWidget,self).__init__()
-        self.initUI()
-
-        # 设置窗口的尺寸
-
-        self.setWindowTitle('显示图像')
-        # self.status = self.statusBar()
-        #
-        # self.status.showMessage('只存在5秒的消息',5000)
-
-    def initUI(self):
-        self.resize(800, 300)
-        self.move(300, 200)
-        self.lbl = QLabel(self)
-        self.pil_image=QImage('D:\pycode20100406\pycode\data\login\任达华.jpg')
-
-        self.fcku(self.pil_image)
+# Created on 2018年6月14日
+# author: Irony
+# site: https://pyqt5.com , https://github.com/892768447
+# email: 892768447@qq.com
+# file: FadeInOut
+# description:
+__Author__ = """By: Irony
+QQ: 892768447
+Email: 892768447@qq.com"""
+__Copyright__ = 'Copyright (c) 2018 Irony'
+__Version__ = 1.0
 
 
-        #self.show()
-        self.timer = QtCore.QTimer(self)  # 定义定时器，用于控制显示视频的帧率
+class Window(QWidget):
+    def __init__(self, *args, **kwargs):
+        super(Window, self).__init__(*args, **kwargs)
+        self.resize(400, 400)
+        layout = QVBoxLayout(self)
+        layout.addWidget(QPushButton('退出', self, clicked=self.doClose))
 
-        self.timer.timeout.connect(lambda:self.fcku(self.pil_image))
-        self.timer.start(10)
+        # 窗口透明度动画类
+        self.animation = QPropertyAnimation(self, b'windowOpacity')
+        self.animation.setDuration(1000)  # 持续时间1秒
 
-    def fcku(self,fckimage):
-        # hbox = QHBoxLayout(self)
-        #print(fckimage.size())
-        pil_image = self.m_resize(self.width(), self.height(), fckimage)
-        # fckimage=cv2.cvtColor(fckimage,cv2.COLOR_RGB2BGR)
-        #fckimage = QImage(fckimage.width, fckimage.height, QImage.Format_RGB888)
-        # print(fckimage.width)
+        # 执行淡入
+        self.doShow()
 
-        pixmap = QPixmap.fromImage(pil_image)
-        # print(pixmap.height())
-        # pixmap = self.m_resize(self.width(), self.height(), pixmap)
-        self.lbl.resize(pil_image.width(),pil_image.height())
-        self.lbl.setPixmap(pixmap)
-        #print(pixmap.size())
-        # hbox.addWidget(lbl)
-        # self.setLayout(hbox)
+    def doShow(self):
+        try:
+            # 尝试先取消动画完成后关闭窗口的信号
+            self.animation.finished.disconnect(self.close)
+        except:
+            pass
+        self.animation.stop()
+        # 透明度范围从0逐渐增加到1
+        self.animation.setStartValue(0)
+        self.animation.setEndValue(1)
+        self.animation.start()
 
-    def m_resize(self,w_box, h_box, pil_image):  # 参数是：要适应的窗口宽、高、Image.open后的图片
+    def doClose(self):
+        self.animation.stop()
+        self.animation.finished.connect(self.close)  # 动画完成则关闭窗口
+        # 透明度范围从1逐渐减少到0
+        self.animation.setStartValue(1)
+        self.animation.setEndValue(0)
+        self.animation.start()
 
-        w, h = pil_image.width(), pil_image.height() # 获取图像的原始大小
-
-        f1 = 1.0*w_box/w
-        f2 = 1.0 * h_box / h
-
-        factor = min([f1, f2])
-
-        width = int(w * factor)
-
-        height = int(h * factor)
-        #return pil_image.resize(width, height)
-        return pil_image.scaled(width, height)
 
 if __name__ == '__main__':
+    import sys
+    from PyQt5.QtWidgets import QApplication
     app = QApplication(sys.argv)
-
-    app.setWindowIcon(QIcon('D:\JinptConfig\桌面2018\111.jpg'))
-    main = FirstMainWin()
-    main.show()
-
+    w = Window()
+    w.show()
     sys.exit(app.exec_())

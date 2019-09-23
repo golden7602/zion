@@ -143,7 +143,11 @@ class Form_Repoet_Day(QWidget):
         year_list = [str(y[0]) for y in year_list if y[0]]
         for y in year_list:
             self.cbo_year.addItem(y)
-        self.cbo_year.setCurrentIndex(-1)
+        cur_year = str(QDate.currentDate().year())
+        if  cur_year in year_list:
+            self.cbo_year.setCurrentText(cur_year)
+        else:
+            self.cbo_year.setCurrentIndex(-1)
         self.tableView.setSelectionMode(QAbstractItemView.SingleSelection)
         self.tableView.setSelectionBehavior(QAbstractItemView.SelectRows)
         self.cbo_base.currentTextChanged.connect(self._search)
@@ -290,39 +294,3 @@ class FormReport_Day_print(JPReport):
 
     def onFormat(self, SectionType, CurrentPage, RowDate=None):
         return False
-
-
-# def getFuncForm_FormReport_Day(mainform):
-#     from Ui.Ui_FormReport_Day import Ui_Form
-#     Form = QWidget()
-#     ui = Ui_Form()
-#     ui.setupUi(Form)
-#     mainform.addForm(Form)
-
-#     cbo_year, cbo_base = ui.cbo_year, ui.cbo_base
-#     tw = ui.tableView
-
-#     db = JPDb
-#     year = db.getDataList('''select year(fOrderDate) as y
-#                 from t_order union select year(fReceiptDate)
-#                 as y from t_receivables''')[0]
-#     ui.mod = None
-
-#     def _search():
-#         if cbo_year.currentIndex() != -1 and cbo_base.currentIndex() != -1:
-#             sql = cbo_base.currentData()
-#             queryInfo = JPQueryFieldInfo(sql.format(cbo_year.currentText()))
-#             ui.mod = myMod(tw, queryInfo)
-
-#     cbo_year.addItems([str(y[0]) for y in year if y[0]])
-#     cbo_year.setCurrentIndex(-1)
-#     cbo_base.clear()
-#     cbo_base.addItem('Payment', self.sql_payment)
-#     cbo_base.addItem('Receivables', sql_receivables)
-#     cbo_base.setCurrentIndex(-1)
-#     tw.setSelectionMode(QAbstractItemView.SingleSelection)
-#     tw.setSelectionBehavior(QAbstractItemView.SelectRows)
-#     cbo_base.currentTextChanged.connect(_search)
-#     cbo_year.currentTextChanged.connect(_search)
-#     ui.butPrint.clicked.connect(butPrint)
-#     return Form

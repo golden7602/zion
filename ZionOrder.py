@@ -6,7 +6,7 @@ from sys import argv
 from sys import exit as sys_exit
 from sys import path as jppath
 
-import fix_qt_import_error
+#import fix_qt_import_error
 
 from PyQt5 import sip
 from PyQt5.QtCore import QMetaObject, Qt, QThread

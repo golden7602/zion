@@ -5,17 +5,17 @@ jppath.append(getcwd())
 
 from lib.JPDatabase.Database import JPDb
 from lib.JPFunction import Singleton
-from PyQt5.QtWidgets import QTreeWidgetItem, QMessageBox, QDialog
-from PyQt5.QtCore import QThread, pyqtSignal, Qt, QObject
+from PyQt5.QtCore import (QThread, pyqtSignal, Qt, QObject)
 from PyQt5.QtGui import QIcon, QPixmap
 from Ui.Ui_FormUserLogin import Ui_Dialog as Ui_Dialog_Login
 from Ui.Ui_FormChangePassword import Ui_Dialog as Ui_Dialog_ChnPwd
 from lib.JPFunction import md5_passwd, setWidgetIconByName
 from pickle import (dumps, loads)
 from base64 import b64decode, b64encode
+from lib.JPMvc.JPWidgets import QTreeWidgetItem, QMessageBox, DialogAnimation
 
 
-class Form_ChangePassword(QDialog):
+class Form_ChangePassword(DialogAnimation):
     def __init__(self, parent=None, flags=Qt.WindowFlags()):
         super().__init__(parent=parent, flags=flags)
         self.ui = Ui_Dialog_ChnPwd()
@@ -57,7 +57,7 @@ class Form_ChangePassword(QDialog):
         self.close()
 
 
-class Form_UserLogin(QDialog):
+class Form_UserLogin(DialogAnimation):
     def __init__(self, isLogin=True):
         super().__init__()
         self.ui = Ui_Dialog_Login()
@@ -78,6 +78,7 @@ class Form_UserLogin(QDialog):
         if not isLogin:
             self.setWindowTitle("Change User")
             self.ui.label_Title.setText("Change User")
+
         self.exec_()
 
     def accept(self):
@@ -104,15 +105,18 @@ class Form_UserLogin(QDialog):
             lst = JPDb().getDict(sql)
             if lst:
                 JPUser().setCurrentUserID(lst[0]['fUserID'])
+                #self.doFadeClose()
                 self.hide()
             else:
+                self.doShake()
                 msgbox('用户名或密码错误！\nUsername or password incorrect!')
         else:
+            self.doShake()
             msgbox('用名或密码没有输入！')
 
     def reject(self):
         if not self.isLogin:
-            self.hide()
+            self.doFadeClose()
         else:
             # 退出程序
             JPDb().close()
