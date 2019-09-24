@@ -10,11 +10,22 @@ from PyQt5.QtGui import QPixmap
 
 
 class Form_ViewPic(QDialog):
-    def __init__(self, parent=None, Pixmap='', flags=Qt.WindowFlags()):
+    def __init__(self, parent=None, fn='', flags=Qt.WindowFlags()):
         pub = JPPub()
         super().__init__(parent=pub.MainForm, flags=flags)
         self.ui = Ui_Dialog()
         self.ui.setupUi(self)
-        self.ui.label.setPixmap(Pixmap)
+        self.fn = fn
+        self.dispPixmap = None
+        self.ui.label.setScaledContents(False)
         self.showMaximized()
-        #self.exec_()
+
+    def resizeEvent(self, resizeEvent):
+        try:
+            self.dispPixmap = JPPub().MainForm.getTaxCerPixmap(self.fn)
+        except FileExistsError as e:
+            self.ui.label.setText(e.Msg)
+        if self.dispPixmap:
+            size = self.ui.label.size()
+            Pixmap = self.dispPixmap.scaled(size, Qt.KeepAspectRatio)
+            self.ui.label.setPixmap(Pixmap)

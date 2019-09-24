@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'e:\Zion\zion\Ui\FuncFormMob.ui'
 #
-# Created by: PyQt5 UI code generator 5.12.3
+# Created by: PyQt5 UI code generator 5.13.0
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -55,7 +55,7 @@ class Ui_Form(object):
         self.horizontalLayout_2.addItem(spacerItem2)
         self.verticalLayout.addWidget(self.widget)
         self.tableView = QtWidgets.QTableView(Form)
-        self.tableView.setStyleSheet("QTreeView::item:hover{background-color:rgb(0,255,0,50)}")
+        self.tableView.setStyleSheet("")
         self.tableView.setEditTriggers(QtWidgets.QAbstractItemView.SelectedClicked)
         self.tableView.setAlternatingRowColors(True)
         self.tableView.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)

@@ -1,10 +1,10 @@
-# -*- mode: python -*-
+# -*- mode: python ; coding: utf-8 -*-
 
 block_cipher = None
 
 
 a = Analysis(['ZionOrder.py'],
-             pathex=['e:\\Zion'],
+             pathex=['E:\\Zion\\zion'],
              binaries=[],
              datas=[],
              hiddenimports=[],
@@ -15,9 +15,6 @@ a = Analysis(['ZionOrder.py'],
              win_private_assemblies=False,
              cipher=block_cipher,
              noarchive=False)
-a.datas.extend([
-    ('PyQt5/Qt/plugins/styles/qwindowsvistastyle.dll', 'src/styles/qwindowsvistastyle.dll', 'BINARY')
-])
 pyz = PYZ(a.pure, a.zipped_data,
              cipher=block_cipher)
 exe = EXE(pyz,
@@ -26,11 +23,11 @@ exe = EXE(pyz,
           a.zipfiles,
           a.datas,
           [],
-          name='ColorProOrderV5.01',
+          name='ZionOrder',
           debug=False,
           bootloader_ignore_signals=False,
           strip=False,
           upx=True,
+          upx_exclude=[],
           runtime_tmpdir=None,
-          console=False,
-          icon='order_162.ico' )
+          console=False , icon='order_162.ico')

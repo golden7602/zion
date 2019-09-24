@@ -25,7 +25,7 @@ from lib.JPMvc.JPModel import (JPTableViewModelEditForm,
                                JPTableViewModelReadOnly)
 from lib.JPPrintReport import JPReport
 from lib.ZionPublc import JPPub
-
+from lib.JPForms.JPDialogAnimation import DialogAnimation
 
 class JPEditFormDataMode():
     """本类为编辑窗口数据类型的枚举"""
@@ -34,7 +34,7 @@ class JPEditFormDataMode():
     New = 3
 
 
-class JPFormModelMain(QDialog):
+class JPFormModelMain(DialogAnimation):
     afterSaveData = pyqtSignal([str])
     firstHasDirty = pyqtSignal()
 

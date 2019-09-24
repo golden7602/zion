@@ -1,12 +1,16 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-from os import getcwd, environ
+from os import getcwd, environ, path as ospath
 from sys import argv
 from sys import exit as sys_exit
 from sys import path as jppath
 
-#import fix_qt_import_error
+# 下面行解决造生成exe后闪退，请不要注释或删除
+# 命令行下运行出现如下提示
+# ImportError: unable to find Qt5Core.dll on PATHImportError: unable to find Qt5Core.dll on PATH
+# 的问题
+import fix_qt_import_error
 
 from PyQt5 import sip
 from PyQt5.QtCore import QMetaObject, Qt, QThread
@@ -146,7 +150,12 @@ class JPMainWindow(QMainWindow):
         # 税务登记证件保存路径
         toPath = ConfigInfo().tax_reg_path
         fn_m = f'{toPath}\\{fn}'
-        return QPixmap(fn_m)
+        if ospath.exists(fn_m):
+            return QPixmap(fn_m)
+        else:
+            e = FileExistsError()
+            e.Msg = f'File "{fn_m}" do not exists!'
+            raise e
 
     def getIcon(self, icoName):
         return QIcon(self.icoPath.format(icoName))
@@ -178,7 +187,7 @@ class JPMainWindow(QMainWindow):
         frm = None
         btns = sysnavigationmenus_data['btns']
         self.menu_id = sysnavigationmenus_data['fNMID']
-        classes = {
+        form_createor = {
             2: JPFuncForm_Order,
             9: JPFuncForm_Payment,
             15: JPFuncForm_Complete,
@@ -197,8 +206,8 @@ class JPMainWindow(QMainWindow):
         }
         if self.menu_id == 12:
             self.close()
-        elif self.menu_id in classes:
-            frm = classes[self.menu_id](self)
+        elif self.menu_id in form_createor:
+            frm = form_createor[self.menu_id](self)
         else:
             frm = Form_Background(self)
 

@@ -84,5 +84,5 @@ class Form_Config(QDialog):
     def accept(self):
         JPPub().saveConfigData(self.configData)
         JPPub().ConfigData(True)
-        QMessageBox.information(self, '', '保存数据成功！\nSave datas complete!')
+        QMessageBox.information(self, '提示', '保存数据成功！\nSave datas complete!')
         self.close()

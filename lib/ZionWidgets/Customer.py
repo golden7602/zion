@@ -133,7 +133,6 @@ class Form_Customer(QWidget):
         self.SQL_EditForm_Main = medit_sql
         self.actionClick()
 
-
     def __getUID(self):
         r = self.ui.tableView.currentIndex()
         if r:
@@ -144,7 +143,7 @@ class Form_Customer(QWidget):
     def cellButtonClicked(self):
         r = self.ui.tableView.currentIndex()
         fn = self.dataInfo.DataRows[r.row()].Datas[9]
-        Form_ViewPic(self, JPPub().MainForm.getTaxCerPixmap(fn))
+        Form_ViewPic(self, fn)
 
     def actionClick(self, where_sql=None):
         wherestring = """where (
@@ -208,9 +207,11 @@ class Form_Customer(QWidget):
         frm = Form_Search(self.dataInfo, self.list_sql.format(wherestring=''))
         frm.whereStringCreated.connect(self.actionClick)
         frm.exec_()
+
     @pyqtSlot()
     def on_CmdRefresh_clicked(self):
         self.actionClick()
+
     @pyqtSlot()
     def on_CmdNew_clicked(self):
 
@@ -290,17 +291,27 @@ class EditForm_Customer(JPFormModelMain):
         self.ui.fCustomerName.setFocus()
         pic.to_FullPath = None
         pic.NewFileName = None
-        self.defPixmap = JPPub().MainForm.getPixmap('big_certificate.png')
+        pic.setScaledContents(False)
+        pic.setWordWrap(True)
+        self.dispPixmap = None
         fn_m = self.mainTableFieldsInfo.DataRows[0].Datas[10]
         if fn_m:
-            pic.setScaledContents(True)
-            pic.setPixmap(JPPub().MainForm.getTaxCerPixmap(fn_m))
+            try:
+                self.dispPixmap = JPPub().MainForm.getTaxCerPixmap(fn_m)
+            except FileExistsError as e:
+                self.ui.label_Tax_Registration.setText('File not found!')
+                # QMessageBox.warning(JPPub().MainForm, '错误', e.Msg)
         else:
-            pic.setScaledContents(False)
-            pic.setPixmap(self.defPixmap)
+            self.dispPixmap = JPPub().MainForm.getPixmap('big_certificate.png')
 
         if self.isReadOnlyMode:
             self.ui.btn_SelectPic.setEnabled(False)
+
+    def resizeEvent(self, resizeEvent):
+        if self.dispPixmap:
+            size = self.ui.label_Tax_Registration.size()
+            Pixmap = self.dispPixmap.scaled(size, Qt.KeepAspectRatio)
+            self.ui.label_Tax_Registration.setPixmap(Pixmap)
 
     def onFirstHasDirty(self):
         self.ui.butSave.setEnabled(True)

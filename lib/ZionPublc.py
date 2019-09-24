@@ -1,18 +1,22 @@
 # -*- coding: utf-8 -*-
+from base64 import b64decode, b64encode
 from os import getcwd
+from pickle import dumps, loads
 from sys import path as jppath
+
 jppath.append(getcwd())
 
-from lib.JPDatabase.Database import JPDb
-from lib.JPFunction import Singleton
-from PyQt5.QtCore import (QThread, pyqtSignal, Qt, QObject)
+from PyQt5.QtCore import QObject, Qt, QThread, pyqtSignal
 from PyQt5.QtGui import QIcon, QPixmap
-from Ui.Ui_FormUserLogin import Ui_Dialog as Ui_Dialog_Login
+from PyQt5.QtWidgets import QMessageBox, QTreeWidgetItem
+
+from lib.JPDatabase.Database import JPDb
+from lib.JPForms.JPDialogAnimation import DialogAnimation
+from lib.JPFunction import Singleton, md5_passwd, setWidgetIconByName
 from Ui.Ui_FormChangePassword import Ui_Dialog as Ui_Dialog_ChnPwd
-from lib.JPFunction import md5_passwd, setWidgetIconByName
-from pickle import (dumps, loads)
-from base64 import b64decode, b64encode
-from lib.JPMvc.JPWidgets import QTreeWidgetItem, QMessageBox, DialogAnimation
+from Ui.Ui_FormUserLogin import Ui_Dialog as Ui_Dialog_Login
+
+
 
 
 class Form_ChangePassword(DialogAnimation):
@@ -116,7 +120,7 @@ class Form_UserLogin(DialogAnimation):
 
     def reject(self):
         if not self.isLogin:
-            self.doFadeClose()
+            self.hide()
         else:
             # 退出程序
             JPDb().close()

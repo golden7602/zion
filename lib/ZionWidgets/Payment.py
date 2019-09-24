@@ -84,7 +84,7 @@ class JPFuncForm_Payment(ZionFuncForm):
         if self.getCurrentColumnValue(13) == 1:
             msg = '付款书已经确认，无法重复确认!\n'
             msg = msg + 'The payment has been confirmed and cannot be repeated.'
-            QMessageBox.information(JPPub().MainForm, '', msg)
+            QMessageBox.information(JPPub().MainForm, '提示', msg)
             return
         sql = "update t_order set fConfirmed=1,fConfirmID={uid} where fOrderID='{pk}'"
         db = JPDb()
@@ -108,7 +108,7 @@ class JPFuncForm_Payment(ZionFuncForm):
             msg = msg + 'The payment [{pk}] has been confirmed and cannot be modified.'
             msg = msg + "  Do you want to confirm this payment form?"
             msg = msg.format(pk=cu_id)
-            QMessageBox.information(JPPub().MainForm, '', msg)
+            QMessageBox.information(JPPub().MainForm, '提示', msg)
             return
         super().on_CmdEdit_clicked()
 
