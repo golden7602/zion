@@ -94,6 +94,8 @@ class JPFuncForm_Order(JPFunctionForm):
         super().setListFormSQL(sql_1, sql_2)
         self.tableView.setColumnHidden(13, True)
         self.fSubmited_column = 13
+        self.pub = JPPub()
+        self.pub.UserSaveData.connect(self.UserSaveData)
 
         m_sql = """
                 SELECT fOrderID as 订单号码OrderID
@@ -123,6 +125,10 @@ class JPFuncForm_Order(JPFunctionForm):
                 WHERE fOrderID = '{}'
                 """
         self.setEditFormSQL(m_sql, s_sql)
+
+    def UserSaveData(self, tbName):
+        if tbName == 't_order':
+            self.refreshListForm()
 
     def getEditForm(self, sql_main, edit_mode, sql_sub, PKValue):
 
@@ -344,6 +350,7 @@ class EditForm_Order(JPFormModelMainHasSub):
         self.ui.fPayable.refreshValueNotRaiseEvent(fPayable, True)
 
     def onAfterSaveData(self, data):
+        JPPub().broadcastMessage("t_order")
         if self.isNewMode:
             self.ui.fOrderID.refreshValueNotRaiseEvent(data, True)
 

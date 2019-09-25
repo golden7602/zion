@@ -1,252 +1,168 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-'''
-Created on 2017年12月28日
+"""
+Created on 2017年12月17日
 @author: Irony."[讽刺]
 @site: https://pyqt5.com , https://github.com/892768447
 @email: 892768447@qq.com
-@file: charts.bar.BarStack
-@description: like http://echarts.baidu.com/demo.html#bar-stack
-'''
+@file: WorldMap
+@description: 
+"""
+import json
+import math
 
-from random import randint
-import sys
-
-from PyQt5.QtChart import QChartView, QChart, QBarSeries, QBarSet, QBarCategoryAxis
-from PyQt5.QtCore import Qt, QPointF, QRectF, QPoint
-from PyQt5.QtGui import QPainter, QPen
-from PyQt5.QtWidgets import QApplication, QGraphicsLineItem, QWidget, \
-    QHBoxLayout, QLabel, QVBoxLayout, QGraphicsProxyWidget
+from PyQt5.QtCore import Qt, QPointF, QRectF
+from PyQt5.QtGui import QColor, QPainter, QPolygonF, QPen, QBrush
+from PyQt5.QtOpenGL import QGLFormat
+from PyQt5.QtWidgets import QGraphicsView, QGraphicsScene, QGraphicsPolygonItem
 
 __Author__ = "By: Irony.\"[讽刺]\nQQ: 892768447\nEmail: 892768447@qq.com"
 __Copyright__ = "Copyright (c) 2017 Irony.\"[讽刺]"
 __Version__ = "Version 1.0"
 
 
-class ToolTipItem(QWidget):
-    def __init__(self, color, text, parent=None):
-        super(ToolTipItem, self).__init__(parent)
-        layout = QHBoxLayout(self)
-        layout.setContentsMargins(0, 0, 0, 0)
-        clabel = QLabel(self)
-        clabel.setMinimumSize(12, 12)
-        clabel.setMaximumSize(12, 12)
-        clabel.setStyleSheet(
-            "border-radius:6px;background: rgba(%s,%s,%s,%s);" %
-            (color.red(), color.green(), color.blue(), color.alpha()))
-        layout.addWidget(clabel)
-        self.textLabel = QLabel(text, self, styleSheet="color:white;")
-        layout.addWidget(self.textLabel)
+class GraphicsView(QGraphicsView):
 
-    def setText(self, text):
-        self.textLabel.setText(text)
-
-
-class ToolTipWidget(QWidget):
-
-    Cache = {}
+    # 背景区域颜色
+    backgroundColor = QColor(31, 31, 47)
+    # 边框颜色
+    borderColor = QColor(58, 58, 90)
 
     def __init__(self, *args, **kwargs):
-        super(ToolTipWidget, self).__init__(*args, **kwargs)
-        self.setAttribute(Qt.WA_StyledBackground, True)
-        self.setStyleSheet("ToolTipWidget{background: rgba(50, 50, 50, 100);}")
-        layout = QVBoxLayout(self)
-        self.titleLabel = QLabel(self, styleSheet="color:white;")
-        layout.addWidget(self.titleLabel)
-
-    def updateUi(self, title, bars):
-        self.titleLabel.setText(title)
-        for bar, value in bars:
-            if bar not in self.Cache:
-                item = ToolTipItem(bar.color(),
-                                   (bar.label() or "-") + ":" + str(value),
-                                   self)
-                self.layout().addWidget(item)
-                self.Cache[bar] = item
-            else:
-                self.Cache[bar].setText((bar.label() or "-") + ":" +
-                                        str(value))
-            brush = bar.brush()
-            color = brush.color()
-            self.Cache[bar].setVisible(color.alphaF() == 1.0)  # 隐藏那些不可用的项
-        self.adjustSize()  # 调整大小
-
-
-class GraphicsProxyWidget(QGraphicsProxyWidget):
-    def __init__(self, *args, **kwargs):
-        super(GraphicsProxyWidget, self).__init__(*args, **kwargs)
-        self.setZValue(999)
-        self.tipWidget = ToolTipWidget()
-        self.setWidget(self.tipWidget)
-        self.hide()
-
-    def width(self):
-        return self.size().width()
-
-    def height(self):
-        return self.size().height()
-
-    def show(self, title, bars, pos):
-        self.setGeometry(QRectF(pos, self.size()))
-        self.tipWidget.updateUi(title, bars)
-        super(GraphicsProxyWidget, self).show()
-
-
-class ChartView(QChartView):
-    def __init__(self, *args, **kwargs):
-        super(ChartView, self).__init__(*args, **kwargs)
+        super(GraphicsView, self).__init__(*args, **kwargs)
         self.resize(800, 600)
-        self.setRenderHint(QPainter.Antialiasing)  # 抗锯齿
-        self.initChart()
+        # 设置背景颜色
+        self.setBackgroundBrush(self.backgroundColor)
+        '''
+        #参考 http://doc.qt.io/qt-5/qgraphicsview.html#CacheModeFlag-enum
+        CacheNone                    不使用缓存
+        CacheBackground              缓存背景
+        '''
+        self.setCacheMode(self.CacheBackground)
+        '''
+        #参考 http://doc.qt.io/qt-5/qgraphicsview.html#DragMode-enum
+        NoDrag                       什么都没发生; 鼠标事件被忽略。
+        ScrollHandDrag               光标变成指针，拖动鼠标将滚动滚动条。 该模式可以在交互式和非交互式模式下工作。
+        RubberBandDrag               拖动鼠标将设置橡皮筋几何形状，并选择橡皮筋所覆盖的所有项目。 对于非交互式视图，此模式被禁用。
+        '''
+        self.setDragMode(self.ScrollHandDrag)
+        '''
+        #参考 http://doc.qt.io/qt-5/qgraphicsview.html#OptimizationFlag-enum
+        DontClipPainter              已过时
+        DontSavePainterState         渲染时，QGraphicsView在渲染背景或前景时以及渲染每个项目时保护painter状态（请参阅QPainter.save()）。 这允许你离开painter处于改变状态（即你可以调用QPainter.setPen()或QPainter.setBrush()，而不需要在绘制之后恢复状态）。 但是，如果项目一致地恢复状态，则应启用此标志以防止QGraphicsView执行相同的操作。
+        DontAdjustForAntialiasing    禁用QGraphicsView的抗锯齿自动调整曝光区域。 在QGraphicsItem.boundingRect()的边界上渲染反锯齿线的项目可能会导致渲染部分线外。 为了防止渲染失真，QGraphicsView在所有方向上将所有曝光区域扩展2个像素。 如果启用此标志，QGraphicsView将不再执行这些调整，最大限度地减少需要重绘的区域，从而提高性能。 一个常见的副作用是，使用抗锯齿功能进行绘制的项目可能会在移动时在画面上留下绘画痕迹。
+        IndirectPainting             从Qt 4.6开始，恢复调用QGraphicsView.drawItems()和QGraphicsScene.drawItems()的旧绘画算法。 仅用于与旧代码的兼容性。
+        '''
+        self.setOptimizationFlag(self.DontSavePainterState)
+        '''
+        #参考 http://doc.qt.io/qt-5/qpainter.html#RenderHint-enum
+        Antialiasing                 抗锯齿
+        TextAntialiasing             文本抗锯齿
+        SmoothPixmapTransform        平滑像素变换算法
+        HighQualityAntialiasing      请改用Antialiasing
+        NonCosmeticDefaultPen        已过时
+        Qt4CompatiblePainting        从Qt4移植到Qt5可能有用
+        '''
+        self.setRenderHints(QPainter.Antialiasing | QPainter.TextAntialiasing
+                            | QPainter.SmoothPixmapTransform)
+        if QGLFormat.hasOpenGL():
+            self.setRenderHint(QPainter.HighQualityAntialiasing)
+        '''
+        #当视图被调整大小时，视图如何定位场景。使用这个属性来决定当视口控件的大小改变时，如何在视口中定位场景。 缺省行为NoAnchor在调整大小的过程中不改变场景的位置; 视图的左上角将显示为在调整大小时被锚定。请注意，只有场景的一部分可见（即有滚动条时），此属性的效果才明显。 否则，如果整个场景适合视图，QGraphicsScene使用视图对齐将视景中的场景定位。 
+        #参考 http://doc.qt.io/qt-5/qgraphicsview.html#ViewportAnchor-enum
+        NoAnchor                     视图保持场景的位置不变
+        AnchorViewCenter             视图中心被用作锚点。
+        AnchorUnderMouse             鼠标当前位置被用作锚点
+        '''
+        self.setResizeAnchor(self.AnchorUnderMouse)
+        '''
+        Rubber选择模式
+        #参考 http://doc.qt.io/qt-5/qt.html#ItemSelectionMode-enum
+        ContainsItemShape            输出列表仅包含形状完全包含在选择区域内的项目。 不包括与区域轮廓相交的项目。
+        IntersectsItemShape          默认，输出列表包含其形状完全包含在选择区域内的项目以及与区域轮廓相交的项目。
+        ContainsItemBoundingRect     输出列表仅包含边界矩形完全包含在选择区域内的项目。 不包括与区域轮廓相交的项目。
+        IntersectsItemBoundingRect   输出列表包含边界矩形完全包含在选择区域内的项目以及与区域轮廓相交的项目。 这种方法通常用于确定需要重绘的区域。
+        '''
+        self.setRubberBandSelectionMode(Qt.IntersectsItemShape)
+        '''
+        #在转换过程中如何定位视图。QGraphicsView使用这个属性决定当变换矩阵改变时如何在视口中定位场景，并且视图的坐标系被变换。 默认行为AnchorViewCenter确保在视图中心的场景点在变换过程中保持不变（例如，在旋转时，场景将围绕视图的中心旋转）。请注意，只有场景的一部分可见（即有滚动条时），此属性的效果才明显。 否则，如果整个场景适合视图，QGraphicsScene使用视图对齐将视景中的场景定位。
+        #参考 http://doc.qt.io/qt-5/qgraphicsview.html#ViewportAnchor-enum
+        NoAnchor                     视图保持场景的位置不变
+        AnchorViewCenter             视图中心被用作锚点。
+        AnchorUnderMouse             鼠标当前位置被用作锚点
+        '''
+        self.setTransformationAnchor(self.AnchorUnderMouse)
+        #         if QGLFormat.hasOpenGL():  # 如果开启了OpenGL则使用OpenGL Widget
+        #             self.setViewport(QGLWidget(QGLFormat(QGL.SampleBuffers)))
+        '''
+        #参考 http://doc.qt.io/qt-5/qgraphicsview.html#ViewportUpdateMode-enum
+        FullViewportUpdate           当场景的任何可见部分改变或重新显示时，QGraphicsView将更新整个视口。 当QGraphicsView花费更多的时间来计算绘制的内容（比如重复更新很多小项目）时，这种方法是最快的。 这是不支持部分更新（如QGLWidget）的视口以及需要禁用滚动优化的视口的首选更新模式。
+        MinimalViewportUpdate        QGraphicsView将确定需要重绘的最小视口区域，通过避免重绘未改变的区域来最小化绘图时间。 这是QGraphicsView的默认模式。 虽然这种方法提供了一般的最佳性能，但如果场景中有很多小的可见变化，QGraphicsView最终可能花费更多的时间来寻找最小化的方法。
+        SmartViewportUpdate          QGraphicsView将尝试通过分析需要重绘的区域来找到最佳的更新模式。
+        BoundingRectViewportUpdate   视口中所有更改的边界矩形将被重绘。 这种模式的优点是，QGraphicsView只搜索一个区域的变化，最大限度地减少了花在确定需要重绘的时间。 缺点是还没有改变的地方也需要重新绘制。
+        NoViewportUpdate             当场景改变时，QGraphicsView将永远不会更新它的视口。 预计用户将控制所有更新。 此模式禁用QGraphicsView中的所有（可能较慢）项目可见性测试，适用于要求固定帧速率或视口以其他方式在外部进行更新的场景。
+        '''
+        self.setViewportUpdateMode(self.SmartViewportUpdate)
+        # 设置场景(根据地图的经纬度,并让原点显示在屏幕中间)
+        self._scene = QGraphicsScene(-180, -90, 360, 180, self)
+        self.setScene(self._scene)
 
-        # 提示widget
-        self.toolTipWidget = GraphicsProxyWidget(self._chart)
+        # 初始化地图
+        self.initMap()
 
-        # line 宽度需要调整
-        self.lineItem = QGraphicsLineItem(self._chart)
-        pen = QPen(Qt.gray)
-        self.lineItem.setPen(pen)
-        self.lineItem.setZValue(998)
-        self.lineItem.hide()
+    def wheelEvent(self, event):
+        # 滑轮事件
+        if event.modifiers() & Qt.ControlModifier:
+            self.scaleView(math.pow(2.0, -event.angleDelta().y() / 240.0))
+            return event.accept()
+        super(GraphicsView, self).wheelEvent(event)
 
-        # 一些固定计算，减少mouseMoveEvent中的计算量
-        # 获取x和y轴的最小最大值
-        axisX, axisY = self._chart.axisX(), self._chart.axisY()
-        self.category_len = len(axisX.categories())
-        self.min_x, self.max_x = -0.5, self.category_len - 0.5
-        self.min_y, self.max_y = axisY.min(), axisY.max()
-        # 坐标系中左上角顶点
-        self.point_top = self._chart.mapToPosition(
-            QPointF(self.min_x, self.max_y))
-
-    def mouseMoveEvent(self, event):
-        super(ChartView, self).mouseMoveEvent(event)
-        pos = event.pos()
-        # 把鼠标位置所在点转换为对应的xy值
-        x = self._chart.mapToValue(pos).x()
-        y = self._chart.mapToValue(pos).y()
-        index = round(x)
-        # 得到在坐标系中的所有bar的类型和点
-        serie = self._chart.series()[0]
-        bars = [
-            (bar, bar.at(index)) for bar in serie.barSets()
-            if self.min_x <= x <= self.max_x and self.min_y <= y <= self.max_y
-        ]
-        #         print(bars)
-        if bars:
-            right_top = self._chart.mapToPosition(
-                QPointF(self.max_x, self.max_y))
-            # 等分距离比例
-            step_x = round(
-                (right_top.x() - self.point_top.x()) / self.category_len)
-            posx = self._chart.mapToPosition(QPointF(x, self.min_y))
-            self.lineItem.setLine(posx.x(), self.point_top.y(), posx.x(),
-                                  posx.y())
-            self.lineItem.show()
-            try:
-                title = self.categories[index]
-            except:
-                title = ""
-            t_width = self.toolTipWidget.width()
-            t_height = self.toolTipWidget.height()
-            # 如果鼠标位置离右侧的距离小于tip宽度
-            x = pos.x() - t_width if self.width() - \
-                pos.x() - 20 < t_width else pos.x()
-            # 如果鼠标位置离底部的高度小于tip高度
-            y = pos.y() - t_height if self.height() - \
-                pos.y() - 20 < t_height else pos.y()
-            self.toolTipWidget.show(title, bars, QPoint(x, y))
-        else:
-            self.toolTipWidget.hide()
-            self.lineItem.hide()
-
-    def handleMarkerClicked(self):
-        marker = self.sender()  # 信号发送者
-        if not marker:
+    def scaleView(self, scaleFactor):
+        factor = self.transform().scale(scaleFactor, scaleFactor).mapRect(
+            QRectF(0, 0, 1, 1)).width()
+        if factor < 0.07 or factor > 100:
             return
-        bar = marker.barset()
-        if not bar:
-            return
-        # bar透明度
-        brush = bar.brush()
-        color = brush.color()
-        alpha = 0.0 if color.alphaF() == 1.0 else 1.0
-        color.setAlphaF(alpha)
-        brush.setColor(color)
-        bar.setBrush(brush)
-        # marker
-        brush = marker.labelBrush()
-        color = brush.color()
-        alpha = 0.4 if color.alphaF() == 1.0 else 1.0
-        # 设置label的透明度
-        color.setAlphaF(alpha)
-        brush.setColor(color)
-        marker.setLabelBrush(brush)
-        # 设置marker的透明度
-        brush = marker.brush()
-        color = brush.color()
-        color.setAlphaF(alpha)
-        brush.setColor(color)
-        marker.setBrush(brush)
+        self.scale(scaleFactor, scaleFactor)
 
-    def handleMarkerHovered(self, status):
-        # 设置bar的画笔宽度
-        marker = self.sender()  # 信号发送者
-        if not marker:
-            return
-        bar = marker.barset()
-        if not bar:
-            return
-        pen = bar.pen()
-        if not pen:
-            return
-        pen.setWidth(pen.width() + (1 if status else -1))
-        bar.setPen(pen)
-
-    def handleBarHoverd(self, status, index):
-        # 设置bar的画笔宽度
-        bar = self.sender()  # 信号发送者
-        pen = bar.pen()
-        if not pen:
-            return
-        pen.setWidth(pen.width() + (1 if status else -1))
-        bar.setPen(pen)
-
-    def initChart(self):
-        self._chart = QChart(title="柱状图堆叠")
-        self._chart.setAcceptHoverEvents(True)
-        # Series动画
-        self._chart.setAnimationOptions(QChart.SeriesAnimations)
-        self.categories = ["周一", "周二", "周三", "周四", "周五", "周六", "周日"]
-        names = ["邮件营销", "联盟广告", "视频广告", "直接访问", "搜索引擎"]
-        series = QBarSeries(self._chart)
-        for name in names:
-            bar = QBarSet(name)
-            # 随机数据
-            for _ in range(7):
-                bar.append(randint(0, 10))
-            series.append(bar)
-            bar.hovered.connect(self.handleBarHoverd)  # 鼠标悬停
-        self._chart.addSeries(series)
-        self._chart.createDefaultAxes()  # 创建默认的轴
-        # x轴
-        axis_x = QBarCategoryAxis(self._chart)
-        axis_x.append(self.categories)
-        self._chart.setAxisX(axis_x, series)
-        # chart的图例
-        legend = self._chart.legend()
-        legend.setVisible(True)
-        # 遍历图例上的标记并绑定信号
-        for marker in legend.markers():
-            # 点击事件
-            marker.clicked.connect(self.handleMarkerClicked)
-            # 鼠标悬停事件
-            marker.hovered.connect(self.handleMarkerHovered)
-        self.setChart(self._chart)
+    def initMap(self):
+        features = json.load(open("Data/world.json",
+                                  encoding="utf8")).get("features")
+        for feature in features:
+            geometry = feature.get("geometry")
+            if not geometry:
+                continue
+            _type = geometry.get("type")
+            coordinates = geometry.get("coordinates")
+            for coordinate in coordinates:
+                if _type == "Polygon":
+                    polygon = QPolygonF([
+                        QPointF(latitude, -longitude)
+                        for latitude, longitude in coordinate
+                    ])
+                    item = QGraphicsPolygonItem(polygon)
+                    item.setPen(QPen(self.borderColor, 0))
+                    item.setBrush(QBrush(self.backgroundColor))
+                    item.setPos(0, 0)
+                    self._scene.addItem(item)
+                elif _type == "MultiPolygon":
+                    for _coordinate in coordinate:
+                        polygon = QPolygonF([
+                            QPointF(latitude, -longitude)
+                            for latitude, longitude in _coordinate
+                        ])
+                        item = QGraphicsPolygonItem(polygon)
+                        item.setPen(QPen(self.borderColor, 0))
+                        item.setBrush(QBrush(self.backgroundColor))
+                        item.setPos(0, 0)
+                        self._scene.addItem(item)
 
 
 if __name__ == "__main__":
+    import sys
+    from PyQt5.QtWidgets import QApplication
     app = QApplication(sys.argv)
-    view = ChartView()
+    print("OpenGL Status:", QGLFormat.hasOpenGL())
+    view = GraphicsView()
+    view.setWindowTitle("世界地图")
     view.show()
     sys.exit(app.exec_())

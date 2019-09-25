@@ -3,7 +3,8 @@ from base64 import b64decode, b64encode
 from os import getcwd
 from pickle import dumps, loads
 from sys import path as jppath
-
+import socket
+import time
 jppath.append(getcwd())
 
 from PyQt5.QtCore import QObject, Qt, QThread, pyqtSignal
@@ -15,8 +16,6 @@ from lib.JPForms.JPDialogAnimation import DialogAnimation
 from lib.JPFunction import Singleton, md5_passwd, setWidgetIconByName
 from Ui.Ui_FormChangePassword import Ui_Dialog as Ui_Dialog_ChnPwd
 from Ui.Ui_FormUserLogin import Ui_Dialog as Ui_Dialog_Login
-
-
 
 
 class Form_ChangePassword(DialogAnimation):
@@ -216,9 +215,25 @@ class JPUser(QObject):
         return self.Name and self.__ID
 
 
+class MyThreadRec(QThread):  # 加载功能树的线程类
+    def __init__(self, pub, rec, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.rec = rec
+        self.pub = pub
+
+    def run(self):
+        while True:
+            data, address = self.rec.recvfrom(65535)
+            self.pub.UserSaveData.emit(data.decode('utf-8'))
+            print(data.decode('utf-8'))
+            # print('Server received from {}:{}'.format(address,
+            #                                           data.decode('utf-8')))
+
+
 @Singleton
 class JPPub(QObject):
     MainForm = None
+    UserSaveData = pyqtSignal(str)
 
     def __init__(self):
         if self.MainForm is None:
@@ -228,6 +243,8 @@ class JPPub(QObject):
             self.__ConfigData = None
             self.INITCustomer()
             self.INITEnum()
+            # 启动数据改变事件的监听
+            self.__recvM()
 
             sql = """
                 SELECT fNMID, fMenuText, fParentId, fCommand, fObjectName, fIcon,
@@ -285,3 +302,21 @@ class JPPub(QObject):
         if RefResh or self.__ConfigData is None:
             self.__ConfigData = self.getConfigData()
         return self.__ConfigData
+
+    def broadcastMessage(self, msg: str):
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+        PORT = 1060
+        network = '<broadcast>'
+        s.sendto(msg.encode('utf-8'), (network, PORT))
+        s.close()
+
+    def __recvM(self):
+        self.rec = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.rec.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+        PORT = 1060
+        self.rec.bind(('', PORT))
+        self.rec.setblocking(True)
+        # print('Listening for broadcast at ', self.rec.getsockname())
+        self.ThreadRec = MyThreadRec(self, self.rec)
+        self.ThreadRec.start()

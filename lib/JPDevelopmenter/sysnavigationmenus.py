@@ -1,16 +1,72 @@
 import sys
-
+from pickle import dumps, loads
+from base64 import b64decode, b64encode
 from os import getcwd
 from sys import path as jppath
 jppath.append(getcwd())
 
-from lib.JPDevelopmenter.Ui.Ui_FormSysnavigationMenus import Ui_Dialog
+#from lib.JPDevelopmenter.Ui.Ui_FormSysnavigationMenus import Ui_Dialog
 from lib.JPDatabase.Database import JPDb, JPDbType
 
-from PyQt5.QtWidgets import (QDialog, QApplication, QTreeWidgetItem, QStyledItemDelegate)
+from PyQt5.QtWidgets import (QDialog, QApplication, QTreeWidgetItem,
+                             QStyledItemDelegate)
 from PyQt5.QtCore import Qt, QThread, QAbstractItemModel, QModelIndex
 from PyQt5.QtGui import QIcon
 from lib.JPDatabase.Query import JPQueryFieldInfo
+from PyQt5 import QtCore, QtGui, QtWidgets
+
+import json
+
+
+class myTreeWidget(QtWidgets.QTreeWidget):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.setAcceptDrops(True)
+        self.setDragEnabled(True)
+
+    def dragEnterEvent(self, e):
+        print(e.mimeData().hasText())
+        if e.mimeData().hasText():
+            e.accept()
+        else:
+            e.ignore()
+
+    def dropEvent(self, e):
+        print(e.mimeData().text())
+        #self.addItem(e.mimeData().text())
+
+    def mimeData(self, TreeWidgetItem):
+        d = QtCore.QMimeData()
+        txt = json.dumps(TreeWidgetItem[0].jpData)
+        d.setText(txt)
+        return d
+
+
+class Ui_Dialog(object):
+    def setupUi(self, Dialog):
+        Dialog.setObjectName("Dialog")
+        Dialog.resize(892, 636)
+        self.verticalLayout = QtWidgets.QVBoxLayout(Dialog)
+        self.verticalLayout.setObjectName("verticalLayout")
+        self.treeWidget = myTreeWidget(Dialog)
+        self.treeWidget.setObjectName("treeWidget")
+        self.treeWidget.headerItem().setText(0, "1")
+        self.verticalLayout.addWidget(self.treeWidget)
+        self.buttonBox = QtWidgets.QDialogButtonBox(Dialog)
+        self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
+        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel
+                                          | QtWidgets.QDialogButtonBox.Ok)
+        self.buttonBox.setObjectName("buttonBox")
+        self.verticalLayout.addWidget(self.buttonBox)
+
+        self.retranslateUi(Dialog)
+        self.buttonBox.accepted.connect(Dialog.accept)
+        self.buttonBox.rejected.connect(Dialog.reject)
+        QtCore.QMetaObject.connectSlotsByName(Dialog)
+
+    def retranslateUi(self, Dialog):
+        _translate = QtCore.QCoreApplication.translate
+        Dialog.setWindowTitle(_translate("Dialog", "SysNavigationMenus"))
 
 
 class TreeModel(QAbstractItemModel):
@@ -68,7 +124,7 @@ def loadTreeview(treeWidget, items):
                 item.setText(0, r["fMenuText"])
                 item.setText(1, str(r["fDispIndex"]))
                 item.setText(2, str(r["fIcon"]))
-                item.setCheckState(3,r["fDefault"])
+                item.setCheckState(3, r["fDefault"])
                 #item.setText(3, str(r["fDefault"]))
                 item.setText(4, str(r["fNodeBackvolor"]))
                 item.setText(5, str(r["fNodeForeColor"]))
@@ -94,10 +150,8 @@ def loadTreeview(treeWidget, items):
 
 
 class myQStyledItemDelegate(QStyledItemDelegate):
-    def __init__(self, parent: QObject = None):
+    def __init__(self, parent=None):
         super().__init__(parent)
-
-    
 
 
 class Edit_FormSysnavigationMenus(QDialog):
@@ -135,7 +189,6 @@ if __name__ == "__main__":
     db = JPDb()
     db.setDatabaseType(JPDbType.MySQL)
     fld = Edit_FormSysnavigationMenus()
-    fld.exec_()
     # fld.ui.splitter.setStretchFactor(0, 2)
     # fld.ui.splitter.setStretchFactor(1, 11)
     fld.showMaximized()
