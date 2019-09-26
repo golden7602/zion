@@ -12,11 +12,11 @@ from lib.JPDatabase.Query import JPTabelFieldInfo
 from lib.JPFunction import JPDateConver
 from lib.JPMvc.JPEditFormModel import JPEditFormDataMode, JPFormModelMain
 from lib.JPMvc.JPModel import JPTableViewModelReadOnly
-from lib.ZionPublc import JPDb, JPPub
+from lib.JPPublc import JPDb, JPPub
 from Ui.Ui_FormCustomer import Ui_Form as Ui_Form_List
 from Ui.Ui_FormCustomerEdit import Ui_Form as Ui_Form_Edit
 from lib.JPDatabase.Query import JPQueryFieldInfo
-from lib.JPSearch import Form_Search
+from lib.JPForms.JPSearch import Form_Search
 from threading import Thread
 from lib.JPConfigInfo import ConfigInfo
 from lib.ZionWidgets.ViewPic import Form_ViewPic
@@ -132,6 +132,12 @@ class Form_Customer(QWidget):
 
         self.SQL_EditForm_Main = medit_sql
         self.actionClick()
+        self.pub = JPPub()
+        self.pub.UserSaveData.connect(self.UserSaveData)
+
+    def UserSaveData(self, tbName):
+        if tbName == 't_customer':
+            self.actionClick()
 
     def __getUID(self):
         r = self.ui.tableView.currentIndex()
@@ -369,3 +375,10 @@ class EditForm_Customer(JPFormModelMain):
             myCopy(pic.NewFileName, pic.to_FullPath)
         except Exception as e:
             raise MyCopyFileError(pic.NewFileName, pic.to_FullPath, str(e))
+
+    def onAfterSaveData(self, data):
+        act = 'new' if self.isNewMode else 'edit'
+        JPPub().broadcastMessage(tablename="t_customer",
+                                 action=act,
+                                 PK=data[0][0])
+        super().onAfterSaveData(data)

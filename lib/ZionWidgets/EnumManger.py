@@ -12,7 +12,7 @@ from Ui.Ui_FormEnumEdit import Ui_Form as Ui_Form_Edit
 from lib.JPDatabase.Query import JPQueryFieldInfo, JPTabelFieldInfo
 from lib.JPMvc.JPModel import (JPTableViewModelReadOnly)
 from lib.JPMvc.JPEditFormModel import JPFormModelMain, JPEditFormDataMode
-from lib.ZionPublc import JPDb, JPPub
+from lib.JPPublc import JPDb, JPPub
 
 
 class _myReadOnlyMod(JPTableViewModelReadOnly):

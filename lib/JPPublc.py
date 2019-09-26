@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 from base64 import b64decode, b64encode
 from os import getcwd
+import json
 from pickle import dumps, loads
 from sys import path as jppath
 import socket
 import time
+import datetime
 jppath.append(getcwd())
 
 from PyQt5.QtCore import QObject, Qt, QThread, pyqtSignal
@@ -16,6 +18,7 @@ from lib.JPForms.JPDialogAnimation import DialogAnimation
 from lib.JPFunction import Singleton, md5_passwd, setWidgetIconByName
 from Ui.Ui_FormChangePassword import Ui_Dialog as Ui_Dialog_ChnPwd
 from Ui.Ui_FormUserLogin import Ui_Dialog as Ui_Dialog_Login
+from lib.JPForms.JPNotify import WindowNotify
 
 
 class Form_ChangePassword(DialogAnimation):
@@ -216,24 +219,25 @@ class JPUser(QObject):
 
 
 class MyThreadRec(QThread):  # 加载功能树的线程类
-    def __init__(self, pub, rec, *args, **kwargs):
+    def __init__(self, pub, notify, rec, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.rec = rec
         self.pub = pub
+        self.notify = notify
 
     def run(self):
         while True:
             data, address = self.rec.recvfrom(65535)
-            self.pub.UserSaveData.emit(data.decode('utf-8'))
-            print(data.decode('utf-8'))
-            # print('Server received from {}:{}'.format(address,
-            #                                           data.decode('utf-8')))
+            txt = json.loads(data.decode('utf-8'))
+            self.pub.UserSaveData.emit(txt[0])
+            self.pub.SingnalPopMessage.emit(txt[1])
 
 
 @Singleton
 class JPPub(QObject):
     MainForm = None
     UserSaveData = pyqtSignal(str)
+    SingnalPopMessage = pyqtSignal(str)
 
     def __init__(self):
         if self.MainForm is None:
@@ -243,8 +247,6 @@ class JPPub(QObject):
             self.__ConfigData = None
             self.INITCustomer()
             self.INITEnum()
-            # 启动数据改变事件的监听
-            self.__recvM()
 
             sql = """
                 SELECT fNMID, fMenuText, fParentId, fCommand, fObjectName, fIcon,
@@ -303,20 +305,47 @@ class JPPub(QObject):
             self.__ConfigData = self.getConfigData()
         return self.__ConfigData
 
-    def broadcastMessage(self, msg: str):
+    def broadcastMessage(self, tablename=None, action=None, PK=None):
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         s.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
         PORT = 1060
         network = '<broadcast>'
+        act = {
+            'confirmation': '确认',
+            'Submit': '提交',
+            'edit': '修改',
+            'new': '新增',
+            'delete': '删除'
+        }
+        tn = {
+            't_order': '订单表',
+            'sysusers': '用户表',
+            't_receivables': '收款表',
+            't_customer': '客户表',
+            't_quotation': '报价单表'
+        }
+        curtime = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        curtab = tn[tablename]
+        curact = act[action]
+        curpk = PK
+        curuser = JPUser().currentUserID()
+        txt = f'{curtime}:用户[{curuser}]操作,[{curtab}]有新的记录被用户[{curact}],编号为[{curpk}]'
+        msg = json.dumps((tablename, txt))
         s.sendto(msg.encode('utf-8'), (network, PORT))
         s.close()
 
-    def __recvM(self):
+    def receiveMessage(self, app):
         self.rec = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.rec.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
         PORT = 1060
         self.rec.bind(('', PORT))
         self.rec.setblocking(True)
         # print('Listening for broadcast at ', self.rec.getsockname())
-        self.ThreadRec = MyThreadRec(self, self.rec)
+        self.notify = WindowNotify(app=app)
+        self.ThreadRec = MyThreadRec(self, self.notify, self.rec)
+        self.SingnalPopMessage.connect(self.popMessage)
         self.ThreadRec.start()
+
+    def popMessage(self, txt):
+        self.notify.show(content=txt)
+        self.notify.showAnimation()

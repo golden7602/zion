@@ -5,7 +5,7 @@ jppath.append(getcwd())
 from Ui.Ui_FormConfig import Ui_Dialog
 from PyQt5.QtWidgets import QDialog, QMessageBox, QColorDialog
 from PyQt5.QtGui import QColor
-from lib.ZionPublc import JPPub
+from lib.JPPublc import JPPub
 from PyQt5.QtCore import Qt
 from lib.JPDatabase.Database import JPDb
 from functools import partial

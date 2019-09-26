@@ -15,8 +15,8 @@ from lib.JPFunction import JPRound
 from lib.JPMvc.JPEditFormModel import JPEditFormDataMode, JPFormModelMainHasSub
 from lib.JPMvc.JPFuncForm import JPFunctionForm
 from lib.JPMvc.JPModel import JPTableViewModelReadOnly
-from lib.JPPrintReport import JPPrintSectionType
-from lib.ZionPublc import JPPub, JPUser
+from lib.JPPrint.JPPrintReport import JPPrintSectionType
+from lib.JPPublc import JPPub, JPUser
 from lib.ZionReport.OrderReportMob import Order_report_Mob
 from lib.ZionWidgets.EditFormOrderOrPrintingOrder import JPFormOrder
 
@@ -198,6 +198,9 @@ class JPFuncForm_Order(JPFunctionForm):
                              pk_n=self.EditFormPrimarykeyFieldName,
                              pk_v=cu_id)
             db.executeTransaction([sql, sql1.format(pk_v=cu_id)])
+            JPPub().broadcastMessage(tablename="t_order",
+                                     PK=cu_id,
+                                     action='Submit')
             self.refreshListForm()
 
     @pyqtSlot()
@@ -350,7 +353,10 @@ class EditForm_Order(JPFormModelMainHasSub):
         self.ui.fPayable.refreshValueNotRaiseEvent(fPayable, True)
 
     def onAfterSaveData(self, data):
-        JPPub().broadcastMessage("t_order")
+        act = 'new' if self.isNewMode else 'edit'
+        JPPub().broadcastMessage(tablename="t_order",
+                                 action=act,
+                                 PK=data[0][0])
         if self.isNewMode:
             self.ui.fOrderID.refreshValueNotRaiseEvent(data, True)
 

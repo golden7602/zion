@@ -21,7 +21,7 @@ from PyQt5.QtWidgets import (QApplication, QHBoxLayout, QLabel, QMainWindow,
 
 from lib.JPDatabase.Database import JPDb, JPDbType
 from lib.JPFunction import readQss, setWidgetIconByName, seWindowsIcon
-from lib.ZionPublc import JPPub, JPUser
+from lib.JPPublc import JPPub, JPUser
 from lib.ZionWidgets.Adjustment import JPFuncForm_Adjustment
 from lib.ZionWidgets.Background import Form_Background
 from lib.ZionWidgets.Backup import Form_Backup
@@ -143,6 +143,10 @@ class JPMainWindow(QMainWindow):
         if st.count() > 0:
             temp = st.widget(0)
             st.removeWidget(temp)
+            try:
+                JPPub().UserSaveData.disconnect(temp.UserSaveData)
+            except Exception:
+                pass
             del temp
         st.addWidget(form)
 
@@ -233,5 +237,7 @@ if __name__ == "__main__":
     MainWindow.setWindowIcon(icon)
     MainWindow.ui.splitter.setStretchFactor(0, 2)
     MainWindow.ui.splitter.setStretchFactor(1, 11)
+    # 启动数据改变事件的监听
+    JPPub().receiveMessage(app)
     MainWindow.showMaximized()
     sys_exit(app.exec_())

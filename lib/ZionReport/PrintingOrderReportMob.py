@@ -3,12 +3,12 @@ from sys import path as jppath
 jppath.append(getcwd())
 
 from PyQt5.QtPrintSupport import QPrinter
-from lib.JPPrintReport import JPPrintSectionType, JPReport
+from lib.JPPrint.JPPrintReport import JPPrintSectionType, JPReport
 from PyQt5.QtGui import QColor, QFont, QPainter, QPixmap
 from PyQt5.QtCore import Qt
 from lib.JPDatabase.Database import JPDb
 from configparser import ConfigParser
-from lib.ZionPublc import JPPub
+from lib.JPPublc import JPPub
 
 
 class PrintOrder_report_Mob(JPReport):

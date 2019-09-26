@@ -23,8 +23,8 @@ from lib.JPFunction import JPRound
 from lib.JPMvc import JPWidgets
 from lib.JPMvc.JPModel import (JPTableViewModelEditForm,
                                JPTableViewModelReadOnly)
-from lib.JPPrintReport import JPReport
-from lib.ZionPublc import JPPub
+from lib.JPPrint.JPPrintReport import JPReport
+from lib.JPPublc import JPPub
 from lib.JPForms.JPDialogAnimation import DialogAnimation
 
 class JPEditFormDataMode():

@@ -15,7 +15,7 @@ from lib.JPMvc.JPModel import JPTableViewModelReadOnly
 from Ui.Ui_FormUser import Ui_Form as Ui_Form_List
 from Ui.Ui_FormUserEdit import Ui_Form as Ui_Form_Edit
 from PyQt5.QtGui import QColor
-from lib.ZionPublc import JPUser, JPPub
+from lib.JPPublc import JPUser, JPPub
 
 
 class myJPTableViewModelReadOnly(JPTableViewModelReadOnly):
@@ -45,6 +45,12 @@ class Form_User(QWidget):
         tr.setColumnWidth(1, 100)
         tr.itemChanged.connect(self.onItemChanged)
         self.refreshTable()
+        self.pub = JPPub()
+        self.pub.UserSaveData.connect(self.UserSaveData)
+
+    def UserSaveData(self, tbName):
+        if tbName == 'sysusers':
+            self.refreshTable()
 
     def refreshTable(self):
         self.SQL = """
@@ -223,6 +229,7 @@ class Form_User(QWidget):
                                 (QMessageBox.Yes | QMessageBox.No),
                                 QMessageBox.Yes) == QMessageBox.Yes:
             JPDb().executeTransaction(sql.format(uid))
+            JPPub().broadcastMessage(tablename="sysusers",action='delete',PK=uid)
             self.mod.removeRow(
                 self.ui.tableView.selectionModel().currentIndex().row())
 
@@ -300,4 +307,8 @@ class EditForm_User(JPFormModelMain):
     def onAfterSaveData(self, data):
         # 重新加载一次用户数据
         JPUser().INIT()
+        act = 'new' if self.isNewMode else 'edit'
+        JPPub().broadcastMessage(tablename="sysusers",
+                                 PK=data[0][0],
+                                 action=act)
         super().onAfterSaveData(data)

@@ -5,7 +5,7 @@ import webbrowser
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QPoint, QPropertyAnimation, Qt, QTimer, pyqtSignal
-from PyQt5.QtWidgets import QPushButton, QWidget
+from PyQt5.QtWidgets import QPushButton, QWidget, QApplication
 
 #from Lib.UiNotify import Ui_NotifyForm  # @UnresolvedImport
 
@@ -112,11 +112,18 @@ class WindowNotify(QWidget, Ui_NotifyForm):
 
     SignalClosed = pyqtSignal()  # 弹窗关闭信号
 
-    def __init__(self, title="", content="", timeout=5000, *args, **kwargs):
+    def __init__(self,
+                 title="",
+                 content="",
+                 timeout=5000,
+                 app=None,
+                 *args,
+                 **kwargs):
         super(WindowNotify, self).__init__(*args, **kwargs)
         self.setupUi(self)
         self.setTitle(title).setContent(content)
         self._timeout = timeout
+        self.app = app
         self._init()
 
     def setTitle(self, title):
@@ -251,8 +258,8 @@ if __name__ == "__main__":
     from PyQt5.QtWidgets import QApplication, QHBoxLayout
     app = QApplication(sys.argv)
 
-    #window = QWidget()
-    notify = WindowNotify()
+    window = QWidget()
+    notify = WindowNotify(app=app)
     notify.show(content='ljkhjkhk').showAnimation()
     # layout = QHBoxLayout(window)
 
@@ -268,6 +275,6 @@ if __name__ == "__main__":
     # layout.addWidget(b1)
     # layout.addWidget(b2)
 
-    #window.show()
+    window.show()
 
     sys.exit(app.exec_())

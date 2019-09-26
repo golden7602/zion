@@ -10,10 +10,10 @@ from Ui.Ui_FormReport_Day import Ui_Form
 from lib.JPDatabase.Database import JPDb
 from lib.JPDatabase.Query import JPQueryFieldInfo
 from lib.JPFunction import findButtonAndSetIcon
-from lib.JPPrintReport import JPReport
+from lib.JPPrint.JPPrintReport import JPReport
 from PyQt5.QtPrintSupport import QPrinter
 from lib.JPExcel.JPExportToExcel import JPExpExcelFromTabelFieldInfo
-from lib.ZionPublc import JPPub
+from lib.JPPublc import JPPub
 
 
 class _myMod(JPTableViewModelReadOnly):

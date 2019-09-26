@@ -9,11 +9,11 @@ from PyQt5.QtGui import QColor, QFont, QPainter, QPixmap
 from PyQt5.QtWidgets import QDialog, QMessageBox, QWidget
 from PyQt5.QtPrintSupport import QPrinter
 
-from lib.JPPrintReport import JPPrintSectionType, JPReport
-from lib.ZionPublc import JPPub
+from lib.JPPrint.JPPrintReport import JPPrintSectionType, JPReport
+from lib.JPPublc import JPPub
 from lib.JPMvc.JPFuncForm import JPFunctionForm
 from lib.ZionWidgets.Order import EditForm_Order
-from lib.ZionPublc import JPDb
+from lib.JPPublc import JPDb
 from lib.ZionReport.OrderReportMob import Order_report_Mob
 from lib.JPMvc.JPEditFormModel import JPEditFormDataMode
 from lib.JPMvc.JPModel import JPTableViewModelReadOnly

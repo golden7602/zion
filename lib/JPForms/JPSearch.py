@@ -26,8 +26,8 @@ from lib.JPFunction import JPDateConver, JPGetDisplayText
 from lib.JPMvc.JPDelegate import _JPDelegate_Base
 from lib.JPMvc.JPModel import (JPTableViewModelEditForm,
                                JPTableViewModelReadOnly)
-from lib.JPPrintReport import JPReport
-from lib.ZionPublc import JPPub
+from lib.JPPrint.JPPrintReport import JPReport
+from lib.JPPublc import JPPub
 from Ui.Ui_FormSearch import Ui_DlgSearch
 
 jppath.append(getcwd())

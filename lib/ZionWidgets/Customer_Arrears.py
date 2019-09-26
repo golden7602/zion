@@ -12,7 +12,7 @@ from lib.JPExcel.JPExportToExcel import JPExpExcelFromTabelFieldInfo
 from lib.JPFunction import JPDateConver
 from lib.JPMvc.JPEditFormModel import JPEditFormDataMode, JPFormModelMain
 from lib.JPMvc.JPModel import JPTableViewModelReadOnly
-from lib.ZionPublc import JPDb, JPPub
+from lib.JPPublc import JPDb, JPPub
 from Ui.Ui_FormCustomer_Arrears import Ui_Form as Ui_Form_List
 
 

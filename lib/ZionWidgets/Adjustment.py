@@ -5,12 +5,12 @@ jppath.append(getcwd())
 from functools import reduce
 
 from PyQt5.QtCore import Qt, QModelIndex, pyqtSlot
-from PyQt5.QtGui import QColor, QFont, QPainter, QPixmap,QPalette,QBrush
+from PyQt5.QtGui import QColor, QFont, QPainter, QPixmap, QPalette, QBrush
 from PyQt5.QtWidgets import QDialog, QMessageBox, QWidget
 from PyQt5.QtPrintSupport import QPrinter
 
-from lib.JPPrintReport import JPPrintSectionType, JPReport
-from lib.ZionPublc import JPPub, JPDb
+from lib.JPPrint.JPPrintReport import JPPrintSectionType, JPReport
+from lib.JPPublc import JPPub, JPDb
 from lib.ZionWidgets.ZionFunc import ZionFuncForm
 from lib.JPMvc.JPModel import JPTableViewModelReadOnly
 
@@ -50,7 +50,7 @@ class JPFuncForm_Adjustment(ZionFuncForm):
                     fCanceled1 as `已作废Canceled`,
                     fCancel_Name as `作废提交人CancelUser`,
                     fSubmited1 as `提交Submited`,
-                    fSubmit_Name as `Submit_User`,
+                    fSubmit_Name as `提交人Submit_User`,
                     fConfirmed1 as `确认Confirmed`,
                     fConfirm_Name as `确认人fConfirm_Name`,
                     fDelivered1 as `交付Delivered`,
@@ -60,7 +60,7 @@ class JPFuncForm_Adjustment(ZionFuncForm):
                     fPayable as `应付金额Valor a Pagar`,
                     fDesconto as `折扣Desconto`,
                     fCustomerID as `客户编号CustomerID`,
-                    fCanceled as `fCanceled`
+                    fCanceled as `作废fCanceled`
                 FROM v_order AS o
                 WHERE fOrderDate{date}
                         AND (fCanceled={ch1} OR fCanceled={ch2})
@@ -146,7 +146,7 @@ class JPFuncForm_Adjustment(ZionFuncForm):
             form.ui.fTax.setEnabled(True)
         #self.__setFormBack(form)
         return super().onAfterCreatedForm(cur_tp, form)
-    
+
     # def __setFormBack(self,form):
     #     pk = form.ui.fOrderID.text()
     #     sql = f"select fCanceled from t_order where fOrderID='{pk}'"

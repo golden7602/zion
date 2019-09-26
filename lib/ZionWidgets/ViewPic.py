@@ -4,7 +4,7 @@ jppath.append(getcwd())
 
 from Ui.Ui_FormViewPic import Ui_Dialog
 from PyQt5.QtWidgets import QDialog
-from lib.ZionPublc import JPPub
+from lib.JPPublc import JPPub
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap
 

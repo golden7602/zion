@@ -8,7 +8,7 @@ from Ui.Ui_FormBackup import Ui_Dialog
 from configparser import ConfigParser
 from lib.JPDatabase.Database import JPDb
 from lib.JPDatabase.Query import JPQueryFieldInfo
-from lib.ZionPublc import JPPub
+from lib.JPPublc import JPPub
 from lib.JPDatabase.ExportSQL import CreateSQL_MySQL
 
 

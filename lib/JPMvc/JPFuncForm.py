@@ -19,7 +19,7 @@ from Ui.Ui_FuncFormMob import Ui_Form
 from lib.JPExcel.JPExportToExcel import clsExportToExcelFromTableWidget
 import re
 import abc
-from lib.JPSearch import Form_Search
+from lib.JPForms.JPSearch import Form_Search
 
 
 class JPFunctionForm(QWidget):

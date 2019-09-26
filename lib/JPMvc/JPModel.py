@@ -20,7 +20,7 @@ from lib.JPDatabase.Query import (JPQueryFieldInfo, JPTabelFieldInfo,
 from lib.JPFunction import (JPBooleanString, JPDateConver, JPGetDisplayText,
                             JPRound, PrintFunctionRunTime)
 from lib.JPMvc import JPWidgets
-from lib.ZionPublc import JPPub
+from lib.JPPublc import JPPub
 
 
 class JPTableViewModelBase(QAbstractTableModel):

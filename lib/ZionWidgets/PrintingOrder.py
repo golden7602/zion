@@ -11,15 +11,15 @@ from lib.JPDatabase.Database import JPDb
 from lib.JPDatabase.Query import JPQueryFieldInfo
 from lib.JPMvc.JPEditFormModel import JPFormModelMain
 from lib.JPMvc.JPFuncForm import JPFunctionForm, JPEditFormDataMode
-from lib.JPPrintReport import JPPrintSectionType
-from lib.ZionPublc import JPPub, JPUser
+from lib.JPPrint.JPPrintReport import JPPrintSectionType
+from lib.JPPublc import JPPub, JPUser
 from lib.ZionReport.PrintingOrderReportMob import PrintOrder_report_Mob
 from lib.ZionWidgets.EditFormOrderOrPrintingOrder import JPFormPrintingOrder
 from lib.JPFunction import JPRound
 from lib.JPMvc.JPModel import JPTableViewModelReadOnly
 from lib.JPExcel.JPExportToExcel import JPExpExcelFromTabelFieldInfo
 from lib.ZionWidgets.ViewPic import Form_ViewPic
-from lib.JPPrintReport import JPReport
+from lib.JPPrint.JPPrintReport import JPReport
 from PyQt5.QtPrintSupport import QPrinter
 
 
@@ -123,6 +123,12 @@ class JPFuncForm_PrintingOrder(JPFunctionForm):
                 WHERE fOrderID = '{}'
                 """
         self.setEditFormSQL(m_sql, None)
+        self.pub = JPPub()
+        self.pub.UserSaveData.connect(self.UserSaveData)
+
+    def UserSaveData(self, tbName):
+        if tbName == 't_order':
+            self.refreshListForm()
 
     def getEditForm(self, sql_main, edit_mode, sql_sub, PKValue):
         frm = EditForm_PrintingOrder(sql_main=sql_main,
@@ -173,6 +179,9 @@ class JPFuncForm_PrintingOrder(JPFunctionForm):
                              pk_n=self.EditFormPrimarykeyFieldName,
                              pk_v=cu_id)
             db.executeTransaction([sql, sql1.format(pk_v=cu_id)])
+            JPPub().broadcastMessage(tablename="t_order",
+                                     PK=cu_id,
+                                     action='Submit')
             self.refreshListForm()
 
     @pyqtSlot()
@@ -306,6 +315,10 @@ class EditForm_PrintingOrder(JPFormModelMain):
             '''
 
     def onAfterSaveData(self, data):
+        act = 'new' if self.isNewMode else 'edit'
+        JPPub().broadcastMessage(tablename="t_order",
+                                 PK=data[0][0],
+                                 action=act)
         if self.isNewMode:
             self.ui.fOrderID.refreshValueNotRaiseEvent(data, True)
 

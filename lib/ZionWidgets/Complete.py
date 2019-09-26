@@ -13,37 +13,32 @@ from lib.JPExcel.JPExportToExcel import JPExpExcelFromTabelFieldInfo
 from lib.JPMvc.JPEditFormModel import JPFormModelMain, JPFormModelMainHasSub
 from lib.JPMvc.JPFuncForm import JPFunctionForm
 from lib.JPMvc.JPModel import JPTableViewModelReadOnly
-from lib.JPPrintReport import JPPrintSectionType, JPReport
-from lib.ZionPublc import JPDb, JPPub, JPUser
+from lib.JPPrint.JPPrintReport import JPPrintSectionType, JPReport
+from lib.JPPublc import JPDb, JPPub, JPUser
 from lib.ZionWidgets.EditFormOrderOrPrintingOrder import (JPFormOrder,
                                                           JPFormPrintingOrder)
 from lib.ZionWidgets.ZionFunc import ZionFuncForm
 
 
-
-
-
-
 class _myMod(JPTableViewModelReadOnly):
     def __init__(self, *args):
         super().__init__(*args)
-        self.viewed_icon=JPPub().MainForm.getIcon('watch_variable.ico')
-        self.ok_icon=JPPub().MainForm.getIcon('delivery.png')
+        self.viewed_icon = JPPub().MainForm.getIcon('watch_variable.ico')
+        self.ok_icon = JPPub().MainForm.getIcon('delivery.png')
         self._getData = self.TabelFieldInfo.getOnlyData
 
     def data(self, index, role: int = Qt.DisplayRole):
         r = index.row()
         c = index.column()
         if role == Qt.DecorationRole:
-            if c==11 and  self._getData((r,12)):
+            if c == 11 and self._getData((r, 12)):
                 return self.viewed_icon
-            elif c==3 and self._getData((r,5)):
+            elif c == 3 and self._getData((r, 5)):
                 return self.ok_icon
             return super().data(index, role)
-        elif role == Qt.TextAlignmentRole and (c==3 or c==11) :
+        elif role == Qt.TextAlignmentRole and (c == 3 or c == 11):
             return Qt.AlignCenter
         return super().data(index, role)
-        
 
 
 class _myFuncForm(JPFunctionForm):
@@ -164,7 +159,7 @@ class JPFuncForm_Complete(_myFuncForm):
 
     @pyqtSlot()
     def on_CmdExportToExcel_clicked(self):
-        if self.model.rowCount()==0:
+        if self.model.rowCount() == 0:
             return
         exp = JPExpExcelFromTabelFieldInfo(self.model.TabelFieldInfo,
                                            self.MainForm)
@@ -175,7 +170,6 @@ def hideObject(ui):
     ui.butSave.hide()
     ui.butPrint.hide()
     ui.butPDF.hide()
-
 
 
 class EditForm_Order(JPFormModelMainHasSub):
@@ -203,8 +197,6 @@ class EditForm_Order(JPFormModelMainHasSub):
         return [('fCustomerID', pub.getCustomerList(), 1),
                 ('fVendedorID', pub.getEnumList(10), 1),
                 ('fEntryID', u_lst, 1)]
-
-
 
     def onGetColumnWidths(self):
         return [0, 60, 300, 100, 100]

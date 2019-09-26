@@ -13,8 +13,8 @@ from lib.JPFunction import JPDateConver, JPGetDisplayText, findButtonAndSetIcon
 from lib.JPMvc import JPWidgets
 from lib.JPMvc.JPEditFormModel import JPEditFormDataMode, JPFormModelMain
 from lib.JPMvc.JPModel import JPTableViewModelReadOnly
-from lib.JPPrintReport import JPReport
-from lib.ZionPublc import JPPub, JPUser
+from lib.JPPrint.JPPrintReport import JPReport
+from lib.JPPublc import JPPub, JPUser
 from Ui.Ui_FormReceivableEdit import Ui_Form as Edit_ui
 from Ui.Ui_FormReceivables import Ui_Form
 
@@ -159,6 +159,23 @@ class Form_Receivables(QWidget):
         self.ui.SelectDate.setDate(QDate.currentDate())
         # 引发一次事件，刷新左下、右下
         self.currentCustomerChanged()
+        self.pub = JPPub()
+        self.pub.UserSaveData.connect(self.UserSaveData)
+        self.MsgWindowsPoped = False
+
+    def UserSaveData(self, tbName):
+        if self.MsgWindowsPoped:
+            return
+        else:
+            self.MsgWindowsPoped = True
+        msg = "其他用户添加了新的收款记录，是否刷新窗口?"
+        msg = msg + '\nOther users have added new receipt records. Do you refresh the window?'
+        if tbName == 't_receivables':
+            if QMessageBox.question(self, "确认", msg, QMessageBox.Ok
+                                    | QMessageBox.Cancel) == QMessageBox.Ok:
+                self.dateChanged(self.ui.SelectDate.date())
+                self.currentCustomerChanged()
+            self.MsgWindowsPoped = False
 
     def __formChange(self, *args):
         print(args)
@@ -385,8 +402,10 @@ class RecibidoEdit(JPFormModelMain):
         self.ui.fOrderID.setEnabled(True)
 
     def onAfterSaveData(self, data):
+        JPPub().broadcastMessage(tablename="t_receivables", act='new', PK=data[0][0])
         self.ui.butSave.setEnabled(False)
         self.ListForm.dateChanged(data)
+        self.ListForm.currentCustomerChanged()
 
 
 class FormReport_Rec_print(JPReport):
@@ -405,7 +424,8 @@ class FormReport_Rec_print(JPReport):
         self.font_YaHei_10 = QFont(self.font_YaHei)
         self.font_YaHei_10.setPointSize(20)
         self.font_YaHei_10.setBold(True)
-        self.BackColor = JPPub().getConfigData()['PrintHighlightBackgroundColor']
+        self.BackColor = JPPub().getConfigData(
+        )['PrintHighlightBackgroundColor']
         rpt = self
 
         rpt.logo = QPixmap(getcwd() + "\\res\\tmLogo100.png")

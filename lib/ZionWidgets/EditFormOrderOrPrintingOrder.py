@@ -5,7 +5,7 @@ jppath.append(getcwd())
 
 from Ui.Ui_FormPrintingOrder_Template import Ui_Form as FormPrintingOrder
 from Ui.Ui_FormOrder_Template import Ui_Form as FormOrder
-from lib.ZionPublc import JPPub
+from lib.JPPublc import JPPub
 
 
 def _setEditFormButtonsIcon(ui):

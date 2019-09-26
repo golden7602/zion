@@ -9,8 +9,8 @@ from PyQt5.QtGui import QColor, QFont, QPainter, QPixmap
 from PyQt5.QtWidgets import QDialog, QMessageBox, QWidget
 from PyQt5.QtPrintSupport import QPrinter
 
-from lib.JPPrintReport import JPPrintSectionType, JPReport
-from lib.ZionPublc import JPPub, JPDb
+from lib.JPPrint.JPPrintReport import JPPrintSectionType, JPReport
+from lib.JPPublc import JPPub, JPDb
 from lib.JPMvc.JPFuncForm import JPFunctionForm
 from lib.ZionWidgets.PrintingOrder import EditForm_PrintingOrder
 from lib.ZionReport.PrintingOrderReportMob import PrintOrder_report_Mob

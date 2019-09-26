@@ -9,6 +9,7 @@ from PyQt5.QtCore import pyqtSlot, Qt, QModelIndex
 from lib.JPExcel.JPExportToExcel import JPExpExcelFromTabelFieldInfo
 from lib.JPDatabase.Query import JPQueryFieldInfo
 from lib.JPMvc.JPFuncForm import JPEditFormDataMode
+from lib.JPPublc import JPPub
 
 
 
@@ -40,6 +41,12 @@ class ZionFuncForm(JPFunctionForm):
             FROM t_order
             WHERE fOrderID = '{}'
             """
+        self.pub = JPPub()
+        self.pub.UserSaveData.connect(self.UserSaveData)
+
+    def UserSaveData(self, tbName):
+        if tbName == 't_order':
+            self.refreshListForm()
 
     def onCurrentRowChanged(self, QModelIndex1, QModelIndex2):
         cur_tp = self.getCurrentSelectPKValue()[0:2]

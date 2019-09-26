@@ -5,9 +5,9 @@ jppath.append(getcwd())
 from PyQt5.QtCore import pyqtSlot, Qt, QModelIndex
 from lib.ZionWidgets.ZionFunc import ZionFuncForm
 from lib.ZionReport.OrderReportMob import Order_report_Mob
-from lib.JPPrintReport import JPPrintSectionType
+from lib.JPPrint.JPPrintReport import JPPrintSectionType
 from PyQt5.QtWidgets import QMessageBox
-from lib.ZionPublc import JPDb, JPPub, JPUser
+from lib.JPPublc import JPDb, JPPub, JPUser
 from lib.JPMvc.JPModel import JPTableViewModelReadOnly
 from PyQt5.QtGui import QColor
 
@@ -15,7 +15,7 @@ from PyQt5.QtGui import QColor
 class myJPTableViewModelReadOnly(JPTableViewModelReadOnly):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.ok_icon=JPPub().MainForm.getIcon('yes.ico')
+        self.ok_icon = JPPub().MainForm.getIcon('yes.ico')
 
     def data(self, index, role=Qt.DisplayRole):
         r = index.row()
@@ -23,7 +23,7 @@ class myJPTableViewModelReadOnly(JPTableViewModelReadOnly):
         tab = self.TabelFieldInfo
         if c == 4:
             if role == Qt.DecorationRole:
-                if tab.getOnlyData((r,c)):
+                if tab.getOnlyData((r, c)):
                     return self.ok_icon
             else:
                 return super().data(index, role=role)
@@ -98,6 +98,9 @@ class JPFuncForm_Payment(ZionFuncForm):
                                 QMessageBox.Yes | QMessageBox.No,
                                 QMessageBox.No) == QMessageBox.Yes:
             db.executeTransaction(sql)
+            JPPub().broadcastMessage(tablename="t_order",
+                                     action='confirmation',
+                                     PK=cu_id)
             self.refreshListForm()
 
     @pyqtSlot()
@@ -118,7 +121,6 @@ class JPFuncForm_Payment(ZionFuncForm):
         form.ui.fCustomerID.setEnabled(False)
         form.ui.fRequiredDeliveryDate.setEnabled(False)
         form.ui.fEntryID.setEnabled(False)
-
 
 
 class Payment_report(Order_report_Mob):
