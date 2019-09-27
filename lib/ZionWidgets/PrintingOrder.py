@@ -317,7 +317,7 @@ class EditForm_PrintingOrder(JPFormModelMain):
     def onAfterSaveData(self, data):
         act = 'new' if self.isNewMode else 'edit'
         JPPub().broadcastMessage(tablename="t_order",
-                                 PK=data[0][0],
+                                 PK=data,
                                  action=act)
         if self.isNewMode:
             self.ui.fOrderID.refreshValueNotRaiseEvent(data, True)

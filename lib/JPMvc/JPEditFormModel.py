@@ -27,6 +27,7 @@ from lib.JPPrint.JPPrintReport import JPReport
 from lib.JPPublc import JPPub
 from lib.JPForms.JPDialogAnimation import DialogAnimation
 
+
 class JPEditFormDataMode():
     """本类为编辑窗口数据类型的枚举"""
     Edit = 1
@@ -35,7 +36,7 @@ class JPEditFormDataMode():
 
 
 class JPFormModelMain(DialogAnimation):
-    afterSaveData = pyqtSignal([str])
+    afterSaveData = pyqtSignal([int],[str])
     firstHasDirty = pyqtSignal()
 
     def __init__(self,
@@ -276,7 +277,6 @@ class JPFormModelMain(DialogAnimation):
         ds = mti.DataRows[0].Datas
         st = self.EditMode
         TN = mti.TableName
-
         sql_i = 'INSERT INTO ' + TN + ' ({}) VALUES ({});\n'
         sql_u = 'UPDATE ' + TN + ' SET {} WHERE {}={};\n'
         row_st = mti.DataRows[0].State
@@ -284,10 +284,13 @@ class JPFormModelMain(DialogAnimation):
                 or row_st == JPTabelRowData.OriginalValue):
             if self.isNewMode:
                 raise KeyError('您没有输入有效数据!No valid data was entered!')
+
         if st == JPEditFormDataMode.New:
+            selectPkSQL = []
             for fld in mti.Fields:
                 if fld.IsPrimarykey:
                     if fld.Auto_Increment:
+                        selectPkSQL = [JPDb().LAST_INSERT_ID_SQL()]
                         continue
                     else:
                         nm_lst.append(fld.FieldName)
@@ -300,19 +303,24 @@ class JPFormModelMain(DialogAnimation):
             if pk_role:
                 newPKSQL = JPDb().NewPkSQL(pk_role)
                 sqls = newPKSQL[0:2] + sqls + newPKSQL[2:]
-            return sqls
+            # 自动加上返回PK语句
+            return sqls + selectPkSQL
+
         if st == JPEditFormDataMode.Edit:
+            selectPkSQL = []
             for fld in mti.Fields:
                 if fld.IsPrimarykey:
                     r_pk_name = fld.FieldName
                     r_pk_v = fld.sqlValue(ds[fld._index])
+                    selectPkSQL = [f'select {r_pk_v};']
                 else:
                     nm_lst.append(fld.FieldName)
                     v_lst.append(
                         self.ObjectDict()[fld.FieldName].getSqlValue())
             temp = ['{}={}'.format(n, v) for n, v in zip(nm_lst, v_lst)]
             sqls.append(sql_u.format(",".join(temp), r_pk_name, r_pk_v))
-            return sqls
+            # 自动加上返回PK语句
+            return sqls + selectPkSQL
 
 
 class MyButtonDelegate(QItemDelegate):

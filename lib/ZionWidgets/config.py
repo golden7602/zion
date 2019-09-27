@@ -25,7 +25,8 @@ class Form_Config(QDialog):
         self.ui = Ui_Dialog()
         self.ui.setupUi(self)
         pub.MainForm.addOneButtonIcon(self.ui.colorpicker, 'color_picker.ico')
-        pub.MainForm.addOneButtonIcon(self.ui.colorpicker_2, 'color_picker.ico')
+        pub.MainForm.addOneButtonIcon(self.ui.colorpicker_2,
+                                      'color_picker.ico')
         # 读取信息
         self.configData = pub.getConfigData()
         # 写信息到窗体控件
@@ -48,6 +49,15 @@ class Form_Config(QDialog):
             self.configData.get("AutoShrinkFonts", False))
         self.ui.radioButton_AutoEllipsis.setChecked(
             self.configData.get("AutoEllipsis", False))
+        self.ui.radioButton_AutoRefreshWhenDataChange_Open.setChecked(
+            self.configData.get("AutoRefreshWhenDataChange", True))
+        self.ui.radioButton_BubbleTipsWhenDataChange_Open.setChecked(
+            self.configData.get("BubbleTipsWhenDataChange", True))
+
+        self.ui.radioButton_AutoRefreshWhenDataChange_Close.setChecked(
+            not self.ui.radioButton_AutoRefreshWhenDataChange_Open.isChecked())
+        self.ui.radioButton_BubbleTipsWhenDataChange_Close.setChecked(
+            not self.ui.radioButton_BubbleTipsWhenDataChange_Open.isChecked())
 
         # 事件处理
 
@@ -60,7 +70,16 @@ class Form_Config(QDialog):
                     self.ui.PrintHighlightBackgroundColor))
         self.ui.radioButton_AutoShrinkFonts.toggled.connect(self.configChanged)
         self.ui.radioButton_AutoEllipsis.toggled.connect(self.configChanged)
-
+        self.ui.radioButton_AutoRefreshWhenDataChange_Open.toggled.connect(
+            self.configChanged)
+        self.ui.radioButton_AutoRefreshWhenDataChange_Open.toggled.connect(
+            self.configChanged)
+        self.ui.radioButton_AutoRefreshWhenDataChange_Close.toggled.connect(
+            self.configChanged)
+        self.ui.radioButton_BubbleTipsWhenDataChange_Open.toggled.connect(
+            self.configChanged)
+        self.ui.radioButton_BubbleTipsWhenDataChange_Close.toggled.connect(
+            self.configChanged)
         self.exec_()
 
     def configChanged(self):
@@ -72,6 +91,12 @@ class Form_Config(QDialog):
             )
         self.configData[
             'AutoEllipsis'] = self.ui.radioButton_AutoEllipsis.isChecked()
+        self.configData[
+            'AutoRefreshWhenDataChange'] = self.ui.radioButton_AutoRefreshWhenDataChange_Open.isChecked(
+            )
+        self.configData[
+            'BubbleTipsWhenDataChange'] = self.ui.radioButton_BubbleTipsWhenDataChange_Open.isChecked(
+            )
 
     def backColorSelect(self, obj):
         color = QColorDialog.getColor()

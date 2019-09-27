@@ -103,6 +103,10 @@ class JPFuncForm_PrintingQuotation(JPFunctionForm):
                 """
         self.setEditFormSQL(m_sql, None)
 
+    def UserSaveData(self, tbName):
+        if tbName == 't_quotation':
+            self.refreshListForm()
+
     def onGetModelClass(self):
         return _myMod
 
@@ -145,6 +149,9 @@ class JPFuncForm_PrintingQuotation(JPFunctionForm):
                 info = info + 'The order [{id}] has been generated according '
                 info = info + 'to the quotation. Please modify the order information.'
                 QMessageBox.information(self, "提示", info.format(id=result))
+                JPPub().broadcastMessage(tablename="t_order",
+                                         action='createOrder',
+                                         PK=data)
                 self.refreshListForm()
         except Exception as e:
             msgBox = QMessageBox(QMessageBox.Critical, u'提示', str(e))

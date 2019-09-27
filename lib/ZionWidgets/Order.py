@@ -356,7 +356,7 @@ class EditForm_Order(JPFormModelMainHasSub):
         act = 'new' if self.isNewMode else 'edit'
         JPPub().broadcastMessage(tablename="t_order",
                                  action=act,
-                                 PK=data[0][0])
+                                 PK=data)
         if self.isNewMode:
             self.ui.fOrderID.refreshValueNotRaiseEvent(data, True)
 

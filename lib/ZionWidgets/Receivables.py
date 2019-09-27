@@ -402,10 +402,12 @@ class RecibidoEdit(JPFormModelMain):
         self.ui.fOrderID.setEnabled(True)
 
     def onAfterSaveData(self, data):
-        JPPub().broadcastMessage(tablename="t_receivables", act='new', PK=data[0][0])
+        JPPub().broadcastMessage(tablename="t_receivables", action='new', PK=data)
         self.ui.butSave.setEnabled(False)
         self.ListForm.dateChanged(data)
         self.ListForm.currentCustomerChanged()
+
+
 
 
 class FormReport_Rec_print(JPReport):

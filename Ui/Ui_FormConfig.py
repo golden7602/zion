@@ -2,9 +2,10 @@
 
 # Form implementation generated from reading ui file 'e:\Zion\zion\Ui\FormConfig.ui'
 #
-# Created by: PyQt5 UI code generator 5.12.3
+# Created by: PyQt5 UI code generator 5.13.0
 #
 # WARNING! All changes made in this file will be lost!
+
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
@@ -58,16 +59,14 @@ class Ui_Dialog(object):
         self.label_4 = QtWidgets.QLabel(self.frame)
         self.label_4.setObjectName("label_4")
         self.horizontalLayout_3.addWidget(self.label_4)
-        spacerItem = QtWidgets.QSpacerItem(35, 20, QtWidgets.QSizePolicy.Fixed,
-                                           QtWidgets.QSizePolicy.Minimum)
+        spacerItem = QtWidgets.QSpacerItem(35, 20, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_3.addItem(spacerItem)
         self.Null_prompt_bac_color = QtWidgets.QWidget(self.frame)
         self.Null_prompt_bac_color.setMinimumSize(QtCore.QSize(100, 0))
-        self.Null_prompt_bac_color.setStyleSheet(
-            "background-color: rgb(255, 0, 255);\n"
-            "border: 1px inset   ;\n"
-            "border-color: rgb(194, 194, 194);\n"
-            "")
+        self.Null_prompt_bac_color.setStyleSheet("background-color: rgb(255, 0, 255);\n"
+"border: 1px inset   ;\n"
+"border-color: rgb(194, 194, 194);\n"
+"")
         self.Null_prompt_bac_color.setObjectName("Null_prompt_bac_color")
         self.horizontalLayout_3.addWidget(self.Null_prompt_bac_color)
         self.colorpicker = QtWidgets.QPushButton(self.frame)
@@ -75,14 +74,11 @@ class Ui_Dialog(object):
         self.colorpicker.setMaximumSize(QtCore.QSize(25, 16777215))
         self.colorpicker.setText("")
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("../res/ico/color_picker.ico"),
-                       QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap("../res/ico/color_picker.ico"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.colorpicker.setIcon(icon)
         self.colorpicker.setObjectName("colorpicker")
         self.horizontalLayout_3.addWidget(self.colorpicker)
-        spacerItem1 = QtWidgets.QSpacerItem(40, 20,
-                                            QtWidgets.QSizePolicy.Expanding,
-                                            QtWidgets.QSizePolicy.Minimum)
+        spacerItem1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_3.addItem(spacerItem1)
         self.verticalLayout_3.addLayout(self.horizontalLayout_3)
         self.horizontalLayout_6 = QtWidgets.QHBoxLayout()
@@ -90,19 +86,15 @@ class Ui_Dialog(object):
         self.label_5 = QtWidgets.QLabel(self.frame)
         self.label_5.setObjectName("label_5")
         self.horizontalLayout_6.addWidget(self.label_5)
-        spacerItem2 = QtWidgets.QSpacerItem(10, 20,
-                                            QtWidgets.QSizePolicy.Fixed,
-                                            QtWidgets.QSizePolicy.Minimum)
+        spacerItem2 = QtWidgets.QSpacerItem(10, 20, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_6.addItem(spacerItem2)
         self.PrintHighlightBackgroundColor = QtWidgets.QWidget(self.frame)
         self.PrintHighlightBackgroundColor.setMinimumSize(QtCore.QSize(100, 0))
-        self.PrintHighlightBackgroundColor.setStyleSheet(
-            "background-color: rgb(255, 0, 255);\n"
-            "border: 1px inset   ;\n"
-            "border-color: rgb(194, 194, 194);\n"
-            "")
-        self.PrintHighlightBackgroundColor.setObjectName(
-            "PrintHighlightBackgroundColor")
+        self.PrintHighlightBackgroundColor.setStyleSheet("background-color: rgb(255, 0, 255);\n"
+"border: 1px inset   ;\n"
+"border-color: rgb(194, 194, 194);\n"
+"")
+        self.PrintHighlightBackgroundColor.setObjectName("PrintHighlightBackgroundColor")
         self.horizontalLayout_6.addWidget(self.PrintHighlightBackgroundColor)
         self.colorpicker_2 = QtWidgets.QPushButton(self.frame)
         self.colorpicker_2.setMinimumSize(QtCore.QSize(25, 0))
@@ -111,9 +103,7 @@ class Ui_Dialog(object):
         self.colorpicker_2.setIcon(icon)
         self.colorpicker_2.setObjectName("colorpicker_2")
         self.horizontalLayout_6.addWidget(self.colorpicker_2)
-        spacerItem3 = QtWidgets.QSpacerItem(40, 20,
-                                            QtWidgets.QSizePolicy.Expanding,
-                                            QtWidgets.QSizePolicy.Minimum)
+        spacerItem3 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_6.addItem(spacerItem3)
         self.verticalLayout_3.addLayout(self.horizontalLayout_6)
         self.horizontalLayout_4 = QtWidgets.QHBoxLayout()
@@ -121,9 +111,7 @@ class Ui_Dialog(object):
         self.label_3 = QtWidgets.QLabel(self.frame)
         self.label_3.setObjectName("label_3")
         self.horizontalLayout_4.addWidget(self.label_3)
-        spacerItem4 = QtWidgets.QSpacerItem(40, 20,
-                                            QtWidgets.QSizePolicy.Fixed,
-                                            QtWidgets.QSizePolicy.Minimum)
+        spacerItem4 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_4.addItem(spacerItem4)
         self.widget = QtWidgets.QWidget(self.frame)
         self.widget.setObjectName("widget")
@@ -135,32 +123,70 @@ class Ui_Dialog(object):
         self.radioButton_AutoEllipsis.setObjectName("radioButton_AutoEllipsis")
         self.horizontalLayout_5.addWidget(self.radioButton_AutoEllipsis)
         self.radioButton_AutoShrinkFonts = QtWidgets.QRadioButton(self.widget)
-        self.radioButton_AutoShrinkFonts.setObjectName(
-            "radioButton_AutoShrinkFonts")
+        self.radioButton_AutoShrinkFonts.setObjectName("radioButton_AutoShrinkFonts")
         self.horizontalLayout_5.addWidget(self.radioButton_AutoShrinkFonts)
         self.horizontalLayout_4.addWidget(self.widget)
-        spacerItem5 = QtWidgets.QSpacerItem(40, 20,
-                                            QtWidgets.QSizePolicy.Expanding,
-                                            QtWidgets.QSizePolicy.Minimum)
+        spacerItem5 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_4.addItem(spacerItem5)
         self.verticalLayout_3.addLayout(self.horizontalLayout_4)
-        spacerItem6 = QtWidgets.QSpacerItem(20, 429,
-                                            QtWidgets.QSizePolicy.Minimum,
-                                            QtWidgets.QSizePolicy.Expanding)
-        self.verticalLayout_3.addItem(spacerItem6)
+        self.horizontalLayout_10 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_10.setObjectName("horizontalLayout_10")
+        self.label_6 = QtWidgets.QLabel(self.frame)
+        self.label_6.setObjectName("label_6")
+        self.horizontalLayout_10.addWidget(self.label_6)
+        spacerItem6 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_10.addItem(spacerItem6)
+        self.widget_3 = QtWidgets.QWidget(self.frame)
+        self.widget_3.setObjectName("widget_3")
+        self.horizontalLayout_7 = QtWidgets.QHBoxLayout(self.widget_3)
+        self.horizontalLayout_7.setContentsMargins(0, 0, 0, 0)
+        self.horizontalLayout_7.setSpacing(0)
+        self.horizontalLayout_7.setObjectName("horizontalLayout_7")
+        self.radioButton_AutoRefreshWhenDataChange_Open = QtWidgets.QRadioButton(self.widget_3)
+        self.radioButton_AutoRefreshWhenDataChange_Open.setObjectName("radioButton_AutoRefreshWhenDataChange_Open")
+        self.horizontalLayout_7.addWidget(self.radioButton_AutoRefreshWhenDataChange_Open)
+        self.radioButton_AutoRefreshWhenDataChange_Close = QtWidgets.QRadioButton(self.widget_3)
+        self.radioButton_AutoRefreshWhenDataChange_Close.setObjectName("radioButton_AutoRefreshWhenDataChange_Close")
+        self.horizontalLayout_7.addWidget(self.radioButton_AutoRefreshWhenDataChange_Close)
+        self.horizontalLayout_10.addWidget(self.widget_3)
+        spacerItem7 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_10.addItem(spacerItem7)
+        self.verticalLayout_3.addLayout(self.horizontalLayout_10)
+        self.horizontalLayout_9 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_9.setObjectName("horizontalLayout_9")
+        self.label_7 = QtWidgets.QLabel(self.frame)
+        self.label_7.setObjectName("label_7")
+        self.horizontalLayout_9.addWidget(self.label_7)
+        spacerItem8 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_9.addItem(spacerItem8)
+        self.widget_2 = QtWidgets.QWidget(self.frame)
+        self.widget_2.setObjectName("widget_2")
+        self.horizontalLayout_8 = QtWidgets.QHBoxLayout(self.widget_2)
+        self.horizontalLayout_8.setContentsMargins(0, 0, 0, 0)
+        self.horizontalLayout_8.setSpacing(0)
+        self.horizontalLayout_8.setObjectName("horizontalLayout_8")
+        self.radioButton_BubbleTipsWhenDataChange_Open = QtWidgets.QRadioButton(self.widget_2)
+        self.radioButton_BubbleTipsWhenDataChange_Open.setObjectName("radioButton_BubbleTipsWhenDataChange_Open")
+        self.horizontalLayout_8.addWidget(self.radioButton_BubbleTipsWhenDataChange_Open)
+        self.radioButton_BubbleTipsWhenDataChange_Close = QtWidgets.QRadioButton(self.widget_2)
+        self.radioButton_BubbleTipsWhenDataChange_Close.setObjectName("radioButton_BubbleTipsWhenDataChange_Close")
+        self.horizontalLayout_8.addWidget(self.radioButton_BubbleTipsWhenDataChange_Close)
+        self.horizontalLayout_9.addWidget(self.widget_2)
+        spacerItem9 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_9.addItem(spacerItem9)
+        self.verticalLayout_3.addLayout(self.horizontalLayout_9)
+        spacerItem10 = QtWidgets.QSpacerItem(20, 429, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        self.verticalLayout_3.addItem(spacerItem10)
         self.verticalLayout_4.addWidget(self.frame)
         self.tabWidget.addTab(self.tab2, "")
         self.verticalLayout.addWidget(self.tabWidget)
         self.horizontalLayout = QtWidgets.QHBoxLayout()
         self.horizontalLayout.setObjectName("horizontalLayout")
-        spacerItem7 = QtWidgets.QSpacerItem(40, 20,
-                                            QtWidgets.QSizePolicy.Expanding,
-                                            QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout.addItem(spacerItem7)
+        spacerItem11 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout.addItem(spacerItem11)
         self.buttonBox = QtWidgets.QDialogButtonBox(Dialog)
         self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
-        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel
-                                          | QtWidgets.QDialogButtonBox.Ok)
+        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel|QtWidgets.QDialogButtonBox.Ok)
         self.buttonBox.setObjectName("buttonBox")
         self.horizontalLayout.addWidget(self.buttonBox)
         self.verticalLayout.addLayout(self.horizontalLayout)
@@ -174,26 +200,21 @@ class Ui_Dialog(object):
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Config "))
-        self.label.setText(
-            _translate("Dialog", "PrintOrder单据备注内容 PrintOrder Note："))
+        self.label.setText(_translate("Dialog", "PrintOrder单据备注内容 PrintOrder Note："))
         self.label_2.setText(_translate("Dialog", "单据账户信息Conta Bancaria："))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab1),
-                                  _translate("Dialog", "Bill"))
-        self.label_4.setText(
-            _translate("Dialog", "空值提示文背景色Null Prompt Background Color："))
-        self.label_5.setText(
-            _translate("Dialog", "打印突出显示背景色Print Highlight Background Color："))
-        self.label_3.setText(
-            _translate(
-                "Dialog",
-                "文本宽度超边界时打印方式 Printing Policy When Text Width is Extra Width:")
-        )
-        self.radioButton_AutoEllipsis.setText(
-            _translate("Dialog", "自动省略Auto ellipsis"))
-        self.radioButton_AutoShrinkFonts.setText(
-            _translate("Dialog", "自动缩小字体Auto shrink fonts"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab2),
-                                  _translate("Dialog", "other"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab1), _translate("Dialog", "Bill"))
+        self.label_4.setText(_translate("Dialog", "空值提示文背景色Null Prompt Background Color："))
+        self.label_5.setText(_translate("Dialog", "打印突出显示背景色Print Highlight Background Color："))
+        self.label_3.setText(_translate("Dialog", "文本宽度超边界时打印方式 Printing Policy When Text Width is Extra Width:"))
+        self.radioButton_AutoEllipsis.setText(_translate("Dialog", "自动省略Auto ellipsis"))
+        self.radioButton_AutoShrinkFonts.setText(_translate("Dialog", "自动缩小字体Auto shrink fonts"))
+        self.label_6.setText(_translate("Dialog", "其他用户修改数据时自动刷新数据 Automatically refresh data when other users modify data:"))
+        self.radioButton_AutoRefreshWhenDataChange_Open.setText(_translate("Dialog", "打开"))
+        self.radioButton_AutoRefreshWhenDataChange_Close.setText(_translate("Dialog", "关闭"))
+        self.label_7.setText(_translate("Dialog", "其他用户修改数据时气泡提示 Bubble Tips When Other Users Modify Data:"))
+        self.radioButton_BubbleTipsWhenDataChange_Open.setText(_translate("Dialog", "打开"))
+        self.radioButton_BubbleTipsWhenDataChange_Close.setText(_translate("Dialog", "关闭"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab2), _translate("Dialog", "other"))
 
 
 if __name__ == "__main__":

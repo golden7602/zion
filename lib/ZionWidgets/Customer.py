@@ -380,5 +380,5 @@ class EditForm_Customer(JPFormModelMain):
         act = 'new' if self.isNewMode else 'edit'
         JPPub().broadcastMessage(tablename="t_customer",
                                  action=act,
-                                 PK=data[0][0])
+                                 PK=data)
         super().onAfterSaveData(data)

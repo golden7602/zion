@@ -309,6 +309,6 @@ class EditForm_User(JPFormModelMain):
         JPUser().INIT()
         act = 'new' if self.isNewMode else 'edit'
         JPPub().broadcastMessage(tablename="sysusers",
-                                 PK=data[0][0],
+                                 PK=data,
                                  action=act)
         super().onAfterSaveData(data)

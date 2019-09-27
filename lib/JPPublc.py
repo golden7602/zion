@@ -218,21 +218,6 @@ class JPUser(QObject):
         return self.Name and self.__ID
 
 
-class MyThreadRec(QThread):  # 加载功能树的线程类
-    def __init__(self, pub, notify, rec, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.rec = rec
-        self.pub = pub
-        self.notify = notify
-
-    def run(self):
-        while True:
-            data, address = self.rec.recvfrom(65535)
-            txt = json.loads(data.decode('utf-8'))
-            self.pub.UserSaveData.emit(txt[0])
-            self.pub.SingnalPopMessage.emit(txt[1])
-
-
 @Singleton
 class JPPub(QObject):
     MainForm = None
@@ -299,6 +284,8 @@ class JPPub(QObject):
         cur = conn.cursor()
         cur.execute(sql, b64encode(dumps(data)))
         conn.commit()
+        # 保存后刷新当前配置文件
+        self.__ConfigData = data
 
     def ConfigData(self, RefResh=False):
         if RefResh or self.__ConfigData is None:
@@ -315,7 +302,8 @@ class JPPub(QObject):
             'Submit': '提交',
             'edit': '修改',
             'new': '新增',
-            'delete': '删除'
+            'delete': '删除',
+            'createOrder': '由报价单生成新订单'
         }
         tn = {
             't_order': '订单表',
@@ -328,21 +316,45 @@ class JPPub(QObject):
         curtab = tn[tablename]
         curact = act[action]
         curpk = PK
-        curuser = JPUser().currentUserID()
-        txt = f'{curtime}:用户[{curuser}]操作,[{curtab}]有新的记录被用户[{curact}],编号为[{curpk}]'
+        obj_user = JPUser()
+        uid = obj_user.currentUserID()
+        curuser = [v[1] for v in obj_user.getAllUserList() if v[0] == uid][0]
+        txt = f'{curtime}:\n用户[{curuser}]操作;\n[{curtab}]有新的记录被用户[{curact}],\n编号为[{curpk}]'
         msg = json.dumps((tablename, txt))
         s.sendto(msg.encode('utf-8'), (network, PORT))
         s.close()
 
     def receiveMessage(self, app):
+        # 收发消息类
+        class MyThreadRec(QThread):
+            def __init__(self, pub, notify, rec, *args, **kwargs):
+                super().__init__(*args, **kwargs)
+                self.rec = rec
+                self.pub = pub
+                self.notify = notify
+                self.currentIP = None
+
+            def run(self):
+                while True:
+                    data, address = self.rec.recvfrom(65535)
+                    txt = json.loads(data.decode('utf-8'))
+                    # 发送信息方是本机时不处理
+                    if address[0] != self.currentIP:
+                        if self.pub.ConfigData()['AutoRefreshWhenDataChange']:
+                            self.pub.UserSaveData.emit(txt[0])
+                        if self.pub.ConfigData()['BubbleTipsWhenDataChange']:
+                            self.pub.SingnalPopMessage.emit(txt[1])
+                    time.sleep(1)
+
         self.rec = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.rec.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
         PORT = 1060
         self.rec.bind(('', PORT))
         self.rec.setblocking(True)
-        # print('Listening for broadcast at ', self.rec.getsockname())
         self.notify = WindowNotify(app=app)
         self.ThreadRec = MyThreadRec(self, self.notify, self.rec)
+        myname = socket.getfqdn(socket.gethostname())
+        self.ThreadRec.currentIP = socket.gethostbyname(myname)
         self.SingnalPopMessage.connect(self.popMessage)
         self.ThreadRec.start()
 
