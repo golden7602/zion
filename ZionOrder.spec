@@ -4,7 +4,7 @@ block_cipher = None
 
 
 a = Analysis(['ZionOrder.py'],
-             pathex=['E:\\Zion\\zion'],
+             pathex=['C:\\Users\\win10\\Desktop\\Zion\\zion'],
              binaries=[],
              datas=[],
              hiddenimports=[],
