@@ -696,15 +696,14 @@ class FormReport_Rec_print(JPReport):
         title_height += 25
         payable_tab = JPQueryFieldInfo(sql_payable)
         v1 = payable_tab.getOnlyData([0, 0])
-        v2 = tongji_tab.getOnlyData([len(tongji_tab) - 1, 5])
+        v2 = tongji_tab.getOnlyData([len(tongji_tab) - 1, 1])
         v3 = '{:,.2f}'.format((v1 if v1 else 0) - (v2 if v2 else 0))
-        t2 = tongji_tab.getDispText([len(tongji_tab) -
-                                     1, 5]) + " " if v2 else "0 "
+        ShouDangRiDingDan = tongji_tab.getDispText([len(tongji_tab) -
+                                     1, 1]) + " " if v2 else "0 "
         txt = [
             payable_tab.getDispText([0, 0]) + " ",
             JPGetDisplayText(len(payable_tab), str) + " ",
-            t2,
-            # tongji_tab.getDispText([len(tongji_tab) - 1, 5]) + " ",
+            ShouDangRiDingDan,
             JPGetDisplayText(len(tongji_tab), str) + " ",
             v3 + " "
         ]

@@ -92,6 +92,7 @@ class JPFuncForm_Adjustment(ZionFuncForm):
         self.checkBox_2.setText('Normal')
         self.checkBox_1.setChecked(True)
         self.checkBox_2.setChecked(True)
+        self.ui.comboBox.setCurrentIndex(1)
         self.setListFormSQL(sql_1, sql_2)
         self.tableView.setColumnHidden(13, True)
         self.tableView.setColumnHidden(15, True)

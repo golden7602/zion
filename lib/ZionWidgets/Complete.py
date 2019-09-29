@@ -112,7 +112,7 @@ class JPFuncForm_Complete(_myFuncForm):
         self.checkBox_2.setText('UnCompleted')
         self.checkBox_1.setChecked(False)
         self.checkBox_2.setChecked(True)
-        self.ui.comboBox.setCurrentIndex(3)
+        self.ui.comboBox.setCurrentIndex(1)
         self.setListFormSQL(sql_1, sql_2)
         self.tableView.setColumnHidden(5, True)
         self.tableView.setColumnHidden(12, True)
