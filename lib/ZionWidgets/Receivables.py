@@ -351,6 +351,7 @@ class RecibidoEdit(JPFormModelMain):
                     FROM t_order
                     WHERE fCustomerID = {CustomerID}
                         AND fConfirmed = 1
+                        AND fCanceled = 0
                 ) Q0
                 ON c.fCustomerID = Q0.fCustomerID
                 LEFT JOIN (
