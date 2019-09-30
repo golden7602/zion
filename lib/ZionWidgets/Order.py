@@ -286,8 +286,8 @@ class EditForm_Order(JPFormModelMainHasSub):
         self.ui.fCity.setText(tab.getOnlyData([0, 5]))
 
     def onGetColumnFormulas(self):
-        fla = "JPRound(JPRound({2}) * JPRound({4},2) * "
-        fla = fla + "JPRound({5},2) * JPRound({6},2),2)"
+        fla = "JPRound(JPRound({2}) * JPRound({4},3) * "
+        fla = fla + "JPRound({5},3) * JPRound({6},2),3)"
         return [(7, fla)]
 
     def __onTaxKeyPress(self, KeyEvent):
