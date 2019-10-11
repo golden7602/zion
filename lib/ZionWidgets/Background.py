@@ -10,7 +10,7 @@ class Form_Background(Ui_Form):
         super().__init__()
         self.Widget = QWidget()
         self.setupUi(self.Widget)
-        self.label.setPixmap(QPixmap(mainform.logoPath.format("mlogo.png")))
+        self.label.setPixmap(mainform.backPixmap)
 
         # palette1 = QPalette()
         # palette1.setBrush(self.widget_2.backgroundRole(), QBrush(QPixmap(getcwd() + "\\res\\mLogo.png",flags=Qt.Im)))

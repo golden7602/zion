@@ -17,7 +17,8 @@ class PrintOrder_report_Mob(JPReport):
                  Orientation=QPrinter.Orientation(1)):
         super().__init__(PaperSize, Orientation)
         self.SetMargins(30, 60, 30, 20)
-        self.Copys = 2
+        self.CopyInfo = JPPub().getCopysInfo('BillCopys_PrintingOrder')
+        self.Copys = len(self.CopyInfo)
         self.logo = JPPub().MainForm.logoPixmap
         #self.logo = QPixmap(getcwd() + "\\res\\tmLogo100.png")
         self.FillColor = JPPub().getConfigData(
@@ -603,35 +604,44 @@ class PrintOrder_report_Mob(JPReport):
         # 签字部分
         RF.AddItem(1,
                    0,
-                   110,
+                   95,
                    100,
                    20,
                    '制作人 Productor:',
                    Bolder=False,
                    AlignmentFlag=(Qt.AlignRight | Qt.AlignVCenter),
                    Font=self.font_YaHei_8)
-        RF.AddItem(1, 100, 125, 100, 0, '')
+        RF.AddItem(1, 100, 110, 100, 0, '')
         RF.AddItem(1,
                    220,
-                   110,
+                   95,
                    100,
                    20,
                    '审核人 Aprovar:',
                    Bolder=False,
                    AlignmentFlag=(Qt.AlignRight | Qt.AlignVCenter),
                    Font=self.font_YaHei_8)
-        RF.AddItem(1, 320, 125, 100, 0, '')
+        RF.AddItem(1, 320, 110, 100, 0, '')
         RF.AddItem(1,
                    420,
-                   110,
+                   95,
                    120,
                    20,
                    '会计Caixa:',
                    Bolder=False,
                    AlignmentFlag=(Qt.AlignRight | Qt.AlignVCenter),
                    Font=self.font_YaHei_8)
-        RF.AddItem(1, 540, 125, 100, 0, '')
-
+        RF.AddItem(1, 540, 110, 100, 0, '')
+        RF.AddItem(1,
+                   420,
+                   125,
+                   120,
+                   20,
+                   '客户cliente:',
+                   Bolder=False,
+                   AlignmentFlag=(Qt.AlignRight | Qt.AlignVCenter),
+                   Font=self.font_YaHei_8)
+        RF.AddItem(1, 540, 140, 100, 0, '')
         noteStr = JPDb().getOnConfigValue('Note_PrintingOrder', str)
         RF.AddItem(1,
                    0,
@@ -686,15 +696,19 @@ class PrintOrder_report_Mob(JPReport):
 
     # 修改联次
     def onBeforePrint(self, Copys, Sec, CurrentPrintDataRow, obj):
-        if Copys == 2:
-            if obj.PrintObject == " CONT.  / PRDUCAO":
-                return False, "第二联"
-            elif obj.PrintObject in [
+        title = self.CopyInfo[Copys-1]['title']
+        flag = self.CopyInfo[Copys-1]['flag']
+        if obj.PrintObject == " CONT.  / PRDUCAO":
+            return False, title
+        else:
+            if obj.PrintObject in [
                     "fPrice", "fAmountDetail", "fAmount", "fDesconto", "fTax",
                     "fPayable"
             ]:
-                return False, " "
-        return False, None
+                return False, ' ' if flag is False else None
+            return False, None
+
+
 
     def init_data(self, OrderID: str):
         SQL = """

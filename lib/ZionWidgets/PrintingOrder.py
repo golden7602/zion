@@ -408,7 +408,7 @@ class EditForm_PrintingOrder(JPFormModelMain):
                                      zt=0)
             bc, result = db.executeTransaction(sql)
             if result:
-                txt = '选择的客户名(相同分公司类型)下有同类型但不确认的单据，不能增加新单据!\n'
+                txt = '选择的客户名(相同分公司类型)下有同类型但未确认的单据，不能增加新单据!\n'
                 txt = txt + 'There are identical but uncertain documents '
                 txt = txt + 'under the name of the selected customer, '
                 txt = txt + 'and no new documents can be added'

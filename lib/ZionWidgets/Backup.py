@@ -66,7 +66,9 @@ class Form_Backup(QDialog):
             file_.write('\n')
             file_.write(self.__getCr(dbn, tn, False)+";")
             file_.write('\n')
-            file_.write(exp.getSql(tn))
+            tempSQL = exp.getSql(tn)
+            if tempSQL:
+                file_.write(tempSQL)
             file_.write('\n')
         for vn in views:
             file_.write('-- 导出  视图 {}.{} 结构'.format(dbn, vn))

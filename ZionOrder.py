@@ -38,6 +38,7 @@ from lib.ZionWidgets.Quotation import JPFuncForm_Quotation
 from lib.ZionWidgets.Receivables import Form_Receivables
 from lib.ZionWidgets.Report_Day import Form_Repoet_Day
 from lib.ZionWidgets.User import Form_User
+from lib.ZionWidgets.OutboundOrder import JPFuncForm_OutboundOrder
 from Ui.Ui_FormMain import Ui_MainWindow
 from lib.JPConfigInfo import ConfigInfo
 
@@ -84,8 +85,9 @@ class JPMainWindow(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.ui.label_Title.setText("Zion OrderM")
-        self.ui.label_Title.setText("ColorPro OrderM")
-        self.setWindowTitle("ColorPro OrderM")
+        #self.ui.label_Title.setText("ColorPro OrderM")
+        #self.setWindowTitle("ColorPro OrderM")
+        self.setWindowTitle("Zion OrderM")
 
         # self.icoPath = ":/pic/res/ico/{}"
         # self.logoPath = ":/logo/res/{}"
@@ -93,7 +95,8 @@ class JPMainWindow(QMainWindow):
         self.logoPath = getcwd() + "\\res\\{}"
 
         # 设置主窗体中按钮图标及Logo
-        self.logoPixmap = QPixmap(self.logoPath.format("tmlogo100.png"))
+        self.logoPixmap = QPixmap(self.logoPath.format("zions_100.png"))
+        self.backPixmap = QPixmap(self.logoPath.format("zions_tm.png"))
         self.addOneButtonIcon(self.ui.ChangeUser, "changeuser.png")
         self.addOneButtonIcon(self.ui.ChangePassword, "changepassword.png")
         self.addLogoToLabel(self.ui.label_logo)
@@ -206,7 +209,8 @@ class JPMainWindow(QMainWindow):
             73: Form_Customer,
             13: Form_User,
             148: Form_FormCustomer_Arrears,
-            147: Form_Backup
+            147: Form_Backup,
+            152: JPFuncForm_OutboundOrder
         }
         if self.menu_id == 12:
             self.close()

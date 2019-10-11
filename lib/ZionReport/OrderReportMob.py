@@ -17,9 +17,9 @@ class Order_report_Mob(JPReport):
         super().__init__(PaperSize, Orientation)
 
         self.SetMargins(30, 60, 30, 30)
-        self.Copys = 2
+        self.CopyInfo = JPPub().getCopysInfo('BillCopys_Order')
+        self.Copys = len(self.CopyInfo)
         self.logo = JPPub().MainForm.logoPixmap
-        #self.logo = QPixmap(getcwd() + "\\res\\tmLogo100.png")
         self.FillColor = JPPub().getConfigData(
         )['PrintHighlightBackgroundColor']
 
@@ -523,6 +523,17 @@ class Order_report_Mob(JPReport):
                    Font=self.font_YaHei_8)
 
         RF.AddItem(1, 540, 125, 100, 0, '')
+        RF.AddItem(1,
+                   420,
+                   140,
+                   120,
+                   20,
+                   '客户cliente:',
+                   Bolder=False,
+                   AlignmentFlag=(Qt.AlignRight | Qt.AlignVCenter),
+                   Font=self.font_YaHei_8)
+
+        RF.AddItem(1, 540, 155, 100, 0, '')
 
         self.PageFooter.AddItem(4,
                                 10,
@@ -548,15 +559,17 @@ class Order_report_Mob(JPReport):
 
     # 修改联次
     def onBeforePrint(self, Copys, Sec, CurrentPrintDataRow, obj):
-        if Copys == 2:
-            if obj.PrintObject == " CONT.  / PRDUCAO":
-                return False, "第二联"
-            elif obj.PrintObject in [
+        title = self.CopyInfo[Copys-1]['title']
+        flag = self.CopyInfo[Copys-1]['flag']
+        if obj.PrintObject == " CONT.  / PRDUCAO":
+            return False, title
+        else:
+            if obj.PrintObject in [
                     "fPrice", "fAmountDetail", "fAmount", "fDesconto", "fTax",
                     "fPayable"
             ]:
-                return False, " "
-        return False, None
+                return False, ' ' if flag is False else None
+            return False, None
 
     def init_data(self, OrderID: str):
         SQL = """SELECT o.*

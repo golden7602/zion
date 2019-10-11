@@ -76,7 +76,7 @@ class _jpPrintItem(metaclass=abc.ABCMeta):
             return
         if self.Visible is False:
             return
-        
+
         r1, r2 = self.Report.onBeforePrint(
             self.Report._CurrentCopys, self.Section,
             self.Section._GetCurrentPrintDataRow(), self)
@@ -243,6 +243,7 @@ class _jpPrintPixmap(_jpPrintItem):
 
 class _jpPrintSection(object):
     """本类描述一个打印的节,抽象类，请不要实例化"""
+
     # Report = None  # 类属性，节所属的报表对象
 
     def __init__(self):
@@ -820,6 +821,16 @@ class _jpPrintGroup(object):
             self.GroupFooter.Print(painter, k)
 
 
+class _JPPrintPreviewDialog(QPrintPreviewDialog):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    # def open(self):
+    #     print("afadsfasdf")
+
+    # def done(self,int1):
+    #     print(int1)
+    
 class JPReport(object):
     """报表类"""
     def __init__(self, PaperSize, Orientation):
@@ -1016,7 +1027,7 @@ class JPReport(object):
         self._Calc_All_Fields()
 
         # 后台用用户定义的纸型及边距计算一次页码，注意过程中不用真正绘制
-        dialog = QPrintPreviewDialog(self.Printer)
+        dialog = _JPPrintPreviewDialog(self.Printer)
         dialog.paintRequested.connect(self.PrintPreview)
 
         dialog.exec_()

@@ -36,7 +36,7 @@ class JPEditFormDataMode():
 
 
 class JPFormModelMain(DialogAnimation):
-    afterSaveData = pyqtSignal([int],[str])
+    afterSaveData = pyqtSignal([int], [str])
     firstHasDirty = pyqtSignal()
 
     def __init__(self,
@@ -450,6 +450,16 @@ class JPFormModelMainHasSub(JPFormModelMain):
             result = mainSaveSQLs + subSaveSQls + updatePKSQL
         return result
 
+
+    def onGetModelClass(self):
+        """返回子窗体显示模型，可重写"""
+        if self.isNewMode:
+            return myJPTableViewModelEditForm
+        elif self.isReadOnlyMode:
+            return myJPTableViewModelReadOnly
+        elif self.isEditMode:
+            return myJPTableViewModelEditForm
+
     def __readSubData(self):
         tv = self.ui.tableView
         em = self.EditMode
@@ -457,19 +467,18 @@ class JPFormModelMainHasSub(JPFormModelMain):
         if em is None:
             raise ValueError("没有指定子窗体的编辑模式！")
         # 建立子窗体模型
+        ModelClass = self.onGetModelClass()
+
         if self.isNewMode:
             tfi = JPTabelFieldInfo(self.subSQL, False)
             if len(tfi.DeleteRows) == 0:
                 tfi.addRow()
-            self.subModel = myJPTableViewModelEditForm(tv, tfi)
         if self.isReadOnlyMode:
             tfi = JPQueryFieldInfo(self.subSQL.format(self.PKValue))
-            self.subModel = myJPTableViewModelReadOnly(tv, tfi)
         if self.isEditMode:
             tfi = JPTabelFieldInfo(self.subSQL.format(self.PKValue))
             tfi.addRow()
-            self.subModel = myJPTableViewModelEditForm(tv, tfi)
-
+        self.subModel = ModelClass(tv, tfi)
         if self.isNewMode or self.isEditMode:
             self.subModel.firstHasDirty.connect(self.onFirstHasDirty)
 
@@ -675,7 +684,10 @@ class JPFormModelMainHasSub(JPFormModelMain):
         d_r = tfi.DeleteRows
         if d_r:
             for i in range(len(d_r)):
-                sqls.append(sql_del.format(pk=d_r[i].Datas[i_pk]))
+                pk = d_r[i].Datas[i_pk]
+                # PK列不为空时才生成删除语句
+                if pk:
+                    sqls.append(sql_del.format(pk=pk))
 
         return sqls
 

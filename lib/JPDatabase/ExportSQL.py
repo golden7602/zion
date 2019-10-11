@@ -23,6 +23,8 @@ class CreateSQL_MySQL(QObject):
         cur.execute(sql)
         con.commit()
         tab = cur._result.rows
+        if len(tab)==0:
+            return 
         c_col = len(cur._result.fields)
         fns = ['`{}`'.format(r.name) for r in cur._result.fields]
         fg = ", "

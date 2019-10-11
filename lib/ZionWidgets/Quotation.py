@@ -194,6 +194,8 @@ class Edit_Order_Quotation(EditForm_Order):
 class Order_report(Order_report_Mob):
     def __init__(self):
         super().__init__()
+        self.CopyInfo = JPPub().getCopysInfo('BillCopys_QuotationOrder')
+        self.Copys = len(self.CopyInfo)
 
     def onFormat(self, SectionType, CurrentPage, RowDate=None):
         if (SectionType == JPPrintSectionType.PageHeader and CurrentPage == 1):

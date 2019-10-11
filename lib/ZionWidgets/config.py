@@ -29,6 +29,7 @@ class Form_Config(QDialog):
                                       'color_picker.ico')
         # 读取信息
         self.configData = pub.getConfigData()
+
         # 写信息到窗体控件
         self.ui.Note_PrintingOrder.setText(
             self.configData['Note_PrintingOrder'])
@@ -59,6 +60,18 @@ class Form_Config(QDialog):
         self.ui.radioButton_BubbleTipsWhenDataChange_Close.setChecked(
             not self.ui.radioButton_BubbleTipsWhenDataChange_Open.isChecked())
 
+        self.ui.BillCopys_Order.setText(self.configData['BillCopys_Order'])
+        self.ui.BillCopys_PrintingOrder.setText(
+            self.configData['BillCopys_PrintingOrder'])
+        self.ui.BillCopys_OutboundOrder.setText(
+            self.configData['BillCopys_OutboundOrder'])
+        self.ui.BillCopys_WarehouseRreceipt.setText(
+            self.configData['BillCopys_WarehouseRreceipt'])
+        self.ui.BillCopys_QuotationOrder.setText(
+            self.configData['BillCopys_QuotationOrder'])
+        self.ui.BillCopys_QuotationPrintingOrder.setText(
+            self.configData['BillCopys_QuotationPrintingOrder'])
+
         # 事件处理
 
         self.ui.Note_PrintingOrder.textChanged.connect(self.configChanged)
@@ -80,6 +93,15 @@ class Form_Config(QDialog):
             self.configChanged)
         self.ui.radioButton_BubbleTipsWhenDataChange_Close.toggled.connect(
             self.configChanged)
+        self.ui.BillCopys_Order.textChanged.connect(self.configChanged)
+        self.ui.BillCopys_PrintingOrder.textChanged.connect(self.configChanged)
+        self.ui.BillCopys_OutboundOrder.textChanged.connect(self.configChanged)
+        self.ui.BillCopys_WarehouseRreceipt.textChanged.connect(
+            self.configChanged)
+        self.ui.BillCopys_QuotationOrder.textChanged.connect(
+            self.configChanged)
+        self.ui.BillCopys_QuotationPrintingOrder.textChanged.connect(
+            self.configChanged)
         self.exec_()
 
     def configChanged(self):
@@ -96,6 +118,24 @@ class Form_Config(QDialog):
             )
         self.configData[
             'BubbleTipsWhenDataChange'] = self.ui.radioButton_BubbleTipsWhenDataChange_Open.isChecked(
+            )
+
+        self.configData[
+            'BillCopys_Order'] = self.ui.BillCopys_Order.toPlainText()
+        self.configData[
+            'BillCopys_PrintingOrder'] = self.ui.BillCopys_PrintingOrder.toPlainText(
+            )
+        self.configData[
+            'BillCopys_OutboundOrder'] = self.ui.BillCopys_OutboundOrder.toPlainText(
+            )
+        self.configData[
+            'BillCopys_WarehouseRreceipt'] = self.ui.BillCopys_WarehouseRreceipt.toPlainText(
+            )
+        self.configData[
+            'BillCopys_QuotationOrder'] = self.ui.BillCopys_QuotationOrder.toPlainText(
+            )
+        self.configData[
+            'BillCopys_QuotationPrintingOrder'] = self.ui.BillCopys_QuotationPrintingOrder.toPlainText(
             )
 
     def backColorSelect(self, obj):

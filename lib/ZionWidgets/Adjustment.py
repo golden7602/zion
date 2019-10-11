@@ -141,8 +141,8 @@ class JPFuncForm_Adjustment(ZionFuncForm):
 
         if form.OrderType == "TP":
             form.setWindowTitle("PrintingOrder Adjustment")
-            for nm in form.ObjectDict.keys():
-                form.ObjectDict[nm].setEnabled(False)
+            for nm in form.ObjectDict().keys():
+                form.ObjectDict()[nm].setEnabled(False)
             form.ui.fPrice.setEnabled(True)
             form.ui.fTax.setEnabled(True)
         #self.__setFormBack(form)

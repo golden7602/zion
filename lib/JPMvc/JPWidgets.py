@@ -181,6 +181,10 @@ class _JPWidgetBase(QObject):
         elif isinstance(self, QCheckBox_):
             self.setCheckable(not state)
 
+    def isNumeric(self):
+        lst = (JPFieldType.Int, JPFieldType.Float)
+        return  self.__FieldInfo.TypeCode in lst
+
 
 class QLineEdit(QLineEdit_, _JPWidgetBase):
     def __init__(self, parent):
@@ -197,7 +201,7 @@ class QLineEdit(QLineEdit_, _JPWidgetBase):
         if t is None or len(t) == 0:
             return self.getNullValue()
         self.clearStyleSheet()
-        if self.FieldInfo.TypeCode in (JPFieldType.Int, JPFieldType.Float):
+        if self.isNumeric():
             return "'{}'".format(t.replace(',', ''))
         if self.FieldInfo.TypeCode == JPFieldType.String:
             return "'{}'".format(t.replace("'", "\\'"))
@@ -255,7 +259,7 @@ class QLineEdit(QLineEdit_, _JPWidgetBase):
 
     def keyPressEvent(self, KeyEvent):
         # 限制只能输入数字及小数点,不能输入科学计数法的e
-        if self.FieldInfo.TypeCode in [JPFieldType.Int, JPFieldType.Float]:
+        if self.isNumeric():
             if not KeyEvent.text() in '-.0123456789':
                 return
             else:
@@ -268,7 +272,7 @@ class QLineEdit(QLineEdit_, _JPWidgetBase):
         if v:
             self.setText(JPGetDisplayText(v, FieldInfo=self.FieldInfo))
         else:
-            if self.FieldInfo.TypeCode in [JPFieldType.Int, JPFieldType.Float]:
+            if self.isNumeric():
                 self.setText('0')
             else:
                 self.setText('')
@@ -289,17 +293,28 @@ class QLineEdit(QLineEdit_, _JPWidgetBase):
     def __onlyRefreshDisplayText(self, v):
         self.setText(v)
 
+    def isSignalConnected(self, obj, name):
+        """判断信号是否连接
+        :param obj:        对象
+        :param name:       信号名，如 clicked()
+        """
+        index = obj.metaObject().indexOfMethod(name)
+        if index > -1:
+            method = obj.metaObject().method(index)
+            if method:
+                return obj.isSignalConnected(method)
+        return False
+
     def focusInEvent(self, e):
         # 如果此对象没有被赋值字段信息
         try:
-            if self.FieldInfo.TypeCode in (JPFieldType.Int, JPFieldType.Float):
+            if self.isNumeric():
                 t = self.text()
                 self.textChanged[str].disconnect(self.__onlyRefreshDisplayText)
                 self.setText(t.replace(',', ''))
                 self.textChanged[str].connect(self.__onlyRefreshDisplayText)
         except Exception:
-            print(self.objectName())
-            print(Exception)
+            pass
         finally:
             QLineEdit_.focusInEvent(self, e)
 
@@ -328,28 +343,6 @@ class QLineEdit(QLineEdit_, _JPWidgetBase):
             self.refreshValueNotRaiseEvent(txt, True)
         super()._onValueChange(self.FieldInfo.Value)
         QLineEdit_.focusOutEvent(self, e)
-
-
-# class _LineEditIntMixin():
-#     __slots__ = ()
-
-#     class _JPIntValidator(QValidator):
-#         def __init__(self, v1, v2):
-#             super().__init__()
-#             self.min = v1
-#             self.max = v2
-
-#         def validate(self, vstr, pos):
-#             if (vstr is None) or (vstr == ''):
-#                 return QValidator.Acceptable, vstr, pos
-#             str0 = vstr.replace(',', '')
-#             mt = re.match(r"^-?[1-9]\d*$", str0, flags=(re.I))
-#             if mt:
-#                 if self.min <= int(str0) <= self.max:
-#                     return QValidator.Acceptable, str0, pos
-#                 elif self.min > int(str0):
-#                     return QValidator.Intermediate, str0, pos
-#             return QValidator.Invalid, str0, pos
 
 
 class QTextEdit(QTextEdit_, _JPWidgetBase):
@@ -561,4 +554,3 @@ class QCheckBox(QCheckBox_, _JPWidgetBase):
 
     def Value(self):
         return 1 if self.checkState() == Qt.Checked else 0
-

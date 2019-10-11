@@ -276,7 +276,41 @@ class JPPub(QObject):
         cur = conn.cursor()
         cur.execute(sql)
         conn.commit()
-        return loads(b64decode(cur._result.rows[0][0]))
+        mydic = loads(b64decode(cur._result.rows[0][0]))
+
+        # 防止没有设置信息时，给定初始值
+        # copys
+        copys = [
+            'BillCopys_Order', 'BillCopys_PrintingOrder',
+            'BillCopys_OutboundOrder', 'BillCopys_WarehouseRreceipt',
+            'BillCopys_QuotationOrder', 'BillCopys_QuotationPrintingOrder'
+        ]
+        for item in copys:
+            if item not in mydic.keys():
+                mydic[item] = 'atendimento;1;producao;0;cliente;1;caixa;1'
+
+        return mydic
+
+    def getCopysInfo(self, billname: str):
+        try:
+            info_str = self.getConfigData()[billname]
+            info_lst = info_str.split(';')
+            mydic = []
+            for i in range(len(info_lst)):
+                if i % 2 == 0:
+                    mydic.append({
+                        'title':
+                        info_lst[i],
+                        'flag':
+                        True if info_lst[i + 1] == '1' else False
+                    })
+            return mydic
+
+        except Exception as e:
+            msg = '读取单据联次信息出现错误，信息如下:\n'
+            msg = msg + str(e)
+            QMessageBox.warning(self, '提示', msg, QMessageBox.Yes,
+                                QMessageBox.Yes)
 
     def saveConfigData(self, data: dict):
         sql = "update sysconfig set fValue=%s where fName='configValue'"
