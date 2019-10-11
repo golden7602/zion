@@ -344,10 +344,11 @@ class JPPub(QObject):
             'sysusers': '用户表',
             't_receivables': '收款表',
             't_customer': '客户表',
-            't_quotation': '报价单表'
+            't_quotation': '报价单表',
+            't_product_outbound_order':'出库单表',
         }
         curtime = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        curtab = tn[tablename]
+        curtab = tn[tablename] 
         curact = act[action]
         curpk = PK
         obj_user = JPUser()

@@ -32,6 +32,7 @@ class JPFuncForm_OutboundOrder(JPFunctionForm):
         sql_0 = """
                 SELECT o.fOrderID as 订单号码OrderID,
                     fOrderDate as 日期OrderDate,
+                    fSubmited as 提交,
                     fCustomerName as 客户名Cliente,
                     fRequiredDeliveryDate as 交货日期RequiredDeliveryDate,
                     fAmount as 金额SubTotal,
@@ -50,8 +51,8 @@ class JPFuncForm_OutboundOrder(JPFunctionForm):
         self.checkBox_1.setChecked(False)
         self.checkBox_2.setChecked(True)
         super().setListFormSQL(sql_1, sql_2)
-        self.tableView.setColumnHidden(13, True)
-        self.fSubmited_column = 13
+        #self.tableView.setColumnHidden(13, True)
+        self.fSubmited_column = 2
         self.pub = JPPub()
         self.pub.UserSaveData.connect(self.UserSaveData)
 
@@ -147,13 +148,21 @@ class JPFuncForm_OutboundOrder(JPFunctionForm):
                                      QMessageBox.Yes | QMessageBox.No,
                                      QMessageBox.No)
         if reply == QMessageBox.Yes:
-            sql = "update {tn} set fSubmited=1 where {pk_n}='{pk_v}';"
-            sql1 = "select '{pk_v}';"
+            sql=f"""
+            UPDATE t_product_information AS p,
+                (SELECT fProductID,
+                    sum(fQuant) AS sum_sl
+                FROM t_product_outbound_order_detail
+                WHERE fOrderID='{cu_id}'
+                GROUP BY  fProductID) AS q1 SET p.fCurrentQuantity=p.fCurrentQuantity-q1.sum_sl
+            WHERE p.fID=q1.fProductID;
+            """
+            sql1 = "select '{cu_id}';"
             sql = sql.format(tn=self.EditFormMainTableName,
                              pk_n=self.EditFormPrimarykeyFieldName,
                              pk_v=cu_id)
-            db.executeTransaction([sql, sql1.format(pk_v=cu_id)])
-            JPPub().broadcastMessage(tablename="t_order",
+            db.executeTransaction([sql, sql1])
+            JPPub().broadcastMessage(tablename="t_product_outbound_order",
                                      PK=cu_id,
                                      action='Submit')
             self.refreshListForm()
