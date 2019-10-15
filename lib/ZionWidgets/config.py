@@ -3,7 +3,7 @@ from sys import path as jppath
 jppath.append(getcwd())
 
 from Ui.Ui_FormConfig import Ui_Dialog
-from PyQt5.QtWidgets import QDialog, QMessageBox, QColorDialog
+from PyQt5.QtWidgets import QDialog, QMessageBox, QColorDialog, QFileDialog
 from PyQt5.QtGui import QColor
 from lib.JPPublc import JPPub
 from PyQt5.QtCore import Qt
@@ -27,6 +27,8 @@ class Form_Config(QDialog):
         pub.MainForm.addOneButtonIcon(self.ui.colorpicker, 'color_picker.ico')
         pub.MainForm.addOneButtonIcon(self.ui.colorpicker_2,
                                       'color_picker.ico')
+        pub.MainForm.addOneButtonIcon(self.ui.taxRegPathSelect,
+                                      'folder_explore.ico')
         # 读取信息
         self.configData = pub.getConfigData()
 
@@ -72,6 +74,8 @@ class Form_Config(QDialog):
         self.ui.BillCopys_QuotationPrintingOrder.setText(
             self.configData['BillCopys_QuotationPrintingOrder'])
 
+        self.ui.TaxRegCerPath.setText(self.configData['TaxRegCerPath'])
+
         # 事件处理
 
         self.ui.Note_PrintingOrder.textChanged.connect(self.configChanged)
@@ -102,6 +106,11 @@ class Form_Config(QDialog):
             self.configChanged)
         self.ui.BillCopys_QuotationPrintingOrder.textChanged.connect(
             self.configChanged)
+
+        self.ui.taxRegPathSelect.clicked.connect(
+            partial(self.folderSelect, self.ui.TaxRegCerPath))
+        self.ui.TaxRegCerPath.textChanged.connect(self.configChanged)
+
         self.exec_()
 
     def configChanged(self):
@@ -137,6 +146,7 @@ class Form_Config(QDialog):
         self.configData[
             'BillCopys_QuotationPrintingOrder'] = self.ui.BillCopys_QuotationPrintingOrder.toPlainText(
             )
+        self.configData['TaxRegCerPath'] = self.ui.TaxRegCerPath.text()
 
     def backColorSelect(self, obj):
         color = QColorDialog.getColor()
@@ -145,6 +155,13 @@ class Form_Config(QDialog):
             c_str = self.getRGBString(color)
             obj.setStyleSheet(f"background-color: {c_str}")
             self.configData[key] = color
+
+    def folderSelect(self, obj):
+        path = QFileDialog.getExistingDirectory()
+        key = obj.objectName()
+        if path:
+            obj.setText(path)
+            self.configData[key] = path
 
     def accept(self):
         JPPub().saveConfigData(self.configData)

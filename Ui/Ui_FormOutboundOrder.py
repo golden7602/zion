@@ -6,7 +6,6 @@
 #
 # WARNING! All changes made in this file will be lost!
 
-
 from os import getcwd
 from sys import path as jppath
 jppath.append(getcwd())
@@ -244,16 +243,6 @@ class Ui_Form(object):
         self.fCity.setClearButtonEnabled(False)
         self.fCity.setObjectName("fCity")
         self.gridLayout.addWidget(self.fCity, 1, 6, 1, 1)
-        self.fSucursal = QtWidgets.QCheckBox(Form)
-        self.fSucursal.setMinimumSize(QtCore.QSize(0, 25))
-        self.fSucursal.setSizeIncrement(QtCore.QSize(0, 25))
-        self.fSucursal.setText("")
-        self.fSucursal.setObjectName("fSucursal")
-        self.gridLayout.addWidget(self.fSucursal, 2, 6, 1, 1)
-        self.label_16 = QtWidgets.QLabel(Form)
-        self.label_16.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
-        self.label_16.setObjectName("label_16")
-        self.gridLayout.addWidget(self.label_16, 2, 5, 1, 1)
         self.fEndereco = QtWidgets.QLineEdit(Form)
         self.fEndereco.setMinimumSize(QtCore.QSize(0, 25))
         self.fEndereco.setSizeIncrement(QtCore.QSize(0, 25))
@@ -436,8 +425,7 @@ class Ui_Form(object):
         Form.setTabOrder(self.fNUIT, self.fCity)
         Form.setTabOrder(self.fCity, self.fEndereco)
         Form.setTabOrder(self.fEndereco, self.fVendedorID)
-        Form.setTabOrder(self.fVendedorID, self.fSucursal)
-        Form.setTabOrder(self.fSucursal, self.fContato)
+        Form.setTabOrder(self.fVendedorID, self.fContato)
         Form.setTabOrder(self.fContato, self.fCelular)
         Form.setTabOrder(self.fCelular, self.fTelefone)
         Form.setTabOrder(self.fTelefone, self.tableView)
@@ -450,7 +438,7 @@ class Ui_Form(object):
 
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
-        Form.setWindowTitle(_translate("Form", "Order"))
+        Form.setWindowTitle(_translate("Form", "Outbound order"))
         self.label_Title_Chn.setText(_translate("Form", "出库单"))
         self.label_Title_Eng.setText(_translate("Form", "Outbound order"))
         self.label_Title_Note.setText(_translate("Form", "(ESTE DOCUMENTO É DO USO INTERNO)"))
@@ -471,7 +459,6 @@ class Ui_Form(object):
         self.label_3.setText(_translate("Form", "日期Date:"))
         self.fOrderDate.setDisplayFormat(_translate("Form", "yyyy-MM-dd"))
         self.label_8.setText(_translate("Form", "城市City:"))
-        self.label_16.setText(_translate("Form", "Sucursal:"))
         self.label_5.setText(_translate("Form", "销售Vendedor:"))
         self.label_17.setText(_translate("Form", "录入人Enter:"))
         self.tableView.setToolTip(_translate("Form", "<html><head/><body><p>如果要输入单价为金额为0的订单，请在单价处输入0，但这时，明细表只能输入一行，如果要增加行，请先点击表格空白处（取消选中任何单元格），然后按 alt+d。</p><p>If you want to enter an order with a unit price of 0, please enter 0 at the unit price. But at this time, the detailed list can only enter one line. If you want to add more rows, please click on the blank of the table (cancel any cells), and then press Alt + D.</p></body></html>"))

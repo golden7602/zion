@@ -39,6 +39,7 @@ from lib.ZionWidgets.Receivables import Form_Receivables
 from lib.ZionWidgets.Report_Day import Form_Repoet_Day
 from lib.ZionWidgets.User import Form_User
 from lib.ZionWidgets.OutboundOrder import JPFuncForm_OutboundOrder
+from lib.ZionWidgets.ProductInformation import Form_ProductList
 from Ui.Ui_FormMain import Ui_MainWindow
 from lib.JPConfigInfo import ConfigInfo
 
@@ -210,7 +211,8 @@ class JPMainWindow(QMainWindow):
             13: Form_User,
             148: Form_FormCustomer_Arrears,
             147: Form_Backup,
-            152: JPFuncForm_OutboundOrder
+            152: JPFuncForm_OutboundOrder,
+            168: Form_ProductList
         }
         if self.menu_id == 12:
             self.close()

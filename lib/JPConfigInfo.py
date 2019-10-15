@@ -26,5 +26,5 @@ class ConfigInfo():
         self.database = kw["database"]
         self.port = int(kw['port'])
 
-        kw = dict(config._sections["path"])
-        self.tax_reg_path = kw["tax_reg"]
+        # kw = dict(config._sections["path"])
+        # self.tax_reg_path = kw["tax_reg"]

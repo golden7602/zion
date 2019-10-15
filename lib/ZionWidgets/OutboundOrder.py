@@ -1,4 +1,4 @@
-from functools import reduce
+
 from os import getcwd
 from sys import path as jppath
 
@@ -22,7 +22,27 @@ from Ui.Ui_FormOutboundOrder import Ui_Form
 from lib.ZionWidgets.ProductSelecter import ProductSelecter
 
 
+class OutboundOrderMod(JPTableViewModelReadOnly):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.tabFont = QFont("Times", 10)
+        self.tabFont.setBold(False)
+        self.tabFont.setStretch(150)
+        self.ok_icon = JPPub().MainForm.getIcon('yes.ico')
 
+    def data(self, index, role=Qt.DisplayRole):
+        r = index.row()
+        c = index.column()
+        tab = self.TabelFieldInfo
+        curid = tab.getOnlyData((r, 0))  # DataRows[r].Datas[0]
+
+        submited = tab.getOnlyData((r, 2))
+        if c == 2 and role == Qt.DecorationRole and submited:
+            return self.ok_icon
+        elif c == 2 and role == Qt.DisplayRole and submited:
+            return "Submited"
+        else:
+            return super().data(index, role=role)
 
 
 class JPFuncForm_OutboundOrder(JPFunctionForm):
@@ -88,6 +108,9 @@ class JPFuncForm_OutboundOrder(JPFunctionForm):
         if tbName == 't_product_outbound_order':
             self.refreshListForm()
 
+    def onGetModelClass(self):
+        return OutboundOrderMod
+
     def getEditForm(self, sql_main, edit_mode, sql_sub, PKValue):
 
         frm = EditForm_OutboundOrder(sql_main=sql_main,
@@ -100,7 +123,6 @@ class JPFuncForm_OutboundOrder(JPFunctionForm):
         frm.ui.fEntryID.setEnabled(False)
         frm.ui.fEndereco.setEnabled(False)
         return frm
-
 
     # @pyqtSlot()
     # def on_CmdExportToExcel_clicked(self):
@@ -148,7 +170,9 @@ class JPFuncForm_OutboundOrder(JPFunctionForm):
                                      QMessageBox.Yes | QMessageBox.No,
                                      QMessageBox.No)
         if reply == QMessageBox.Yes:
-            sql=f"""
+            sql0 = f"""UPDATE t_product_outbound_order set fSubmited=1 
+                where fOrderID='{cu_id}';"""
+            sql1 = f"""
             UPDATE t_product_information AS p,
                 (SELECT fProductID,
                     sum(fQuant) AS sum_sl
@@ -158,10 +182,7 @@ class JPFuncForm_OutboundOrder(JPFunctionForm):
             WHERE p.fID=q1.fProductID;
             """
             sql1 = "select '{cu_id}';"
-            sql = sql.format(tn=self.EditFormMainTableName,
-                             pk_n=self.EditFormPrimarykeyFieldName,
-                             pk_v=cu_id)
-            db.executeTransaction([sql, sql1])
+            db.executeTransaction([sql0, sql1, sql1])
             JPPub().broadcastMessage(tablename="t_product_outbound_order",
                                      PK=cu_id,
                                      action='Submit')
@@ -208,7 +229,12 @@ class mySubMod(JPTableViewModelReadOnly):
 
         if role == Qt.DisplayRole and c == 2:
             if curid:
-                return self.productInfo[curid][0]
+                r = self.productInfo[curid]
+                r1 = [r[0]]
+                for i in range(len(r)):
+                    if i >= 2 and r[i]:
+                        r1.append(r[i])
+                return " /".join(r1)
         elif role == Qt.TextAlignmentRole and c == 2:
             return (Qt.AlignLeft | Qt.AlignVCenter)
 
@@ -247,7 +273,17 @@ class EditForm_OutboundOrder(JPFormModelMainHasSub):
         self.ui.tableView.keyPressEvent = self.mykeyPressEvent
         self.ui.tableView.selectionModel().currentChanged.connect(
             self._tv_currentChanged)
-        self.subModel.productInfo = {}
+
+        self.subModel.productInfo = self.__getProductInfo()
+
+    def __getProductInfo(self):
+        sql = """
+        select fID,fProductName, fCurrentQuantity ,
+        fSpesc,fWidth,fLength,fUint
+        from t_product_information where fCancel=0
+        """
+        lst = JPDb().getDataList(sql)
+        return {r[0]: r[1:] for r in lst}
 
     def onGetModelClass(self):
         return mySubMod
@@ -256,7 +292,6 @@ class EditForm_OutboundOrder(JPFormModelMainHasSub):
         def fun(p_id, product_name, fCurrentQuantity):
             tab = self.subModel.TabelFieldInfo
             tab.setData([r, 2], p_id)
-            self.subModel.productInfo[p_id] = (product_name, fCurrentQuantity)
 
         r = index1.row()
         if index1.column() == 2:
@@ -305,7 +340,7 @@ class EditForm_OutboundOrder(JPFormModelMainHasSub):
         return [1]
 
     def onGetReadOnlyColumns(self):
-        return [7]
+        return [5]
 
     def onGetColumnWidths(self):
         return [25, 0, 500, 100, 100, 100]

@@ -51,7 +51,7 @@ class ProductSelecter(QDialog):
         fUint 单位Unidade, 
         fNote as 备注Observações
         from t_product_information 
-        where fProductName like '%{key}%' 
+        where fCancel=0 and fProductName like '%{key}%' 
         order by  fID
         """
         self.tab = JPQueryFieldInfo(sql)

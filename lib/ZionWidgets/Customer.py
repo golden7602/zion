@@ -18,7 +18,6 @@ from Ui.Ui_FormCustomerEdit import Ui_Form as Ui_Form_Edit
 from lib.JPDatabase.Query import JPQueryFieldInfo
 from lib.JPForms.JPSearch import Form_Search
 from threading import Thread
-from lib.JPConfigInfo import ConfigInfo
 from lib.ZionWidgets.ViewPic import Form_ViewPic
 from lib.JPFunction import GetFileMd5
 
@@ -313,6 +312,8 @@ class EditForm_Customer(JPFormModelMain):
         if self.isReadOnlyMode:
             self.ui.btn_SelectPic.setEnabled(False)
 
+        self.toPath = JPPub().getConfigData()['TaxRegCerPath']
+
     def resizeEvent(self, resizeEvent):
         if self.dispPixmap:
             size = self.ui.label_Tax_Registration.size()
@@ -340,7 +341,7 @@ class EditForm_Customer(JPFormModelMain):
         r_path, r_file = os.path.split(fileName_choose)
         fn_split = r_file.split(".")
         newName = GetFileMd5(fileName_choose)
-        toPath = ConfigInfo().tax_reg_path
+        toPath = self.toPath
         fn_m = f'tax_reg_{newName}'
         fn_e = fn_split[len(fn_split) - 1]
         pic.to_FullPath = f"{toPath}\\{fn_m}.{fn_e}"

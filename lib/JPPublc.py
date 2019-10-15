@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from base64 import b64decode, b64encode
-from os import getcwd
+from os import getcwd, path as ospath
 import json
 from pickle import dumps, loads
 from sys import path as jppath
@@ -289,6 +289,16 @@ class JPPub(QObject):
             if item not in mydic.keys():
                 mydic[item] = 'atendimento;1;producao;0;cliente;1;caixa;1'
 
+        if 'TaxRegCerPath' not in mydic.keys():
+            mydic['TaxRegCerPath'] = ''
+            txt = '您还没有设置客户税务登记证件位置\n'
+            txt = txt + 'You haven\'t set up the location of the customer\'s tax registration certificate yet'
+            QMessageBox.information(self.MainForm, '提示', txt)
+        else:
+            if not ospath.exists(mydic['TaxRegCerPath']):
+                txt = '您设置的客户税务登记证件位置不存在\n'
+                txt = txt + 'The location of the customer tax registration certificate you set does not exist'
+                QMessageBox.information(self.MainForm, '提示', txt)
         return mydic
 
     def getCopysInfo(self, billname: str):
@@ -345,10 +355,13 @@ class JPPub(QObject):
             't_receivables': '收款表',
             't_customer': '客户表',
             't_quotation': '报价单表',
-            't_product_outbound_order':'出库单表',
+            't_product_information':'产品信息表' ,
+            't_product_outbound_order': '出库单表',
+            't_product_warehousereceipt_order':'入库单表',
+            't_supplier': '供应商表'
         }
         curtime = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        curtab = tn[tablename] 
+        curtab = tn[tablename]
         curact = act[action]
         curpk = PK
         obj_user = JPUser()

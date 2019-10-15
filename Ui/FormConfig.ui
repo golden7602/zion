@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>971</width>
-    <height>629</height>
+    <height>676</height>
    </rect>
   </property>
   <property name="font">
@@ -32,7 +32,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>1</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="tab1">
       <attribute name="title">
@@ -91,7 +91,14 @@
           </widget>
          </item>
          <item>
-          <widget class="QTextEdit" name="BillCopys_Order"/>
+          <widget class="QTextEdit" name="BillCopys_Order">
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>40</height>
+            </size>
+           </property>
+          </widget>
          </item>
          <item>
           <widget class="QLabel" name="label_9">
@@ -101,7 +108,14 @@
           </widget>
          </item>
          <item>
-          <widget class="QTextEdit" name="BillCopys_PrintingOrder"/>
+          <widget class="QTextEdit" name="BillCopys_PrintingOrder">
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>40</height>
+            </size>
+           </property>
+          </widget>
          </item>
          <item>
           <widget class="QLabel" name="label_10">
@@ -111,7 +125,14 @@
           </widget>
          </item>
          <item>
-          <widget class="QTextEdit" name="BillCopys_OutboundOrder"/>
+          <widget class="QTextEdit" name="BillCopys_OutboundOrder">
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>40</height>
+            </size>
+           </property>
+          </widget>
          </item>
          <item>
           <widget class="QLabel" name="label_11">
@@ -121,7 +142,14 @@
           </widget>
          </item>
          <item>
-          <widget class="QTextEdit" name="BillCopys_WarehouseRreceipt"/>
+          <widget class="QTextEdit" name="BillCopys_WarehouseRreceipt">
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>40</height>
+            </size>
+           </property>
+          </widget>
          </item>
          <item>
           <widget class="QLabel" name="label_12">
@@ -131,7 +159,14 @@
           </widget>
          </item>
          <item>
-          <widget class="QTextEdit" name="BillCopys_QuotationOrder"/>
+          <widget class="QTextEdit" name="BillCopys_QuotationOrder">
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>40</height>
+            </size>
+           </property>
+          </widget>
          </item>
          <item>
           <widget class="QLabel" name="label_13">
@@ -141,7 +176,27 @@
           </widget>
          </item>
          <item>
-          <widget class="QTextEdit" name="BillCopys_QuotationPrintingOrder"/>
+          <widget class="QTextEdit" name="BillCopys_QuotationPrintingOrder">
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>40</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="verticalSpacer_2">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
          </item>
         </layout>
        </item>
@@ -541,6 +596,31 @@ border-color: rgb(194, 194, 194);
                </size>
               </property>
              </spacer>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_11">
+            <item>
+             <widget class="QLabel" name="label_14">
+              <property name="text">
+               <string>客户税务登记证存放路径：Customer Tax registration certificate Path：</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="TaxRegCerPath">
+              <property name="readOnly">
+               <bool>false</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="taxRegPathSelect">
+              <property name="text">
+               <string/>
+              </property>
+             </widget>
             </item>
            </layout>
           </item>
