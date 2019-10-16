@@ -231,6 +231,7 @@ class JPPub(QObject):
             self.db = JPDb()
             self.__ConfigData = None
             self.INITCustomer()
+            self.INITSupplier()
             self.INITEnum()
 
             sql = """
@@ -259,9 +260,18 @@ class JPPub(QObject):
                 fNUIT,fCity,fContato,fTaxRegCer from t_customer'''
         self.__allCustomerList = self.db.getDataList(sql)
 
+    def INITSupplier(self):
+        sql = '''select fSupplierName,fSupplierID,
+                fNUIT,fCity,fContato,fTaxRegCer from t_Supplier'''
+        self.__allSupplieList = self.db.getDataList(sql)
+
     def getEnumList(self, enum_type_id: int):
         self.INITEnum()
         return self.__EnumDict[enum_type_id]
+
+    def getSupplierList(self):
+        self.INITSupplier()
+        return self.__allSupplierList
 
     def getCustomerList(self):
         self.INITCustomer()
@@ -355,9 +365,9 @@ class JPPub(QObject):
             't_receivables': '收款表',
             't_customer': '客户表',
             't_quotation': '报价单表',
-            't_product_information':'产品信息表' ,
+            't_product_information': '产品信息表',
             't_product_outbound_order': '出库单表',
-            't_product_warehousereceipt_order':'入库单表',
+            't_product_warehousereceipt_order': '入库单表',
             't_supplier': '供应商表'
         }
         curtime = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')

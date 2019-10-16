@@ -40,6 +40,7 @@ from lib.ZionWidgets.Report_Day import Form_Repoet_Day
 from lib.ZionWidgets.User import Form_User
 from lib.ZionWidgets.OutboundOrder import JPFuncForm_OutboundOrder
 from lib.ZionWidgets.ProductInformation import Form_ProductList
+from lib.ZionWidgets.Supplier import Form_Supplier
 from Ui.Ui_FormMain import Ui_MainWindow
 from lib.JPConfigInfo import ConfigInfo
 
@@ -156,7 +157,7 @@ class JPMainWindow(QMainWindow):
 
     def getTaxCerPixmap(self, fn):
         # 税务登记证件保存路径
-        toPath = ConfigInfo().tax_reg_path
+        toPath = JPPub().ConfigData()['TaxRegCerPath']
         fn_m = f'{toPath}\\{fn}'
         if ospath.exists(fn_m):
             return QPixmap(fn_m)
@@ -212,7 +213,8 @@ class JPMainWindow(QMainWindow):
             148: Form_FormCustomer_Arrears,
             147: Form_Backup,
             152: JPFuncForm_OutboundOrder,
-            168: Form_ProductList
+            168: Form_ProductList,
+            176: Form_Supplier
         }
         if self.menu_id == 12:
             self.close()

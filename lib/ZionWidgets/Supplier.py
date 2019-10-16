@@ -13,8 +13,8 @@ from lib.JPFunction import JPDateConver
 from lib.JPMvc.JPEditFormModel import JPEditFormDataMode, JPFormModelMain
 from lib.JPMvc.JPModel import JPTableViewModelReadOnly
 from lib.JPPublc import JPDb, JPPub
-from Ui.Ui_FormCustomer import Ui_Form as Ui_Form_List
-from Ui.Ui_FormCustomerEdit import Ui_Form as Ui_Form_Edit
+from Ui.Ui_FormSupplier import Ui_Form as Ui_Form_List
+from Ui.Ui_FormSupplierEdit import Ui_Form as Ui_Form_Edit
 from lib.JPDatabase.Query import JPQueryFieldInfo
 from lib.JPForms.JPSearch import Form_Search
 from threading import Thread
@@ -83,7 +83,7 @@ class MyButtonDelegate(QItemDelegate):
         editor.setGeometry(StyleOptionViewItem.rect)
 
 
-class Form_Customer(QWidget):
+class Form_Supplier(QWidget):
     def __init__(self, mainform):
         super().__init__()
         self.ui = Ui_Form_List()
@@ -93,7 +93,7 @@ class Form_Customer(QWidget):
         self.list_sql = """
             select 
                 fSupplierID as `ID`, 
-                fSupplierName as `客户名称Cliente`, 
+                fSupplierName as `供应商名称Supplier`, 
                 fNUIT as `税号NUIT`, 
                 fEndereco as `地址Endereco`,
                 fCity as `城市City`, 
@@ -109,7 +109,7 @@ class Form_Customer(QWidget):
         medit_sql = """
             select 
             fSupplierID as `ID`, 
-            fSupplierName as `客户名称Cliente`, 
+            fSupplierName as `供应商名称Supplier`, 
             fNUIT as `税号NUIT`, 
             fEndereco,
             fCity,
@@ -195,7 +195,7 @@ class Form_Customer(QWidget):
             self._locationRow(ID)
 
     def getEditForm(self, sql_main, edit_mode, sql_sub, PKValue):
-        frm = EditForm_Customer(sql_main=sql_main,
+        frm = EditForm_Supplier(sql_main=sql_main,
                                 edit_mode=edit_mode,
                                 PKValue=PKValue)
         frm.afterSaveData.connect(self.refreshTable)
@@ -251,24 +251,18 @@ class Form_Customer(QWidget):
             return
         sql0 = """
             SELECT fSupplierID
-            FROM (
-                SELECT fSupplierID
-                FROM v_order
-                UNION ALL
-                SELECT fSupplierID
-                FROM v_quotation
-            ) Q
-            WHERE Q.fSupplierID = {}
+            FROM t_product_warehousereceipt_order
+            WHERE fSupplierID = {}
             LIMIT 1"""
         tab = JPQueryFieldInfo(sql0.format(uid))
         if len(tab):
             txt = '该客户已经存在订单，无法删除!\n'
-            txt = txt + "The customer already has an order and can not delete it!"
+            txt = txt + "The Supplier already has an order and can not delete it!"
             QMessageBox.warning(self, '提示', txt, QMessageBox.Cancel,
                                 QMessageBox.Cancel)
             return
         del_txt = '确认要删除此客户？\n'
-        del_txt = del_txt + 'Are you sure you want to delete this customer?'
+        del_txt = del_txt + 'Are you sure you want to delete this Supplier?'
         sql = "DELETE FROM t_supplier WHERE fSupplierID = {}"
         if QMessageBox.question(self, '提示', del_txt,
                                 (QMessageBox.Yes | QMessageBox.No),
@@ -277,7 +271,7 @@ class Form_Customer(QWidget):
             self.refreshTable()
 
 
-class EditForm_Customer(JPFormModelMain):
+class EditForm_Supplier(JPFormModelMain):
     def __init__(self, sql_main, PKValue, edit_mode, flags=Qt.WindowFlags()):
         super().__init__(Ui_Form_Edit(),
                          sql_main=sql_main,
@@ -360,7 +354,7 @@ class EditForm_Customer(JPFormModelMain):
                 self.ui.butSave.setEnabled(False)
                 self.afterSaveData.emit(str(result))
                 self.__SavePic(result)
-                JPPub().INITCustomer()
+                JPPub().INITSupplier()
                 QMessageBox.information(self, '完成',
                                         '保存数据完成！\nSave data complete!')
 

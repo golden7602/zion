@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS `syslanguage` (
   PRIMARY KEY (`fID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1006477 DEFAULT CHARSET=utf8;
 
--- 正在导出表  myorder_python.syslanguage 的数据：~841 rows (大约)
+-- 正在导出表  myorder_python.syslanguage 的数据：~813 rows (大约)
 /*!40000 ALTER TABLE `syslanguage` DISABLE KEYS */;
 INSERT INTO `syslanguage` (`fID`, `fParentId`, `fObjectName`, `fCaption`, `fFontSize`, `fFontName`, `fIndex`, `fLanguage1`, `fLanguage2`, `fType`, `TS`) VALUES
 	(1, 0, NULL, 'Logical Operational Symbols', NULL, NULL, NULL, '逻辑运算符', 'Logical Operational Symbols', NULL, '2019-04-10 09:01:01'),
@@ -895,7 +895,7 @@ CREATE TABLE IF NOT EXISTS `sysnavigationmenus` (
   KEY `ParentID` (`fParentId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=184 DEFAULT CHARSET=utf8;
 
--- 正在导出表  myorder_python.sysnavigationmenus 的数据：~136 rows (大约)
+-- 正在导出表  myorder_python.sysnavigationmenus 的数据：~113 rows (大约)
 /*!40000 ALTER TABLE `sysnavigationmenus` DISABLE KEYS */;
 INSERT INTO `sysnavigationmenus` (`fNMID`, `fDispIndex`, `fParentId`, `fEnabled`, `fMenuText`, `fCommand`, `fObjectName`, `fFormMode`, `fArg`, `fIcon`, `fDefault`, `fNodeBackvolor`, `fNodeForeColor`, `fNodeFontBold`, `fExpanded`, `fDescription`, `fLevel`, `fIsCommandButton`, `TS`) VALUES
 	(1, 110, 0, b'1', 'Function', 0, '', 0, '', 'home', b'1', NULL, NULL, 0, 1, '', b'0', b'0', '2019-04-20 13:45:28'),
@@ -1005,7 +1005,7 @@ INSERT INTO `sysnavigationmenus` (`fNMID`, `fDispIndex`, `fParentId`, `fEnabled`
 	(171, 7304, 168, b'1', 'Refresh', 0, 'CmdRefresh', NULL, NULL, 'Refresh.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-10-14 16:46:43'),
 	(172, 950, 168, b'1', 'Search', 0, 'CmdSearch', NULL, NULL, 'folder_explore.ico', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-10-14 16:46:43'),
 	(173, 7303, 168, b'1', 'Delete', 0, 'CmdDelete', NULL, NULL, 'Delete.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-10-14 16:46:43'),
-	(176, 31, NULL, b'1', 'Supplier', 0, 'Supplier', NULL, NULL, NULL, b'0', NULL, NULL, 0, 1, NULL, b'0', b'0', '2019-10-15 17:44:18'),
+	(176, 31, 1, b'1', 'Supplier', 0, 'Supplier', NULL, NULL, 'suppliers.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'0', '2019-10-16 08:08:23'),
 	(177, 7302, 176, b'1', 'Edit', 0, 'CmdEdit', NULL, NULL, 'Edit.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-10-15 17:44:40'),
 	(178, 7301, 176, b'1', 'New', 0, 'CmdNew', NULL, NULL, 'New.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-10-15 17:44:40'),
 	(179, 7304, 176, b'1', 'Refresh', 0, 'CmdRefresh', NULL, NULL, 'Refresh.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-10-15 17:44:40'),
@@ -1070,9 +1070,9 @@ CREATE TABLE IF NOT EXISTS `sysuserright` (
   `TS` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`fID`),
   UNIQUE KEY `UserID` (`fUserID`,`fRightID`)
-) ENGINE=InnoDB AUTO_INCREMENT=943 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=974 DEFAULT CHARSET=utf8;
 
--- 正在导出表  myorder_python.sysuserright 的数据：~499 rows (大约)
+-- 正在导出表  myorder_python.sysuserright 的数据：~679 rows (大约)
 /*!40000 ALTER TABLE `sysuserright` DISABLE KEYS */;
 INSERT INTO `sysuserright` (`fID`, `fRightID`, `fUserID`, `fHasRight`, `TS`) VALUES
 	(1, 1, 2, b'1', '2019-09-09 13:32:22'),
@@ -1719,12 +1719,41 @@ INSERT INTO `sysuserright` (`fID`, `fRightID`, `fUserID`, `fHasRight`, `TS`) VAL
 	(923, 171, 3, b'0', '2019-10-14 16:57:55'),
 	(924, 172, 3, b'0', '2019-10-14 16:57:55'),
 	(925, 173, 3, b'0', '2019-10-14 16:57:55'),
-	(936, 176, 2, b'0', '2019-10-15 17:44:57'),
-	(937, 177, 2, b'0', '2019-10-15 17:44:57'),
-	(938, 178, 2, b'0', '2019-10-15 17:44:57'),
-	(939, 179, 2, b'0', '2019-10-15 17:44:57'),
-	(940, 180, 2, b'0', '2019-10-15 17:44:57'),
-	(941, 181, 2, b'0', '2019-10-15 17:44:57');
+	(936, 176, 2, b'1', '2019-10-16 08:09:03'),
+	(937, 177, 2, b'1', '2019-10-16 08:09:03'),
+	(938, 178, 2, b'1', '2019-10-16 08:09:03'),
+	(939, 179, 2, b'1', '2019-10-16 08:09:03'),
+	(940, 180, 2, b'1', '2019-10-16 08:09:03'),
+	(941, 181, 2, b'1', '2019-10-16 08:09:03'),
+	(943, 151, 5, b'0', '2019-10-16 08:09:03'),
+	(944, 152, 5, b'0', '2019-10-16 08:09:03'),
+	(945, 153, 5, b'0', '2019-10-16 08:09:03'),
+	(946, 154, 5, b'0', '2019-10-16 08:09:03'),
+	(947, 155, 5, b'0', '2019-10-16 08:09:03'),
+	(948, 156, 5, b'0', '2019-10-16 08:09:03'),
+	(949, 157, 5, b'0', '2019-10-16 08:09:03'),
+	(950, 158, 5, b'0', '2019-10-16 08:09:03'),
+	(951, 159, 5, b'0', '2019-10-16 08:09:03'),
+	(952, 160, 5, b'0', '2019-10-16 08:09:03'),
+	(953, 161, 5, b'0', '2019-10-16 08:09:03'),
+	(954, 162, 5, b'0', '2019-10-16 08:09:03'),
+	(955, 163, 5, b'0', '2019-10-16 08:09:03'),
+	(956, 164, 5, b'0', '2019-10-16 08:09:03'),
+	(957, 165, 5, b'0', '2019-10-16 08:09:03'),
+	(958, 166, 5, b'0', '2019-10-16 08:09:03'),
+	(959, 167, 5, b'0', '2019-10-16 08:09:03'),
+	(960, 168, 5, b'0', '2019-10-16 08:09:03'),
+	(961, 169, 5, b'0', '2019-10-16 08:09:03'),
+	(962, 170, 5, b'0', '2019-10-16 08:09:03'),
+	(963, 171, 5, b'0', '2019-10-16 08:09:03'),
+	(964, 172, 5, b'0', '2019-10-16 08:09:03'),
+	(965, 173, 5, b'0', '2019-10-16 08:09:03'),
+	(966, 176, 5, b'0', '2019-10-16 08:09:03'),
+	(967, 177, 5, b'0', '2019-10-16 08:09:03'),
+	(968, 178, 5, b'0', '2019-10-16 08:09:03'),
+	(969, 179, 5, b'0', '2019-10-16 08:09:03'),
+	(970, 180, 5, b'0', '2019-10-16 08:09:03'),
+	(971, 181, 5, b'0', '2019-10-16 08:09:03');
 /*!40000 ALTER TABLE `sysuserright` ENABLE KEYS */;
 
 -- 导出  表 myorder_python.sysusers 结构
@@ -2068,7 +2097,7 @@ CREATE TABLE IF NOT EXISTS `t_order` (
   KEY `iOrderDate` (`fOrderDate`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- 正在导出表  myorder_python.t_order 的数据：~157 rows (大约)
+-- 正在导出表  myorder_python.t_order 的数据：~183 rows (大约)
 /*!40000 ALTER TABLE `t_order` DISABLE KEYS */;
 INSERT INTO `t_order` (`fOrderID`, `fPrice`, `fCustomerID`, `fOrderDate`, `fEspecieID`, `fRequiredDeliveryDate`, `fCategoryID`, `fBrandMateriaID`, `fAmount`, `fTax`, `fPayable`, `fDesconto`, `fColorID`, `fEntryID`, `fSubmited`, `fSubmitID`, `fReviewed`, `fReviewerID`, `fConfirmed`, `fConfirmID`, `fDelivered`, `fDelivererID`, `fCanceled`, `fCancelID`, `fDeliveryDate`, `fNumerBegin`, `fQuant`, `fPagePerVolumn`, `fNumerEnd`, `fAvistaID`, `fTamanhoID`, `fSucursal`, `fLogo`, `fVendedorID`, `fNrCopyID`, `fContato`, `fCelular`, `fTelefone`, `fNote`, `fDeliverViewed`, `TS`) VALUES
 	('222', NULL, 1, '2019-10-10', NULL, '2019-10-10', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, b'0', NULL, NULL, NULL, NULL, NULL, NULL, b'0', '2019-10-10 07:59:04'),
@@ -2271,7 +2300,7 @@ CREATE TABLE IF NOT EXISTS `t_order_detail` (
   PRIMARY KEY (`fID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=215 DEFAULT CHARSET=utf8;
 
--- 正在导出表  myorder_python.t_order_detail 的数据：~153 rows (大约)
+-- 正在导出表  myorder_python.t_order_detail 的数据：~204 rows (大约)
 /*!40000 ALTER TABLE `t_order_detail` DISABLE KEYS */;
 INSERT INTO `t_order_detail` (`fID`, `fOrderID`, `fQuant`, `fProductName`, `fLength`, `fWidth`, `fPrice`, `fAmount`, `TS`) VALUES
 	(2, 'CP2019-0909000001', 200, 'IMP Cartao de visita laminado F/V', 1.000, 1.000, 7.00, 1400.00, '2019-09-09 14:11:41'),
@@ -2494,117 +2523,120 @@ CREATE TABLE IF NOT EXISTS `t_product_information` (
   `fMinimumStock` decimal(13,3) NOT NULL DEFAULT '0.000',
   `fCancel` tinyint(4) NOT NULL DEFAULT '0',
   `TS` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `fProductPic` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`fID`)
-) ENGINE=InnoDB AUTO_INCREMENT=106 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=109 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- 正在导出表  myorder_python.t_product_information 的数据：~105 rows (大约)
+-- 正在导出表  myorder_python.t_product_information 的数据：~107 rows (大约)
 /*!40000 ALTER TABLE `t_product_information` DISABLE KEYS */;
-INSERT INTO `t_product_information` (`fID`, `fProductName`, `fSpesc`, `fWidth`, `fLength`, `fUint`, `fNote`, `fCurrentQuantity`, `fMinimumStock`, `fCancel`, `TS`) VALUES
-	(1, 'CTP板 Chapa de CTP', '', '', '', '包', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(2, 'PS板 Chapa  positivas ( PS)', '', '', '', '包', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(3, 'PS显影液 Revelador', '', '', '', '瓶', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(4, '洁板剂 Plate cleaner', '', '', '', '瓶', '印刷', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(5, '还原清洗剂 blanket rejuvenator (caucho)', '', '', '', '瓶', '1箱+6瓶', -4.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(6, '印刷机油墨 白 Tinta branca officet', '2.5 kg', '', '', '罐', '', -8.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(7, '印刷机油墨 黑 Tinta preta officet', '2.5 kg', '', '', '罐', '1 montra', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(8, '印刷机油墨 蓝 Tinta azul ciao officet', '2.5 kg', '', '', '罐', '1 montra', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(9, '印刷机油墨 黄 Tinta amarela officet', '2.5 kg', '', '', '罐', '1 montra', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(10, '印刷机油墨 红 Tinta magenta officet', '2.5 kg', '', '', '罐', '1 montra', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(11, '普通喷绘机墨水 红 Tinta rolaund(magenta)', '', '', '', '瓶', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(12, '普通喷绘机墨水 蓝 Tinta rolaund (azul ciao)', '', '', '', '瓶', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(13, '普通喷绘机墨水 黄 Tinta rolaund (amarelo)', '', '', '', '瓶', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(14, '普通喷绘机墨水 黑 Tinta rolaud (preto)', '', '', '', '瓶', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(15, '旗帜机油墨 红 Tinta cartucho (magenta)', '', '', '', '罐', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(16, '旗帜机油墨 黑 Tinta cartucho (preto)', '', '', '', '罐', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(17, '旗帜机油墨 黄 Tinta cartucho (amarelo)', '', '', '', '罐', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(18, '旗帜机油墨 蓝 Tinta cartucho( azul ciao)', '', '', '', '罐', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(19, '铁门型架 Estrutura de backdrop', '', '', '', '套', '1 montra', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(20, '拉伸膜（过塑膜） Papel aderrente', '', '', '', '卷', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(21, '硫酸纸', '', '', '', '', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(22, '印衣服打印卷材 Rolo de estampar(pequena)', '', '', '', '卷', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(23, '转印膜 Rolo de estampar(grande)', '', '', '', '卷', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(24, 'BOPP预涂膜 光面腹膜 Laminacao', '', '', '', '卷', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(25, 'BOPP预涂膜 哑面腹膜', '', '', '', '', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(26, '大喷绘机墨水 黄 Tinta (amarelo)', '', '', '', '瓶', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(27, '大喷绘机墨水 黑 Tinta (preto)', '', '', '', '瓶', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(28, '大喷绘机墨水 蓝 Tinta (azul ciao)', '', '', '', '瓶', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(29, '大喷绘机墨水 红 Tinta (Magenta)', '', '', '', '瓶', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(30, '豪华单屏易拉宝（最常用）06 Roll up base 06', '', '', '', '套', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(31, '豪华单屏易拉宝（最好的 Roll up(Bom)', '', '', '', '套', '黑色袋子/4500mt', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(32, '标准易拉宝（黑袋）07 Roll up standard (pasta preta)', '', '', '', 'pcs', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(33, '标准易拉宝（黑袋）蓝色边', '', '', '', 'pcs', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(34, '豪华易拉宝（黄色袋子） Roll up standard (pasta laranja)', '', '', '', 'pcs', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(35, '铁拉网 Rede de puxar de ferro', '', '', '', '套', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(36, '不干胶', '', '', '', '箱', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(37, '毕业证书筒 Certificado de graduacao (canudo)', '', '', '', 'caixa', '每箱大概140个', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(38, '3.4米旗杆 Tripé (3 metros/40) 4头', '', '', '', 'pcs', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(39, '3.4米旗杆 Tripé (3 metros/40) 3头', '', '', '', 'pcs', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(40, '旗杆小 Tripé', '', '', '', 'pcs', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(41, '栏杆 Separador', '', '', '', 'pcs', '外加10条', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(42, '栏杆底座/铝 Base de bandeira', '', '', '', 'pcs', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(43, '绘图纸 Papel de desenho', '', '', '', 'caixa', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(44, '装订圈 Argolas para encadernacao de livros', '', '', '', 'caixa', '加4小盒', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(45, '热熔胶 Adesivos', '', '', '', 'Saco', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(46, '装订机 Maquina de encadernar', '', '', '', 'PCS', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(47, '斜纹地板膜 Filme de chao(20180225)', '', '1.27', '50', '卷', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(48, '五米注水旗杆 Pau de subir bandeira(5 metros)', '', '', '', '件', '163*11*11cm', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(49, '三米旗杆 Vinil pequeno', '', '', '', '件', '165*14*11cm', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(50, '艺彩专业冷裱膜 50 MIC', '', '1.37', '50', '件', '1.37*50m', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(51, '户外写真耗材 150G哑PP背胶 150G-PP', '', '1.27', '50', '件', '150G-PP', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(52, '十字纹冷裱膜  Vinnil n? de barra 20180717', '', '1.07', '50', '卷', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(53, '210G双哑PP纸 Vinnil n? de barra 20180419', '', '0.914', '50', '件', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(54, '单向透视膜 Van virgem', '', '', '', '件', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(55, 'NAME：TGB-140 TGB-140', '', '1.27', '50', '件', '1.27*50M', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(56, '2236 PVC 2236 PVC', '', '1.27', '50', '件', '1.27*50M', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(57, '208G  20180310', '', '1.52', '50', '件', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(58, '弱溶剂哑面化纤油画布 CD-240ECH Vinnil CD-240ECH', '', '0.914', '30', '卷', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(59, '弱溶剂半透闪点静电贴 KD051 Vinnil 20180717', '', '1.22', '50', '卷', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(60, '弱溶剂透明静电贴 KF001 Vinnil 20180716', '', '1.52', '50', '卷', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(61, '弱溶剂白色PVC静电贴 KF002 Vinnil KF002', '', '1.52', '50', '卷', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(62, '粗纹环保背胶油画布 YD-5003B Vinnil YD-5003B', '', '1.37', '45', '卷', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(63, '弱溶剂无纺双透布  Pano', '', '1.52', '50', '卷', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(64, '弱溶剂超透PVC贴 ECO-240MP Vinnil 20180716', '', '1.52', '50', '卷', 'FORA', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(65, '弱溶剂灰背PVC胶片 PF-330SG/易拉宝打印材料 Material para roll up', '', '0.914', '50', '卷', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(66, '210MIC粗纹地板膜 Vinnil 20180614', '', '1.27', '50', '卷', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(67, '超透冷袜膜 Vinil(20180611)', '', '1.27', '100', '卷', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(68, '注水旗座 大 80*40*80cm', '', '', '', '件', '80*40*80cm', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(69, '注水旗座 小 Tampa da base de bandeira', '', '', '', '件', '外加18套', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(70, '铝拉网 Rede de puxar de aluminio', '', '', '', '件', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(71, '无缝背胶晶彩反光膜  Vinil', '', '1.24', '50', '件', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(72, '晶彩格（背胶） Vinil', '', '1.24', '50', '件', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(73, '弱溶剂光面化纤油画布 Vinnil', '', '', '', '件', '0.914*50m', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(74, '弱溶剂哑面化纤油画布 Vinnil', '', '', '', '件', '0.914*50m', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(75, '黑袋沙子旁 Vinil 20180718', '', '1.37', '50', '卷', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(76, '2020vinnil  Vinil 20180416', '', '1.37', '50', '卷', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(77, '2020vinnil 1.27*50)', '', '', '', '', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(78, '2020vinnil 20180417 Top baner (70G FIAG FABRIC)', '', '1.2', '257', '卷', '一共39卷', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(79, '2020vinnil  Top baner(70G FIAG FABRIC)', '', '1.2', '239', '', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(80, '70G FIAG FABRIC 旗织机卷材 Top baner (70G FIAG FABRIC)', '', '1.2', '260', '', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(81, '70G FIAG FABRIC 旗织机卷材 Top baner(70G FIAG FABRIC)', '', '1.2', '226', '', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(82, '70G FIAG FABRIC 旗织机卷材 Top baner (70G FIAG FABRIC)', '', '1.2', '214', '', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(83, '70G FIAG FABRIC 旗织机卷材 Top baner (70G FIAG FABRIC)', '', '1.2', '236', '', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(84, '70G FIAG FABRIC 旗织机卷材 Top baner(145G TIENT F?BRIC)', '', '1.5', '150', '', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(85, '70G FIAG FABRIC 旗织机卷材 Top baner(145G TIENT F?BRIC)', '', '1.5', '152', '', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(86, '旗帜布 145G tent fabric  Top baner(145G TIENT F?BRIC)', '', '1.5', '153', '', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(87, '旗帜布 145G tent fabric  Top baner (145G TIENT FABRIC)', '', '1.5', '142', '', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(88, '旗帜布 145G tent fabric  Top baner (145G TIENT FABRIC)', '', '1.5', '182', '', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(89, '旗帜布 145G tent fabric  Top baner(95G GIOSSY SATIN)', '', '1.5', '200', '', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(90, '旗帜布 145G tent fabric  Top baner ((110G WAR IMOTTONG FABRIC)', '', '1.5', '115', '', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(91, '旗帜布 95g giossy satin Top baner (110G WAR IMOTTONG FABRIC)', '', '1.5', '101', '', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(92, '旗帜布 110g war[ lmottomg fabric Top baner (110G WAR IMOTTONG FABRIC)', '', '1.5', '122', '', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(93, '旗帜布 110g war[ lmottomg fabric Top baner (110G WAR IMOTTONG FABRIC)', '', '1.5', '136', '', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(94, '110g war[ lmottomg fabric Top baner ( 110G)', '', '1.6', '120', '', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(95, '旗帜布 110g war[ lmottomg fabric Top baner ( 110G)', '', '1.6', '136', '', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(96, '旗帜布 110g 轻编旗帜布 Top baner ( 110G )', '', '1.6', '128', '', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(97, '旗帜布 110g 轻编旗帜布 Top baner ( 110G)', '', '1.6', '171', '', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(98, '旗帜布 110g 轻编旗帜布 Top baner (600D OXFORD FABRIC)', '', '1.5', '80', '', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(99, '旗帜布 110g 轻编旗帜布 Top baner (120G MESH)', '', '1.6', '100', '', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(100, '账蓬 3*3', '', '', '', '个', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(101, '账蓬 3*6', '', '', '', '个', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(102, '卷材薄纸 KT BOARD', '', '', '', '卷', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(103, '未知名 Mesa de promocao', '', '', '', '卷', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(104, '双面亮光板', '', '', '', '', '', 0.000, 0.000, 0, '0000-00-00 00:00:00'),
-	(105, '广告桌/架子', '', '', '', '', '\r\n', 0.000, 0.000, 0, '0000-00-00 00:00:00');
+INSERT INTO `t_product_information` (`fID`, `fProductName`, `fSpesc`, `fWidth`, `fLength`, `fUint`, `fNote`, `fCurrentQuantity`, `fMinimumStock`, `fCancel`, `TS`, `fProductPic`) VALUES
+	(1, 'CTP板 Chapa de CTP', '', '', '', '包', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(2, 'PS板 Chapa  positivas ( PS)', '', '', '', '包', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(3, 'PS显影液 Revelador', '', '', '', '瓶', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(4, '洁板剂 Plate cleaner', '', '', '', '瓶', '印刷', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(5, '还原清洗剂 blanket rejuvenator (caucho)', '', '', '', '瓶', '1箱+6瓶', -4.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(6, '印刷机油墨 白 Tinta branca officet', '2.5 kg', '', '', '罐', '', -8.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(7, '印刷机油墨 黑 Tinta preta officet', '2.5 kg', '', '', '罐', '1 montra', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(8, '印刷机油墨 蓝 Tinta azul ciao officet', '2.5 kg', '', '', '罐', '1 montra', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(9, '印刷机油墨 黄 Tinta amarela officet', '2.5 kg', '', '', '罐', '1 montra', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(10, '印刷机油墨 红 Tinta magenta officet', '2.5 kg', '', '', '罐', '1 montra', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(11, '普通喷绘机墨水 红 Tinta rolaund(magenta)', '', '', '', '瓶', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(12, '普通喷绘机墨水 蓝 Tinta rolaund (azul ciao)', '', '', '', '瓶', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(13, '普通喷绘机墨水 黄 Tinta rolaund (amarelo)', '', '', '', '瓶', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(14, '普通喷绘机墨水 黑 Tinta rolaud (preto)', '', '', '', '瓶', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(15, '旗帜机油墨 红 Tinta cartucho (magenta)', '', '', '', '罐', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(16, '旗帜机油墨 黑 Tinta cartucho (preto)', '', '', '', '罐', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(17, '旗帜机油墨 黄 Tinta cartucho (amarelo)', '', '', '', '罐', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(18, '旗帜机油墨 蓝 Tinta cartucho( azul ciao)', '', '', '', '罐', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(19, '铁门型架 Estrutura de backdrop', '', '', '', '套', '1 montra', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(20, '拉伸膜（过塑膜） Papel aderrente', '', '', '', '卷', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(21, '硫酸纸', '', '', '', '', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(22, '印衣服打印卷材 Rolo de estampar(pequena)', '', '', '', '卷', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(23, '转印膜 Rolo de estampar(grande)', '', '', '', '卷', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(24, 'BOPP预涂膜 光面腹膜 Laminacao', '', '', '', '卷', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(25, 'BOPP预涂膜 哑面腹膜', '', '', '', '', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(26, '大喷绘机墨水 黄 Tinta (amarelo)', '', '', '', '瓶', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(27, '大喷绘机墨水 黑 Tinta (preto)', '', '', '', '瓶', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(28, '大喷绘机墨水 蓝 Tinta (azul ciao)', '', '', '', '瓶', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(29, '大喷绘机墨水 红 Tinta (Magenta)', '', '', '', '瓶', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(30, '豪华单屏易拉宝（最常用）06 Roll up base 06', '', '', '', '套', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(31, '豪华单屏易拉宝（最好的 Roll up(Bom)', '', '', '', '套', '黑色袋子/4500mt', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(32, '标准易拉宝（黑袋）07 Roll up standard (pasta preta)', '', '', '', 'pcs', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(33, '标准易拉宝（黑袋）蓝色边', '', '', '', 'pcs', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(34, '豪华易拉宝（黄色袋子） Roll up standard (pasta laranja)', '', '', '', 'pcs', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(35, '铁拉网 Rede de puxar de ferro', '', '', '', '套', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(36, '不干胶', '', '', '', '箱', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(37, '毕业证书筒 Certificado de graduacao (canudo)', '', '', '', 'caixa', '每箱大概140个', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(38, '3.4米旗杆 Tripé (3 metros/40) 4头', '', '', '', 'pcs', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(39, '3.4米旗杆 Tripé (3 metros/40) 3头', '', '', '', 'pcs', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(40, '旗杆小 Tripé', '', '', '', 'pcs', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(41, '栏杆 Separador', '', '', '', 'pcs', '外加10条', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(42, '栏杆底座/铝 Base de bandeira', '', '', '', 'pcs', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(43, '绘图纸 Papel de desenho', '', '', '', 'caixa', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(44, '装订圈 Argolas para encadernacao de livros', '', '', '', 'caixa', '加4小盒', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(45, '热熔胶 Adesivos', '', '', '', 'Saco', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(46, '装订机 Maquina de encadernar', '', '', '', 'PCS', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(47, '斜纹地板膜 Filme de chao(20180225)', '', '1.27', '50', '卷', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(48, '五米注水旗杆 Pau de subir bandeira(5 metros)', '', '', '', '件', '163*11*11cm', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(49, '三米旗杆 Vinil pequeno', '', '', '', '件', '165*14*11cm', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(50, '艺彩专业冷裱膜 50 MIC', '', '1.37', '50', '件', '1.37*50m', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(51, '户外写真耗材 150G哑PP背胶 150G-PP', '', '1.27', '50', '件', '150G-PP', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(52, '十字纹冷裱膜  Vinnil n? de barra 20180717', '', '1.07', '50', '卷', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(53, '210G双哑PP纸 Vinnil n? de barra 20180419', '', '0.914', '50', '件', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(54, '单向透视膜 Van virgem', '', '', '', '件', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(55, 'NAME：TGB-140 TGB-140', '', '1.27', '50', '件', '1.27*50M', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(56, '2236 PVC 2236 PVC', '', '1.27', '50', '件', '1.27*50M', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(57, '208G  20180310', '', '1.52', '50', '件', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(58, '弱溶剂哑面化纤油画布 CD-240ECH Vinnil CD-240ECH', '', '0.914', '30', '卷', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(59, '弱溶剂半透闪点静电贴 KD051 Vinnil 20180717', '', '1.22', '50', '卷', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(60, '弱溶剂透明静电贴 KF001 Vinnil 20180716', '', '1.52', '50', '卷', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(61, '弱溶剂白色PVC静电贴 KF002 Vinnil KF002', '', '1.52', '50', '卷', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(62, '粗纹环保背胶油画布 YD-5003B Vinnil YD-5003B', '', '1.37', '45', '卷', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(63, '弱溶剂无纺双透布  Pano', '', '1.52', '50', '卷', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(64, '弱溶剂超透PVC贴 ECO-240MP Vinnil 20180716', '', '1.52', '50', '卷', 'FORA', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(65, '弱溶剂灰背PVC胶片 PF-330SG/易拉宝打印材料 Material para roll up', '', '0.914', '50', '卷', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(66, '210MIC粗纹地板膜 Vinnil 20180614', '', '1.27', '50', '卷', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(67, '超透冷袜膜 Vinil(20180611)', '', '1.27', '100', '卷', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(68, '注水旗座 大 80*40*80cm', '', '', '', '件', '80*40*80cm', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(69, '注水旗座 小 Tampa da base de bandeira', '', '', '', '件', '外加18套', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(70, '铝拉网 Rede de puxar de aluminio', '', '', '', '件', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(71, '无缝背胶晶彩反光膜  Vinil', '', '1.24', '50', '件', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(72, '晶彩格（背胶） Vinil', '', '1.24', '50', '件', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(73, '弱溶剂光面化纤油画布 Vinnil', '', '', '', '件', '0.914*50m', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(74, '弱溶剂哑面化纤油画布 Vinnil', '', '', '', '件', '0.914*50m', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(75, '黑袋沙子旁 Vinil 20180718', '', '1.37', '50', '卷', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(76, '2020vinnil  Vinil 20180416', '', '1.37', '50', '卷', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(77, '2020vinnil 1.27*50)', '', '', '', '', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(78, '2020vinnil 20180417 Top baner (70G FIAG FABRIC)', '', '1.2', '257', '卷', '一共39卷', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(79, '2020vinnil  Top baner(70G FIAG FABRIC)', '', '1.2', '239', '', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(80, '70G FIAG FABRIC 旗织机卷材 Top baner (70G FIAG FABRIC)', '', '1.2', '260', '', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(81, '70G FIAG FABRIC 旗织机卷材 Top baner(70G FIAG FABRIC)', '', '1.2', '226', '', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(82, '70G FIAG FABRIC 旗织机卷材 Top baner (70G FIAG FABRIC)', '', '1.2', '214', '', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(83, '70G FIAG FABRIC 旗织机卷材 Top baner (70G FIAG FABRIC)', '', '1.2', '236', '', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(84, '70G FIAG FABRIC 旗织机卷材 Top baner(145G TIENT F?BRIC)', '', '1.5', '150', '', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(85, '70G FIAG FABRIC 旗织机卷材 Top baner(145G TIENT F?BRIC)', '', '1.5', '152', '', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(86, '旗帜布 145G tent fabric  Top baner(145G TIENT F?BRIC)', '', '1.5', '153', '', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(87, '旗帜布 145G tent fabric  Top baner (145G TIENT FABRIC)', '', '1.5', '142', '', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(88, '旗帜布 145G tent fabric  Top baner (145G TIENT FABRIC)', '', '1.5', '182', '', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(89, '旗帜布 145G tent fabric  Top baner(95G GIOSSY SATIN)', '', '1.5', '200', '', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(90, '旗帜布 145G tent fabric  Top baner ((110G WAR IMOTTONG FABRIC)', '', '1.5', '115', '', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(91, '旗帜布 95g giossy satin Top baner (110G WAR IMOTTONG FABRIC)', '', '1.5', '101', '', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(92, '旗帜布 110g war[ lmottomg fabric Top baner (110G WAR IMOTTONG FABRIC)', '', '1.5', '122', '', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(93, '旗帜布 110g war[ lmottomg fabric Top baner (110G WAR IMOTTONG FABRIC)', '', '1.5', '136', '', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(94, '110g war[ lmottomg fabric Top baner ( 110G)', '', '1.6', '120', '', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(95, '旗帜布 110g war[ lmottomg fabric Top baner ( 110G)', '', '1.6', '136', '', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(96, '旗帜布 110g 轻编旗帜布 Top baner ( 110G )', '', '1.6', '128', '', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(97, '旗帜布 110g 轻编旗帜布 Top baner ( 110G)', '', '1.6', '171', '', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(98, '旗帜布 110g 轻编旗帜布 Top baner (600D OXFORD FABRIC)', '', '1.5', '80', '', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(99, '旗帜布 110g 轻编旗帜布 Top baner (120G MESH)', '', '1.6', '100', '', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(100, '账蓬 3*3', '', '', '', '个', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(101, '账蓬 3*6', '', '', '', '个', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(102, '卷材薄纸 KT BOARD', '', '', '', '卷', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(103, '未知名 Mesa de promocao', '', '', '', '卷', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(104, '双面亮光板', '', '', '', '', '', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(105, '广告桌/架子', '', '', '', '', '\r\n', 0.000, 0.000, 0, '0000-00-00 00:00:00', NULL),
+	(107, '22', NULL, NULL, NULL, NULL, '2', 0.000, 22.000, 0, '2019-10-16 18:43:52', NULL),
+	(108, '222', NULL, NULL, NULL, NULL, NULL, 0.000, 333.000, 0, '2019-10-16 18:45:11', 'tax_reg_73866501432fff8690decdb7360ba1fc.jpg');
 /*!40000 ALTER TABLE `t_product_information` ENABLE KEYS */;
 
 -- 导出  表 myorder_python.t_product_outbound_order 结构
@@ -2703,8 +2735,10 @@ CREATE TABLE IF NOT EXISTS `t_product_warehousereceipt_order` (
   KEY `iOrderDate` (`fOrderDate`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- 正在导出表  myorder_python.t_product_warehousereceipt_order 的数据：~0 rows (大约)
+-- 正在导出表  myorder_python.t_product_warehousereceipt_order 的数据：~1 rows (大约)
 /*!40000 ALTER TABLE `t_product_warehousereceipt_order` DISABLE KEYS */;
+INSERT INTO `t_product_warehousereceipt_order` (`fOrderID`, `fPrice`, `fSupplierID`, `fOrderDate`, `fWarehousingDate`, `fAmount`, `fTax`, `fPayable`, `fDesconto`, `fEntryID`, `fSubmited`, `fSubmitID`, `fCanceled`, `fCancelID`, `fContato`, `fCelular`, `fTelefone`, `fNote`, `TS`) VALUES
+	('234234', NULL, 3, '2019-10-16', NULL, 1.00, 1.00, 1.00, 1.00, 2, b'1', NULL, b'0', NULL, NULL, NULL, NULL, NULL, '2019-10-16 10:08:15');
 /*!40000 ALTER TABLE `t_product_warehousereceipt_order` ENABLE KEYS */;
 
 -- 导出  表 myorder_python.t_product_warehousereceipt_order_detail 结构
@@ -2719,10 +2753,12 @@ CREATE TABLE IF NOT EXISTS `t_product_warehousereceipt_order_detail` (
   `fAmount` decimal(11,2) NOT NULL,
   `TS` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`fID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
--- 正在导出表  myorder_python.t_product_warehousereceipt_order_detail 的数据：~0 rows (大约)
+-- 正在导出表  myorder_python.t_product_warehousereceipt_order_detail 的数据：~1 rows (大约)
 /*!40000 ALTER TABLE `t_product_warehousereceipt_order_detail` DISABLE KEYS */;
+INSERT INTO `t_product_warehousereceipt_order_detail` (`fID`, `fOrderID`, `fQuant`, `fProductID`, `fPrice`, `fNote`, `fAmount`, `TS`) VALUES
+	(1, '234234', 3, 5, 4.00, '5', 6.00, '2019-10-16 10:13:11');
 /*!40000 ALTER TABLE `t_product_warehousereceipt_order_detail` ENABLE KEYS */;
 
 -- 导出  表 myorder_python.t_quotation 结构
@@ -3025,10 +3061,12 @@ CREATE TABLE IF NOT EXISTS `t_supplier` (
   PRIMARY KEY (`fSupplierID`),
   UNIQUE KEY `OnlyOne` (`fSupplierName`),
   UNIQUE KEY `fNUIT` (`fNUIT`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
--- 正在导出表  myorder_python.t_supplier 的数据：~0 rows (大约)
+-- 正在导出表  myorder_python.t_supplier 的数据：~1 rows (大约)
 /*!40000 ALTER TABLE `t_supplier` DISABLE KEYS */;
+INSERT INTO `t_supplier` (`fSupplierID`, `fSupplierName`, `fNUIT`, `fCity`, `fContato`, `fAreaCode`, `fCelular`, `fTelefone`, `fEndereco`, `fEmail`, `fWeb`, `fFax`, `fNote`, `TS`, `fTaxRegCer`) VALUES
+	(3, 'test', ' ', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-10-16 10:07:38', NULL);
 /*!40000 ALTER TABLE `t_supplier` ENABLE KEYS */;
 
 -- 导出  视图 myorder_python.v_enumeration 结构

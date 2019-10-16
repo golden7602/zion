@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>665</width>
-    <height>484</height>
+    <height>482</height>
    </rect>
   </property>
   <property name="maximumSize">
@@ -98,7 +98,7 @@
           </font>
          </property>
          <property name="text">
-          <string>供应商信息</string>
+          <string>产品信息</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignBottom|Qt::AlignHCenter</set>
@@ -128,7 +128,7 @@
           </font>
          </property>
          <property name="text">
-          <string>Customer Information</string>
+          <string>Product Information</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignHCenter|Qt::AlignTop</set>
@@ -154,7 +154,7 @@
      <item row="0" column="0">
       <widget class="QLabel" name="label_13">
        <property name="text">
-        <string>供应商编号SupplierID:</string>
+        <string>产品编号ID:</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -162,7 +162,7 @@
       </widget>
      </item>
      <item row="1" column="1">
-      <widget class="QLineEdit" name="fSupplierName">
+      <widget class="QLineEdit" name="fProductName">
        <property name="minimumSize">
         <size>
          <width>0</width>
@@ -181,7 +181,7 @@
       </widget>
      </item>
      <item row="4" column="1">
-      <widget class="QLineEdit" name="fCelular">
+      <widget class="QLineEdit" name="fLength">
        <property name="minimumSize">
         <size>
          <width>0</width>
@@ -214,7 +214,7 @@
         </size>
        </property>
        <property name="text">
-        <string>税号NUIT:</string>
+        <string>宽度Width:</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -236,7 +236,7 @@
         </size>
        </property>
        <property name="text">
-        <string>供应商名称SupplierName:</string>
+        <string>客户名称ProductName:</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -266,7 +266,7 @@
       </widget>
      </item>
      <item row="5" column="1">
-      <widget class="QLineEdit" name="fEmail">
+      <widget class="QLineEdit" name="fUint">
        <property name="minimumSize">
         <size>
          <width>0</width>
@@ -285,7 +285,7 @@
       </widget>
      </item>
      <item row="2" column="1">
-      <widget class="QLineEdit" name="fEndereco">
+      <widget class="QLineEdit" name="fSpesc">
        <property name="minimumSize">
         <size>
          <width>0</width>
@@ -307,53 +307,12 @@
       </widget>
      </item>
      <item row="6" column="1">
-      <widget class="QLineEdit" name="fCity">
+      <widget class="QLineEdit" name="fMinimumStock">
        <property name="minimumSize">
         <size>
          <width>0</width>
          <height>25</height>
         </size>
-       </property>
-      </widget>
-     </item>
-     <item row="7" column="0">
-      <widget class="QLabel" name="label_11">
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="sizeIncrement">
-        <size>
-         <width>0</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>联系人Contato:</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="7" column="1">
-      <widget class="QLineEdit" name="fContato">
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="sizeIncrement">
-        <size>
-         <width>0</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="clearButtonEnabled">
-        <bool>true</bool>
        </property>
       </widget>
      </item>
@@ -372,7 +331,7 @@
         </size>
        </property>
        <property name="text">
-        <string>城市City:</string>
+        <string>最低警戒库存MinimumStock:</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -380,7 +339,7 @@
       </widget>
      </item>
      <item row="3" column="1">
-      <widget class="QLineEdit" name="fNUIT">
+      <widget class="QLineEdit" name="fWidth">
        <property name="minimumSize">
         <size>
          <width>0</width>
@@ -392,33 +351,11 @@
          <width>0</width>
          <height>25</height>
         </size>
-       </property>
-      </widget>
-     </item>
-     <item row="8" column="0">
-      <widget class="QLabel" name="label_16">
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="sizeIncrement">
-        <size>
-         <width>0</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>传真Fax:</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
        </property>
       </widget>
      </item>
      <item row="0" column="1">
-      <widget class="QLineEdit" name="fSupplierID">
+      <widget class="QLineEdit" name="fID">
        <property name="minimumSize">
         <size>
          <width>0</width>
@@ -442,7 +379,7 @@
      <item row="4" column="0">
       <widget class="QLabel" name="label_10">
        <property name="text">
-        <string>手机Celular:</string>
+        <string>长度Length:</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -464,7 +401,7 @@
         </size>
        </property>
        <property name="text">
-        <string>地址Endereco:</string>
+        <string>规格Spesc:</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -486,29 +423,10 @@
         </size>
        </property>
        <property name="text">
-        <string>电子邮件Email:</string>
+        <string>计量单位Uint:</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="8" column="1">
-      <widget class="QLineEdit" name="fFax">
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="sizeIncrement">
-        <size>
-         <width>0</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="clearButtonEnabled">
-        <bool>true</bool>
        </property>
       </widget>
      </item>
@@ -519,6 +437,13 @@
          <width>50</width>
          <height>0</height>
         </size>
+       </property>
+      </widget>
+     </item>
+     <item row="8" column="2">
+      <widget class="QPushButton" name="btn_SelectPic">
+       <property name="text">
+        <string>Select Pic</string>
        </property>
       </widget>
      </item>
@@ -550,13 +475,6 @@
        </property>
       </widget>
      </item>
-     <item row="8" column="2">
-      <widget class="QPushButton" name="btn_SelectPic">
-       <property name="text">
-        <string>Select Pic</string>
-       </property>
-      </widget>
-     </item>
     </layout>
    </item>
    <item>
@@ -569,7 +487,7 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QLineEdit" name="fTaxRegCer">
+      <widget class="QLineEdit" name="fProductPic">
        <property name="enabled">
         <bool>true</bool>
        </property>
@@ -643,20 +561,18 @@
   </layout>
  </widget>
  <tabstops>
-  <tabstop>fSupplierID</tabstop>
-  <tabstop>fSupplierName</tabstop>
-  <tabstop>fEndereco</tabstop>
-  <tabstop>fNUIT</tabstop>
-  <tabstop>fCelular</tabstop>
-  <tabstop>fEmail</tabstop>
-  <tabstop>fCity</tabstop>
-  <tabstop>fContato</tabstop>
-  <tabstop>fFax</tabstop>
+  <tabstop>fID</tabstop>
+  <tabstop>fProductName</tabstop>
+  <tabstop>fSpesc</tabstop>
+  <tabstop>fWidth</tabstop>
+  <tabstop>fLength</tabstop>
+  <tabstop>fUint</tabstop>
+  <tabstop>fMinimumStock</tabstop>
   <tabstop>fNote</tabstop>
   <tabstop>btn_SelectPic</tabstop>
   <tabstop>butSave</tabstop>
   <tabstop>butCancel</tabstop>
-  <tabstop>fTaxRegCer</tabstop>
+  <tabstop>fProductPic</tabstop>
  </tabstops>
  <resources/>
  <connections/>
