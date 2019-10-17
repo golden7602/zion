@@ -25,17 +25,28 @@ class ProductSelecter(QDialog):
         self.ui.lineEdit.returnPressed.connect(self.actionClick)
         #self.ui.lineEdit.setAttribute(Qt.WA_InputMethodEnabled, False)
         action.triggered.connect(self.actionClick)
+        self.ui.tableView.doubleClicked.connect(self.tv_doubleClicked)
         self.actionClick()
+
+    def tv_doubleClicked(self, index1):
+        r = index1.row()
+        #p_id = self.tab.getOnlyData([r, 0])
+        self.emitEvent(r)
+        self.close()
 
     def accept(self):
         index = self.ui.tableView.selectionModel().currentIndex()
         r = index.row()
         if r != -1:
-            p_id = self.tab.getOnlyData([r, 0])
-            product_name = self.tab.getOnlyData([r, 1])
-            fCurrentQuantity = self.tab.getOnlyData([r, 2])
-            self.ProductSeledted.emit(p_id, product_name, fCurrentQuantity)
+            self.emitEvent(r)
         self.close()
+
+    def emitEvent(self, rowNum):
+        r=rowNum
+        p_id = self.tab.getOnlyData([r, 0])
+        product_name = self.tab.getOnlyData([r, 1])
+        fCurrentQuantity = self.tab.getOnlyData([r, 2])
+        self.ProductSeledted.emit(p_id, product_name, fCurrentQuantity)
 
     def actionClick(self):
         key = self.ui.lineEdit.text()
