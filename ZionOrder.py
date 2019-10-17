@@ -17,7 +17,7 @@ from PyQt5.QtCore import QMetaObject, Qt, QThread
 from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtWidgets import (QApplication, QHBoxLayout, QLabel, QMainWindow,
                              QProgressBar, QPushButton, QTreeWidgetItem,
-                             QWidget)
+                             QWidget) 
 
 from lib.JPDatabase.Database import JPDb, JPDbType
 from lib.JPFunction import readQss, setWidgetIconByName, seWindowsIcon

@@ -187,23 +187,23 @@ class JPDb(object):
         if name == '_JPDb__db_type':
             raise AttributeError("应在第一使用JPDb类时，先调用其setDatabaseType方法指定数据库类型")
 
-    def getOnConfigValue(self, name, vCls):
-        tp = {
-            str: "fValueStr",
-            int: "fValueInt",
-            bool: "fValueBool",
-            datetime.date: "fValueDate",
-            datetime.datetime: "fValueDateTime"
-        }
-        if not (vCls in tp.keys()):
-            raise ValueError("给定参数类型不在列表中")
-        sql = "select {tp} from sysconfig where fName='{name}'"
-        sql = sql.format(tp=tp[vCls], name=name)
-        r, r2 = self.executeTransaction(sql)
-        if r2:
-            return r2
-        else:
-            raise ValueError("取参数值错误")
+    # def getOnConfigValue(self, name, vCls):
+    #     tp = {
+    #         str: "fValueStr",
+    #         int: "fValueInt",
+    #         bool: "fValueBool",
+    #         datetime.date: "fValueDate",
+    #         datetime.datetime: "fValueDateTime"
+    #     }
+    #     if not (vCls in tp.keys()):
+    #         raise ValueError("给定参数类型不在列表中")
+    #     sql = "select {tp} from sysconfig where fName='{name}'"
+    #     sql = sql.format(tp=tp[vCls], name=name)
+    #     r, r2 = self.executeTransaction(sql)
+    #     if r2:
+    #         return r2
+    #     else:
+    #         raise ValueError("取参数值错误")
 
     def saveConfigVale(self, name, value, vCls):
         tp = {

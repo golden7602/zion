@@ -19,6 +19,8 @@ from lib.JPPublc import JPPub, JPUser
 from lib.ZionReport.OrderReportMob import Order_report_Mob
 from Ui.Ui_FormOutboundOrder import Ui_Form
 from lib.ZionWidgets.ProductSelecter import ProductSelecter
+from PyQt5.QtPrintSupport import QPrinter
+from lib.JPPrint.JPPrintReport import JPReport
 
 
 class OutboundOrderMod(JPTableViewModelReadOnly):
@@ -92,7 +94,6 @@ class JPFuncForm_OutboundOrder(JPFunctionForm):
                     , fDesconto
                     , fNote
                     ,fEntryID
-                    ,fSucursal
                 FROM t_product_outbound_order
                 WHERE fOrderID = '{}'
                 """
@@ -415,7 +416,7 @@ class EditForm_OutboundOrder(JPFormModelMainHasSub):
     @pyqtSlot()
     def on_butPrint_clicked(self):
         try:
-            rpt = Order_report()
+            rpt = Outbound_Order_Report()
             rpt.PrintCurrentReport(self.ui.fOrderID.Value())
         except Exception as identifier:
             msg = "打印过程出错，错误信息为：{}".format(str(identifier))
@@ -443,14 +444,14 @@ class EditForm_OutboundOrder(JPFormModelMainHasSub):
             msgBox.exec_()
 
 
-class Order_report_Mob(JPReport):
+class Outbound_Order_Report(JPReport):
     def __init__(self,
                  PaperSize=QPrinter.A5,
                  Orientation=QPrinter.Orientation(1)):
         super().__init__(PaperSize, Orientation)
 
         self.SetMargins(30, 60, 30, 30)
-        self.CopyInfo = JPPub().getCopysInfo('BillCopys_Order')
+        self.CopyInfo = JPPub().getCopysInfo('BillCopys_OutboundOrder')
         self.Copys = len(self.CopyInfo)
         self.logo = JPPub().MainForm.logoPixmap
         self.FillColor = JPPub().getConfigData(
@@ -471,7 +472,7 @@ class Order_report_Mob(JPReport):
         self.font_YaHei_10.setBold(True)
 
     def init_ReportHeader_title(self,
-                                title1="NOTA DE PAGAMENTO",
+                                title1="Outbound Order",
                                 title2="(ESTE DOCUMENTO É DO USO INTERNO)"):
         RH = self.ReportHeader
         RH.AddItem(2, 0, 0, 274, 50, self.logo)
@@ -502,7 +503,7 @@ class Order_report_Mob(JPReport):
                    55,
                    90,
                    20,
-                   "订单日期Date",
+                   "出库单日期Date",
                    Font=self.font_YaHei_8,
                    AlignmentFlag=Qt.AlignCenter)
         RH.AddItem(3,
@@ -712,18 +713,16 @@ class Order_report_Mob(JPReport):
         RH.AddPrintLables(
             0,
             135,
-            20, [
-                "#", "数量Qtd", "名称Descrição", "长Comp.", "宽Larg.",
-                "单价P. Unitario", "金额Total"
-            ], [40, 50, 280, 60, 60, 80, 80], [
+            20, ["#", "名称Descrição", "数量Qtd", "单价P. Unitario", "金额Total"],
+            [40, 370, 80, 80, 80], [
                 Qt.AlignCenter, Qt.AlignCenter, Qt.AlignCenter, Qt.AlignCenter,
-                Qt.AlignCenter, Qt.AlignCenter, Qt.AlignCenter
+                Qt.AlignCenter
             ],
             FillColor=self.FillColor,
             Font=self.font_YaHei_8)
 
     def init_PageHeader(self,
-                        title1="NOTA DE PAGAMENTO",
+                        title1="Outbound Order",
                         title2="(ESTE DOCUMENTO É DO USO INTERNO)"):
         PH = self.PageHeader
         PH.AddItem(2, 0, 0, 274, 50, self.logo)
@@ -754,7 +753,7 @@ class Order_report_Mob(JPReport):
                    55,
                    90,
                    20,
-                   "订单日期Date",
+                   "出库单日期Date",
                    Font=self.font_YaHei_8,
                    AlignmentFlag=Qt.AlignCenter)
         PH.AddItem(3,
@@ -787,7 +786,7 @@ class Order_report_Mob(JPReport):
                    55,
                    90,
                    20,
-                   "订单号码Nº",
+                   "出库单号码Nº",
                    Font=self.font_YaHei_8,
                    AlignmentFlag=Qt.AlignCenter)
         PH.AddItem(3,
@@ -802,12 +801,10 @@ class Order_report_Mob(JPReport):
         PH.AddPrintLables(
             0,
             75,
-            20, [
-                "#", "数量Qtd", "名称Descrição", "长Comp.", "宽Larg.",
-                "单价P. Unitario", "金额Total"
-            ], [40, 50, 280, 60, 60, 80, 80], [
+            20, ["#", "名称Descrição", "数量Qtd", "单价P. Unitario", "金额Total"],
+            [40, 370, 80, 80, 80], [
                 Qt.AlignCenter, Qt.AlignCenter, Qt.AlignCenter, Qt.AlignCenter,
-                Qt.AlignCenter, Qt.AlignCenter, Qt.AlignCenter
+                Qt.AlignCenter
             ],
             Font=self.font_YaHei_8,
             FillColor=self.FillColor)
@@ -816,15 +813,13 @@ class Order_report_Mob(JPReport):
         D = self.Detail
         D.AddPrintFields(0,
                          0,
-                         20, ["fQuant", "fQuant", "fProductName"],
-                         [40, 50, 280],
-                         [Qt.AlignCenter, Qt.AlignCenter, Qt.AlignLeft],
+                         20, ["fQuant", "fProductName"],[40, 370],
+                         [Qt.AlignCenter, Qt.AlignLeft],
                          Font=self.font_YaHei_8)
-        D.AddPrintFields(370,
+        D.AddPrintFields(410,
                          0,
-                         20, ["fLength", "fWidth", "fPrice"], [60, 60, 80],
+                         20, ["fQuant", "fPrice"], [80, 80],
                          [(Qt.AlignRight | Qt.AlignVCenter),
-                          (Qt.AlignRight | Qt.AlignVCenter),
                           (Qt.AlignRight | Qt.AlignVCenter)],
                          Font=self.font_YaHei_8,
                          FormatString='{:,.3f} ')
@@ -1005,16 +1000,22 @@ class Order_report_Mob(JPReport):
             return False, None
 
     def init_data(self, OrderID: str):
-        SQL = """SELECT o.*
-                    , if(isnull(fNote), ' ', fNote) AS fNote1
-                    , d.fQuant, d.fProductName, d.fLength, d.fWidth, d.fPrice
-                    , d.fAmount ,if(isnull(fNote),' ',fNote) as fNote1
-                FROM v_order o
-                    RIGHT JOIN t_order_detail d ON o.fOrderID = d.fOrderID
-                WHERE d.fOrderID = '{}'"""
+        SQL = f"""
+            SELECT o.*,
+                    d.fQuant,
+                    d.fProductID,
+                    d.fPrice ,
+                    d.fAmount ,
+                    if(isnull(o.fNote),
+                    ' ',o.fNote) AS fNote1
+            FROM v_product_outbound_order o
+            RIGHT JOIN t_product_outbound_order_detail d
+                ON o.fOrderID = d.fOrderID
+            WHERE d.fOrderID='{OrderID}'
+            """
 
         db = JPDb()
-        data = db.getDict(SQL.format(OrderID))
+        data = db.getDict(SQL)
         data.sort(key=lambda x: (x['fCustomerName'], x['fCity'], x['fAmount']
                                  is None, x['fAmount']))
         self.DataSource = data
@@ -1025,3 +1026,19 @@ class Order_report_Mob(JPReport):
             self.PaperSize = QPrinter.A4
             self.Orientation = QPrinter.Orientation(0)
         return super().BeginPrint()
+
+    def onFormat(self, SectionType, CurrentPage, RowDate=None):
+        if (SectionType == JPPrintSectionType.PageHeader and CurrentPage == 1):
+            return True
+
+    def PrintCurrentReport(self, OrderID: str):
+        self.init_data(OrderID)
+        self.init_ReportHeader_title(
+            title1=" Outbound Order",
+            title2="(ESTE DOCUMENTO É DO USO INTERNO)")
+        self.init_ReportHeader()
+        self.init_ReportHeader_Individualization()
+        self.init_PageHeader()
+        self.init_Detail()
+        self.init_ReportFooter()
+        super().BeginPrint()

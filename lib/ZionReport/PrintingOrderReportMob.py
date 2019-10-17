@@ -642,7 +642,8 @@ class PrintOrder_report_Mob(JPReport):
                    AlignmentFlag=(Qt.AlignRight | Qt.AlignVCenter),
                    Font=self.font_YaHei_8)
         RF.AddItem(1, 540, 140, 100, 0, '')
-        noteStr = JPDb().getOnConfigValue('Note_PrintingOrder', str)
+        noteStr = JPPub().ConfigData()['Note_PrintingOrder']
+        #noteStr = JPDb().getOnConfigValue('Note_PrintingOrder', str)
         RF.AddItem(1,
                    0,
                    130,

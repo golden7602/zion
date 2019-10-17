@@ -303,7 +303,8 @@ class Order_report(Order_report_Mob):
                    AlignmentFlag=Qt.AlignRight,
                    Font=self.font_YaHei_8)
         RF.AddItem(1, 540, 125, 100, 0, '')
-        noteStr = JPDb().getOnConfigValue('Bank_Account', str).split('\n')
+        noteStr = JPPub().ConfigData()['Bank_Account'].split('\n')
+        #noteStr = JPDb().getOnConfigValue('Bank_Account', str).split('\n')
 
         self.Arial_Black = QFont("Arial")
         self.Arial_Black.setPointSize(8)
