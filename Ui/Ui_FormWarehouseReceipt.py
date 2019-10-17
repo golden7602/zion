@@ -1,18 +1,16 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'e:\Zion\zion\Ui\FormWarehouseReceipt.ui'
+# Form implementation generated from reading ui file 'c:\Users\win10\Desktop\Zion\zion\Ui\FormWarehouseReceipt.ui'
 #
-# Created by: PyQt5 UI code generator 5.13.0
+# Created by: PyQt5 UI code generator 5.11.3
 #
 # WARNING! All changes made in this file will be lost!
-
 
 from os import getcwd
 from sys import path as jppath
 jppath.append(getcwd())
 from PyQt5 import QtCore, QtGui
 from lib.JPMvc import JPWidgets as QtWidgets
-
 
 class Ui_Form(object):
     def setupUi(self, Form):
@@ -153,13 +151,13 @@ class Ui_Form(object):
         self.fCelular.setClearButtonEnabled(True)
         self.fCelular.setObjectName("fCelular")
         self.gridLayout.addWidget(self.fCelular, 3, 4, 1, 1)
-        self.fRequiredDeliveryDate = QtWidgets.QDateEdit(Form)
-        self.fRequiredDeliveryDate.setMinimumSize(QtCore.QSize(0, 25))
-        self.fRequiredDeliveryDate.setSizeIncrement(QtCore.QSize(0, 25))
-        self.fRequiredDeliveryDate.setAlignment(QtCore.Qt.AlignCenter)
-        self.fRequiredDeliveryDate.setCalendarPopup(True)
-        self.fRequiredDeliveryDate.setObjectName("fRequiredDeliveryDate")
-        self.gridLayout.addWidget(self.fRequiredDeliveryDate, 0, 6, 1, 1)
+        self.fWarehousingDate = QtWidgets.QDateEdit(Form)
+        self.fWarehousingDate.setMinimumSize(QtCore.QSize(0, 25))
+        self.fWarehousingDate.setSizeIncrement(QtCore.QSize(0, 25))
+        self.fWarehousingDate.setAlignment(QtCore.Qt.AlignCenter)
+        self.fWarehousingDate.setCalendarPopup(True)
+        self.fWarehousingDate.setObjectName("fWarehousingDate")
+        self.gridLayout.addWidget(self.fWarehousingDate, 0, 6, 1, 1)
         self.label_7 = QtWidgets.QLabel(Form)
         self.label_7.setMinimumSize(QtCore.QSize(0, 25))
         self.label_7.setSizeIncrement(QtCore.QSize(0, 25))
@@ -212,11 +210,11 @@ class Ui_Form(object):
         self.label_10.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.label_10.setObjectName("label_10")
         self.gridLayout.addWidget(self.label_10, 3, 3, 1, 1)
-        self.fCustomerID = QtWidgets.QComboBox(Form)
-        self.fCustomerID.setMinimumSize(QtCore.QSize(0, 0))
-        self.fCustomerID.setSizeIncrement(QtCore.QSize(0, 25))
-        self.fCustomerID.setObjectName("fCustomerID")
-        self.gridLayout.addWidget(self.fCustomerID, 1, 2, 1, 1)
+        self.fSupplierID = QtWidgets.QComboBox(Form)
+        self.fSupplierID.setMinimumSize(QtCore.QSize(0, 0))
+        self.fSupplierID.setSizeIncrement(QtCore.QSize(0, 25))
+        self.fSupplierID.setObjectName("fSupplierID")
+        self.gridLayout.addWidget(self.fSupplierID, 1, 2, 1, 1)
         self.label_3 = QtWidgets.QLabel(Form)
         self.label_3.setMinimumSize(QtCore.QSize(0, 25))
         self.label_3.setSizeIncrement(QtCore.QSize(0, 25))
@@ -257,12 +255,6 @@ class Ui_Form(object):
         self.label_5.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.label_5.setObjectName("label_5")
         self.gridLayout.addWidget(self.label_5, 2, 3, 1, 1)
-        self.fVendedorID = QtWidgets.QComboBox(Form)
-        self.fVendedorID.setMinimumSize(QtCore.QSize(0, 25))
-        self.fVendedorID.setSizeIncrement(QtCore.QSize(0, 25))
-        self.fVendedorID.setProperty("clearButtonEnabled", True)
-        self.fVendedorID.setObjectName("fVendedorID")
-        self.gridLayout.addWidget(self.fVendedorID, 2, 4, 1, 1)
         self.label_17 = QtWidgets.QLabel(Form)
         self.label_17.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.label_17.setObjectName("label_17")
@@ -271,6 +263,10 @@ class Ui_Form(object):
         self.fEntryID.setMinimumSize(QtCore.QSize(0, 25))
         self.fEntryID.setObjectName("fEntryID")
         self.gridLayout.addWidget(self.fEntryID, 0, 4, 1, 1)
+        self.fPurchaserID = QtWidgets.QComboBox(Form)
+        self.fPurchaserID.setMinimumSize(QtCore.QSize(0, 25))
+        self.fPurchaserID.setObjectName("fPurchaserID")
+        self.gridLayout.addWidget(self.fPurchaserID, 2, 4, 1, 1)
         self.verticalLayout_4.addLayout(self.gridLayout)
         self.horizontalLayout_7 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_7.setSpacing(0)
@@ -420,13 +416,12 @@ class Ui_Form(object):
         Form.setTabOrder(self.butPrint, self.butPDF)
         Form.setTabOrder(self.butPDF, self.fOrderDate)
         Form.setTabOrder(self.fOrderDate, self.fEntryID)
-        Form.setTabOrder(self.fEntryID, self.fRequiredDeliveryDate)
-        Form.setTabOrder(self.fRequiredDeliveryDate, self.fCustomerID)
-        Form.setTabOrder(self.fCustomerID, self.fNUIT)
+        Form.setTabOrder(self.fEntryID, self.fWarehousingDate)
+        Form.setTabOrder(self.fWarehousingDate, self.fSupplierID)
+        Form.setTabOrder(self.fSupplierID, self.fNUIT)
         Form.setTabOrder(self.fNUIT, self.fCity)
         Form.setTabOrder(self.fCity, self.fEndereco)
-        Form.setTabOrder(self.fEndereco, self.fVendedorID)
-        Form.setTabOrder(self.fVendedorID, self.fContato)
+        Form.setTabOrder(self.fEndereco, self.fContato)
         Form.setTabOrder(self.fContato, self.fCelular)
         Form.setTabOrder(self.fCelular, self.fTelefone)
         Form.setTabOrder(self.fTelefone, self.tableView)
@@ -441,26 +436,26 @@ class Ui_Form(object):
         _translate = QtCore.QCoreApplication.translate
         Form.setWindowTitle(_translate("Form", "WarehousReceipt"))
         self.label_Title_Chn.setText(_translate("Form", "入库单"))
-        self.label_Title_Eng.setText(_translate("Form", "warehouse receipt"))
+        self.label_Title_Eng.setText(_translate("Form", "Warehouse Receipt"))
         self.label_Title_Note.setText(_translate("Form", "(ESTE DOCUMENTO É DO USO INTERNO)"))
         self.butSave.setText(_translate("Form", "Save"))
         self.butPrint.setText(_translate("Form", "Print"))
         self.butPDF.setText(_translate("Form", "PDF"))
         self.label_2.setText(_translate("Form", "NO."))
-        self.fRequiredDeliveryDate.setDisplayFormat(_translate("Form", "yyyy-MM-dd"))
+        self.fWarehousingDate.setDisplayFormat(_translate("Form", "yyyy-MM-dd"))
         self.label_7.setText(_translate("Form", "税号NUIT:"))
         self.label_9.setText(_translate("Form", "地址Endereco:"))
         self.label_12.setText(_translate("Form", "电话Tel:"))
         self.label_4.setText(_translate("Form", "入库日期WarehousingDate:"))
         self.label_11.setText(_translate("Form", "联系人Contato:"))
-        self.label_6.setText(_translate("Form", "供应商Cliente:"))
+        self.label_6.setText(_translate("Form", "供应商Supplier:"))
         self.label_10.setText(_translate("Form", "手机Celular:"))
-        self.fCustomerID.setToolTip(_translate("Form", "<html><head/><body><p>可输入客户名称或税号中的部分或全部进行快速过滤</p><p>Enter part or all of the customer name or tax number for quick filtering</p></body></html>"))
-        self.fCustomerID.setProperty("placeholderText", _translate("Form", "Please select a cliente."))
+        self.fSupplierID.setToolTip(_translate("Form", "<html><head/><body><p>可输入客户名称或税号中的部分或全部进行快速过滤</p><p>Enter part or all of the customer name or tax number for quick filtering</p></body></html>"))
+        self.fSupplierID.setProperty("placeholderText", _translate("Form", "Please select a cliente."))
         self.label_3.setText(_translate("Form", "日期Date:"))
         self.fOrderDate.setDisplayFormat(_translate("Form", "yyyy-MM-dd"))
         self.label_8.setText(_translate("Form", "城市City:"))
-        self.label_5.setText(_translate("Form", "销售Vendedor:"))
+        self.label_5.setText(_translate("Form", "采购员Purchaser:"))
         self.label_17.setText(_translate("Form", "录入人Enter:"))
         self.tableView.setToolTip(_translate("Form", "<html><head/><body><p>如果要输入单价为金额为0的订单，请在单价处输入0，但这时，明细表只能输入一行，如果要增加行，请先点击表格空白处（取消选中任何单元格），然后按 alt+d。</p><p>If you want to enter an order with a unit price of 0, please enter 0 at the unit price. But at this time, the detailed list can only enter one line. If you want to add more rows, please click on the blank of the table (cancel any cells), and then press Alt + D.</p></body></html>"))
         self.fNote.setPlaceholderText(_translate("Form", "Note："))
@@ -478,3 +473,4 @@ if __name__ == "__main__":
     ui.setupUi(Form)
     Form.show()
     sys.exit(app.exec_())
+

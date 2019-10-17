@@ -1,7 +1,7 @@
 -- --------------------------------------------------------
 -- 主机:                           127.0.0.1
 -- 服务器版本:                        5.5.63-MariaDB - mariadb.org binary distribution
--- 服务器操作系统:                      Win32
+-- 服务器操作系统:                      Win64
 -- HeidiSQL 版本:                  9.5.0.5196
 -- --------------------------------------------------------
 
@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS `sysconfig` (
 INSERT INTO `sysconfig` (`fID`, `fName`, `fValueInt`, `fValueStr`, `fValueBool`, `fValueDate`, `fValueDateTime`, `TS`, `fValue`) VALUES
 	(1, 'Note_PrintingOrder', NULL, 'Note:\r\nEsta ordem sera entregue em 10 dias de trabalho, se esta for urgente,e necessario pagar mais 20%. Para que nao afecte os trrabalhos diarios da vossa empresa,por favor, encomendem a vossa ordem  o mais rapido possivel.\r\n', NULL, NULL, NULL, NULL, NULL),
 	(2, 'Bank_Account', NULL, 'Conta Bancaria:  MOZA BANCO\r\nNome da Conta: COLOPRO SINGS & PRINTING\r\nNo da Conta: 1546631810001\r\nNIB: 003400001546631810159', NULL, NULL, NULL, '2019-09-04 16:57:54', NULL),
-	(3, 'configValue', NULL, NULL, NULL, NULL, NULL, '2019-09-17 16:33:31', 'gAN9cQAoWBIAAABOb3RlX1ByaW50aW5nT3JkZXJxAVjhAAAATm90ZToKRXN0YSBvcmRlbSBzZXJhIGVudHJlZ3VlIGVtIDEwIGRpYXMgZGUgdHJhYmFsaG8sIHNlIGVzdGEgZm9yIHVyZ2VudGUsZSBuZWNlc3NhcmlvIHBhZ2FyIG1haXMgMjQwJS4gUGFyYSBxdWUgbmFvIGFmZWN0ZSBvcyB0cnJhYmFsaG9zIGRpYXJpb3MgZGEgdm9zc2EgZW1wcmVzYSxwb3IgZmF2b3IsIGVuY29tZW5kZW0gYSB2b3NzYSBvcmRlbSAgbyBtYWlzIHJhcGlkbyBwb3NzaXZlbC4KcQJYDAAAAEJhbmtfQWNjb3VudHEDWHkAAABDb250YSBCYW5jYXJpYTogIE1PWkEgQkFOQ08KTm9tZSBkYSBDb250YTogQ09MT1BSTyBTSU5HUyAmIFBSSU5USU5HCk5vIGRhIENvbnRhOiAxNTQ2NjMxODEwMDAxCk5JQjogMDAzNDAwMDAxNTQ2NjMxODEwMTU5cQRYFQAAAE51bGxfcHJvbXB0X2JhY19jb2xvcnEFY1B5UXQ1LnNpcApfdW5waWNrbGVfdHlwZQpxBlgLAAAAUHlRdDUuUXRHdWlxB1gGAAAAUUNvbG9ycQgoS/9LAEsAS/90cQmHcQpScQtYDwAAAEF1dG9TaHJpbmtGb250c3EMiFgMAAAAQXV0b0VsbGlwc2lzcQ2JWB0AAABQcmludEhpZ2hsaWdodEJhY2tncm91bmRDb2xvcnEOaAZoB1gGAAAAUUNvbG9ycQ8oS8JLwkvCS/90cRCHcRFScRJYDwAAAEJpbGxDb3B5c19PcmRlcnETWCoAAABhdGVuZGltZW50bzsxO3Byb2R1Y2FvOzA7Y2xpZW50ZTsxO2NhaXhhOzFxFFgXAAAAQmlsbENvcHlzX1ByaW50aW5nT3JkZXJxFVgqAAAAYXRlbmRpbWVudG87MTtwcm9kdWNhbzswO2NsaWVudGU7MTtjYWl4YTsxcRZYFwAAAEJpbGxDb3B5c19PdXRib3VuZE9yZGVycRdYKgAAAGF0ZW5kaW1lbnRvOzE7cHJvZHVjYW87MDtjbGllbnRlOzE7Y2FpeGE7MXEYWBsAAABCaWxsQ29weXNfV2FyZWhvdXNlUnJlY2VpcHRxGVgqAAAAYXRlbmRpbWVudG87MTtwcm9kdWNhbzswO2NsaWVudGU7MTtjYWl4YTsxcRpYGQAAAEF1dG9SZWZyZXNoV2hlbkRhdGFDaGFuZ2VxG4hYGAAAAEJ1YmJsZVRpcHNXaGVuRGF0YUNoYW5nZXEciFgYAAAAQmlsbENvcHlzX1F1b3RhdGlvbk9yZGVycR1YDQAAAGF0ZW5kaW1lbnRvOzFxHlggAAAAQmlsbENvcHlzX1F1b3RhdGlvblByaW50aW5nT3JkZXJxH1gYAAAAYXRlbmRpbWVudG87MTtwcm9kdWNhbzswcSBYDQAAAFRheFJlZ0NlclBhdGhxIVgfAAAALy8xOTIuMTY4LjEuMjAvamhnbGIvSmluUGVuZ1Rhb3EidS4=');
+	(3, 'configValue', NULL, NULL, NULL, NULL, NULL, '2019-09-17 16:33:31', 'gAN9cQAoWBIAAABOb3RlX1ByaW50aW5nT3JkZXJxAVjhAAAATm90ZToKRXN0YSBvcmRlbSBzZXJhIGVudHJlZ3VlIGVtIDEwIGRpYXMgZGUgdHJhYmFsaG8sIHNlIGVzdGEgZm9yIHVyZ2VudGUsZSBuZWNlc3NhcmlvIHBhZ2FyIG1haXMgMjQwJS4gUGFyYSBxdWUgbmFvIGFmZWN0ZSBvcyB0cnJhYmFsaG9zIGRpYXJpb3MgZGEgdm9zc2EgZW1wcmVzYSxwb3IgZmF2b3IsIGVuY29tZW5kZW0gYSB2b3NzYSBvcmRlbSAgbyBtYWlzIHJhcGlkbyBwb3NzaXZlbC4KcQJYDAAAAEJhbmtfQWNjb3VudHEDWHkAAABDb250YSBCYW5jYXJpYTogIE1PWkEgQkFOQ08KTm9tZSBkYSBDb250YTogQ09MT1BSTyBTSU5HUyAmIFBSSU5USU5HCk5vIGRhIENvbnRhOiAxNTQ2NjMxODEwMDAxCk5JQjogMDAzNDAwMDAxNTQ2NjMxODEwMTU5cQRYFQAAAE51bGxfcHJvbXB0X2JhY19jb2xvcnEFY1B5UXQ1LnNpcApfdW5waWNrbGVfdHlwZQpxBlgLAAAAUHlRdDUuUXRHdWlxB1gGAAAAUUNvbG9ycQgoS/9LAEsAS/90cQmHcQpScQtYDwAAAEF1dG9TaHJpbmtGb250c3EMiFgMAAAAQXV0b0VsbGlwc2lzcQ2JWB0AAABQcmludEhpZ2hsaWdodEJhY2tncm91bmRDb2xvcnEOaAZoB1gGAAAAUUNvbG9ycQ8oS8JLwkvCS/90cRCHcRFScRJYDwAAAEJpbGxDb3B5c19PcmRlcnETWCoAAABhdGVuZGltZW50bzsxO3Byb2R1Y2FvOzA7Y2xpZW50ZTsxO2NhaXhhOzFxFFgXAAAAQmlsbENvcHlzX1ByaW50aW5nT3JkZXJxFVgqAAAAYXRlbmRpbWVudG87MTtwcm9kdWNhbzswO2NsaWVudGU7MTtjYWl4YTsxcRZYFwAAAEJpbGxDb3B5c19PdXRib3VuZE9yZGVycRdYKgAAAGF0ZW5kaW1lbnRvOzE7cHJvZHVjYW87MDtjbGllbnRlOzE7Y2FpeGE7MXEYWBsAAABCaWxsQ29weXNfV2FyZWhvdXNlUnJlY2VpcHRxGVgqAAAAYXRlbmRpbWVudG87MTtwcm9kdWNhbzswO2NsaWVudGU7MTtjYWl4YTsxcRpYGQAAAEF1dG9SZWZyZXNoV2hlbkRhdGFDaGFuZ2VxG4hYGAAAAEJ1YmJsZVRpcHNXaGVuRGF0YUNoYW5nZXEciFgYAAAAQmlsbENvcHlzX1F1b3RhdGlvbk9yZGVycR1YDQAAAGF0ZW5kaW1lbnRvOzFxHlggAAAAQmlsbENvcHlzX1F1b3RhdGlvblByaW50aW5nT3JkZXJxH1gYAAAAYXRlbmRpbWVudG87MTtwcm9kdWNhbzswcSBYDQAAAFRheFJlZ0NlclBhdGhxIVggAAAAQzovVXNlcnMvd2luMTAvRGVza3RvcC9aaW9uL3ppb25xInUu');
 /*!40000 ALTER TABLE `sysconfig` ENABLE KEYS */;
 
 -- 导出  表 myorder_python.syslanguage 结构
@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS `syslanguage` (
   PRIMARY KEY (`fID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1006477 DEFAULT CHARSET=utf8;
 
--- 正在导出表  myorder_python.syslanguage 的数据：~740 rows (大约)
+-- 正在导出表  myorder_python.syslanguage 的数据：~845 rows (大约)
 /*!40000 ALTER TABLE `syslanguage` DISABLE KEYS */;
 INSERT INTO `syslanguage` (`fID`, `fParentId`, `fObjectName`, `fCaption`, `fFontSize`, `fFontName`, `fIndex`, `fLanguage1`, `fLanguage2`, `fType`, `TS`) VALUES
 	(1, 0, NULL, 'Logical Operational Symbols', NULL, NULL, NULL, '逻辑运算符', 'Logical Operational Symbols', NULL, '2019-04-10 09:01:01'),
@@ -895,7 +895,7 @@ CREATE TABLE IF NOT EXISTS `sysnavigationmenus` (
   KEY `ParentID` (`fParentId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=184 DEFAULT CHARSET=utf8;
 
--- 正在导出表  myorder_python.sysnavigationmenus 的数据：~184 rows (大约)
+-- 正在导出表  myorder_python.sysnavigationmenus 的数据：~134 rows (大约)
 /*!40000 ALTER TABLE `sysnavigationmenus` DISABLE KEYS */;
 INSERT INTO `sysnavigationmenus` (`fNMID`, `fDispIndex`, `fParentId`, `fEnabled`, `fMenuText`, `fCommand`, `fObjectName`, `fFormMode`, `fArg`, `fIcon`, `fDefault`, `fNodeBackvolor`, `fNodeForeColor`, `fNodeFontBold`, `fExpanded`, `fDescription`, `fLevel`, `fIsCommandButton`, `TS`) VALUES
 	(1, 110, 0, b'1', 'Function', 0, '', 0, '', 'home', b'1', NULL, NULL, 0, 1, '', b'0', b'0', '2019-04-20 13:45:28'),
@@ -1057,7 +1057,7 @@ INSERT INTO `systabelautokeyroles` (`fRoleID`, `fRoleName`, `fTabelName`, `fFiel
 	(4, 'PrintingQuoteID', 't_quotation', 'fQuoteID', b'1', 'QP', 0000000002, 6, 'QP2019-1017000002', 'yyyy-mmdd', '2019-10-17 08:22:26'),
 	(5, 'PrintingOderID', 't_order', 'fOrderID', b'1', 'TP', 0000000017, 6, 'TP2019-0914000017', 'yyyy-mmdd', '2019-09-14 11:36:25'),
 	(6, 'OrderQuoteID', 't_Quotation', 'fQuoteID', b'1', 'QS', 0000000006, 6, 'QS2019-1011000006', 'yyyy-mmdd', '2019-10-11 20:06:58'),
-	(7, 'OuttboundOrderID', 't_product_outbound_order', 'fOrderID', b'1', 'PO', 0000000004, 6, 'PO2019-1014000004', 'yyyy-mmdd', '2019-10-14 12:22:57');
+	(7, 'OuttboundOrderID', 't_product_outbound_order', 'fOrderID', b'1', 'PO', 0000000006, 6, 'PO2019-1017000006', 'yyyy-mmdd', '2019-10-17 22:50:59');
 /*!40000 ALTER TABLE `systabelautokeyroles` ENABLE KEYS */;
 
 -- 导出  表 myorder_python.sysuserright 结构
@@ -1072,7 +1072,7 @@ CREATE TABLE IF NOT EXISTS `sysuserright` (
   UNIQUE KEY `UserID` (`fUserID`,`fRightID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=974 DEFAULT CHARSET=utf8;
 
--- 正在导出表  myorder_python.sysuserright 的数据：~861 rows (大约)
+-- 正在导出表  myorder_python.sysuserright 的数据：~499 rows (大约)
 /*!40000 ALTER TABLE `sysuserright` DISABLE KEYS */;
 INSERT INTO `sysuserright` (`fID`, `fRightID`, `fUserID`, `fHasRight`, `TS`) VALUES
 	(1, 1, 2, b'1', '2019-09-09 13:32:22'),
@@ -2097,7 +2097,7 @@ CREATE TABLE IF NOT EXISTS `t_order` (
   KEY `iOrderDate` (`fOrderDate`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- 正在导出表  myorder_python.t_order 的数据：~211 rows (大约)
+-- 正在导出表  myorder_python.t_order 的数据：~157 rows (大约)
 /*!40000 ALTER TABLE `t_order` DISABLE KEYS */;
 INSERT INTO `t_order` (`fOrderID`, `fPrice`, `fCustomerID`, `fOrderDate`, `fEspecieID`, `fRequiredDeliveryDate`, `fCategoryID`, `fBrandMateriaID`, `fAmount`, `fTax`, `fPayable`, `fDesconto`, `fColorID`, `fEntryID`, `fSubmited`, `fSubmitID`, `fReviewed`, `fReviewerID`, `fConfirmed`, `fConfirmID`, `fDelivered`, `fDelivererID`, `fCanceled`, `fCancelID`, `fDeliveryDate`, `fNumerBegin`, `fQuant`, `fPagePerVolumn`, `fNumerEnd`, `fAvistaID`, `fTamanhoID`, `fSucursal`, `fLogo`, `fVendedorID`, `fNrCopyID`, `fContato`, `fCelular`, `fTelefone`, `fNote`, `fDeliverViewed`, `TS`) VALUES
 	('222', NULL, 1, '2019-10-10', NULL, '2019-10-10', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, b'0', NULL, NULL, NULL, NULL, NULL, NULL, b'0', '2019-10-10 07:59:04'),
@@ -2300,7 +2300,7 @@ CREATE TABLE IF NOT EXISTS `t_order_detail` (
   PRIMARY KEY (`fID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=215 DEFAULT CHARSET=utf8;
 
--- 正在导出表  myorder_python.t_order_detail 的数据：~257 rows (大约)
+-- 正在导出表  myorder_python.t_order_detail 的数据：~153 rows (大约)
 /*!40000 ALTER TABLE `t_order_detail` DISABLE KEYS */;
 INSERT INTO `t_order_detail` (`fID`, `fOrderID`, `fQuant`, `fProductName`, `fLength`, `fWidth`, `fPrice`, `fAmount`, `TS`) VALUES
 	(2, 'CP2019-0909000001', 200, 'IMP Cartao de visita laminado F/V', 1.000, 1.000, 7.00, 1400.00, '2019-09-09 14:11:41'),
@@ -2715,9 +2715,10 @@ CREATE TABLE IF NOT EXISTS `t_product_warehousereceipt_order` (
   `fOrderID` char(20) NOT NULL COMMENT '订单号',
   `fPrice` decimal(10,2) DEFAULT NULL COMMENT '单价',
   `fSupplierID` int(11) NOT NULL COMMENT '客户编号',
+  `fPurchaserID` int(11) NOT NULL COMMENT '采购人员',
   `fOrderDate` date NOT NULL COMMENT '订单日期',
   `fWarehousingDate` date DEFAULT NULL COMMENT '入库日期',
-  `fAmount` decimal(11,2) DEFAULT NULL COMMENT '金额',
+  `fAmount` decimal(11,2) unsigned zerofill DEFAULT NULL COMMENT '金额',
   `fTax` decimal(11,2) DEFAULT NULL COMMENT '税金',
   `fPayable` decimal(11,2) DEFAULT NULL COMMENT '应付金额',
   `fDesconto` decimal(11,2) DEFAULT NULL COMMENT '折扣',
@@ -2735,10 +2736,12 @@ CREATE TABLE IF NOT EXISTS `t_product_warehousereceipt_order` (
   KEY `iOrderDate` (`fOrderDate`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- 正在导出表  myorder_python.t_product_warehousereceipt_order 的数据：~1 rows (大约)
+-- 正在导出表  myorder_python.t_product_warehousereceipt_order 的数据：~3 rows (大约)
 /*!40000 ALTER TABLE `t_product_warehousereceipt_order` DISABLE KEYS */;
-INSERT INTO `t_product_warehousereceipt_order` (`fOrderID`, `fPrice`, `fSupplierID`, `fOrderDate`, `fWarehousingDate`, `fAmount`, `fTax`, `fPayable`, `fDesconto`, `fEntryID`, `fSubmited`, `fSubmitID`, `fCanceled`, `fCancelID`, `fContato`, `fCelular`, `fTelefone`, `fNote`, `TS`) VALUES
-	('234234', NULL, 3, '2019-10-16', NULL, 1.00, 1.00, 1.00, 1.00, 2, b'1', NULL, b'0', NULL, NULL, NULL, NULL, NULL, '2019-10-16 10:08:15');
+INSERT INTO `t_product_warehousereceipt_order` (`fOrderID`, `fPrice`, `fSupplierID`, `fPurchaserID`, `fOrderDate`, `fWarehousingDate`, `fAmount`, `fTax`, `fPayable`, `fDesconto`, `fEntryID`, `fSubmited`, `fSubmitID`, `fCanceled`, `fCancelID`, `fContato`, `fCelular`, `fTelefone`, `fNote`, `TS`) VALUES
+	('234234', NULL, 3, 0, '2019-10-16', NULL, 000000001.00, 1.00, 1.00, 1.00, 2, b'1', NULL, b'0', NULL, NULL, NULL, NULL, NULL, '2019-10-16 10:08:15'),
+	('PO2019-1017000005', NULL, 3, 3, '2019-10-17', '2019-10-17', 000000008.00, 1.36, 9.36, NULL, 2, b'0', NULL, b'0', NULL, '234567', '1234567', '2345', NULL, '2019-10-17 22:42:43'),
+	('PO2019-1017000006', NULL, 3, 97, '2019-10-17', '2019-10-01', 000000009.00, 1.53, 10.53, NULL, 2, b'0', NULL, b'0', NULL, '22', '33', '333', NULL, '2019-10-17 22:50:59');
 /*!40000 ALTER TABLE `t_product_warehousereceipt_order` ENABLE KEYS */;
 
 -- 导出  表 myorder_python.t_product_warehousereceipt_order_detail 结构
@@ -2753,12 +2756,15 @@ CREATE TABLE IF NOT EXISTS `t_product_warehousereceipt_order_detail` (
   `fAmount` decimal(11,2) NOT NULL,
   `TS` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`fID`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
--- 正在导出表  myorder_python.t_product_warehousereceipt_order_detail 的数据：~1 rows (大约)
+-- 正在导出表  myorder_python.t_product_warehousereceipt_order_detail 的数据：~4 rows (大约)
 /*!40000 ALTER TABLE `t_product_warehousereceipt_order_detail` DISABLE KEYS */;
 INSERT INTO `t_product_warehousereceipt_order_detail` (`fID`, `fOrderID`, `fQuant`, `fProductID`, `fPrice`, `fNote`, `fAmount`, `TS`) VALUES
-	(1, '234234', 3, 5, 4.00, '5', 6.00, '2019-10-16 10:13:11');
+	(1, '234234', 3, 5, 4.00, '5', 6.00, '2019-10-16 10:13:11'),
+	(2, 'PO2019-1017000005', 1, 6, 2.00, NULL, 2.00, '2019-10-17 22:42:43'),
+	(3, 'PO2019-1017000005', 2, 7, 3.00, NULL, 6.00, '2019-10-17 22:42:43'),
+	(4, 'PO2019-1017000006', 3, 6, 3.00, NULL, 9.00, '2019-10-17 22:50:59');
 /*!40000 ALTER TABLE `t_product_warehousereceipt_order_detail` ENABLE KEYS */;
 
 -- 导出  表 myorder_python.t_quotation 结构
@@ -3259,6 +3265,42 @@ CREATE TABLE `v_product_outbound_order` (
 	`fVendedor` VARCHAR(50) NULL COLLATE 'utf8_general_ci'
 ) ENGINE=MyISAM;
 
+-- 导出  视图 myorder_python.v_product_warehousereceipt_order 结构
+DROP VIEW IF EXISTS `v_product_warehousereceipt_order`;
+-- 创建临时表以解决视图依赖性错误
+CREATE TABLE `v_product_warehousereceipt_order` (
+	`fOrderID` CHAR(20) NOT NULL COMMENT '订单号' COLLATE 'utf8_general_ci',
+	`fPrice` DECIMAL(10,2) NULL COMMENT '单价',
+	`fSupplierID` INT(11) NOT NULL COMMENT '客户编号',
+	`fOrderDate` DATE NOT NULL COMMENT '订单日期',
+	`fWarehousingDate` DATE NULL COMMENT '入库日期',
+	`fAmount` DECIMAL(11,2) UNSIGNED ZEROFILL NULL COMMENT '金额',
+	`fTax` DECIMAL(11,2) NULL COMMENT '税金',
+	`fPayable` DECIMAL(11,2) NULL COMMENT '应付金额',
+	`fDesconto` DECIMAL(11,2) NULL COMMENT '折扣',
+	`fEntryID` INT(11) NULL COMMENT '录入人',
+	`fSubmited` INT(2) UNSIGNED NOT NULL,
+	`fSubmitID` INT(11) NULL COMMENT '提交人',
+	`fCanceled` INT(2) UNSIGNED NOT NULL,
+	`fCancelID` INT(11) NULL COMMENT '作废人',
+	`fPurchaserID` INT(11) NOT NULL COMMENT '采购人员',
+	`fContato` VARCHAR(20) NULL COMMENT '联系人' COLLATE 'utf8_general_ci',
+	`fCelular` VARCHAR(15) NULL COMMENT '手机' COLLATE 'utf8_general_ci',
+	`fTelefone` VARCHAR(15) NULL COMMENT '电话' COLLATE 'utf8_general_ci',
+	`fNote` VARCHAR(255) NULL COMMENT '备注' COLLATE 'utf8_general_ci',
+	`fTaxRegCer` VARCHAR(50) NULL COMMENT '税务登记证' COLLATE 'utf8_general_ci',
+	`fSupplierName` VARCHAR(50) NULL COMMENT '客户名' COLLATE 'utf8_general_ci',
+	`fNUIT` VARCHAR(25) NULL COMMENT '税号' COLLATE 'utf8_general_ci',
+	`fCity` VARCHAR(30) NULL COMMENT '所在地 Mordo' COLLATE 'utf8_general_ci',
+	`fEndereco` VARCHAR(15) NULL COMMENT '地址' COLLATE 'utf8_general_ci',
+	`fSubmited1` VARCHAR(3) NOT NULL COLLATE 'utf8mb4_general_ci',
+	`fCanceled1` VARCHAR(8) NOT NULL COLLATE 'utf8mb4_general_ci',
+	`fSubmit_Name` VARCHAR(20) NULL COLLATE 'utf8_general_ci',
+	`fEntry_Name` VARCHAR(20) NULL COLLATE 'utf8_general_ci',
+	`fCancel_Name` VARCHAR(20) NULL COLLATE 'utf8_general_ci',
+	`fPurchaser` VARCHAR(50) NULL COLLATE 'utf8_general_ci'
+) ENGINE=MyISAM;
+
 -- 导出  视图 myorder_python.v_quotation 结构
 DROP VIEW IF EXISTS `v_quotation`;
 -- 创建临时表以解决视图依赖性错误
@@ -3368,7 +3410,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`myorder`@`%` SQL SECURITY INVOKER VIEW `v_or
 DROP VIEW IF EXISTS `v_product_outbound_order`;
 -- 移除临时表并创建最终视图结构
 DROP TABLE IF EXISTS `v_product_outbound_order`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_product_outbound_order` AS SELECT `o`.`fOrderID` AS `fOrderID`,
+CREATE ALGORITHM=UNDEFINED DEFINER=`myorder`@`%` SQL SECURITY INVOKER VIEW `v_product_outbound_order` AS SELECT `o`.`fOrderID` AS `fOrderID`,
          `o`.`fPrice` AS `fPrice`,
          `o`.`fCustomerID` AS `fCustomerID`,
          `o`.`fOrderDate` AS `fOrderDate`,
@@ -3448,6 +3490,68 @@ LEFT JOIN `sysusers` `u_Cancel`
     ON `o`.`fCancelID` = `u_Cancel`.`fUserID`
 LEFT JOIN `t_enumeration` `e_fVendedorID`
     ON `o`.`fVendedorID` = `e_fVendedorID`.`fItemID` ;
+
+-- 导出  视图 myorder_python.v_product_warehousereceipt_order 结构
+DROP VIEW IF EXISTS `v_product_warehousereceipt_order`;
+-- 移除临时表并创建最终视图结构
+DROP TABLE IF EXISTS `v_product_warehousereceipt_order`;
+CREATE ALGORITHM=UNDEFINED DEFINER=`myorder`@`%` SQL SECURITY INVOKER VIEW `v_product_warehousereceipt_order` AS SELECT `o`.`fOrderID` AS `fOrderID`,
+         `o`.`fPrice` AS `fPrice`,
+         `o`.`fSupplierID` AS `fSupplierID`,
+         `o`.`fOrderDate` AS `fOrderDate`,
+         `o`.`fWarehousingDate` AS `fWarehousingDate`,
+         `o`.`fAmount` AS `fAmount`,
+         `o`.`fTax` AS `fTax` ,
+         `o`.`fPayable` AS `fPayable`,
+         `o`.`fDesconto` AS `fDesconto`,
+         `o`.`fEntryID` AS `fEntryID` ,
+         `o`.`fSubmited` + 0 AS `fSubmited`,
+         `o`.`fSubmitID` AS `fSubmitID` ,
+
+
+         `o`.`fCanceled` + 0 AS `fCanceled`,
+         `o`.`fCancelID` AS `fCancelID`,
+
+         `o`.`fPurchaserID` AS `fPurchaserID`,
+         `o`.`fContato` AS `fContato`,
+         `o`.`fCelular` AS `fCelular`,
+         `o`.`fTelefone` AS `fTelefone`,
+         `o`.`fNote` AS `fNote`,
+         `c`.`fTaxRegCer` AS `fTaxRegCer` ,
+         `c`.`fSupplierName` AS `fSupplierName`,
+         `c`.`fNUIT` AS `fNUIT`,
+         `c`.`fCity` AS `fCity`,
+         `c`.`fEndereco` AS `fEndereco` ,
+        
+
+    CASE `o`.`fSubmited`
+    WHEN 1 THEN
+    'SIM'
+    ELSE ''
+    END AS `fSubmited1` ,
+    
+    
+    CASE `o`.`fCanceled`
+    WHEN 1 THEN
+    'Canceled'
+    ELSE ''
+    END AS `fCanceled1` , `u_Submited`.`fUsername` AS `fSubmit_Name`, 
+	 `u_Entry`.`fUsername` AS `fEntry_Name`, 
+	 
+	 `u_Cancel`.`fUsername` AS `fCancel_Name`, 
+	 `e_fPurchaserID`.`fTitle` AS `fPurchaser`
+FROM `t_product_warehousereceipt_order` `o`
+LEFT JOIN `t_Supplier` `c`
+    ON `o`.`fSupplierID` = `c`.`fSupplierID`
+LEFT JOIN `sysusers` `u_Submited`
+    ON `o`.`fSubmitID` = `u_Submited`.`fUserID`
+LEFT JOIN `sysusers` `u_Entry`
+    ON `o`.`fEntryID` = `u_Entry`.`fUserID`
+
+LEFT JOIN `sysusers` `u_Cancel`
+    ON `o`.`fCancelID` = `u_Cancel`.`fUserID`
+LEFT JOIN `t_enumeration` `e_fPurchaserID`
+    ON `o`.`fPurchaserID` = `e_fPurchaserID`.`fItemID` ;
 
 -- 导出  视图 myorder_python.v_quotation 结构
 DROP VIEW IF EXISTS `v_quotation`;

@@ -147,7 +147,7 @@
             </font>
            </property>
            <property name="text">
-            <string>warehouse receipt</string>
+            <string>Warehouse Receipt</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
@@ -394,7 +394,7 @@
       </widget>
      </item>
      <item row="0" column="6">
-      <widget class="QDateEdit" name="fRequiredDeliveryDate">
+      <widget class="QDateEdit" name="fWarehousingDate">
        <property name="minimumSize">
         <size>
          <width>0</width>
@@ -581,7 +581,7 @@
         </size>
        </property>
        <property name="text">
-        <string>供应商Cliente:</string>
+        <string>供应商Supplier:</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -599,7 +599,7 @@
       </widget>
      </item>
      <item row="1" column="2">
-      <widget class="QComboBox" name="fCustomerID">
+      <widget class="QComboBox" name="fSupplierID">
        <property name="minimumSize">
         <size>
          <width>0</width>
@@ -743,29 +743,10 @@
         </size>
        </property>
        <property name="text">
-        <string>销售Vendedor:</string>
+        <string>采购员Purchaser:</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="4">
-      <widget class="QComboBox" name="fVendedorID">
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="sizeIncrement">
-        <size>
-         <width>0</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="clearButtonEnabled" stdset="0">
-        <bool>true</bool>
        </property>
       </widget>
      </item>
@@ -781,6 +762,16 @@
      </item>
      <item row="0" column="4">
       <widget class="QComboBox" name="fEntryID">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>25</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="4">
+      <widget class="QComboBox" name="fPurchaserID">
        <property name="minimumSize">
         <size>
          <width>0</width>
@@ -1211,12 +1202,11 @@
   <tabstop>butPDF</tabstop>
   <tabstop>fOrderDate</tabstop>
   <tabstop>fEntryID</tabstop>
-  <tabstop>fRequiredDeliveryDate</tabstop>
-  <tabstop>fCustomerID</tabstop>
+  <tabstop>fWarehousingDate</tabstop>
+  <tabstop>fSupplierID</tabstop>
   <tabstop>fNUIT</tabstop>
   <tabstop>fCity</tabstop>
   <tabstop>fEndereco</tabstop>
-  <tabstop>fVendedorID</tabstop>
   <tabstop>fContato</tabstop>
   <tabstop>fCelular</tabstop>
   <tabstop>fTelefone</tabstop>

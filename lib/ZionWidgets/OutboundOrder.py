@@ -51,7 +51,7 @@ class JPFuncForm_OutboundOrder(JPFunctionForm):
         super().__init__(MainForm)
         self.MainForm = MainForm
         sql_0 = """
-                SELECT o.fOrderID as 订单号码OrderID,
+                SELECT o.fOrderID as 出库单号OrderID,
                     fOrderDate as 日期OrderDate,
                     fSubmited as 提交,
                     fCustomerName as 客户名Cliente,
