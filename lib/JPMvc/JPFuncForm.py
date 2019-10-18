@@ -224,6 +224,7 @@ class JPFunctionForm(QWidget):
 
     @pyqtSlot()
     def on_CmdExportToExcel_clicked(self):
+        print("CmdExportToExcel方法未定义")
         return
 
     def __whereStringCreated(self, sql):

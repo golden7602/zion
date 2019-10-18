@@ -4,7 +4,7 @@ from shutil import copyfile as myCopy
 jppath.append(os.getcwd())
 
 from PyQt5.QtCore import Qt, QDate, QModelIndex, pyqtSlot
-from PyQt5.QtGui import QIcon, QPixmap
+from PyQt5.QtGui import QIcon, QPixmap, QFont
 from PyQt5.QtWidgets import (QLineEdit, QWidget, QFileDialog, QMessageBox,
                              QPushButton, QItemDelegate)
 
@@ -14,10 +14,14 @@ from lib.JPDatabase.Query import JPTabelFieldInfo, JPQueryFieldInfo
 from lib.JPMvc.JPModel import JPTableViewModelReadOnly
 from lib.JPFunction import JPDateConver
 from lib.JPFunction import GetFileMd5
+from lib.JPExcel.JPExportToExcel import JPExpExcelFromTabelFieldInfo
 from lib.JPMvc.JPEditFormModel import JPEditFormDataMode, JPFormModelMain
 from Ui.Ui_FormProcuctEdit import Ui_Form as Ui_Form_Edit
 from lib.JPForms.JPSearch import Form_Search
 from lib.ZionWidgets.ViewPic import Form_ViewPic
+from PyQt5.QtPrintSupport import QPrinter
+from lib.JPPrint.JPPrintReport import JPReport
+from lib.JPFunction import JPDateConver, JPGetDisplayText
 
 
 class MyCopyFileError(Exception):
@@ -109,6 +113,10 @@ class Form_ProductList(QWidget):
             fSpesc,fWidth,fLength,fUint,fNote,
             fMinimumStock,fProductPic from t_product_information where fID={}"""
 
+        self.dataInfo_low = None
+        self.dataInfo_detail = None
+        self.sql_detail = None
+
         icon = QIcon(JPPub().MainForm.icoPath.format("search.png"))
         action = self.ui.lineEdit.addAction(icon, QLineEdit.TrailingPosition)
         self.ui.lineEdit.returnPressed.connect(self.actionClick)
@@ -127,6 +135,13 @@ class Form_ProductList(QWidget):
         self.ui.dateBegin.dateChanged.connect(self.dispDetail)
         self.ui.dateEditEnd.dateChanged.connect(self.dispDetail)
         #self.pub.UserSaveData.connect(self.UserSaveData)
+
+        mainform.addOneButtonIcon(self.ui.CmdPrint_Low, 'print.png')
+        mainform.addOneButtonIcon(self.ui.CmdExportToExcel_Low,
+                                  'exportToexcel.png')
+        mainform.addOneButtonIcon(self.ui.CmdPrint_Detail, 'print.png')
+        mainform.addOneButtonIcon(self.ui.CmdExportToExcel_Detail,
+                                  'exportToexcel.png')
 
         de = MyButtonDelegate(self.ui.tableView, self.dataInfo)
         self.ui.tableView.setItemDelegateForColumn(9, de)
@@ -149,7 +164,7 @@ class Form_ProductList(QWidget):
         tv.resizeColumnsToContents()
 
     def dispAlertStock(self):
-        sql = """select              
+        self.sql_low = """select              
             fID as `序号NO.`, 
             fProductName as `产品名称Descrição do produto`, 
             fCurrentQuantity as 当前库存Quantidade ,
@@ -159,7 +174,7 @@ class Form_ProductList(QWidget):
             order by  fID
             """
         tv = self.ui.tableView_low
-        self.dataInfo_low = JPTabelFieldInfo(sql)
+        self.dataInfo_low = JPTabelFieldInfo(self.sql_low)
         self.mod_low = myJPTableViewModelReadOnly(tv, self.dataInfo_low)
         tv.setModel(self.mod_low)
         tv.resizeColumnsToContents()
@@ -172,7 +187,7 @@ class Form_ProductList(QWidget):
             pid = self.dataInfo.getOnlyData([index.row(), 0])
         d1 = JPDateConver(self.ui.dateBegin.date(), str)
         d2 = JPDateConver(self.ui.dateEditEnd.date(), str)
-        sql = f"""
+        self.sql_detail = f"""
             SELECT q.fOrderDate AS 日期OrderDate,
                     q.fOrderID AS 单据号码OrderID,
                     ksmc AS 客商Merchants,
@@ -213,9 +228,9 @@ class Form_ProductList(QWidget):
                 ) AS q
             ORDER BY  Q.Ts DESC 
         """
-        self.dataInfo2 = JPQueryFieldInfo(sql)
+        self.dataInfo_detail = JPQueryFieldInfo(self.sql_detail)
         self.mod3 = JPTableViewModelReadOnly(self.ui.tableView_rec,
-                                             self.dataInfo2)
+                                             self.dataInfo_detail)
         self.ui.tableView_rec.setModel(self.mod3)
         self.ui.tableView_rec.resizeColumnsToContents()
 
@@ -252,10 +267,50 @@ class Form_ProductList(QWidget):
         return frm
 
     @pyqtSlot()
+    def on_CmdExportToExcel_clicked(self):
+        exp = JPExpExcelFromTabelFieldInfo(self.mod.TabelFieldInfo,
+                                           self.MainForm)
+        exp.run()
+
+    @pyqtSlot()
+    def on_CmdExportToExcel_Low_clicked(self):
+        if self.dataInfo_low:
+            exp = JPExpExcelFromTabelFieldInfo(self.dataInfo_low,
+                                               self.MainForm)
+            exp.run()
+
+    @pyqtSlot()
+    def on_CmdExportToExcel_Detail_clicked(self):
+        exp = JPExpExcelFromTabelFieldInfo(self.dataInfo_detail, self.MainForm)
+        exp.run()
+
+    @pyqtSlot()
     def on_CmdSearch_clicked(self):
         frm = Form_Search(self.dataInfo, self.list_sql.format(wherestring=''))
         frm.whereStringCreated.connect(self.actionClick)
         frm.exec_()
+
+    @pyqtSlot()
+    def on_CmdPrint_clicked(self):
+        rpt = FormReport_ProductInfo()
+        rpt.initItem()
+        rpt.BeginPrint()
+
+    @pyqtSlot()
+    def on_CmdPrint_Low_clicked(self):
+        rpt = FormReport_ProductInfo_low()
+        rpt.initItem()
+        rpt.BeginPrint()
+
+    @pyqtSlot()
+    def on_CmdPrint_Detail_clicked(self):
+        if self.sql_detail:
+            rpt = FormReport_ProductInfo_Detail()
+            rpt.sql = self.sql_detail
+            rpt.beginDate=self.ui.dateBegin.date()
+            rpt.EndDate=self.ui.dateEditEnd.date()
+            rpt.initItem()
+            rpt.BeginPrint()
 
     @pyqtSlot()
     def on_CmdRefresh_clicked(self):
@@ -422,3 +477,252 @@ class EditForm_Product(JPFormModelMain):
         act = 'new' if self.isNewMode else 'edit'
         JPPub().broadcastMessage(tablename="t_Product", action=act, PK=data)
         super().onAfterSaveData(data)
+
+
+class FormReport_ProductInfo(JPReport):
+    def __init__(self,
+                 PaperSize=QPrinter.A4,
+                 Orientation=QPrinter.Orientation(1)):
+        super().__init__(PaperSize, Orientation)
+        self.configData = JPPub().getConfigData()
+        self.font_YaHei = QFont("Microsoft YaHei")
+        self.font_YaHei_8 = QFont(self.font_YaHei)
+        self.font_YaHei_8.setPointSize(8)
+        self.font_YaHei_10 = QFont(self.font_YaHei)
+        self.font_YaHei_10.setPointSize(20)
+        self.font_YaHei_10.setBold(True)
+        self.BackColor = JPPub().getConfigData(
+        )['PrintHighlightBackgroundColor']
+
+        self.title_detail = [
+            '序号\nID', '产品名称\nProductName', '规格\nSpesc', '宽\nWidth',
+            '长\nLength', '计量单位\nUint', '剩余库存\nCurrentQuantity',
+            '预警库存\nMinimumStock', '备注\nNote'
+        ]
+
+        self.fns = [
+            'fID', 'fProductName', 'fSpesc', 'fWidth', 'fLength', 'fUint',
+            'fNote', 'fCurrentQuantity', 'fMinimumStock'
+        ]
+        self.sql = """
+        select fID,fProductName,fSpesc,fWidth,fLength,fUint,fNote,
+        fCurrentQuantity,fMinimumStock 
+        from t_product_information 
+        where fCancel=0       
+        order by fID
+        """
+        self.logo = JPPub().MainForm.logoPixmap
+        self.title = 'Product Information List 产品信息明细表'
+
+    def initItem(self):
+        rpt = self
+        rpt.PageHeader.AddItem(2, 0, 0, 274, 50, self.logo)
+        rpt.PageHeader.AddItem(1,
+                               274,
+                               0,
+                               746,
+                               60,
+                               self.title,
+                               Bolder=False,
+                               AlignmentFlag=(Qt.AlignCenter),
+                               Font=self.font_YaHei_10)
+
+        rpt.PageHeader.AddItem(1,
+                               0,
+                               50,
+                               1020,
+                               20,
+                               'Date:{}'.format(
+                                   JPDateConver(QDate.currentDate(), str)),
+                               Bolder=False,
+                               AlignmentFlag=(Qt.AlignRight),
+                               Font=self.font_YaHei_8)
+
+        cols = len(self.title_detail)
+        al_c = Qt.AlignCenter
+        al_r = (Qt.AlignVCenter | Qt.AlignRight)
+        al_l = (Qt.AlignVCenter | Qt.AlignLeft)
+        rpt.SetMargins(30, 30, 30, 30)
+        title_height = 20
+        rpt.ReportHeader.AddPrintLables(
+            0,
+            72,
+            40,
+            Texts=self.title_detail,
+            Widths=[40, 470, 60, 60, 60, 60, 90, 90, 90],
+            Aligns=[al_c] * cols)
+        rpt.Detail.addPrintRowCountItem(0,
+                                        0,
+                                        40,
+                                        20,
+                                        AlignmentFlag=al_c,
+                                        Font=self.font_YaHei_8)
+        rpt.Detail.AddItem(
+            3,
+            40,
+            0,
+            470,
+            20,
+            self.fns[1],
+            FormatString='{}',
+            AlignmentFlag=al_l,
+            # 超出长度省略
+            AutoShrinkFont=self.configData['AutoShrinkFonts'],
+            AutoEllipsis=self.configData['AutoEllipsis'],
+            Font=self.font_YaHei_8)
+        rpt.Detail.AddPrintFields(510,
+                                  0,
+                                  20,
+                                  self.fns[2:], [60, 60, 60, 60, 90, 90, 90],
+                                  [al_c] * 7,
+                                  FormatString=' {}',
+                                  Font=self.font_YaHei_8)
+
+        # 页脚
+        self.PageFooter.AddItem(4,
+                                10,
+                                0,
+                                100,
+                                20,
+                                '',
+                                FormatString='Page: {Page}/{Pages}',
+                                Bolder=False,
+                                AlignmentFlag=Qt.AlignLeft,
+                                Font=self.font_YaHei_8)
+        self.PageFooter.AddItem(5,
+                                100,
+                                0,
+                                920,
+                                20,
+                                '',
+                                FormatString="PrintTime: %Y-%m-%d %H:%M:%S",
+                                Bolder=False,
+                                AlignmentFlag=Qt.AlignRight,
+                                Font=self.font_YaHei_8)
+        self.DataSource = JPDb().getDict(self.sql)
+
+    def onFormat(self, SectionType, CurrentPage, RowDate=None):
+        return False
+
+
+class FormReport_ProductInfo_low(FormReport_ProductInfo):
+    def __init__(self,
+                 PaperSize=QPrinter.A4,
+                 Orientation=QPrinter.Orientation(1)):
+        super().__init__(PaperSize=QPrinter.A4,
+                         Orientation=QPrinter.Orientation(1))
+        self.title = 'Inventory Warning List 低库存产品信息表'
+        self.sql = """
+        select fID,fProductName,fSpesc,fWidth,fLength,fUint,fNote,
+        fCurrentQuantity,fMinimumStock 
+        from t_product_information 
+        where fCancel=0  and   fCurrentQuantity< fMinimumStock 
+        order by fID
+        """
+
+
+class FormReport_ProductInfo_Detail(JPReport):
+    def __init__(self,
+                 PaperSize=QPrinter.A4,
+                 Orientation=QPrinter.Orientation(0)):
+        super().__init__(PaperSize, Orientation)
+        self.configData = JPPub().getConfigData()
+        self.font_YaHei = QFont("Microsoft YaHei")
+        self.font_YaHei_8 = QFont(self.font_YaHei)
+        self.font_YaHei_8.setPointSize(8)
+        self.font_YaHei_10 = QFont(self.font_YaHei)
+        self.font_YaHei_10.setPointSize(20)
+        self.font_YaHei_10.setBold(True)
+        self.BackColor = JPPub().getConfigData(
+        )['PrintHighlightBackgroundColor']
+        self.title_detail = [
+            '序号ID', '日期OrderDate', '单据号码OrderID', '入库In', '出库Out'
+        ]
+        self.fns = ['fOrderDate', 'fOrderDate', 'fOrderID', 'ksmc', 'rk', 'ck']
+        self.logo = JPPub().MainForm.logoPixmap
+        self.title = 'Warehouse in/out Details\n出入库明细表'
+        self.beginDate = None
+        self.EndDate = None
+
+    def initItem(self):
+        rpt = self
+        rpt.PageHeader.AddItem(2, 0, 0, 274, 50, self.logo)
+        rpt.PageHeader.AddItem(1,
+                               274,
+                               0,
+                               376,
+                               60,
+                               self.title,
+                               Bolder=False,
+                               AlignmentFlag=(Qt.AlignCenter),
+                               Font=self.font_YaHei_10)
+
+        rpt.PageHeader.AddItem(1,
+                               0,
+                               50,
+                               650,
+                               20,
+                               'Date:{}'.format(
+                                   JPDateConver(self.beginDate, str) + "--" +
+                                   JPDateConver(self.endDate, str)),
+                               Bolder=False,
+                               AlignmentFlag=(Qt.AlignRight),
+                               Font=self.font_YaHei_8)
+
+        cols = len(self.title_detail)
+        al_c = Qt.AlignCenter
+        al_r = (Qt.AlignVCenter | Qt.AlignRight)
+        al_l = (Qt.AlignVCenter | Qt.AlignLeft)
+        rpt.SetMargins(30, 30, 30, 30)
+        title_height = 20
+        rpt.ReportHeader.AddPrintLables(0,
+                                        72,
+                                        40,
+                                        Texts=self.title_detail,
+                                        Widths=[60, 100, 250, 120, 120],
+                                        Aligns=[al_c] * cols)
+        rpt.Detail.addPrintRowCountItem(0,
+                                        0,
+                                        40,
+                                        20,
+                                        AlignmentFlag=al_c,
+                                        Font=self.font_YaHei_8)
+        rpt.Detail.AddPrintFields(40,
+                                  0,
+                                  20,
+                                  self.fns[1:3], [100, 250], [al_c] * 2,
+                                  FormatString=' {}',
+                                  Font=self.font_YaHei_8)
+
+        rpt.Detail.AddPrintFields(270,
+                                  0,
+                                  20,
+                                  self.fns[4:], [120, 120], [al_r] * 2,
+                                  FormatString='{} ',
+                                  Font=self.font_YaHei_8)
+
+        # 页脚
+        self.PageFooter.AddItem(4,
+                                10,
+                                0,
+                                100,
+                                20,
+                                '',
+                                FormatString='Page: {Page}/{Pages}',
+                                Bolder=False,
+                                AlignmentFlag=Qt.AlignLeft,
+                                Font=self.font_YaHei_8)
+        self.PageFooter.AddItem(5,
+                                0,
+                                0,
+                                650,
+                                20,
+                                '',
+                                FormatString="PrintTime: %Y-%m-%d %H:%M:%S",
+                                Bolder=False,
+                                AlignmentFlag=Qt.AlignRight,
+                                Font=self.font_YaHei_8)
+        self.DataSource = JPDb().getDict(self.sql)
+
+    def onFormat(self, SectionType, CurrentPage, RowDate=None):
+        return False

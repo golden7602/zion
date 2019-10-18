@@ -116,9 +116,9 @@ class JPFuncForm_WarehouseReceipt(JPFunctionForm):
     def getEditForm(self, sql_main, edit_mode, sql_sub, PKValue):
 
         frm = EditForm_WarehouseReceipt(sql_main=sql_main,
-                                     edit_mode=edit_mode,
-                                     sql_sub=sql_sub,
-                                     PKValue=PKValue)
+                                        edit_mode=edit_mode,
+                                        sql_sub=sql_sub,
+                                        PKValue=PKValue)
         frm.ui.fOrderID.setEnabled(False)
         frm.ui.fCity.setEnabled(False)
         frm.ui.fNUIT.setEnabled(False)
@@ -126,25 +126,11 @@ class JPFuncForm_WarehouseReceipt(JPFunctionForm):
         frm.ui.fEndereco.setEnabled(False)
         return frm
 
-    # @pyqtSlot()
-    # def on_CmdExportToExcel_clicked(self):
-    #     sql = """
-    #     SELECT fOrderID,
-    #         fQuant AS '数量Qtd',
-    #         fProductName AS '名称Descrição',
-    #         fLength AS '长Comp.',
-    #         fWidth AS '宽Larg.',
-    #         fPrice AS '单价P. Unitario',
-    #         fAmount AS '金额Total'
-    #     FROM t_order_detail
-    #     WHERE fOrderID IN (
-    #         SELECT 订单号码OrderID FROM ({cur_sql}) Q)"""
-    #     sql = sql.format(cur_sql=self.currentSQL)
-    #     tab = JPQueryFieldInfo(sql)
-    #     exp = JPExpExcelFromTabelFieldInfo(self.model.TabelFieldInfo,
-    #                                        self.MainForm)
-    #     exp.setSubQueryFieldInfo(tab, 0, 0)
-    #     exp.run()
+    @pyqtSlot()
+    def on_CmdExportToExcel_clicked(self):
+        exp = JPExpExcelFromTabelFieldInfo(self.model.TabelFieldInfo,
+                                           self.MainForm)
+        exp.run()
 
     @pyqtSlot()
     def on_CmdSubmit_clicked(self):
@@ -185,9 +171,10 @@ class JPFuncForm_WarehouseReceipt(JPFunctionForm):
             """
             sql1 = "select '{cu_id}';"
             db.executeTransaction([sql0, sql1, sql1])
-            JPPub().broadcastMessage(tablename="t_product_warehousereceipt_order",
-                                     PK=cu_id,
-                                     action='Submit')
+            JPPub().broadcastMessage(
+                tablename="t_product_warehousereceipt_order",
+                PK=cu_id,
+                action='Submit')
             self.refreshListForm()
 
     @pyqtSlot()
@@ -231,12 +218,7 @@ class mySubMod(JPTableViewModelReadOnly):
 
         if role == Qt.DisplayRole and c == 2:
             if curid:
-                r = self.productInfo[curid]
-                r1 = [r[0]]
-                for i in range(len(r)):
-                    if i >= 2 and r[i]:
-                        r1.append(r[i])
-                return " /".join(r1)
+                return self.getFullProductName(curid)
         elif role == Qt.TextAlignmentRole and c == 2:
             return (Qt.AlignLeft | Qt.AlignVCenter)
 
@@ -268,7 +250,6 @@ class EditForm_WarehouseReceipt(JPFormModelMainHasSub):
                 JPUser().currentUserID())
         if edit_mode != JPEditFormDataMode.ReadOnly:
             self.ui.fSupplierID.setEditable(True)
-    
 
         self.ui.fOrderDate.refreshValueNotRaiseEvent(QDate.currentDate())
         self.ui.fWarehousingDate.FieldInfo.NotNull = True
@@ -277,7 +258,17 @@ class EditForm_WarehouseReceipt(JPFormModelMainHasSub):
         self.ui.tableView.selectionModel().currentChanged.connect(
             self._tv_currentChanged)
 
-        self.subModel.productInfo = self.__getProductInfo()
+        self.productInfo = self.__getProductInfo()
+        self.subModel.getFullProductName = self.getFullProductName
+
+    def getFullProductName(self, curid):
+        if curid:
+            r = self.productInfo[curid]
+            r1 = [r[0]]
+            for i in range(len(r)):
+                if i >= 2 and r[i]:
+                    r1.append(r[i])
+            return " /".join(r1)
 
     def __getProductInfo(self):
         sql = """
@@ -351,7 +342,7 @@ class EditForm_WarehouseReceipt(JPFormModelMainHasSub):
     def onGetFieldsRowSources(self):
         sql = '''select fSupplierName,fSupplierID,
                 fNUIT,fCity,fContato,fTaxRegCer from t_supplier'''
-        lst_supplier=JPDb().getDataList(sql)
+        lst_supplier = JPDb().getDataList(sql)
         u_lst = [[item[1], item[0]] for item in JPUser().getAllUserList()]
 
         return [('fSupplierID', lst_supplier, 1),
@@ -817,7 +808,7 @@ class Outbound_Order_Report(JPReport):
         D = self.Detail
         D.AddPrintFields(0,
                          0,
-                         20, ["fQuant", "fProductName"],[40, 370],
+                         20, ["fQuant", "fProductName"], [40, 370],
                          [Qt.AlignCenter, Qt.AlignLeft],
                          Font=self.font_YaHei_8)
         D.AddPrintFields(410,
@@ -995,6 +986,9 @@ class Outbound_Order_Report(JPReport):
         flag = self.CopyInfo[Copys - 1]['flag']
         if obj.PrintObject == " CONT.  / PRDUCAO":
             return False, title
+        elif obj.PrintObject == 'fProductName':
+            return False, self.getFullProductName(
+                CurrentPrintDataRow['fProductID'])
         else:
             if obj.PrintObject in [
                     "fPrice", "fAmountDetail", "fAmount", "fDesconto", "fTax",

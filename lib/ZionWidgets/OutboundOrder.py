@@ -191,6 +191,12 @@ class JPFuncForm_OutboundOrder(JPFunctionForm):
             self.refreshListForm()
 
     @pyqtSlot()
+    def on_CmdExportToExcel_clicked(self):
+        exp = JPExpExcelFromTabelFieldInfo(self.model.TabelFieldInfo,
+                                           self.MainForm)
+        exp.run()
+
+    @pyqtSlot()
     def on_CmdEdit_clicked(self):
         cu_id = self.getCurrentSelectPKValue()
         if not cu_id:
@@ -231,12 +237,7 @@ class mySubMod(JPTableViewModelReadOnly):
 
         if role == Qt.DisplayRole and c == 2:
             if curid:
-                r = self.productInfo[curid]
-                r1 = [r[0]]
-                for i in range(len(r)):
-                    if i >= 2 and r[i]:
-                        r1.append(r[i])
-                return " /".join(r1)
+                return self.getFullProductName(curid)
         elif role == Qt.TextAlignmentRole and c == 2:
             return (Qt.AlignLeft | Qt.AlignVCenter)
 
@@ -275,8 +276,8 @@ class EditForm_OutboundOrder(JPFormModelMainHasSub):
         self.ui.tableView.keyPressEvent = self.mykeyPressEvent
         self.ui.tableView.selectionModel().currentChanged.connect(
             self._tv_currentChanged)
-
-        self.subModel.productInfo = self.__getProductInfo()
+        self.productInfo = self.__getProductInfo()
+        self.subModel.getFullProductName = self.getFullProductName
 
     def __getProductInfo(self):
         sql = """
@@ -286,6 +287,15 @@ class EditForm_OutboundOrder(JPFormModelMainHasSub):
         """
         lst = JPDb().getDataList(sql)
         return {r[0]: r[1:] for r in lst}
+
+    def getFullProductName(self, curid):
+        if curid:
+            r = self.productInfo[curid]
+            r1 = [r[0]]
+            for i in range(len(r)):
+                if i >= 2 and r[i]:
+                    r1.append(r[i])
+            return " /".join(r1)
 
     def onGetModelClass(self):
         return mySubMod
@@ -417,6 +427,7 @@ class EditForm_OutboundOrder(JPFormModelMainHasSub):
     def on_butPrint_clicked(self):
         try:
             rpt = Outbound_Order_Report()
+            rpt.getFullProductName = self.getFullProductName
             rpt.PrintCurrentReport(self.ui.fOrderID.Value())
         except Exception as identifier:
             msg = "打印过程出错，错误信息为：{}".format(str(identifier))
@@ -813,7 +824,7 @@ class Outbound_Order_Report(JPReport):
         D = self.Detail
         D.AddPrintFields(0,
                          0,
-                         20, ["fQuant", "fProductName"],[40, 370],
+                         20, ["fQuant", "fProductName"], [40, 370],
                          [Qt.AlignCenter, Qt.AlignLeft],
                          Font=self.font_YaHei_8)
         D.AddPrintFields(410,
@@ -985,19 +996,6 @@ class Outbound_Order_Report(JPReport):
                                                | Qt.AlignVCenter),
                                 Font=self.font_YaHei_8)
 
-    # 修改联次
-    def onBeforePrint(self, Copys, Sec, CurrentPrintDataRow, obj):
-        title = self.CopyInfo[Copys - 1]['title']
-        flag = self.CopyInfo[Copys - 1]['flag']
-        if obj.PrintObject == " CONT.  / PRDUCAO":
-            return False, title
-        else:
-            if obj.PrintObject in [
-                    "fPrice", "fAmountDetail", "fAmount", "fDesconto", "fTax",
-                    "fPayable"
-            ]:
-                return False, ' ' if flag is False else None
-            return False, None
 
     def init_data(self, OrderID: str):
         SQL = f"""
@@ -1019,6 +1017,23 @@ class Outbound_Order_Report(JPReport):
         data.sort(key=lambda x: (x['fCustomerName'], x['fCity'], x['fAmount']
                                  is None, x['fAmount']))
         self.DataSource = data
+
+    # 修改联次
+    def onBeforePrint(self, Copys, Sec, CurrentPrintDataRow, obj):
+        #print(str(CurrentPrintDataRow))
+        title = self.CopyInfo[Copys - 1]['title']
+        flag = self.CopyInfo[Copys - 1]['flag']
+        if obj.PrintObject == " CONT.  / PRDUCAO":
+            return False, title
+        elif obj.PrintObject == 'fProductName':
+            return False, self.getFullProductName(CurrentPrintDataRow['fProductID'])
+        else:
+            if obj.PrintObject in [
+                    "fPrice", "fAmountDetail", "fAmount", "fDesconto", "fTax",
+                    "fPayable"
+            ]:
+                return False, ' ' if flag is False else None
+            return False, None
 
     def BeginPrint(self):
         # 大于9行自动更改纸型

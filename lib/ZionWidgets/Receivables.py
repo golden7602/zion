@@ -431,7 +431,7 @@ class FormReport_Rec_print(JPReport):
         )['PrintHighlightBackgroundColor']
         rpt = self
 
-        rpt.logo = QPixmap(getcwd() + "\\res\\tmLogo100.png")
+        rpt.logo = JPPub().MainForm.logoPixmap
         rpt.ReportHeader.AddItem(2, 0, 0, 274, 50, rpt.logo)
         rpt.ReportHeader.AddItem(1,
                                  274,
