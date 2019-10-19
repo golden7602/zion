@@ -260,6 +260,14 @@ class EditForm_WarehouseReceipt(JPFormModelMainHasSub):
 
         self.productInfo = self.__getProductInfo()
         self.subModel.getFullProductName = self.getFullProductName
+        self._setEditFormButtonsIcon(self.ui)
+
+    def _setEditFormButtonsIcon(self, ui):
+        pub = JPPub()
+        fun = pub.MainForm.addOneButtonIcon
+        fun(ui.butSave, "save.png")
+        fun(ui.butPrint, "print.png")
+        fun(ui.butPDF, "pdf.png")
 
     def getFullProductName(self, curid):
         if curid:
@@ -412,6 +420,8 @@ class EditForm_WarehouseReceipt(JPFormModelMainHasSub):
     def on_butPrint_clicked(self):
         try:
             rpt = Outbound_Order_Report()
+            rpt.getFullProductName = self.getFullProductName
+
             rpt.PrintCurrentReport(self.ui.fOrderID.Value())
         except Exception as identifier:
             msg = "打印过程出错，错误信息为：{}".format(str(identifier))
@@ -512,15 +522,15 @@ class Outbound_Order_Report(JPReport):
         RH.AddItem(1,
                    180,
                    55,
-                   130,
+                   150,
                    20,
                    "入库日期WarehousingDate:",
                    Font=self.font_YaHei_8,
                    AlignmentFlag=Qt.AlignCenter)
         RH.AddItem(3,
-                   310,
+                   330,
                    55,
-                   90,
+                   70,
                    20,
                    "fWarehousingDate",
                    Font=self.font_YaHei_8,
@@ -947,11 +957,11 @@ class Outbound_Order_Report(JPReport):
 
         RF.AddItem(1, 540, 125, 100, 0, '')
         RF.AddItem(1,
-                   420,
+                   390,
                    140,
-                   120,
+                   150,
                    20,
-                   '客户cliente:',
+                   '库管Warehouse Managem:',
                    Bolder=False,
                    AlignmentFlag=(Qt.AlignRight | Qt.AlignVCenter),
                    Font=self.font_YaHei_8)
@@ -1032,7 +1042,7 @@ class Outbound_Order_Report(JPReport):
     def PrintCurrentReport(self, OrderID: str):
         self.init_data(OrderID)
         self.init_ReportHeader_title(
-            title1="WarehouseRreceipt",
+            title1="入库单 Warehouse Receipt",
             title2="(ESTE DOCUMENTO É DO USO INTERNO)")
         self.init_ReportHeader()
         self.init_ReportHeader_Individualization()

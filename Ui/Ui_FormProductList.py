@@ -149,7 +149,7 @@ class Ui_Form(object):
         self.verticalLayout_4.addWidget(self.splitter_2)
 
         self.retranslateUi(Form)
-        QtCore.QMetaObject.connectSlotsByName(Form)
+        #QtCore.QMetaObject.connectSlotsByName(Form)
 
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate

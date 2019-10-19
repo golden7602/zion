@@ -130,8 +130,7 @@ class Form_ProductList(QWidget):
 
         self.ui.dateBegin.setDate(QDate(QDate.currentDate().year(), 1, 1))
         self.ui.dateEditEnd.setDate(QDate().currentDate())
-        self.ui.tableView.selectionModel(
-        ).currentRowChanged[QModelIndex, QModelIndex].connect(self.dispDetail)
+
         self.ui.dateBegin.dateChanged.connect(self.dispDetail)
         self.ui.dateEditEnd.dateChanged.connect(self.dispDetail)
         #self.pub.UserSaveData.connect(self.UserSaveData)
@@ -162,6 +161,9 @@ class Form_ProductList(QWidget):
         # de = MyButtonDelegate(tv, self.dataInfo)
         # tv.setItemDelegateForColumn(9, de)
         tv.resizeColumnsToContents()
+        self.ui.tableView.selectionModel(
+        ).currentRowChanged[QModelIndex, QModelIndex].connect(self.dispDetail)
+        self.dispDetail()
 
     def dispAlertStock(self):
         self.sql_low = """select              
@@ -178,8 +180,11 @@ class Form_ProductList(QWidget):
         self.mod_low = myJPTableViewModelReadOnly(tv, self.dataInfo_low)
         tv.setModel(self.mod_low)
         tv.resizeColumnsToContents()
+        bz = (len(self.dataInfo_low) > 0)
+        self.ui.CmdExportToExcel_Low.setEnabled(bz)
+        self.ui.CmdPrint_Low.setEnabled(bz)
 
-    def dispDetail(self, index1, index2):
+    def dispDetail(self):
         pid = -1
         tv = self.ui.tableView
         index = tv.selectionModel().currentIndex()
@@ -233,6 +238,9 @@ class Form_ProductList(QWidget):
                                              self.dataInfo_detail)
         self.ui.tableView_rec.setModel(self.mod3)
         self.ui.tableView_rec.resizeColumnsToContents()
+        bz = (len(self.dataInfo_detail) > 0)
+        self.ui.CmdExportToExcel_Detail.setEnabled(bz)
+        self.ui.CmdPrint_Detail.setEnabled(bz)
 
     def getCurrentSelectPKValue(self):
         index = self.ui.tableView.selectionModel().currentIndex()
@@ -307,8 +315,8 @@ class Form_ProductList(QWidget):
         if self.sql_detail:
             rpt = FormReport_ProductInfo_Detail()
             rpt.sql = self.sql_detail
-            rpt.beginDate=self.ui.dateBegin.date()
-            rpt.EndDate=self.ui.dateEditEnd.date()
+            rpt.beginDate = self.ui.dateBegin.date()
+            rpt.endDate = self.ui.dateEditEnd.date()
             rpt.initItem()
             rpt.BeginPrint()
 
@@ -630,6 +638,8 @@ class FormReport_ProductInfo_Detail(JPReport):
         self.font_YaHei = QFont("Microsoft YaHei")
         self.font_YaHei_8 = QFont(self.font_YaHei)
         self.font_YaHei_8.setPointSize(8)
+        self.font_YaHei_12 = QFont(self.font_YaHei)
+        self.font_YaHei_12.setPointSize(12)
         self.font_YaHei_10 = QFont(self.font_YaHei)
         self.font_YaHei_10.setPointSize(20)
         self.font_YaHei_10.setBold(True)
@@ -642,7 +652,7 @@ class FormReport_ProductInfo_Detail(JPReport):
         self.logo = JPPub().MainForm.logoPixmap
         self.title = 'Warehouse in/out Details\n出入库明细表'
         self.beginDate = None
-        self.EndDate = None
+        self.endDate = None
 
     def initItem(self):
         rpt = self
@@ -655,7 +665,7 @@ class FormReport_ProductInfo_Detail(JPReport):
                                self.title,
                                Bolder=False,
                                AlignmentFlag=(Qt.AlignCenter),
-                               Font=self.font_YaHei_10)
+                               Font=self.font_YaHei_12)
 
         rpt.PageHeader.AddItem(1,
                                0,
@@ -677,24 +687,24 @@ class FormReport_ProductInfo_Detail(JPReport):
         title_height = 20
         rpt.ReportHeader.AddPrintLables(0,
                                         72,
-                                        40,
+                                        20,
                                         Texts=self.title_detail,
                                         Widths=[60, 100, 250, 120, 120],
                                         Aligns=[al_c] * cols)
         rpt.Detail.addPrintRowCountItem(0,
                                         0,
-                                        40,
+                                        60,
                                         20,
                                         AlignmentFlag=al_c,
                                         Font=self.font_YaHei_8)
-        rpt.Detail.AddPrintFields(40,
+        rpt.Detail.AddPrintFields(60,
                                   0,
                                   20,
                                   self.fns[1:3], [100, 250], [al_c] * 2,
                                   FormatString=' {}',
                                   Font=self.font_YaHei_8)
 
-        rpt.Detail.AddPrintFields(270,
+        rpt.Detail.AddPrintFields(410,
                                   0,
                                   20,
                                   self.fns[4:], [120, 120], [al_r] * 2,

@@ -278,6 +278,14 @@ class EditForm_OutboundOrder(JPFormModelMainHasSub):
             self._tv_currentChanged)
         self.productInfo = self.__getProductInfo()
         self.subModel.getFullProductName = self.getFullProductName
+        self._setEditFormButtonsIcon(self.ui)
+
+    def _setEditFormButtonsIcon(self, ui):
+        pub = JPPub()
+        fun = pub.MainForm.addOneButtonIcon
+        fun(ui.butSave, "save.png")
+        fun(ui.butPrint, "print.png")
+        fun(ui.butPDF, "pdf.png")
 
     def __getProductInfo(self):
         sql = """
