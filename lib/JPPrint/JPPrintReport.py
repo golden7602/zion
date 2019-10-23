@@ -830,7 +830,8 @@ class _JPPrintPreviewDialog(QPrintPreviewDialog):
 
     # def done(self,int1):
     #     print(int1)
-    
+
+
 class JPReport(object):
     """报表类"""
     def __init__(self, PaperSize, Orientation):

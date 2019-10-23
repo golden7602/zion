@@ -12,7 +12,6 @@ from lib.JPMvc.JPFuncForm import JPEditFormDataMode
 from lib.JPPublc import JPPub
 
 
-
 class ZionFuncForm(JPFunctionForm):
     def __init__(self, parent):
         super().__init__(parent)
