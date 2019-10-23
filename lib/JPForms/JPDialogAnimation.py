@@ -17,7 +17,8 @@ class DialogAnimation(QDialog):
             # 尝试先取消动画完成后关闭窗口的信号
             self.animation.finished.disconnect(self.close)
         except Exception as e:
-            print(str(e))
+            if str(e) != "disconnect() failed between 'finished' and 'close'":
+                print(str(e))
         self.animation.stop()
         # 透明度范围从0逐渐增加到1
         self.animation.setStartValue(0)

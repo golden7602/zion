@@ -57,18 +57,21 @@ class MyButtonDelegate(QItemDelegate):
         self.icon = JPPub().MainForm.getIcon('rosette.ico')
 
     def paint(self, painter, option, index):
-        curCer = self.dataInfo.DataRows[index.row()].Datas[9]
-        if not self.parent().indexWidget(index) and curCer:
-            widget = QPushButton(
-                self.tr(''),
-                self.parent(),
-                clicked=self.parent().parent().cellButtonClicked)
-            widget.setIcon(self.icon)
-            self.parent().setIndexWidget(index, widget)
-        else:
-            widget = self.parent().indexWidget(index)
-            if widget:
-                widget.setGeometry(option.rect)
+        try:
+            curCer = self.dataInfo.DataRows[index.row()].Datas[9]
+            if not self.parent().indexWidget(index) and curCer:
+                widget = QPushButton(
+                    self.tr(''),
+                    self.parent(),
+                    clicked=self.parent().parent().cellButtonClicked)
+                widget.setIcon(self.icon)
+                self.parent().setIndexWidget(index, widget)
+            else:
+                widget = self.parent().indexWidget(index)
+                if widget:
+                    widget.setGeometry(option.rect)
+        except Exception as identifier:
+            pass
 
     def createEditor(self, parent, option, index):
         """有这个空函数覆盖父类的函数，才能使该列不可编辑"""

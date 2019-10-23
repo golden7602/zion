@@ -199,7 +199,7 @@ class _jpPrintField(_jpPrintItem):
                     new_v = Ori_v
                 return self.FormatString.format(Ori_v)
             else:
-                print("数据源中没有找到字段'{}'".format(self.PrintObject))
+                print("数据源中没有找到字段'{}',请检查相关指定数据源的语句！".format(self.PrintObject))
                 return ''
         except (KeyError, TypeError):
             return ''
@@ -875,6 +875,9 @@ class JPReport(object):
         本方法为报表类各节的格式化事件，返回值为False或None时，
         当前节或Detail节的本行数据不打印，其他值均正常打印。
         """
+        name = SectionType.GetSectionName()
+        msg = f'[{name}节的format事件没有重写!]'
+        print(msg)
         return True
 
     def onBeforePrint(self, Copys, Sec, CurrentPrintDataRow, obj):
