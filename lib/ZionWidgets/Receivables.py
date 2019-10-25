@@ -390,6 +390,12 @@ class RecibidoEdit(JPFormModelMain):
             and fConfirmed=1
             and fSubmited=1
             and fCanceled=0
+        union all 
+        select fOrderID from t_product_outbound_order 
+        where fCustomerID={CustomerID} 
+            and fOrderDate=STR_TO_DATE('{dateString}', '%Y-%m-%d')
+            and fSubmited=1
+            and fCanceled=0        
         """
         sql_orderID = sql_orderID.format(
             CustomerID=self.ui.fCustomerID.Value(),
