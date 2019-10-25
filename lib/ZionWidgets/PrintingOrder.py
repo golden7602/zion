@@ -98,7 +98,6 @@ class JPFuncForm_PrintingOrder(JPFunctionForm):
                 , fCelular
                 , fRequiredDeliveryDate
                 , fContato
-                , fTelefone
                 , fVendedorID as 销售Vendedor
                 , fCustomerID
                 , fOrderDate
@@ -142,6 +141,7 @@ class JPFuncForm_PrintingOrder(JPFunctionForm):
         frm.ui.fNUIT.setEnabled(False)
         frm.ui.fEntryID.setEnabled(False)
         frm.ui.fEndereco.setEnabled(False)
+        frm.ui.fEmail.setEnabled(False)
         return frm
 
     def onGetModelClass(self):
@@ -257,10 +257,10 @@ class EditForm_PrintingOrder(JPFormModelMain):
             self.ui.butTaxCer.setEnabled(False)
             uid = JPUser().currentUserID()
             self.ui.fEntryID.refreshValueNotRaiseEvent(uid)
+            self.ui.fOrderDate.refreshValueNotRaiseEvent(QDate.currentDate())
         # 编辑状态下，更新一次历史单据号列表
         if self.isEditMode or self.isReadOnlyMode:
             self.onDateChangeEvent(self.ui.fCustomerID, None)
-
         # 设置必输入字段
         self.ui.fCustomerID.FieldInfo.NotNull = True
         self.ui.fEspecieID.FieldInfo.NotNull = True
@@ -272,7 +272,6 @@ class EditForm_PrintingOrder(JPFormModelMain):
         self.ui.fRequiredDeliveryDate.FieldInfo.NotNull = True
         self.ui.fVendedorID.FieldInfo.NotNull = True
         self.ui.fNrCopyID.FieldInfo.NotNull = True
-        self.ui.fOrderDate.refreshValueNotRaiseEvent(QDate.currentDate())
         self.ui.fCustomerID.setFocus()
 
     def __onTaxKeyPress(self, KeyEvent: QKeyEvent):
@@ -361,20 +360,20 @@ class EditForm_PrintingOrder(JPFormModelMain):
 
         nm = obj.objectName()
         if nm == 'fCustomerID':
-            sql = '''select fCelular, fContato, fTelefone ,fNUIT,fEndereco,fCity,fTaxRegCer
-            from t_customer where fCustomerID={}'''
-            sql = sql.format(self.ui.fCustomerID.Value())
-            tab = JPQueryFieldInfo(sql)
-            self.ui.fCelular.refreshValueNotRaiseEvent(tab.getOnlyData([0, 0]),
-                                                       True)
-            self.ui.fContato.refreshValueNotRaiseEvent(tab.getOnlyData([0, 1]),
-                                                       True)
-            self.ui.fTelefone.refreshValueNotRaiseEvent(
-                tab.getOnlyData([0, 2]), True)
-            self.ui.fNUIT.setText(tab.getOnlyData([0, 3]))
-            self.ui.fEndereco.setText(tab.getOnlyData([0, 4]))
-            self.ui.fCity.setText(tab.getOnlyData([0, 5]))
-            ID = tab.getOnlyData([0, 6])
+            c_id = self.ui.fCustomerID.Value()
+            sql = f'''select fNUIT,fCity,fContato,fAreaCode,
+                    fCelular,fTelefone,fEndereco,fEmail,
+                    fWeb,fFax,fNote,fTaxRegCer
+                    from t_customer 
+                    where fCustomerID={c_id}'''
+            dic = JPDb().getDict(sql)[0]
+            self.ui.fCelular.refreshValueNotRaiseEvent(dic['fCelular'], True)
+            self.ui.fContato.refreshValueNotRaiseEvent(dic['fContato'], True)
+            self.ui.fNUIT.setText(dic['fNUIT'])
+            self.ui.fCity.setText(dic['fCity'])
+            self.ui.fEndereco.setText(dic['fEndereco'])
+            self.ui.fEmail.setText(dic['fEmail'])
+            ID = dic['fTaxRegCer']
             ZT = True if ID else False
             self.ui.butTaxCer.setEnabled(ZT)
             self.ui.butTaxCer.ID = ID

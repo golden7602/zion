@@ -121,6 +121,7 @@ class JPFuncForm_Payment(ZionFuncForm):
         form.ui.fCustomerID.setEnabled(False)
         form.ui.fRequiredDeliveryDate.setEnabled(False)
         form.ui.fEntryID.setEnabled(False)
+        form.ui.fEmail.setEnabled(False)
 
 
 class Payment_report(Order_report_Mob):

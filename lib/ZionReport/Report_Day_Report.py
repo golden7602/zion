@@ -30,22 +30,14 @@ class FormReport_Day_print(JPReport):
         self.font_YaHei_10.setBold(True)
         rpt = self
         rpt.logo = JPPub().MainForm.logoPixmap
-        rpt.ReportHeader.AddItem(2, 0, 0, 274, 50, rpt.logo)
-        rpt.ReportHeader.AddItem(1,
-                                 274,
-                                 0,
-                                 110 * 13 - 274,
-                                 40,
-                                 'Year Report 收款年报表',
-                                 Bolder=False,
-                                 AlignmentFlag=(Qt.AlignCenter),
-                                 Font=self.font_YaHei_10)
-        self.ReportHeader.AddItem(
-            1,
-            274,
-            30,
-            110 * 13 - 274,
-            20,
+        rpt.ReportHeader.AddItemRect(2, (0, 0, 274, 50), rpt.logo)
+        rpt.ReportHeader.AddItemRect(1, (274, 0, 110 * 13 - 274, 40),
+                                     'Year Report 收款年报表',
+                                     Bolder=False,
+                                     AlignmentFlag=(Qt.AlignCenter),
+                                     Font=self.font_YaHei_10)
+        self.ReportHeader.AddItemRect(
+            1, (274, 30, 110 * 13 - 274, 20),
             '基于Base on: {baseon}  年度Year: {myyear}'.format(baseon=baseon,
                                                            myyear=myyear),
             Bolder=False,
@@ -70,35 +62,25 @@ class FormReport_Day_print(JPReport):
                                   Widths=[110],
                                   Aligns=[al_c])
         for i in range(1, cols):
-            rpt.Detail.AddItem(3,
-                               i * 110,
-                               0,
-                               110,
-                               25,
-                               fns[i],
-                               Font=QFont('Times New Roman', 12),
-                               AlignmentFlag=al_r,
-                               FormatString='{:,.2f} ')
-        self.PageFooter.AddItem(4,
-                                10,
-                                0,
-                                110,
-                                20,
-                                '',
-                                FormatString='Page: {Page}/{Pages}',
-                                Bolder=False,
-                                AlignmentFlag=(Qt.AlignLeft | Qt.AlignVCenter),
-                                Font=self.font_YaHei_8)
-        self.PageFooter.AddItem(5,
-                                110 * 10,
-                                0,
-                                110 * 3,
-                                20,
-                                '',
-                                FormatString="PrintTime: %Y-%m-%d %H:%M:%S",
-                                Bolder=False,
-                                AlignmentFlag=Qt.AlignRight,
-                                Font=self.font_YaHei_8)
+            rpt.Detail.AddItemRect(3, (i * 110, 0, 110, 25),
+                                   fns[i],
+                                   Font=QFont('Times New Roman', 12),
+                                   AlignmentFlag=al_r,
+                                   FormatString='{:,.2f} ')
+        self.PageFooter.AddItemRect(4, (10, 0, 110, 20),
+                                    '',
+                                    FormatString='Page: {Page}/{Pages}',
+                                    Bolder=False,
+                                    AlignmentFlag=(Qt.AlignLeft
+                                                   | Qt.AlignVCenter),
+                                    Font=self.font_YaHei_8)
+        self.PageFooter.AddItemRect(
+            5, (110 * 10, 0, 110 * 3, 20),
+            '',
+            FormatString="PrintTime: %Y-%m-%d %H:%M:%S",
+            Bolder=False,
+            AlignmentFlag=Qt.AlignRight,
+            Font=self.font_YaHei_8)
 
     def onFormat(self, SectionType, CurrentPage, RowDate=None):
         return False

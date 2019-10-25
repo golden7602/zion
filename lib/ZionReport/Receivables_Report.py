@@ -35,26 +35,18 @@ class FormReport_Rec_print(JPReport):
         rpt = self
 
         rpt.logo = JPPub().MainForm.logoPixmap
-        rpt.ReportHeader.AddItem(2, 0, 0, 274, 50, rpt.logo)
-        rpt.ReportHeader.AddItem(1,
-                                 274,
-                                 0,
-                                 446,
-                                 60,
-                                 'de vendas diárias 收款日报表',
-                                 Bolder=False,
-                                 AlignmentFlag=(Qt.AlignCenter),
-                                 Font=self.font_YaHei_10)
+        rpt.ReportHeader.AddItemRect(2, (0, 0, 274, 50), rpt.logo)
+        rpt.ReportHeader.AddItemRect(1, (274, 0, 446, 60),
+                                     'de vendas diárias 收款日报表',
+                                     Bolder=False,
+                                     AlignmentFlag=(Qt.AlignCenter),
+                                     Font=self.font_YaHei_10)
 
-        rpt.ReportHeader.AddItem(1,
-                                 0,
-                                 50,
-                                 720,
-                                 20,
-                                 'Date:{}'.format(curdate),
-                                 Bolder=False,
-                                 AlignmentFlag=(Qt.AlignRight),
-                                 Font=self.font_YaHei_8)
+        rpt.ReportHeader.AddItemRect(1, (0, 50, 720, 20),
+                                     'Date:{}'.format(curdate),
+                                     Bolder=False,
+                                     AlignmentFlag=(Qt.AlignRight),
+                                     Font=self.font_YaHei_8)
 
         title = [
             '序号\nID', '客户名\nCliente', '收款额\nAmount', '收款人\nfPayee',
@@ -95,49 +87,29 @@ class FormReport_Rec_print(JPReport):
             AutoShrinkFont=self.configData['AutoShrinkFonts'],
             AutoEllipsis=self.configData['AutoEllipsis'],
             Font=self.font_YaHei_8)
-        rpt.Detail.AddItem(3,
-                           250,
-                           0,
-                           80,
-                           20,
-                           fns[2],
-                           AlignmentFlag=al_r,
-                           FormatString='{:,.2f} ',
-                           Font=self.font_YaHei_8)
-        rpt.Detail.AddItem(3,
-                           330,
-                           0,
-                           80,
-                           20,
-                           fns[3],
-                           AlignmentFlag=al_c,
-                           Font=self.font_YaHei_8)
-        rpt.Detail.AddItem(3,
-                           410,
-                           0,
-                           100,
-                           20,
-                           fns[4],
-                           AlignmentFlag=al_c,
-                           Font=self.font_YaHei_8)
-        rpt.Detail.AddItem(3,
-                           510,
-                           0,
-                           120,
-                           20,
-                           fns[5],
-                           AlignmentFlag=al_l,
-                           FormatString=' {}',
-                           Font=self.font_YaHei_8)
-        rpt.Detail.AddItem(3,
-                           630,
-                           0,
-                           90,
-                           20,
-                           fns[6],
-                           AlignmentFlag=al_l,
-                           FormatString=' {}',
-                           Font=self.font_YaHei_8)
+        rpt.Detail.AddItemRect(3, (250, 0, 80, 20),
+                               fns[2],
+                               AlignmentFlag=al_r,
+                               FormatString='{:,.2f} ',
+                               Font=self.font_YaHei_8)
+        rpt.Detail.AddItemRect(3, (330, 0, 80, 20),
+                               fns[3],
+                               AlignmentFlag=al_c,
+                               Font=self.font_YaHei_8)
+        rpt.Detail.AddItemRect(3, (410, 0, 100, 20),
+                               fns[4],
+                               AlignmentFlag=al_c,
+                               Font=self.font_YaHei_8)
+        rpt.Detail.AddItemRect(3, (510, 0, 120, 20),
+                               fns[5],
+                               AlignmentFlag=al_l,
+                               FormatString=' {}',
+                               Font=self.font_YaHei_8)
+        rpt.Detail.AddItemRect(3, (630, 0, 90, 20),
+                               fns[6],
+                               AlignmentFlag=al_l,
+                               FormatString=' {}',
+                               Font=self.font_YaHei_8)
 
         sum_j = 0
         for i in range(len(cur_tab)):
@@ -317,26 +289,19 @@ class FormReport_Rec_print(JPReport):
                                         Font=self.font_YaHei_8,
                                         FillColor=self.BackColor)
         # 页脚
-        self.PageFooter.AddItem(4,
-                                10,
-                                0,
-                                100,
-                                20,
-                                '',
-                                FormatString='Page: {Page}/{Pages}',
-                                Bolder=False,
-                                AlignmentFlag=Qt.AlignLeft,
-                                Font=self.font_YaHei_8)
-        self.PageFooter.AddItem(5,
-                                0,
-                                0,
-                                720,
-                                20,
-                                '',
-                                FormatString="PrintTime: %Y-%m-%d %H:%M:%S",
-                                Bolder=False,
-                                AlignmentFlag=Qt.AlignRight,
-                                Font=self.font_YaHei_8)
+        self.PageFooter.AddItemRect(4, (10, 0, 100, 20),
+                                    '',
+                                    FormatString='Page: {Page}/{Pages}',
+                                    Bolder=False,
+                                    AlignmentFlag=Qt.AlignLeft,
+                                    Font=self.font_YaHei_8)
+        self.PageFooter.AddItemRect(
+            5, (0, 0, 720, 20),
+            '',
+            FormatString="PrintTime: %Y-%m-%d %H:%M:%S",
+            Bolder=False,
+            AlignmentFlag=Qt.AlignRight,
+            Font=self.font_YaHei_8)
         self.DataSource = [
             cur_tab.getRowValueDict(i) for i in range(len(cur_tab))
         ]

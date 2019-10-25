@@ -129,7 +129,7 @@ class JPFuncForm_Adjustment(ZionFuncForm):
             form.ui.fContato.setEnabled(False)
             form.ui.fTelefone.setEnabled(False)
             form.ui.fCustomerID.setEnabled(True)
-            form.ui.fOrderDate.setEnabled(False)
+            form.ui.fOrderDate.setEnabled(True)
             form.ui.fSucursal.setEnabled(True)
             form.ui.fVendedorID.setEnabled(True)
             form.ui.fEntryID.setEnabled(False)

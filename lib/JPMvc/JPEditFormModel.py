@@ -266,6 +266,7 @@ class JPFormModelMain(DialogAnimation):
 
     @pyqtSlot()
     def on_butPrint_clicked(self):
+        print("打印按钮的代码没有重写")
         return
 
     def getSqls(self, pk_role: int = None):

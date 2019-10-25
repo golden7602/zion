@@ -276,6 +276,44 @@ class _jpPrintSection(object):
     def SectionHeight(self):
         return self._Height
 
+    def AddItemRect(self, objtype, rect: QRect, obj, **kwargs) -> _jpPrintItem:
+        """
+        添加一个单独的打印条目\n
+        objtype 取值 1-4。1：标签；2：图片；3：字段；4：页码或时间\n
+        x, y, w, h 分别为 左，上，宽，高。注意对于文本，y值指 BaseLine的y坐标
+        obj 为内容，对应objtype值如下。
+            1：标签文本；字符串对象 ; 2：图片路径或QPixmap对象； 3：字段名称；4：页码；5：日期时间 
+        其他命名参数：\n
+            Font=QFont 对象 
+            FormatString='' 格式字符串。应用于字符串format方法 
+                日期时间或页码页码格式字符串。应用于字符串format方法 如：'第{Page}/{Pages}\n
+                时间日期格式字符串。如： "PrintTime: %Y-%m-%d %H:%M:%S"
+            AlignmentFlag=Qt.Align 如 (Qt.AlignLeft | Qt.TextWordWrap)为左对齐且自动折行
+            Bolder=bool 是否打印边框
+            Transform=bool 是否纵向文本,objtype为2时无效
+
+        Transform值为True时：
+        w 指的是打印条目的纵向高度（相对于纸张）
+        h 指的是打印条目的横向宽度（相对于纸张）
+        """
+        objcls = [
+            _jpPrintLable, _jpPrintPixmap, _jpPrintField, _jpPrintPageField,
+            _jpPrintDateTime
+        ]
+        pitem = objcls[objtype - 1](QRect(*rect),
+                                    obj,
+                                    Section=self,
+                                    **kwargs)
+        if pitem.Transform:
+            # 旋转文字方向时，高度计算方法为左加宽，也就是算最右
+            maxH = pitem.Rect.width() + pitem.Rect.top()
+        else:
+            maxH = pitem.Rect.height() + pitem.Rect.top()
+        if (maxH) > self._Height:
+            self._Height = maxH
+        self.Items.append(pitem)
+        return pitem
+
     def AddItem(self, objtype, x, y, w, h, obj, **kwargs) -> _jpPrintItem:
         """
         添加一个单独的打印条目\n
@@ -322,11 +360,15 @@ class _jpPrintSection(object):
                        Widths: list = [int],
                        Aligns: list = [],
                        **kwargs):
-        if not (len(Texts) > 0 and len(Texts) == len(Widths)
-                and len(Texts) == len(Aligns)):
-            raise JPPrintError("标签数与宽度、对齐数不相等")
+        n_texts = len(Texts)
+        n_widths = len(Widths)
+        n_aligns = len(Aligns)
+        msg = '标签数与宽度、对齐数不相等:\n'
+        msg = msg + f'标签数为{n_texts};宽度数为{n_widths};对齐数为{n_aligns}'
+        if not (n_texts > 0 and n_texts == n_widths and n_texts == n_aligns):
+            raise JPPrintError(msg)
         leftSum = 0
-        for i in range(len(Texts)):
+        for i in range(n_texts):
             pitem = self.AddItem(1, left + leftSum, top, Widths[i], height,
                                  Texts[i], **kwargs)
             pitem.SetAlignment(Aligns[i])
@@ -340,9 +382,14 @@ class _jpPrintSection(object):
                        Widths: list = [int],
                        Aligns: list = [],
                        **kwargs):
-        if not (len(FieldNames) > 0 and len(FieldNames) == len(Widths)
-                and len(FieldNames) == len(Aligns)):
-            raise JPPrintError("字段数与宽度、对齐数不相等")
+        n_fields = len(FieldNames)
+        n_widths = len(Widths)
+        n_aligns = len(Aligns)
+        msg = '字段数与宽度、对齐数不相等:\n'
+        msg = msg + f'字段数为{n_fields};宽度数为{n_widths};对齐数为{n_aligns}'
+        if not (n_fields > 0 and n_fields == n_widths
+                and n_fields == n_aligns):
+            raise JPPrintError(msg)
         leftSum = 0
         for i in range(len(FieldNames)):
             pitem = self.AddItem(3, left + leftSum, top, Widths[i], height,

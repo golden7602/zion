@@ -2,7 +2,7 @@ from os import getcwd
 from sys import path as jppath
 jppath.append(getcwd())
 
-from PyQt5.QtCore import Qt,QDate
+from PyQt5.QtCore import Qt, QDate
 from PyQt5.QtGui import QFont
 from PyQt5.QtPrintSupport import QPrinter
 
@@ -50,27 +50,19 @@ class FormReport_ProductInfo(JPReport):
 
     def initItem(self):
         rpt = self
-        rpt.PageHeader.AddItem(2, 0, 0, 274, 50, self.logo)
-        rpt.PageHeader.AddItem(1,
-                               274,
-                               0,
-                               746,
-                               60,
-                               self.title,
-                               Bolder=False,
-                               AlignmentFlag=(Qt.AlignCenter),
-                               Font=self.font_YaHei_10)
+        rpt.PageHeader.AddItemRect(2, (0, 0, 274, 50), self.logo)
+        rpt.PageHeader.AddItemRect(1, (274, 0, 746, 60),
+                                   self.title,
+                                   Bolder=False,
+                                   AlignmentFlag=(Qt.AlignCenter),
+                                   Font=self.font_YaHei_10)
 
-        rpt.PageHeader.AddItem(1,
-                               0,
-                               50,
-                               1020,
-                               20,
-                               'Date:{}'.format(
-                                   JPDateConver(QDate.currentDate(), str)),
-                               Bolder=False,
-                               AlignmentFlag=(Qt.AlignRight),
-                               Font=self.font_YaHei_8)
+        rpt.PageHeader.AddItemRect(1, (0, 50, 1020, 20),
+                                   'Date:{}'.format(
+                                       JPDateConver(QDate.currentDate(), str)),
+                                   Bolder=False,
+                                   AlignmentFlag=(Qt.AlignRight),
+                                   Font=self.font_YaHei_8)
 
         cols = len(self.title_detail)
         al_c = Qt.AlignCenter
@@ -113,26 +105,19 @@ class FormReport_ProductInfo(JPReport):
                                   Font=self.font_YaHei_8)
 
         # 页脚
-        self.PageFooter.AddItem(4,
-                                10,
-                                0,
-                                100,
-                                20,
-                                '',
-                                FormatString='Page: {Page}/{Pages}',
-                                Bolder=False,
-                                AlignmentFlag=Qt.AlignLeft,
-                                Font=self.font_YaHei_8)
-        self.PageFooter.AddItem(5,
-                                100,
-                                0,
-                                920,
-                                20,
-                                '',
-                                FormatString="PrintTime: %Y-%m-%d %H:%M:%S",
-                                Bolder=False,
-                                AlignmentFlag=Qt.AlignRight,
-                                Font=self.font_YaHei_8)
+        self.PageFooter.AddItemRect(4, (10, 0, 100, 20),
+                                    '',
+                                    FormatString='Page: {Page}/{Pages}',
+                                    Bolder=False,
+                                    AlignmentFlag=Qt.AlignLeft,
+                                    Font=self.font_YaHei_8)
+        self.PageFooter.AddItemRect(
+            5, (100, 0, 920, 20),
+            '',
+            FormatString="PrintTime: %Y-%m-%d %H:%M:%S",
+            Bolder=False,
+            AlignmentFlag=Qt.AlignRight,
+            Font=self.font_YaHei_8)
         self.DataSource = JPDb().getDict(self.sql)
 
     def onFormat(self, SectionType, CurrentPage, RowDate=None):
@@ -182,28 +167,20 @@ class FormReport_ProductInfo_Detail(JPReport):
 
     def initItem(self):
         rpt = self
-        rpt.PageHeader.AddItem(2, 0, 0, 274, 50, self.logo)
-        rpt.PageHeader.AddItem(1,
-                               274,
-                               0,
-                               376,
-                               60,
-                               self.title,
-                               Bolder=False,
-                               AlignmentFlag=(Qt.AlignCenter),
-                               Font=self.font_YaHei_12)
+        rpt.PageHeader.AddItemRect(2, (0, 0, 274, 50), self.logo)
+        rpt.PageHeader.AddItemRect(1, (274, 0, 376, 60),
+                                   self.title,
+                                   Bolder=False,
+                                   AlignmentFlag=(Qt.AlignCenter),
+                                   Font=self.font_YaHei_12)
 
-        rpt.PageHeader.AddItem(1,
-                               0,
-                               50,
-                               650,
-                               20,
-                               'Date:{}'.format(
-                                   JPDateConver(self.beginDate, str) + "--" +
-                                   JPDateConver(self.endDate, str)),
-                               Bolder=False,
-                               AlignmentFlag=(Qt.AlignRight),
-                               Font=self.font_YaHei_8)
+        rpt.PageHeader.AddItemRect(1, (0, 50, 650, 20),
+                                   'Date:{}'.format(
+                                       JPDateConver(self.beginDate, str) +
+                                       "--" + JPDateConver(self.endDate, str)),
+                                   Bolder=False,
+                                   AlignmentFlag=(Qt.AlignRight),
+                                   Font=self.font_YaHei_8)
 
         cols = len(self.title_detail)
         al_c = Qt.AlignCenter
@@ -238,26 +215,19 @@ class FormReport_ProductInfo_Detail(JPReport):
                                   Font=self.font_YaHei_8)
 
         # 页脚
-        self.PageFooter.AddItem(4,
-                                10,
-                                0,
-                                100,
-                                20,
-                                '',
-                                FormatString='Page: {Page}/{Pages}',
-                                Bolder=False,
-                                AlignmentFlag=Qt.AlignLeft,
-                                Font=self.font_YaHei_8)
-        self.PageFooter.AddItem(5,
-                                0,
-                                0,
-                                650,
-                                20,
-                                '',
-                                FormatString="PrintTime: %Y-%m-%d %H:%M:%S",
-                                Bolder=False,
-                                AlignmentFlag=Qt.AlignRight,
-                                Font=self.font_YaHei_8)
+        self.PageFooter.AddItemRect(4, (10, 0, 100, 20),
+                                    '',
+                                    FormatString='Page: {Page}/{Pages}',
+                                    Bolder=False,
+                                    AlignmentFlag=Qt.AlignLeft,
+                                    Font=self.font_YaHei_8)
+        self.PageFooter.AddItemRect(
+            5, (0, 0, 650, 20),
+            '',
+            FormatString="PrintTime: %Y-%m-%d %H:%M:%S",
+            Bolder=False,
+            AlignmentFlag=Qt.AlignRight,
+            Font=self.font_YaHei_8)
         self.DataSource = JPDb().getDict(self.sql)
 
     def onFormat(self, SectionType, CurrentPage, RowDate=None):

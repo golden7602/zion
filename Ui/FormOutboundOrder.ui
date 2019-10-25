@@ -481,47 +481,6 @@
        </property>
       </widget>
      </item>
-     <item row="3" column="5">
-      <widget class="QLabel" name="label_12">
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="sizeIncrement">
-        <size>
-         <width>0</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>电话Tel:</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="6">
-      <widget class="QLineEdit" name="fTelefone">
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="sizeIncrement">
-        <size>
-         <width>0</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="clearButtonEnabled">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
      <item row="0" column="5">
       <widget class="QLabel" name="label_4">
        <property name="minimumSize">
@@ -781,6 +740,67 @@
      </item>
      <item row="0" column="4">
       <widget class="QComboBox" name="fEntryID">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>25</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="5">
+      <widget class="QLabel" name="label_12">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="sizeIncrement">
+        <size>
+         <width>0</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>电子邮件Email:</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="6">
+      <widget class="QLineEdit" name="fEmail">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="sizeIncrement">
+        <size>
+         <width>0</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="clearButtonEnabled">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="5">
+      <widget class="QLabel" name="label_16">
+       <property name="text">
+        <string>电话Telefone:</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="6">
+      <widget class="QLineEdit" name="fTelefone">
        <property name="minimumSize">
         <size>
          <width>0</width>
@@ -1219,7 +1239,6 @@
   <tabstop>fVendedorID</tabstop>
   <tabstop>fContato</tabstop>
   <tabstop>fCelular</tabstop>
-  <tabstop>fTelefone</tabstop>
   <tabstop>tableView</tabstop>
   <tabstop>fNote</tabstop>
   <tabstop>fAmount</tabstop>

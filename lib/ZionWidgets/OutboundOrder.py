@@ -307,19 +307,19 @@ class EditForm_OutboundOrder(JPFormModelMainHasSub):
             mod.insertRows(l, 1, mod.createIndex(0, l))
 
     def __customerIDChanged(self):
-        sql = '''select fCelular, fContato, fTelefone ,fNUIT,fEndereco,fCity
-            from t_customer where fCustomerID={}'''
-        sql = sql.format(self.ui.fCustomerID.Value())
-        tab = JPQueryFieldInfo(sql)
-        self.ui.fCelular.refreshValueNotRaiseEvent(tab.getOnlyData([0, 0]),
-                                                   True)
-        self.ui.fContato.refreshValueNotRaiseEvent(tab.getOnlyData([0, 1]),
-                                                   True)
-        self.ui.fTelefone.refreshValueNotRaiseEvent(tab.getOnlyData([0, 2]),
-                                                    True)
-        self.ui.fNUIT.setText(tab.getOnlyData([0, 3]))
-        self.ui.fEndereco.setText(tab.getOnlyData([0, 4]))
-        self.ui.fCity.setText(tab.getOnlyData([0, 5]))
+        c_id = self.ui.fCustomerID.Value()
+        sql = f'''select fNUIT,fCity,fContato,fAreaCode,
+                fCelular,fTelefone,fEndereco,fEmail,
+                fWeb,fFax,fNote ,fTaxRegCer
+                from t_customer 
+                where fCustomerID={c_id}'''
+        dic = JPDb().getDict(sql)[0]
+        self.ui.fCelular.refreshValueNotRaiseEvent(dic['fCelular'], True)
+        self.ui.fContato.refreshValueNotRaiseEvent(dic['fContato'], True)
+        self.ui.fNUIT.setText(dic['fNUIT'])
+        self.ui.fCity.setText(dic['fCity'])
+        self.ui.fEndereco.setText(dic['fEndereco'])
+        self.ui.fEmail.setText(dic['fEmail'])
 
     def onGetColumnFormulas(self):
         fla = "JPRound(JPRound({3}) * JPRound({4},3),3)"

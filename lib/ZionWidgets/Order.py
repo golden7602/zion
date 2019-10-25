@@ -105,8 +105,8 @@ class JPFuncForm_Order(JPFunctionForm):
                     , fCustomerID  as 客户名Cliente
                     , fContato
                     , fCelular
-                    , fTelefone
                     , fAmount
+                    , fTelefone
                     , fTax
                     , fPayable
                     , fDesconto
@@ -141,6 +141,7 @@ class JPFuncForm_Order(JPFunctionForm):
         frm.ui.fNUIT.setEnabled(False)
         frm.ui.fEntryID.setEnabled(False)
         frm.ui.fEndereco.setEnabled(False)
+        frm.ui.fEmail.setEnabled(False)
         return frm
 
     def onGetModelClass(self):
@@ -254,10 +255,10 @@ class EditForm_Order(JPFormModelMainHasSub):
         if self.isNewMode:
             self.ObjectDict()['fEntryID'].refreshValueNotRaiseEvent(
                 JPUser().currentUserID())
+            self.ui.fOrderDate.refreshValueNotRaiseEvent(QDate.currentDate())
         if edit_mode != JPEditFormDataMode.ReadOnly:
             self.ui.fCustomerID.setEditable(True)
 
-        self.ui.fOrderDate.refreshValueNotRaiseEvent(QDate.currentDate())
         self.ui.fRequiredDeliveryDate.FieldInfo.NotNull = True
         self.ui.fCustomerID.setFocus()
         self.ui.tableView.keyPressEvent = self.mykeyPressEvent
@@ -271,19 +272,23 @@ class EditForm_Order(JPFormModelMainHasSub):
             mod.insertRows(l, 1, mod.createIndex(0, l))
 
     def __customerIDChanged(self):
-        sql = '''select fCelular, fContato, fTelefone ,fNUIT,fEndereco,fCity
-            from t_customer where fCustomerID={}'''
-        sql = sql.format(self.ui.fCustomerID.Value())
-        tab = JPQueryFieldInfo(sql)
-        self.ui.fCelular.refreshValueNotRaiseEvent(tab.getOnlyData([0, 0]),
-                                                   True)
-        self.ui.fContato.refreshValueNotRaiseEvent(tab.getOnlyData([0, 1]),
-                                                   True)
-        self.ui.fTelefone.refreshValueNotRaiseEvent(tab.getOnlyData([0, 2]),
-                                                    True)
-        self.ui.fNUIT.setText(tab.getOnlyData([0, 3]))
-        self.ui.fEndereco.setText(tab.getOnlyData([0, 4]))
-        self.ui.fCity.setText(tab.getOnlyData([0, 5]))
+        c_id = self.ui.fCustomerID.Value()
+        sql = f'''select fNUIT,fCity,fContato,fAreaCode,
+                fCelular,fTelefone,fEndereco,fEmail,
+                fWeb,fFax,fNote ,fTaxRegCer
+                from t_customer 
+                where fCustomerID={c_id}'''
+        dic = JPDb().getDict(sql)[0]
+        self.ui.fCelular.refreshValueNotRaiseEvent(dic['fCelular'], True)
+        self.ui.fContato.refreshValueNotRaiseEvent(dic['fContato'], True)
+        self.ui.fTelefone.refreshValueNotRaiseEvent(dic['fTelefone'], True)
+        #self.ui.fAreaCode.setText(dic['fAreaCode'])
+        self.ui.fNUIT.setText(dic['fNUIT'])
+        self.ui.fCity.setText(dic['fCity'])
+        self.ui.fEndereco.setText(dic['fEndereco'])
+        self.ui.fEmail.setText(dic['fEmail'])
+        self.ui.fTelefone.setText(dic['fTelefone'])
+
 
     def onGetColumnFormulas(self):
         fla = "JPRound(JPRound({2}) * JPRound({4},3) * "
@@ -319,8 +324,11 @@ class EditForm_Order(JPFormModelMainHasSub):
     def onGetReadOnlyFields(self):
         return ["fEntryID", 'fAmount', 'fPayable', 'fTax']
 
-    def onGetDisableFields(self):
-        return ['fOrderID', 'fCity', 'fNUIT', "fEntryID", 'fEndereco']
+    # def onGetDisableFields(self):
+
+    #     return [
+    #         'fOrderID', 'fCity', 'fNUIT', "fEntryID", 'fEndereco'
+    #     ]
 
     def onDateChangeEvent(self, obj, value):
 
@@ -354,9 +362,7 @@ class EditForm_Order(JPFormModelMainHasSub):
 
     def onAfterSaveData(self, data):
         act = 'new' if self.isNewMode else 'edit'
-        JPPub().broadcastMessage(tablename="t_order",
-                                 action=act,
-                                 PK=data)
+        JPPub().broadcastMessage(tablename="t_order", action=act, PK=data)
         if self.isNewMode:
             self.ui.fOrderID.refreshValueNotRaiseEvent(data, True)
 
