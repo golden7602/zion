@@ -415,7 +415,7 @@ class EditForm_OutboundOrder(JPFormModelMainHasSub):
         try:
             rpt = Outbound_Order_Report()
             rpt.getFullProductName = self.getFullProductName
-            rpt.PrintCurrentReport(self.ui.fOrderID.Value())
+            rpt.BeginPrint(self.ui.fOrderID.Value())
         except Exception as identifier:
             msg = "打印过程出错，错误信息为：{}".format(str(identifier))
             QMessageBox.warning(self, '提示', msg, QMessageBox.Ok,

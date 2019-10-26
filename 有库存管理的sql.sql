@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS `syslanguage` (
   PRIMARY KEY (`fID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1006477 DEFAULT CHARSET=utf8;
 
--- 正在导出表  myorder_python.syslanguage 的数据：~660 rows (大约)
+-- 正在导出表  myorder_python.syslanguage 的数据：~948 rows (大约)
 /*!40000 ALTER TABLE `syslanguage` DISABLE KEYS */;
 INSERT INTO `syslanguage` (`fID`, `fParentId`, `fObjectName`, `fCaption`, `fFontSize`, `fFontName`, `fIndex`, `fLanguage1`, `fLanguage2`, `fType`, `TS`) VALUES
 	(1, 0, NULL, 'Logical Operational Symbols', NULL, NULL, NULL, '逻辑运算符', 'Logical Operational Symbols', NULL, '2019-04-10 09:01:01'),
@@ -895,7 +895,7 @@ CREATE TABLE IF NOT EXISTS `sysnavigationmenus` (
   KEY `ParentID` (`fParentId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=186 DEFAULT CHARSET=utf8;
 
--- 正在导出表  myorder_python.sysnavigationmenus 的数据：~69 rows (大约)
+-- 正在导出表  myorder_python.sysnavigationmenus 的数据：~141 rows (大约)
 /*!40000 ALTER TABLE `sysnavigationmenus` DISABLE KEYS */;
 INSERT INTO `sysnavigationmenus` (`fNMID`, `fDispIndex`, `fParentId`, `fEnabled`, `fMenuText`, `fCommand`, `fObjectName`, `fFormMode`, `fArg`, `fIcon`, `fDefault`, `fNodeBackvolor`, `fNodeForeColor`, `fNodeFontBold`, `fExpanded`, `fDescription`, `fLevel`, `fIsCommandButton`, `TS`) VALUES
 	(1, 110, 0, b'1', 'Function', 0, '', 0, '', 'home', b'1', NULL, NULL, 0, 1, '', b'0', b'0', '2019-04-20 13:45:28'),
@@ -1052,13 +1052,13 @@ CREATE TABLE IF NOT EXISTS `systabelautokeyroles` (
 -- 正在导出表  myorder_python.systabelautokeyroles 的数据：~7 rows (大约)
 /*!40000 ALTER TABLE `systabelautokeyroles` DISABLE KEYS */;
 INSERT INTO `systabelautokeyroles` (`fRoleID`, `fRoleName`, `fTabelName`, `fFieldName`, `fHasDateTime`, `fPreFix`, `fCurrentValue`, `fLenght`, `fLastKey`, `fDateFormat`, `TS`) VALUES
-	(1, 'OrderID', 't_order', 'forderID', b'1', 'CP', 0000000164, 6, 'CP2019-1024000164', 'yyyy-mmdd', '2019-10-24 11:21:26'),
+	(1, 'OrderID', 't_order', 'forderID', b'1', 'CP', 0000000165, 6, 'CP2019-1026000165', 'yyyy-mmdd', '2019-10-26 09:19:21'),
 	(2, 'InkjetPrintingGuide_ID', 't_InkjetPrintingGuide', 'InkjetPrintingGuide_ID', b'1', 'PG', 0000000000, 6, '0', 'yyyy-mmdd', '2019-04-18 12:37:08'),
 	(3, 'Attachment', 't_InkjetPrintingGuide_Map', 'MapName', b'1', 'ATT', 0000000000, 10, '', 'yyyymmdd', '2019-04-18 12:37:08'),
 	(4, 'PrintingQuoteID', 't_quotation', 'fQuoteID', b'1', 'QP', 0000000002, 6, 'QP2019-1017000002', 'yyyy-mmdd', '2019-10-17 08:22:26'),
-	(5, 'PrintingOderID', 't_order', 'fOrderID', b'1', 'TP', 0000000019, 6, 'TP2019-1024000019', 'yyyy-mmdd', '2019-10-24 11:48:37'),
+	(5, 'PrintingOderID', 't_order', 'fOrderID', b'1', 'TP', 0000000020, 6, 'TP2019-1026000020', 'yyyy-mmdd', '2019-10-26 09:18:37'),
 	(6, 'OrderQuoteID', 't_Quotation', 'fQuoteID', b'1', 'QS', 0000000006, 6, 'QS2019-1011000006', 'yyyy-mmdd', '2019-10-11 20:06:58'),
-	(7, 'OuttboundOrderID', 't_product_outbound_order', 'fOrderID', b'1', 'PO', 0000000007, 6, 'PO2019-1018000007', 'yyyy-mmdd', '2019-10-18 09:23:57');
+	(7, 'OuttboundOrderID', 't_product_outbound_order', 'fOrderID', b'1', 'PO', 0000000008, 6, 'PO2019-1026000008', 'yyyy-mmdd', '2019-10-26 09:56:50');
 /*!40000 ALTER TABLE `systabelautokeyroles` ENABLE KEYS */;
 
 -- 导出  表 myorder_python.sysuserright 结构
@@ -1073,7 +1073,7 @@ CREATE TABLE IF NOT EXISTS `sysuserright` (
   UNIQUE KEY `UserID` (`fUserID`,`fRightID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=991 DEFAULT CHARSET=utf8;
 
--- 正在导出表  myorder_python.sysuserright 的数据：~893 rows (大约)
+-- 正在导出表  myorder_python.sysuserright 的数据：~499 rows (大约)
 /*!40000 ALTER TABLE `sysuserright` DISABLE KEYS */;
 INSERT INTO `sysuserright` (`fID`, `fRightID`, `fUserID`, `fHasRight`, `TS`) VALUES
 	(1, 1, 2, b'1', '2019-09-09 13:32:22'),
@@ -2114,7 +2114,7 @@ CREATE TABLE IF NOT EXISTS `t_order` (
   KEY `iOrderDate` (`fOrderDate`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- 正在导出表  myorder_python.t_order 的数据：~217 rows (大约)
+-- 正在导出表  myorder_python.t_order 的数据：~157 rows (大约)
 /*!40000 ALTER TABLE `t_order` DISABLE KEYS */;
 INSERT INTO `t_order` (`fOrderID`, `fPrice`, `fCustomerID`, `fOrderDate`, `fEspecieID`, `fRequiredDeliveryDate`, `fCategoryID`, `fBrandMateriaID`, `fAmount`, `fTax`, `fPayable`, `fDesconto`, `fColorID`, `fEntryID`, `fSubmited`, `fSubmitID`, `fReviewed`, `fReviewerID`, `fConfirmed`, `fConfirmID`, `fDelivered`, `fDelivererID`, `fCanceled`, `fCancelID`, `fDeliveryDate`, `fNumerBegin`, `fQuant`, `fPagePerVolumn`, `fNumerEnd`, `fAvistaID`, `fTamanhoID`, `fSucursal`, `fLogo`, `fVendedorID`, `fNrCopyID`, `fContato`, `fCelular`, `fTelefone`, `fNote`, `fDeliverViewed`, `TS`) VALUES
 	('222', NULL, 1, '2019-10-10', NULL, '2019-10-10', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, b'0', NULL, NULL, NULL, NULL, NULL, NULL, b'0', '2019-10-10 07:59:04'),
@@ -2282,6 +2282,7 @@ INSERT INTO `t_order` (`fOrderID`, `fPrice`, `fCustomerID`, `fOrderDate`, `fEspe
 	('CP2019-1010000162', NULL, 5, '2019-10-10', NULL, '2019-10-07', NULL, NULL, 4.00, 0.68, 4.68, NULL, NULL, 2, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, b'0', b'0', NULL, NULL, '12', '846666552', NULL, NULL, b'0', '2019-10-10 14:12:42'),
 	('CP2019-1010000163', NULL, 5, '2019-10-10', NULL, '2019-10-07', NULL, NULL, 4.00, 0.68, 4.68, NULL, NULL, 2, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, b'0', b'0', NULL, NULL, '12', '846666552', NULL, NULL, b'0', '2019-10-10 14:12:56'),
 	('CP2019-1024000164', NULL, 89, '2019-10-24', NULL, '2019-10-15', NULL, NULL, 60.00, 10.20, 70.20, NULL, NULL, 2, b'1', NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, b'0', b'0', NULL, NULL, 'lianxiren', '13900000', '9548', NULL, b'0', '2019-10-25 14:24:05'),
+	('CP2019-1026000165', NULL, 89, '2019-10-26', NULL, '2019-10-08', NULL, NULL, 1.00, 0.17, 1.17, 0.00, NULL, 2, b'1', NULL, b'0', NULL, b'1', 2, b'0', NULL, b'0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, b'0', b'0', 97, NULL, 'lianxiren3233', '13900000444', '1234', NULL, b'0', '2019-10-26 09:36:40'),
 	('jkfdskf', NULL, 3, '2019-10-10', NULL, '2019-10-09', NULL, NULL, 1.00, 0.17, 1.17, NULL, NULL, 2, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, b'0', b'0', NULL, NULL, '112321', '873066544', NULL, NULL, b'0', '2019-10-10 17:48:33'),
 	('PO2019-1010000001', NULL, 6, '2019-10-10', NULL, '2019-10-09', NULL, NULL, 1.00, 0.17, 1.17, NULL, NULL, 2, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, b'0', b'0', NULL, NULL, NULL, '842387981', NULL, NULL, b'0', '2019-10-10 14:15:57'),
 	('PO2019-1010000002', NULL, 3, '2019-10-10', NULL, '2019-10-09', NULL, NULL, 1.00, 0.17, 1.17, NULL, NULL, 2, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, b'0', b'0', NULL, NULL, '112321', '873066544', NULL, NULL, b'0', '2019-10-10 14:16:09'),
@@ -2302,7 +2303,8 @@ INSERT INTO `t_order` (`fOrderID`, `fPrice`, `fCustomerID`, `fOrderDate`, `fEspe
 	('TP2019-0914000016', 200.00, 49, '2019-09-14', 106, '2019-09-14', NULL, NULL, 1200.00, NULL, 1200.00, NULL, NULL, 2, b'1', NULL, b'0', NULL, b'1', 5, b'0', NULL, b'0', NULL, NULL, NULL, 6, 50, NULL, 78, 84, b'0', b'0', 90, 88, NULL, NULL, NULL, NULL, b'0', '2019-09-14 11:15:30'),
 	('TP2019-0914000017', 200.00, 26, '2019-09-14', 64, '2019-09-14', NULL, NULL, 2400.00, 408.00, 2808.00, NULL, NULL, 2, b'1', NULL, b'0', NULL, b'1', 5, b'0', NULL, b'0', NULL, NULL, 1, 12, 50, 600, 78, 84, b'0', b'0', 90, 88, NULL, '870708888', NULL, NULL, b'0', '2019-09-14 11:41:34'),
 	('TP2019-1024000018', 3.00, 89, '2019-10-16', 65, '2019-10-14', NULL, NULL, 36.00, 6.00, 42.00, NULL, NULL, 2, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, NULL, 1, 12, 12, 288, 79, 83, b'0', b'0', 97, 87, 'lianxiren', '13900000', '124', NULL, b'0', '2019-10-25 15:35:11'),
-	('TP2019-1024000019', 34.00, 89, '2019-10-24', 67, '2019-09-29', NULL, NULL, 1156.00, 197.00, 1353.00, NULL, NULL, 2, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, NULL, 0, 34, 34, 0, 79, 83, b'0', b'0', 97, 87, 'lianxiren', '13900000', '123', NULL, b'0', '2019-10-25 15:35:08');
+	('TP2019-1024000019', 34.00, 89, '2019-10-24', 67, '2019-09-29', NULL, NULL, 1156.00, 197.00, 1353.00, NULL, NULL, 2, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, NULL, 0, 34, 34, 0, 79, 83, b'0', b'0', 97, 87, 'lianxiren', '13900000', '123', NULL, b'0', '2019-10-25 15:35:08'),
+	('TP2019-1026000020', 123.00, 89, '2019-10-26', 68, '2019-10-14', NULL, NULL, 15129.00, 2572.00, 17701.00, NULL, NULL, 2, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, NULL, 0, 123, 123, 0, 79, 83, NULL, b'0', 97, 87, 'lianxiren', '13900000', '1234', NULL, b'0', '2019-10-26 09:18:37');
 /*!40000 ALTER TABLE `t_order` ENABLE KEYS */;
 
 -- 导出  表 myorder_python.t_order_detail 结构
@@ -2318,9 +2320,9 @@ CREATE TABLE IF NOT EXISTS `t_order_detail` (
   `fAmount` decimal(11,2) NOT NULL,
   `TS` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`fID`)
-) ENGINE=InnoDB AUTO_INCREMENT=216 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=217 DEFAULT CHARSET=utf8;
 
--- 正在导出表  myorder_python.t_order_detail 的数据：~259 rows (大约)
+-- 正在导出表  myorder_python.t_order_detail 的数据：~153 rows (大约)
 /*!40000 ALTER TABLE `t_order_detail` DISABLE KEYS */;
 INSERT INTO `t_order_detail` (`fID`, `fOrderID`, `fQuant`, `fProductName`, `fLength`, `fWidth`, `fPrice`, `fAmount`, `TS`) VALUES
 	(2, 'CP2019-0909000001', 200, 'IMP Cartao de visita laminado F/V', 1.000, 1.000, 7.00, 1400.00, '2019-09-09 14:11:41'),
@@ -2527,7 +2529,8 @@ INSERT INTO `t_order_detail` (`fID`, `fOrderID`, `fQuant`, `fProductName`, `fLen
 	(206, 'CP2019-0928000158', 25, 'IMP/ DE BANDEIRAS C/ COSTURA 1.2m*08m', 1.000, 1.000, 500.00, 12500.00, '2019-09-28 10:59:02'),
 	(207, 'CP2019-0928000159', 1, 'IMP/ DE BANNER PRETO C/ 4 ILHOSES', 1.406, 0.606, 400.00, 344.04, '2019-09-28 11:02:59'),
 	(214, 'CP2019-0930000160', 1, '1', 1.000, 1.000, 1.00, 1.00, '2019-09-30 12:22:03'),
-	(215, 'CP2019-1024000164', 1, '2', 3.000, 4.000, 5.00, 60.00, '2019-10-24 11:21:26');
+	(215, 'CP2019-1024000164', 1, '2', 3.000, 4.000, 5.00, 60.00, '2019-10-24 11:21:26'),
+	(216, 'CP2019-1026000165', 1, '1', 1.000, 1.000, 1.00, 1.00, '2019-10-26 09:19:21');
 /*!40000 ALTER TABLE `t_order_detail` ENABLE KEYS */;
 
 -- 导出  表 myorder_python.t_product_information 结构
@@ -2702,7 +2705,8 @@ CREATE TABLE IF NOT EXISTS `t_product_outbound_order` (
 INSERT INTO `t_product_outbound_order` (`fOrderID`, `fPrice`, `fCustomerID`, `fOrderDate`, `fRequiredDeliveryDate`, `fAmount`, `fTax`, `fPayable`, `fDesconto`, `fEntryID`, `fSubmited`, `fSubmitID`, `fReviewed`, `fReviewerID`, `fConfirmed`, `fConfirmID`, `fDelivered`, `fDelivererID`, `fCanceled`, `fCancelID`, `fDeliveryDate`, `fQuant`, `fSucursal`, `fVendedorID`, `fContato`, `fCelular`, `fTelefone`, `fNote`, `TS`) VALUES
 	('PO2019-1010000003', NULL, 3, '2019-10-10', '2019-10-08', 2.00, 0.34, 2.34, NULL, 2, b'1', NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, NULL, NULL, b'0', NULL, '1', '873066544', NULL, NULL, '2019-10-14 11:31:38'),
 	('PO2019-1014000004', NULL, 10, '2019-10-14', '2019-10-15', 4.00, 0.68, 4.68, NULL, 2, b'1', NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, NULL, NULL, b'0', NULL, '1231', '847320606', NULL, NULL, '2019-10-14 12:24:13'),
-	('PO2019-1018000007', NULL, 2, '2019-10-18', '2019-10-15', 72.00, 12.24, 84.24, NULL, 2, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, NULL, NULL, NULL, 97, '3', '845470047', NULL, NULL, '2019-10-18 09:23:57');
+	('PO2019-1018000007', NULL, 2, '2019-10-18', '2019-10-15', 72.00, 12.24, 84.24, NULL, 2, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, NULL, NULL, NULL, 97, '3', '845470047', NULL, NULL, '2019-10-18 09:23:57'),
+	('PO2019-1026000008', NULL, 89, '2019-10-26', '2019-10-15', 48.00, 8.16, 56.16, NULL, 2, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, NULL, NULL, NULL, NULL, 'lianxiren', '13900000', NULL, NULL, '2019-10-26 09:56:50');
 /*!40000 ALTER TABLE `t_product_outbound_order` ENABLE KEYS */;
 
 -- 导出  表 myorder_python.t_product_outbound_order_detail 结构
@@ -2733,7 +2737,10 @@ INSERT INTO `t_product_outbound_order_detail` (`fID`, `fOrderID`, `fQuant`, `fPr
 	(9, 'PO2019-1018000007', 2, 3, 2.00, NULL, 4.00, '2019-10-18 09:23:57'),
 	(10, 'PO2019-1018000007', 3, 6, 3.00, NULL, 9.00, '2019-10-18 09:23:57'),
 	(11, 'PO2019-1018000007', 5, 9, 5.00, NULL, 25.00, '2019-10-18 09:23:57'),
-	(12, 'PO2019-1018000007', 5, 2, 6.00, NULL, 30.00, '2019-10-18 09:23:57');
+	(12, 'PO2019-1018000007', 5, 2, 6.00, NULL, 30.00, '2019-10-18 09:23:57'),
+	(13, 'PO2019-1026000008', 4, 6, 4.00, NULL, 16.00, '2019-10-26 09:56:50'),
+	(14, 'PO2019-1026000008', 4, 7, 4.00, NULL, 16.00, '2019-10-26 09:56:50'),
+	(15, 'PO2019-1026000008', 4, 8, 4.00, NULL, 16.00, '2019-10-26 09:56:50');
 /*!40000 ALTER TABLE `t_product_outbound_order_detail` ENABLE KEYS */;
 
 -- 导出  表 myorder_python.t_product_warehousereceipt_order 结构

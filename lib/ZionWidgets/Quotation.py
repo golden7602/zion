@@ -96,7 +96,7 @@ class JPFuncForm_Quotation(JPFunctionForm):
         m_sql = """
                 SELECT fOrderID, fOrderDate, fVendedorID, fRequiredDeliveryDate
                     , fCustomerID, fContato, fCelular, fTelefone, fAmount, fTax
-                    , fPayable, fDesconto, fNote,fEntryID,fSucursal
+                    , fPayable, fDesconto, fNote,fEntryID
                 FROM t_quotation
                 WHERE fOrderID = '{}'
                 """
@@ -138,11 +138,11 @@ class JPFuncForm_Quotation(JPFunctionForm):
         INSERT INTO t_order (fOrderID, fOrderDate, fVendedorID
             , fRequiredDeliveryDate, fCustomerID
             , fContato, fCelular, fTelefone, fAmount, fTax
-            , fPayable, fDesconto, fNote, fEntryID, fSucursal)
+            , fPayable, fDesconto, fNote, fEntryID)
             SELECT @PK, fOrderDate, fVendedorID
                 , fRequiredDeliveryDate, fCustomerID
                 , fContato, fCelular, fTelefone, fAmount, fTax
-                , fPayable, fDesconto, fNote, fEntryID, fSucursal
+                , fPayable, fDesconto, fNote, fEntryID
                 FROM t_quotation
                 WHERE fOrderID = '{id}';""".format(id=cu_id), """
         INSERT INTO t_order_detail (fOrderID, fQuant, fProductName

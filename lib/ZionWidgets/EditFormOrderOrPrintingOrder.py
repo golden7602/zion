@@ -20,13 +20,12 @@ class JPFormOrder(FormOrder):
     def setupUi(self, *args, **kwargs):
         super().setupUi(*args, **kwargs)
         _setEditFormButtonsIcon(self)
-        self.fSucursal.hide()
-        self.label_16.hide()
+
+
 
 
 class JPFormPrintingOrder(FormPrintingOrder):
     def setupUi(self, *args, **kwargs):
         super().setupUi(*args, **kwargs)
         _setEditFormButtonsIcon(self)
-        self.fSucursal.hide()
-        self.label_16.hide()
+

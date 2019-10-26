@@ -18,7 +18,7 @@ class ZionFuncForm(JPFunctionForm):
         self.CP_m_sql = """
                 SELECT fOrderID, fOrderDate, fVendedorID, fRequiredDeliveryDate
                     , fCustomerID, fContato, fCelular, fTelefone, fAmount, fTax
-                    , fPayable, fDesconto, fNote,fEntryID,fSucursal
+                    , fPayable, fDesconto, fNote,fEntryID
                 FROM t_order
                 WHERE fOrderID = '{}'
                 """
@@ -33,7 +33,7 @@ class ZionFuncForm(JPFunctionForm):
         self.TP_m_sql = """
             SELECT fOrderID, fCelular, fRequiredDeliveryDate, fContato
                 , fTelefone, fVendedorID, fCustomerID, fOrderDate
-                , fSucursal, fQuant, fNumerBegin, fNumerEnd
+                , fQuant, fNumerBegin, fNumerEnd
                 , fPrice, fLogo, fEspecieID, fAvistaID, fTamanhoID
                 , fNrCopyID, fPagePerVolumn, fNote, fAmount, fDesconto
                 , fTax, fPayable,fEntryID

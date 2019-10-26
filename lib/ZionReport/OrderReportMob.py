@@ -101,57 +101,69 @@ class Order_report_Mob(JPReport):
                        FormatString=" {}")
         # 第3行
         RH.AddItemRect(1, (0, 95, 90, 20),
+                       "地址Endereco:",
+                       Font=self.font_YaHei_8,
+                       AlignmentFlag=Qt.AlignCenter)
+        RH.AddItemRect(3, (90, 95, 310, 20),
+                       "fEndereco",
+                       Font=self.font_YaHei_8,
+                       AlignmentFlag=Qt.AlignLeft | Qt.AlignVCenter,
+                       FormatString=" {}")
+        RH.AddItemRect(1, (400, 95, 90, 20),
                        "税号NUIT:",
                        Font=self.font_YaHei_8,
                        AlignmentFlag=Qt.AlignCenter)
-        RH.AddItemRect(3, (90, 95, 90, 20),
+        RH.AddItemRect(3, (490, 95, 160, 20),
                        "fNUIT",
                        Font=self.font_YaHei_8,
                        AlignmentFlag=Qt.AlignLeft | Qt.AlignVCenter,
                        FormatString=" {}")
-        RH.AddItemRect(1, (180, 95, 130, 20),
+
+        # 第4行
+        RH.AddItemRect(1, (0, 115, 90, 20),
                        "电子邮件Email:",
                        Font=self.font_YaHei_8,
                        AlignmentFlag=Qt.AlignCenter)
-        RH.AddItemRect(3, (310, 95, 180, 20),
+        RH.AddItemRect(3, (90, 115, 310, 20),
                        "fEmail",
                        Font=self.font_YaHei_8,
                        AlignmentFlag=Qt.AlignLeft | Qt.AlignVCenter,
                        FormatString=" {}")
 
-        RH.AddItemRect(1, (490, 95, 90, 20),
+        RH.AddItemRect(1, (400, 115, 90, 20),
                        "城市City:",
                        Font=self.font_YaHei_8,
                        AlignmentFlag=Qt.AlignCenter)
-        RH.AddItemRect(3, (580, 95, 70, 20),
+        RH.AddItemRect(3, (490, 115, 160, 20),
                        "fCity",
                        Font=self.font_YaHei_8,
                        AlignmentFlag=Qt.AlignLeft | Qt.AlignVCenter,
                        FormatString=" {}")
 
-        RH.AddItemRect(1, (0, 115, 90, 20),
+        # 第5行
+        RH.AddItemRect(1, (0, 135, 90, 20),
                        "联系人Contato:",
                        Font=self.font_YaHei_8,
                        AlignmentFlag=Qt.AlignCenter)
-        RH.AddItemRect(3, (90, 115, 90, 20),
+        RH.AddItemRect(3, (90, 135, 90, 20),
                        "fContato",
                        Font=self.font_YaHei_8,
                        AlignmentFlag=Qt.AlignLeft | Qt.AlignVCenter,
                        FormatString=" {}")
-        RH.AddItemRect(1, (180, 115, 130, 20),
+        RH.AddItemRect(1, (180, 135, 130, 20),
                        "手机Celular:",
                        Font=self.font_YaHei_8,
                        AlignmentFlag=Qt.AlignCenter)
-        RH.AddItemRect(3, (310, 115, 90, 20),
+        RH.AddItemRect(3, (310, 135, 90, 20),
                        "fCelular",
                        Font=self.font_YaHei_8,
                        AlignmentFlag=Qt.AlignLeft | Qt.AlignVCenter,
                        FormatString=" {}")
-        RH.AddItemRect(1, (400, 115, 90, 20),
+        RH.AddItemRect(1, (400, 135, 90, 20),
                        "电话Telefone",
                        Font=self.font_YaHei_8,
                        AlignmentFlag=Qt.AlignCenter)
-        RH.AddItemRect(3, (490, 115, 160, 20),
+        RH.AddItemRect(3, (490, 135, 160, 20),
                        "fTelefone",
                        Font=self.font_YaHei_8,
                        AlignmentFlag=Qt.AlignLeft | Qt.AlignVCenter,
@@ -169,7 +181,7 @@ class Order_report_Mob(JPReport):
         RH = self.ReportHeader
         RH.AddPrintLables(
             0,
-            135,
+            155,
             20, [
                 "#", "数量Qtd", "名称Descrição", "长Comp.", "宽Larg.",
                 "单价P. Unitario", "金额Total"
@@ -383,7 +395,7 @@ class Order_report_Mob(JPReport):
 
     def BeginPrint(self):
         # 大于9行自动更改纸型
-        if len(self.DataSource) > 9:
+        if len(self.DataSource) > 5:
             self.PaperSize = QPrinter.A4
             self.Orientation = QPrinter.Orientation(0)
         return super().BeginPrint()

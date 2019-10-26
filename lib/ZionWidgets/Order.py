@@ -112,7 +112,6 @@ class JPFuncForm_Order(JPFunctionForm):
                     , fDesconto
                     , fNote
                     ,fEntryID
-                    ,fSucursal
                 FROM t_order
                 WHERE fOrderID = '{}'
                 """
@@ -256,12 +255,15 @@ class EditForm_Order(JPFormModelMainHasSub):
             self.ObjectDict()['fEntryID'].refreshValueNotRaiseEvent(
                 JPUser().currentUserID())
             self.ui.fOrderDate.refreshValueNotRaiseEvent(QDate.currentDate())
+        else:
+            self.__customerIDChanged()
         if edit_mode != JPEditFormDataMode.ReadOnly:
             self.ui.fCustomerID.setEditable(True)
 
         self.ui.fRequiredDeliveryDate.FieldInfo.NotNull = True
         self.ui.fCustomerID.setFocus()
         self.ui.tableView.keyPressEvent = self.mykeyPressEvent
+
 
     # 手动增加空行
     def mykeyPressEvent(self, KeyEvent):
@@ -279,10 +281,10 @@ class EditForm_Order(JPFormModelMainHasSub):
                 from t_customer 
                 where fCustomerID={c_id}'''
         dic = JPDb().getDict(sql)[0]
-        self.ui.fCelular.refreshValueNotRaiseEvent(dic['fCelular'], True)
-        self.ui.fContato.refreshValueNotRaiseEvent(dic['fContato'], True)
-        self.ui.fTelefone.refreshValueNotRaiseEvent(dic['fTelefone'], True)
-        #self.ui.fAreaCode.setText(dic['fAreaCode'])
+        if self.isNewMode:
+            self.ui.fCelular.refreshValueNotRaiseEvent(dic['fCelular'], True)
+            self.ui.fContato.refreshValueNotRaiseEvent(dic['fContato'], True)
+            self.ui.fTelefone.refreshValueNotRaiseEvent(dic['fTelefone'], True)
         self.ui.fNUIT.setText(dic['fNUIT'])
         self.ui.fCity.setText(dic['fCity'])
         self.ui.fEndereco.setText(dic['fEndereco'])

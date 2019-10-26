@@ -95,7 +95,7 @@ class JPFuncForm_PrintingQuotation(JPFunctionForm):
         m_sql = """
                 SELECT fOrderID, fCelular, fRequiredDeliveryDate, fContato
                     , fTelefone, fVendedorID, fCustomerID, fOrderDate
-                    , fSucursal, fQuant, fNumerBegin, fNumerEnd
+                    , fQuant, fNumerBegin, fNumerEnd
                     , fPrice, fLogo, fEspecieID, fAvistaID, fTamanhoID
                     , fNrCopyID, fPagePerVolumn, fNote, fAmount, fDesconto
                     , fTax, fPayable,fEntryID
@@ -125,13 +125,13 @@ class JPFuncForm_PrintingQuotation(JPFunctionForm):
             """
         INSERT INTO t_order (fOrderID, fCelular, fRequiredDeliveryDate, fContato
                     , fTelefone, fVendedorID, fCustomerID, fOrderDate
-                    , fSucursal, fQuant, fNumerBegin, fNumerEnd
+                    , fQuant, fNumerBegin, fNumerEnd
                     , fPrice, fLogo, fEspecieID, fAvistaID, fTamanhoID
                     , fNrCopyID, fPagePerVolumn, fNote, fAmount, fDesconto
                     , fTax, fPayable,fEntryID)
             SELECT @PK, fCelular, fRequiredDeliveryDate, fContato
                         , fTelefone, fVendedorID, fCustomerID, fOrderDate
-                        , fSucursal, fQuant, fNumerBegin, fNumerEnd
+                        , fQuant, fNumerBegin, fNumerEnd
                         , fPrice, fLogo, fEspecieID, fAvistaID, fTamanhoID
                         , fNrCopyID, fPagePerVolumn, fNote, fAmount, fDesconto
                         , fTax, fPayable,fEntryID

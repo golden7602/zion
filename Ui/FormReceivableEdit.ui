@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>886</width>
+    <width>923</width>
     <height>493</height>
    </rect>
   </property>
@@ -244,30 +244,18 @@
      <property name="spacing">
       <number>3</number>
      </property>
-     <item row="3" column="3">
-      <widget class="QLabel" name="label_14">
-       <property name="minimumSize">
+     <item row="0" column="2" colspan="3">
+      <widget class="QComboBox" name="fCustomerID">
+       <property name="maximumSize">
         <size>
-         <width>0</width>
-         <height>25</height>
+         <width>16777215</width>
+         <height>16777215</height>
         </size>
-       </property>
-       <property name="sizeIncrement">
-        <size>
-         <width>0</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>已付金额Amount Paid:</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
        </property>
       </widget>
      </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="label_9">
+     <item row="0" column="5">
+      <widget class="QLabel" name="label_7">
        <property name="minimumSize">
         <size>
          <width>0</width>
@@ -281,29 +269,7 @@
         </size>
        </property>
        <property name="text">
-        <string>地址Endereco:</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="5">
-      <widget class="QLabel" name="label_19">
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="sizeIncrement">
-        <size>
-         <width>0</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>收款日期Data de Pago</string>
+        <string>税号NUIT:</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -332,8 +298,8 @@
        </property>
       </widget>
      </item>
-     <item row="4" column="3">
-      <widget class="QLabel" name="label_18">
+     <item row="1" column="6">
+      <widget class="QLineEdit" name="fCity">
        <property name="minimumSize">
         <size>
          <width>0</width>
@@ -346,32 +312,16 @@
          <height>25</height>
         </size>
        </property>
-       <property name="text">
-        <string>收款人Payee:</string>
+       <property name="readOnly">
+        <bool>true</bool>
        </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="5">
-      <widget class="QLabel" name="label_16">
-       <property name="text">
-        <string>Sucursal:</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="4">
-      <widget class="QComboBox" name="fPayeeID"/>
-     </item>
-     <item row="1" column="6">
-      <widget class="QCheckBox" name="fSucursal">
-       <property name="enabled">
+       <property name="clearButtonEnabled">
         <bool>false</bool>
        </property>
+      </widget>
+     </item>
+     <item row="5" column="0">
+      <widget class="QLabel" name="label_20">
        <property name="minimumSize">
         <size>
          <width>0</width>
@@ -385,7 +335,60 @@
         </size>
        </property>
        <property name="text">
-        <string/>
+        <string>金额Amount:</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="label_9">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="sizeIncrement">
+        <size>
+         <width>0</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>地址Endereco:</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="2">
+      <widget class="QLineEdit" name="fCelular">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="sizeIncrement">
+        <size>
+         <width>0</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+       <property name="clearButtonEnabled">
+        <bool>false</bool>
        </property>
       </widget>
      </item>
@@ -412,8 +415,14 @@
        </property>
       </widget>
      </item>
-     <item row="4" column="0">
-      <widget class="QLabel" name="label_17">
+     <item row="4" column="4">
+      <widget class="QComboBox" name="fPayeeID"/>
+     </item>
+     <item row="4" column="2">
+      <widget class="QComboBox" name="fPaymentMethodID"/>
+     </item>
+     <item row="4" column="5">
+      <widget class="QLabel" name="label_19">
        <property name="minimumSize">
         <size>
          <width>0</width>
@@ -427,7 +436,7 @@
         </size>
        </property>
        <property name="text">
-        <string>收款方式Modo Pago:</string>
+        <string>收款日期Data de Pago</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -466,7 +475,7 @@
        </property>
        <property name="maximumSize">
         <size>
-         <width>130</width>
+         <width>16777215</width>
          <height>16777215</height>
         </size>
        </property>
@@ -483,9 +492,6 @@
         <bool>false</bool>
        </property>
       </widget>
-     </item>
-     <item row="4" column="2">
-      <widget class="QComboBox" name="fPaymentMethodID"/>
      </item>
      <item row="3" column="4">
       <widget class="QLineEdit" name="fAmountPaid">
@@ -509,8 +515,27 @@
        </property>
       </widget>
      </item>
-     <item row="7" column="2" colspan="5">
-      <widget class="QTextEdit" name="fNote"/>
+     <item row="3" column="3">
+      <widget class="QLabel" name="label_14">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="sizeIncrement">
+        <size>
+         <width>0</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>已付金额Amount Paid:</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+      </widget>
      </item>
      <item row="7" column="0">
       <widget class="QLabel" name="label_21">
@@ -534,8 +559,8 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="4">
-      <widget class="QLineEdit" name="fTelefone">
+     <item row="2" column="3">
+      <widget class="QLabel" name="label_12">
        <property name="minimumSize">
         <size>
          <width>0</width>
@@ -548,11 +573,11 @@
          <height>25</height>
         </size>
        </property>
-       <property name="readOnly">
-        <bool>true</bool>
+       <property name="text">
+        <string>电话Tel:</string>
        </property>
-       <property name="clearButtonEnabled">
-        <bool>false</bool>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
        </property>
       </widget>
      </item>
@@ -586,6 +611,16 @@
        </property>
       </widget>
      </item>
+     <item row="6" column="2" colspan="2">
+      <widget class="QComboBox" name="fOrderID">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;仅仅列出本日已经提交、已经确认、且未作废的订单&lt;/p&gt;&lt;p&gt;List only orders submitted, confirmed and not cancelled today.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="2" colspan="5">
+      <widget class="QTextEdit" name="fNote"/>
+     </item>
      <item row="2" column="5" rowspan="2">
       <widget class="QLabel" name="label_15">
        <property name="minimumSize">
@@ -608,8 +643,8 @@
        </property>
       </widget>
      </item>
-     <item row="5" column="0">
-      <widget class="QLabel" name="label_20">
+     <item row="4" column="0">
+      <widget class="QLabel" name="label_17">
        <property name="minimumSize">
         <size>
          <width>0</width>
@@ -623,10 +658,51 @@
         </size>
        </property>
        <property name="text">
-        <string>金额Amount:</string>
+        <string>收款方式Modo Pago:</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="3">
+      <widget class="QLabel" name="label_18">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="sizeIncrement">
+        <size>
+         <width>0</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>收款人Payee:</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="6">
+      <widget class="QLineEdit" name="fNUIT">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="sizeIncrement">
+        <size>
+         <width>0</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="readOnly">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
@@ -675,40 +751,12 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="3">
-      <widget class="QLabel" name="label_12">
+     <item row="2" column="4">
+      <widget class="QLineEdit" name="fTelefone">
        <property name="minimumSize">
         <size>
          <width>0</width>
          <height>25</height>
-        </size>
-       </property>
-       <property name="sizeIncrement">
-        <size>
-         <width>0</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>电话Tel:</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="2">
-      <widget class="QLineEdit" name="fCelular">
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>130</width>
-         <height>16777215</height>
         </size>
        </property>
        <property name="sizeIncrement">
@@ -725,13 +773,6 @@
        </property>
       </widget>
      </item>
-     <item row="6" column="2" colspan="2">
-      <widget class="QComboBox" name="fOrderID">
-       <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;仅仅列出本日已经提交、已经确认、且未作废的订单&lt;/p&gt;&lt;p&gt;List only orders submitted, confirmed and not cancelled today.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-      </widget>
-     </item>
      <item row="6" column="0">
       <widget class="QLabel" name="label">
        <property name="text">
@@ -742,7 +783,17 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="2">
+     <item row="1" column="5">
+      <widget class="QLabel" name="label_8">
+       <property name="text">
+        <string>城市City:</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="2" colspan="3">
       <widget class="QLineEdit" name="fEndereco">
        <property name="minimumSize">
         <size>
@@ -764,89 +815,6 @@
        </property>
        <property name="clearButtonEnabled">
         <bool>false</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="3">
-      <widget class="QLabel" name="label_8">
-       <property name="text">
-        <string>城市City:</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="4">
-      <widget class="QLineEdit" name="fCity">
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="sizeIncrement">
-        <size>
-         <width>0</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="readOnly">
-        <bool>true</bool>
-       </property>
-       <property name="clearButtonEnabled">
-        <bool>false</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="6">
-      <widget class="QLineEdit" name="fNUIT">
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="sizeIncrement">
-        <size>
-         <width>0</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="readOnly">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="5">
-      <widget class="QLabel" name="label_7">
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="sizeIncrement">
-        <size>
-         <width>0</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>税号NUIT:</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="2" colspan="3">
-      <widget class="QComboBox" name="fCustomerID">
-       <property name="maximumSize">
-        <size>
-         <width>16777215</width>
-         <height>16777215</height>
-        </size>
        </property>
       </widget>
      </item>
@@ -961,8 +929,6 @@
   <tabstop>fCustomerID</tabstop>
   <tabstop>fNUIT</tabstop>
   <tabstop>fEndereco</tabstop>
-  <tabstop>fCity</tabstop>
-  <tabstop>fSucursal</tabstop>
   <tabstop>fCelular</tabstop>
   <tabstop>fTelefone</tabstop>
   <tabstop>fAmountPayable</tabstop>

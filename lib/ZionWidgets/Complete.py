@@ -46,7 +46,7 @@ class _myFuncForm(JPFunctionForm):
         super().__init__(parent)
         self.CP_m_sql = """
                 SELECT fOrderID, fOrderDate, fVendedorID, fRequiredDeliveryDate
-                    , fCustomerID, fNote,fEntryID,fSucursal
+                    , fCustomerID, fNote,fEntryID
                     , fContato, fCelular  ,fTelefone
                     , fNUIT, fCity, fEndereco
                     ,' ' as fAmount,' ' as fDesconto,' ' as fTax,' ' as fPayable, ' ' as fPrice
@@ -63,7 +63,7 @@ class _myFuncForm(JPFunctionForm):
         self.TP_m_sql = """
                 SELECT fOrderID, fRequiredDeliveryDate, fVendedorID
                     , fCustomerID, fOrderDate
-                    , fSucursal, fQuant, fNumerBegin, fNumerEnd, fPrice
+                    , fQuant, fNumerBegin, fNumerEnd, fPrice
                     , fLogo, fEspecieID, fAvistaID, fTamanhoID, fNrCopyID
                     , fPagePerVolumn, fNote, fEntryID, fContato, fCelular
                     , fTelefone, fNUIT, fCity, fEndereco
