@@ -139,16 +139,26 @@ class JPDb(object):
             except Exception as e:
                 raise ValueError('SQL语句或表名格式不正确!\n{}\n'.format(sql) + str(e))
 
-            covsdict = JPMySQLFieldInfo.getConvertersDict()
-            flds = [JPMySQLFieldInfo(item) for item in cur._result.fields]
             rs = cur._result.rows
-            cover = [covsdict[fld.TypeCode] for fld in flds]
+            flds = cur._result.fields
             datas = []
-            for i in range(len(rs)):
-                datas.append({
-                    flds[j].FieldName: cover[j](v)
-                    for j, v in enumerate(rs[i])
-                })
+            for row in rs:
+                dic_i = {}
+                for n, v in zip(flds, row):
+                    tp_i = JPMySQLFieldInfo.tp[n.type_code]
+                    dic_i[n.name] = JPMySQLFieldInfo.getConvertersDict()[tp_i](v)
+                datas.append(dic_i)
+
+            # covsdict = JPMySQLFieldInfo.getConvertersDict()
+            # flds = [JPMySQLFieldInfo(item) for item in cur._result.fields]
+            # rs = cur._result.rows
+            # cover = [covsdict[fld.TypeCode] for fld in flds]
+            # datas = []
+            # for i in range(len(rs)):
+            #     datas.append({
+            #         flds[j].FieldName: cover[j](v)
+            #         for j, v in enumerate(rs[i])
+            #     })
             return datas
 
     def getOnlyStrcFilter(self):

@@ -7,7 +7,6 @@
 # WARNING! All changes made in this file will be lost!
 
 
-
 from os import getcwd
 from sys import path as jppath
 jppath.append(getcwd())
@@ -18,7 +17,7 @@ from lib.JPMvc import JPWidgets as QtWidgets
 class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
-        Form.resize(777, 567)
+        Form.resize(939, 567)
         font = QtGui.QFont()
         font.setFamily("Arial")
         font.setPointSize(10)
@@ -232,7 +231,8 @@ class Ui_Form(object):
         self.fEmail = QtWidgets.QLineEdit(Form)
         self.fEmail.setMinimumSize(QtCore.QSize(0, 25))
         self.fEmail.setSizeIncrement(QtCore.QSize(0, 25))
-        self.fEmail.setClearButtonEnabled(True)
+        self.fEmail.setReadOnly(True)
+        self.fEmail.setClearButtonEnabled(False)
         self.fEmail.setObjectName("fEmail")
         self.gridLayout.addWidget(self.fEmail, 3, 2, 1, 3)
         self.fCity = QtWidgets.QLineEdit(Form)

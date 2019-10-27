@@ -309,17 +309,18 @@ class EditForm_WarehouseReceipt(JPFormModelMainHasSub):
             mod.insertRows(l, 1, mod.createIndex(0, l))
 
     def __customerIDChanged(self):
-        c_id = self.ui.fCustomerID.Value()
+        c_id = self.ui.fSupplierID.Value()
+        if not c_id:
+            return
         sql = f'''select fNUIT,fCity,fContato,fAreaCode,
                 fCelular,fTelefone,fEndereco,fEmail,
                 fWeb,fFax,fNote ,fTaxRegCer
-                from t_customer 
-                where fCustomerID={c_id}'''
+                from t_supplier 
+                where fSupplierID={c_id}'''
         dic = JPDb().getDict(sql)[0]
         self.ui.fCelular.refreshValueNotRaiseEvent(dic['fCelular'], True)
         self.ui.fContato.refreshValueNotRaiseEvent(dic['fContato'], True)
-        #self.ui.fTelefone.refreshValueNotRaiseEvent(dic['fTelefone'], True)
-        #self.ui.fAreaCode.setText(dic['fAreaCode'])
+        self.ui.fTelefone.refreshValueNotRaiseEvent(dic['fTelefone'], True)
         self.ui.fNUIT.setText(dic['fNUIT'])
         self.ui.fCity.setText(dic['fCity'])
         self.ui.fEndereco.setText(dic['fEndereco'])

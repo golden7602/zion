@@ -118,7 +118,7 @@ class JPMySQLFieldInfo(JPFieldInfo):
         def v_date(x):
             if isinstance(x, QDate):
                 return x
-            if isinstance(x,datetime_date):
+            if isinstance(x, datetime_date):
                 return QDate(x.year, x.month, x.day)
 
         def v_bool(x):
@@ -126,11 +126,13 @@ class JPMySQLFieldInfo(JPFieldInfo):
                 return 1 if x else 0
             if isinstance(x, bytes):
                 return ord(x)
+
         def v_int(x):
-            if isinstance(x,str):
-                if len(x)>0:
+            if isinstance(x, str):
+                if len(x) > 0:
                     return int(x)
             return x
+
         return {
             JPFieldInfo.Int: v_int,
             JPFieldInfo.Float: v_float,

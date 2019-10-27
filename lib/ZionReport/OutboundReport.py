@@ -265,7 +265,7 @@ class Outbound_Order_Report(JPReport):
                          FormatString='{:,.3f} ')
         D.AddPrintFields(570,
                          0,
-                         20, ["fAmount"], [80],
+                         20, ["fAmount_detail"], [80],
                          [(Qt.AlignRight | Qt.AlignVCenter)],
                          Font=self.font_YaHei_8,
                          FormatString='{:,.2f} ')
@@ -367,12 +367,18 @@ class Outbound_Order_Report(JPReport):
             Font=self.font_YaHei_8)
 
     def init_data(self, OrderID: str):
-        SQL = f"""
-            SELECT o.*,
+        SQL = f"""SELECT 
+            o.fOrderID, o.fOrderDate, o.fRequiredDeliveryDate
+            , o.fCustomerName, o.fNUIT
+            , o.fCity, o.fEndereco, o.fEmail
+            , o.fContato, o.fCelular
+            , o.fTelefone, o.fAmount
+            , o.fTax, o.fPayable, o.fDesconto
+            , o.fVendedor,
                     d.fQuant,
                     d.fProductID,
                     d.fPrice ,
-                    d.fAmount ,
+                    d.fAmount as fAmount_detail,
                     if(isnull(o.fNote),
                     ' ',o.fNote) AS fNote1
             FROM v_product_outbound_order o

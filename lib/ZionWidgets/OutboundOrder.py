@@ -246,6 +246,7 @@ class EditForm_OutboundOrder(JPFormModelMainHasSub):
         if self.isNewMode:
             self.ObjectDict()['fEntryID'].refreshValueNotRaiseEvent(
                 JPUser().currentUserID())
+            self.__customerIDChanged()
         if edit_mode != JPEditFormDataMode.ReadOnly:
             self.ui.fCustomerID.setEditable(True)
 
@@ -308,6 +309,8 @@ class EditForm_OutboundOrder(JPFormModelMainHasSub):
 
     def __customerIDChanged(self):
         c_id = self.ui.fCustomerID.Value()
+        if not c_id:
+            return
         sql = f'''select fNUIT,fCity,fContato,fAreaCode,
                 fCelular,fTelefone,fEndereco,fEmail,
                 fWeb,fFax,fNote ,fTaxRegCer

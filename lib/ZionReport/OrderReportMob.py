@@ -272,7 +272,7 @@ class Order_report_Mob(JPReport):
                          FormatString='{:,.3f} ')
         D.AddPrintFields(570,
                          0,
-                         20, ["fAmount"], [80],
+                         20, ["fAmount_detail"], [80],
                          [(Qt.AlignRight | Qt.AlignVCenter)],
                          Font=self.font_YaHei_8,
                          FormatString='{:,.2f} ')
@@ -379,18 +379,27 @@ class Order_report_Mob(JPReport):
             return False, None
 
     def init_data(self, OrderID: str):
-        SQL = """SELECT o.*
-                    , if(isnull(fNote), ' ', fNote) AS fNote1
-                    , d.fQuant, d.fProductName, d.fLength, d.fWidth, d.fPrice
-                    , d.fAmount ,if(isnull(fNote),' ',fNote) as fNote1
-                FROM v_order o
-                    RIGHT JOIN t_order_detail d ON o.fOrderID = d.fOrderID
-                WHERE d.fOrderID = '{}'"""
+        SQL = """
+            SELECT o.fOrderID, o.fOrderDate, o.fRequiredDeliveryDate
+                , o.fCustomerName, o.fNUIT
+                , o.fCity, o.fEndereco, o.fEmail
+                , o.fContato, o.fCelular
+                , o.fTelefone, o.fAmount
+                , o.fTax, o.fPayable, o.fDesconto
+                , o.fVendedor
+                , if(isnull(fNote), ' ', fNote) AS fNote1
+                , d.fQuant, d.fProductName, d.fLength, d.fWidth, d.fPrice
+                , d.fAmount as fAmount_detail
+                , if(isnull(fNote), ' ', fNote) AS fNote1
+            FROM v_order o
+                RIGHT JOIN t_order_detail d ON o.fOrderID = d.fOrderID
+            WHERE d.fOrderID = '{}'
+        """
 
         db = JPDb()
         data = db.getDict(SQL.format(OrderID))
-        data.sort(key=lambda x: (x['fCustomerName'], x['fCity'], x['fAmount']
-                                 is None, x['fAmount']))
+        # data.sort(key=lambda x: (x['fCustomerName'], x['fCity'], x['fAmount']
+        #                          is None, x['fAmount']))
         self.DataSource = data
 
     def BeginPrint(self):
