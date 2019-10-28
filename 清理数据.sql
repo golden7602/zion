@@ -22,7 +22,7 @@ ALTER TABLE t_order_detail	AUTO_INCREMENT=1;
 
 
 
-delete from t_product_outbound_orderr where 1=1;
+delete from t_product_outbound_order where 1=1;
 delete from t_product_outbound_order_detail where 1=1;
 ALTER TABLE t_product_outbound_order_detail	AUTO_INCREMENT=1;
 

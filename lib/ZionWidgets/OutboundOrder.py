@@ -123,6 +123,7 @@ class JPFuncForm_OutboundOrder(JPFunctionForm):
         frm.ui.fNUIT.setEnabled(False)
         frm.ui.fEntryID.setEnabled(False)
         frm.ui.fEndereco.setEnabled(False)
+        frm.ui.fEmail.setEnabled(False)
         return frm
 
     @pyqtSlot()
@@ -246,10 +247,10 @@ class EditForm_OutboundOrder(JPFormModelMainHasSub):
         if self.isNewMode:
             self.ObjectDict()['fEntryID'].refreshValueNotRaiseEvent(
                 JPUser().currentUserID())
+        else:
             self.__customerIDChanged()
         if edit_mode != JPEditFormDataMode.ReadOnly:
             self.ui.fCustomerID.setEditable(True)
-
         self.ui.fOrderDate.refreshValueNotRaiseEvent(QDate.currentDate())
         self.ui.fRequiredDeliveryDate.FieldInfo.NotNull = True
         self.ui.fCustomerID.setFocus()
@@ -317,8 +318,10 @@ class EditForm_OutboundOrder(JPFormModelMainHasSub):
                 from t_customer 
                 where fCustomerID={c_id}'''
         dic = JPDb().getDict(sql)[0]
-        self.ui.fCelular.refreshValueNotRaiseEvent(dic['fCelular'], True)
-        self.ui.fContato.refreshValueNotRaiseEvent(dic['fContato'], True)
+        if self.isNewMode:
+            self.ui.fCelular.refreshValueNotRaiseEvent(dic['fCelular'], True)
+            self.ui.fContato.refreshValueNotRaiseEvent(dic['fContato'], True)
+            self.ui.fTelefone.refreshValueNotRaiseEvent(dic['fTelefone'], True)
         self.ui.fNUIT.setText(dic['fNUIT'])
         self.ui.fCity.setText(dic['fCity'])
         self.ui.fEndereco.setText(dic['fEndereco'])
@@ -355,7 +358,7 @@ class EditForm_OutboundOrder(JPFormModelMainHasSub):
                 ('fEntryID', u_lst, 1)]
 
     def onGetReadOnlyFields(self):
-        return ["fEntryID", 'fAmount', 'fPayable', 'fTax']
+        return ["fEntryID", 'fAmount', 'fPayable', 'fTax','fEmail']
 
     def onGetDisableFields(self):
         return ['fOrderID', 'fCity', 'fNUIT', "fEntryID", 'fEndereco']

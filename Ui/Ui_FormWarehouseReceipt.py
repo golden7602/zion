@@ -6,7 +6,6 @@
 #
 # WARNING! All changes made in this file will be lost!
 
-
 from os import getcwd
 from sys import path as jppath
 jppath.append(getcwd())

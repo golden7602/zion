@@ -12,7 +12,6 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
 -- 导出  表 myorder_python.sysconfig 结构
-DROP TABLE IF EXISTS `sysconfig`;
 CREATE TABLE IF NOT EXISTS `sysconfig` (
   `fID` int(11) NOT NULL AUTO_INCREMENT,
   `fName` varchar(50) DEFAULT NULL,
@@ -34,843 +33,7 @@ INSERT INTO `sysconfig` (`fID`, `fName`, `fValueInt`, `fValueStr`, `fValueBool`,
 	(3, 'configValue', NULL, NULL, NULL, NULL, NULL, '2019-09-17 16:33:31', 'gAN9cQAoWBIAAABOb3RlX1ByaW50aW5nT3JkZXJxAVjhAAAATm90ZToKRXN0YSBvcmRlbSBzZXJhIGVudHJlZ3VlIGVtIDEwIGRpYXMgZGUgdHJhYmFsaG8sIHNlIGVzdGEgZm9yIHVyZ2VudGUsZSBuZWNlc3NhcmlvIHBhZ2FyIG1haXMgMjQwJS4gUGFyYSBxdWUgbmFvIGFmZWN0ZSBvcyB0cnJhYmFsaG9zIGRpYXJpb3MgZGEgdm9zc2EgZW1wcmVzYSxwb3IgZmF2b3IsIGVuY29tZW5kZW0gYSB2b3NzYSBvcmRlbSAgbyBtYWlzIHJhcGlkbyBwb3NzaXZlbC4KcQJYDAAAAEJhbmtfQWNjb3VudHEDWHkAAABDb250YSBCYW5jYXJpYTogIE1PWkEgQkFOQ08KTm9tZSBkYSBDb250YTogQ09MT1BSTyBTSU5HUyAmIFBSSU5USU5HCk5vIGRhIENvbnRhOiAxNTQ2NjMxODEwMDAxCk5JQjogMDAzNDAwMDAxNTQ2NjMxODEwMTU5cQRYFQAAAE51bGxfcHJvbXB0X2JhY19jb2xvcnEFY1B5UXQ1LnNpcApfdW5waWNrbGVfdHlwZQpxBlgLAAAAUHlRdDUuUXRHdWlxB1gGAAAAUUNvbG9ycQgoS/9LAEsAS/90cQmHcQpScQtYDwAAAEF1dG9TaHJpbmtGb250c3EMiFgMAAAAQXV0b0VsbGlwc2lzcQ2JWB0AAABQcmludEhpZ2hsaWdodEJhY2tncm91bmRDb2xvcnEOaAZoB1gGAAAAUUNvbG9ycQ8oS8JLwkvCS/90cRCHcRFScRJYDwAAAEJpbGxDb3B5c19PcmRlcnETWCoAAABhdGVuZGltZW50bzsxO3Byb2R1Y2FvOzA7Y2xpZW50ZTsxO2NhaXhhOzFxFFgXAAAAQmlsbENvcHlzX1ByaW50aW5nT3JkZXJxFVgqAAAAYXRlbmRpbWVudG87MTtwcm9kdWNhbzswO2NsaWVudGU7MTtjYWl4YTsxcRZYFwAAAEJpbGxDb3B5c19PdXRib3VuZE9yZGVycRdYKgAAAGF0ZW5kaW1lbnRvOzE7cHJvZHVjYW87MDtjbGllbnRlOzE7Y2FpeGE7MXEYWBsAAABCaWxsQ29weXNfV2FyZWhvdXNlUnJlY2VpcHRxGVgqAAAAYXRlbmRpbWVudG87MTtwcm9kdWNhbzswO2NsaWVudGU7MTtjYWl4YTsxcRpYGQAAAEF1dG9SZWZyZXNoV2hlbkRhdGFDaGFuZ2VxG4hYGAAAAEJ1YmJsZVRpcHNXaGVuRGF0YUNoYW5nZXEciFgYAAAAQmlsbENvcHlzX1F1b3RhdGlvbk9yZGVycR1YDQAAAGF0ZW5kaW1lbnRvOzFxHlggAAAAQmlsbENvcHlzX1F1b3RhdGlvblByaW50aW5nT3JkZXJxH1gYAAAAYXRlbmRpbWVudG87MTtwcm9kdWNhbzswcSBYDQAAAFRheFJlZ0NlclBhdGhxIVgMAAAARTovWmlvbi96aW9ucSJ1Lg==');
 /*!40000 ALTER TABLE `sysconfig` ENABLE KEYS */;
 
--- 导出  表 myorder_python.syslanguage 结构
-DROP TABLE IF EXISTS `syslanguage`;
-CREATE TABLE IF NOT EXISTS `syslanguage` (
-  `fID` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
-  `fParentId` int(11) NOT NULL DEFAULT '0' COMMENT '上级编号',
-  `fObjectName` varchar(60) DEFAULT NULL COMMENT '对象名',
-  `fCaption` varchar(255) DEFAULT NULL COMMENT '标题',
-  `fFontSize` tinyint(2) DEFAULT NULL COMMENT '字号',
-  `fFontName` varchar(255) DEFAULT NULL COMMENT '字体',
-  `fIndex` smallint(6) DEFAULT NULL COMMENT '顺序',
-  `fLanguage1` varchar(255) DEFAULT NULL COMMENT '语言1',
-  `fLanguage2` varchar(255) DEFAULT NULL COMMENT '语言2',
-  `fType` tinyint(4) DEFAULT NULL COMMENT '类型',
-  `TS` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`fID`)
-) ENGINE=InnoDB AUTO_INCREMENT=1006477 DEFAULT CHARSET=utf8;
-
--- 正在导出表  myorder_python.syslanguage 的数据：~948 rows (大约)
-/*!40000 ALTER TABLE `syslanguage` DISABLE KEYS */;
-INSERT INTO `syslanguage` (`fID`, `fParentId`, `fObjectName`, `fCaption`, `fFontSize`, `fFontName`, `fIndex`, `fLanguage1`, `fLanguage2`, `fType`, `TS`) VALUES
-	(1, 0, NULL, 'Logical Operational Symbols', NULL, NULL, NULL, '逻辑运算符', 'Logical Operational Symbols', NULL, '2019-04-10 09:01:01'),
-	(2, 0, NULL, 'Sys Error Infomation', NULL, NULL, NULL, '系统错误信息', 'Sys Error Infomation', NULL, '0000-00-00 00:00:00'),
-	(101, 0, NULL, 'User Error Infomation', NULL, NULL, NULL, '用户错误信息', 'User Error Infomation', NULL, '0000-00-00 00:00:00'),
-	(102, 0, NULL, 'User Definition Object', NULL, NULL, NULL, '用户定义对象', 'User Definition Object', NULL, '0000-00-00 00:00:00'),
-	(1001, 1, NULL, 'Include', NULL, NULL, NULL, '包含', 'Include', NULL, '0000-00-00 00:00:00'),
-	(1002, 1, NULL, 'NotEqual', NULL, NULL, NULL, '不等于', 'NotEqual', NULL, '0000-00-00 00:00:00'),
-	(1003, 1, NULL, 'NotNull', NULL, NULL, NULL, '不为空', 'NotNull', NULL, '0000-00-00 00:00:00'),
-	(1004, 1, NULL, 'NotBetween', NULL, NULL, NULL, '不在区间内', 'NotBetween', NULL, '0000-00-00 00:00:00'),
-	(1005, 1, NULL, 'GreaterThan', NULL, NULL, NULL, '大于', 'GreaterThan', NULL, '0000-00-00 00:00:00'),
-	(1006, 1, NULL, 'GreaterOrEqual', NULL, NULL, NULL, '大于或等于', 'GreaterOrEqual', NULL, '0000-00-00 00:00:00'),
-	(1007, 1, NULL, 'Equal', NULL, NULL, NULL, '等于', 'Equal', NULL, '0000-00-00 00:00:00'),
-	(1008, 1, NULL, 'NotEndLike', NULL, NULL, NULL, '结束不是', 'NotEndLike', NULL, '0000-00-00 00:00:00'),
-	(1009, 1, NULL, 'EndLike', NULL, NULL, NULL, '结束是', 'EndLike', NULL, '0000-00-00 00:00:00'),
-	(1010, 1, NULL, 'NotBeginLike', NULL, NULL, NULL, '开头不是', 'NotBeginLike', NULL, '0000-00-00 00:00:00'),
-	(1011, 1, NULL, 'BeginLike', NULL, NULL, NULL, '开头是', 'BeginLike', NULL, '0000-00-00 00:00:00'),
-	(1012, 1, NULL, 'LaterThan', NULL, NULL, NULL, '晚于', 'LaterThan', NULL, '0000-00-00 00:00:00'),
-	(1013, 1, NULL, 'LaterOrEqual', NULL, NULL, NULL, '晚于等于', 'LaterOrEqual', NULL, '0000-00-00 00:00:00'),
-	(1014, 1, NULL, 'IsNull', NULL, NULL, NULL, '为空', 'IsNull', NULL, '0000-00-00 00:00:00'),
-	(1015, 1, NULL, 'LessThan', NULL, NULL, NULL, '小于', 'LessThan', NULL, '0000-00-00 00:00:00'),
-	(1016, 1, NULL, 'LessOrEqual', NULL, NULL, NULL, '小于或等于', 'LessOrEqual', NULL, '0000-00-00 00:00:00'),
-	(1017, 1, NULL, 'Between', NULL, NULL, NULL, '在区间内', 'Between', NULL, '0000-00-00 00:00:00'),
-	(1018, 1, NULL, 'EarluThan', NULL, NULL, NULL, '早于', 'EarluThan', NULL, '0000-00-00 00:00:00'),
-	(1019, 1, NULL, 'EarlyOrEqual', NULL, NULL, NULL, '早于等于', 'EarlyOrEqual', NULL, '0000-00-00 00:00:00'),
-	(1020, 1, NULL, 'ISFalse', NULL, NULL, NULL, '值为否', 'ISFalse', NULL, '0000-00-00 00:00:00'),
-	(1021, 1, NULL, 'IsTrue', NULL, NULL, NULL, '值为是', 'IsTrue', NULL, '0000-00-00 00:00:00'),
-	(1022, 1, NULL, 'LengthIs', NULL, NULL, NULL, '长度等于', 'LengthIs', NULL, '0000-00-00 00:00:00'),
-	(1023, 1, NULL, 'LengthGreaterOrEqual', NULL, NULL, NULL, '长度大于等于', 'LengthGreaterOrEqual', NULL, '0000-00-00 00:00:00'),
-	(1024, 1, NULL, 'LengthLessOrEqual', NULL, NULL, NULL, '长度小于等于', 'LengthLessOrEqual', NULL, '0000-00-00 00:00:00'),
-	(1025, 1, NULL, 'LengthGreaterThan', NULL, NULL, NULL, '长度大于', 'LengthGreaterThan', NULL, '0000-00-00 00:00:00'),
-	(1026, 1, NULL, 'LengthLessThan', NULL, NULL, NULL, '长度小于', 'LengthLessThan', NULL, '0000-00-00 00:00:00'),
-	(1027, 1, NULL, 'IsEmptyString', NULL, NULL, NULL, '为空字符串', 'IsEmptyString', NULL, '0000-00-00 00:00:00'),
-	(2001, 2, NULL, 'The parameter in the sysconfig  has no type set:', NULL, NULL, NULL, '系统参数表中参数没有设置类型:', 'The parameter in the sysconfig  has no type set:', NULL, '0000-00-00 00:00:00'),
-	(2002, 2, NULL, 'Parameter type error!', NULL, NULL, NULL, '参数类型错误！', 'Parameter type error', NULL, '0000-00-00 00:00:00'),
-	(2003, 2, NULL, 'Error saving parameters', NULL, NULL, NULL, '保存参数出现错误', 'Error saving parameters', NULL, '0000-00-00 00:00:00'),
-	(2004, 2, NULL, 'An error occurred while saving the data. The data may not be fully saved', NULL, NULL, NULL, '保存数据时发生错误,数据可能没有完整保存', 'An error occurred while saving the data. The data may not be fully saved', NULL, '0000-00-00 00:00:00'),
-	(2005, 2, NULL, 'Please enter your username!', NULL, NULL, NULL, '请输入您的用户名！', 'Please enter your username!', NULL, '0000-00-00 00:00:00'),
-	(2006, 2, NULL, 'Please enter your password!', NULL, NULL, NULL, '请输入您的密码！', 'Please enter your password!', NULL, '0000-00-00 00:00:00'),
-	(2007, 2, NULL, 'Username or password incorrect!', NULL, NULL, NULL, '用户名或密码不正确！', 'Username or password incorrect!', NULL, '0000-00-00 00:00:00'),
-	(2008, 2, NULL, 'No record was selected!', NULL, NULL, NULL, '您没有选择有效的记录！', 'No record was selected!', NULL, '0000-00-00 00:00:00'),
-	(2009, 2, NULL, 'Save data complete!', NULL, NULL, NULL, '数据保存成功！', 'Save data complete!', NULL, '0000-00-00 00:00:00'),
-	(2010, 2, NULL, 'When setting the list form header, no appropriate control was found！', NULL, NULL, NULL, '设置列表窗体表头时，没有找到合适的控件！', 'When setting the list form header, no appropriate control was found！', NULL, '0000-00-00 00:00:00'),
-	(2011, 2, NULL, 'Please select an error message type!', NULL, NULL, NULL, '请选择一个错误信息类型!', 'Please select an error message type!', NULL, '0000-00-00 00:00:00'),
-	(2012, 2, 'ErrInfo', 'Please select the query criteria!', NULL, NULL, NULL, '请选择查询条件!', 'Please select the query criteria!', NULL, '0000-00-00 00:00:00'),
-	(2013, 2, 'ErrInfo', 'Please close the object that has been opened except this form!', NULL, NULL, NULL, '请关闭除此表单外已打开的对象！', 'Please close the object that has been opened except this form!', NULL, '0000-00-00 00:00:00'),
-	(2014, 2, 'ErrInfo', 'Field [@Para] cannot be empty!', NULL, NULL, NULL, '字段【@Para】不能为空!', 'Field [@Para] cannot be empty!', NULL, '2019-04-10 23:12:35'),
-	(2015, 2, 'Errinfo', 'Field [@Para] cannot be zero in length!', NULL, NULL, NULL, '字段【@Para】长度不能为零！', 'Field [@Para] cannot be zero in length!', NULL, '2019-04-10 23:12:31'),
-	(2016, 2, 'ErrInfo', 'The order have been cancelled and cannot be edited!', NULL, NULL, NULL, '单据已经作废，无法编辑', 'The order have been cancelled and cannot be edited!', NULL, '2019-04-18 20:33:50'),
-	(2017, 2, 'Errinfo', 'Recovery data will delete all data in the target table. Are you sure you want to restore?', NULL, NULL, NULL, '恢复数据将会删除目标表中所有数据，确认要恢复吗？', 'Recovery data will delete all data in the target table. Are you sure you want to restore?', NULL, '2019-04-23 18:50:52'),
-	(10025, 101, 'ErrInfo', 'The order will not be modified after submission. Click OK to continue submitting.', NULL, NULL, 1, '提交后订单将不能修改！确定继续提交。', 'The order will not be modified after submission.  Click OK to continue submitting.', NULL, '2019-04-02 09:25:30'),
-	(10026, 101, 'ErrInfo', 'Customer name cannot be empty!', NULL, NULL, 2, '客户名称不能为空！', 'Customer name cannot be empty!', NULL, '0000-00-00 00:00:00'),
-	(10027, 101, 'ErrInfo', 'Error while saving data', NULL, NULL, 3, '保存数据时发生错误!', 'Error while saving data', NULL, '0000-00-00 00:00:00'),
-	(10028, 101, 'ErrInfo', 'The order has been submitted and cannot be modified.', NULL, NULL, 4, '订单已经提交,不能再修改!', 'The order has been submitted and cannot be modified.', NULL, '0000-00-00 00:00:00'),
-	(10029, 101, 'ErrInfo', 'The production guide has not been generated and cannot be submitted.', NULL, NULL, 5, '生产指南还没有生成，无法提交!', 'The production guide has not been generated and cannot be submitted.', NULL, '0000-00-00 00:00:00'),
-	(10030, 101, 'ErrInfo', 'Production Guidelines have been submitted and cannot be submitted repeatedly.', NULL, NULL, 6, '生产指南已经提交，无法重复提交!', 'Production Guidelines have been submitted and cannot be submitted repeatedly.', NULL, '0000-00-00 00:00:00'),
-	(10031, 101, 'ErrInfo', 'The payment has been submitted and cannot be modified.', NULL, NULL, 7, '付款书已经确认,不能再修改!', 'The payment has been submitted and cannot be modified.', NULL, '0000-00-00 00:00:00'),
-	(10032, 101, 'ErrInfo', 'The payment has been confirmed and cannot be repeated.', NULL, NULL, 8, '付款书已经确认，无法重复确认!', 'The payment has been confirmed and cannot be repeated.', NULL, '0000-00-00 00:00:00'),
-	(10033, 101, 'ErrInfo', ' Production guidelines already exist and cannot be created.', NULL, NULL, 9, '生产指南已经存在，无法重复创建!', ' Production guidelines already exist and cannot be created.', NULL, '0000-00-00 00:00:00'),
-	(10034, 101, 'ErrInfo', 'No production guide has been created yet.', NULL, NULL, 10, '还没有创建生产指南', 'No production guide has been created yet.', NULL, '0000-00-00 00:00:00'),
-	(10035, 101, 'ErrInfo', 'Production Guidelines will not be modified after submission. Please confirm that the order has been saved! Click OK to continue submitting.', NULL, NULL, 11, '提交后生产指南将不能修改，确认已经保存！确定继续提交。', 'Production Guidelines will not be modified after submission. Please confirm that the order has been saved! Click OK to continue submitting.', NULL, '0000-00-00 00:00:00'),
-	(10036, 101, 'ErrInfo', 'The production guide has been submitted and cannot be modified.', NULL, NULL, 12, '生产指南已经提交,不能再修改!', 'The production guide has been submitted and cannot be modified.', NULL, '0000-00-00 00:00:00'),
-	(10037, 101, 'ErrInfo', 'No orders.', NULL, NULL, 13, '没有订单，无法处理生产指南！', 'No orders.', NULL, '0000-00-00 00:00:00'),
-	(10038, 101, 'ErrInfo', 'Delivery date cannot be empty!', NULL, NULL, 14, '交货日期不能为空！', 'Delivery date cannot be empty!', NULL, '0000-00-00 00:00:00'),
-	(10039, 101, 'ErrInfo', 'Amount can not be empty!', NULL, NULL, NULL, '金额不能为空！', 'Amount can not be empty!', NULL, '0000-00-00 00:00:00'),
-	(10040, 101, 'ErrInfo', 'Modo Pago can not be empty!', NULL, NULL, NULL, '收款方式不能为空！', 'Modo Pago can not be empty!', NULL, '0000-00-00 00:00:00'),
-	(10041, 101, 'ErrInfo', 'Payee can not be empty!', NULL, NULL, NULL, '收款人不能为空！', 'Payee can not be empty!', NULL, '0000-00-00 00:00:00'),
-	(10042, 101, 'ErrInfo', 'The bill of payment will not be amended after confirmation. Do you want to confirm this payment form?', NULL, NULL, NULL, '付款单确认后将不能修改。是否要确认此付款单？', 'The bill of payment will not be amended after confirmation. Do you want to confirm this payment form?', NULL, '0000-00-00 00:00:00'),
-	(10043, 101, 'ErrInfo', 'The order has been submitted, can not be repeated submission', NULL, NULL, NULL, '订单已经提交，不能重复提交！', 'The order has been submitted, can not be repeated submission', NULL, '0000-00-00 00:00:00'),
-	(10044, 101, 'ErrInfo', 'Are you sure you want to cancel this order?', NULL, NULL, NULL, '您确认要作废此订单？', 'Are you sure you want to cancel this order?', NULL, '0000-00-00 00:00:00'),
-	(10045, 101, 'ErrInfo', 'The order has been cancelled and cannot be cancelled again!', NULL, NULL, NULL, '订单已作废，无法重复作废！', 'The order has been cancelled and cannot be cancelled again!', NULL, '0000-00-00 00:00:00'),
-	(10046, 101, 'ErrInfo', 'Are you sure you want to delete this customer?', NULL, NULL, NULL, '确认要删除此客户？', 'Are you sure you want to delete this customer?', NULL, '0000-00-00 00:00:00'),
-	(10047, 101, 'ErrInfo', 'The customer already has an order and can not delete it!', NULL, NULL, NULL, '该客户已经存在订单，无法删除!', 'The customer already has an order and can not delete it!', NULL, '0000-00-00 00:00:00'),
-	(10048, 101, 'ErrInfo', 'The order has been delivered, and can not be repeated delivery!', NULL, NULL, NULL, '订单已经交付，不能重复交付！', 'The order has been delivered, and can not be repeated delivery!', NULL, '2019-04-05 01:19:47'),
-	(10049, 101, 'ErrInfo', 'Are you sure you want to deliver this order?', NULL, NULL, NULL, '确认要交付此订单吗?', 'Are you sure you want to deliver this order?', NULL, '2019-04-05 01:21:47'),
-	(1005737, 102, 'f_Order_Edit_mob', 'f_Order_Edit_mob', NULL, NULL, NULL, 'f_Order_Edit_mob', 'f_Order_Edit_mob', 2, '2019-04-22 09:45:15'),
-	(1005738, 1005737, 'CmdSave', 'Save', NULL, NULL, NULL, 'Save', 'Save', 104, '2019-04-22 09:45:15'),
-	(1005739, 1005737, 'CmdExit', 'Exit', NULL, NULL, NULL, 'Exit', 'Exit', 104, '2019-04-22 09:45:15'),
-	(1005740, 1005737, 'CmdPrint', 'Print', NULL, NULL, NULL, 'Print', 'Print', 104, '2019-04-22 09:45:15'),
-	(1005741, 1005737, 'CmdPDF', 'PDF', NULL, NULL, NULL, 'PDF', 'PDF', 104, '2019-04-22 09:45:15'),
-	(1005742, 1005737, 'Label_fNote', '备注Note:', NULL, NULL, NULL, '备注Note:', '备注Note:', 100, '2019-04-22 09:45:15'),
-	(1005743, 1005737, 'Label_fAmount', '金额合计SubTotal:', NULL, NULL, NULL, '金额合计SubTotal:', '金额合计SubTotal:', 100, '2019-04-22 09:45:15'),
-	(1005744, 1005737, 'Label_fTax', '税金IVA:', NULL, NULL, NULL, '税金IVA:', '税金IVA:', 100, '2019-04-22 09:45:15'),
-	(1005745, 1005737, 'Label_fPayable', '应付金额Valor a Pagar:', NULL, NULL, NULL, '应付金额Valor a Pagar:', '应付金额Valor a Pagar:', 100, '2019-04-22 09:45:15'),
-	(1005746, 1005737, 'Label_fDesconto', '折扣Desconto:', NULL, NULL, NULL, '折扣Desconto:', '折扣Desconto:', 100, '2019-04-22 09:45:15'),
-	(1005747, 1005737, 'Label_fOrderID', 'Nº:', NULL, NULL, NULL, 'Nº:', 'Nº:', 100, '2019-04-22 09:45:15'),
-	(1005748, 1005737, 'Label_fOrderDate', '日期Date:', NULL, NULL, NULL, '日期Date:', '日期Date:', 100, '2019-04-22 09:45:15'),
-	(1005749, 1005737, 'Label_fUNIT', '税号NUIT:', NULL, NULL, NULL, '税号NUIT:', '税号NUIT:', 100, '2019-04-22 09:45:15'),
-	(1005750, 1005737, 'Label_fCity', '城市City:', NULL, NULL, NULL, '城市City:', '城市City:', 100, '2019-04-22 09:45:15'),
-	(1005751, 1005737, 'Label_fContato', '联系人Contato:', NULL, NULL, NULL, '联系人Contato:', '联系人Contato:', 100, '2019-04-22 09:45:15'),
-	(1005752, 1005737, 'Label_fCelular', '手机Celular:', NULL, NULL, NULL, '手机Celular:', '手机Celular:', 100, '2019-04-22 09:45:15'),
-	(1005753, 1005737, 'Label_fTelefone', '电话Tel:', NULL, NULL, NULL, '电话Tel:', '电话Tel:', 100, '2019-04-22 09:45:15'),
-	(1005754, 1005737, 'Label_fEndereco', '地址Endereco:', NULL, NULL, NULL, '地址Endereco:', '地址Endereco:', 100, '2019-04-22 09:45:15'),
-	(1005755, 1005737, 'Label_fSucursal', 'Sucursal:', NULL, NULL, NULL, 'Sucursal:', 'Sucursal:', 100, '2019-04-22 09:45:15'),
-	(1005756, 1005737, 'Label_fRequiredDeliveryDate', '交货日期Date:', NULL, NULL, NULL, '交货日期Date:', '交货日期Date:', 100, '2019-04-22 09:45:15'),
-	(1005757, 1005737, 'Label_fCustomerName', '客户名Cliente:', NULL, NULL, NULL, '客户名Cliente:', '客户名Cliente:', 100, '2019-04-22 09:45:15'),
-	(1005758, 1005737, 'Label_fCanceled', 'Canceled', NULL, NULL, NULL, 'Canceled', 'Canceled', 100, '2019-04-22 09:45:15'),
-	(1005759, 1005737, 'Label_fVendedor', '销售Vendedor:', NULL, NULL, NULL, '销售Vendedor:', '销售Vendedor:', 100, '2019-04-22 09:45:15'),
-	(1005760, 102, 'SysfrmConfig', 'SysfrmConfig', NULL, NULL, NULL, 'SysfrmConfig', 'SysfrmConfig', 2, '2019-04-22 09:45:15'),
-	(1005761, 1005760, 'Label_ListFormRowBackColor', '列表窗体界面背景色ListFormRowBackColor:', NULL, NULL, NULL, '列表窗体界面背景色ListFormRowBackColor:', '列表窗体界面背景色ListFormRowBackColor:', 100, '2019-04-22 09:45:15'),
-	(1005762, 1005760, 'Label_UserInterfaceLanguage', '用户界面语言UserInterfaceLanguage:', NULL, NULL, NULL, '用户界面语言UserInterfaceLanguage:', '用户界面语言UserInterfaceLanguage:', 100, '2019-04-22 09:45:15'),
-	(1005763, 1005760, 'CmdOk', 'OK(&O)', NULL, NULL, NULL, 'OK(&O)', 'OK(&O)', 104, '2019-04-22 09:45:15'),
-	(1005764, 1005760, 'Label_NullControlLabelForeColor', '空字段标题前景色NullControlLabelForeColor:', NULL, NULL, NULL, '空字段标题前景色NullControlLabelForeColor:', '空字段标题前景色NullControlLabelForeColor:', 100, '2019-04-22 09:45:15'),
-	(1005765, 1005760, 'Label_NullControlBackColor', '空字段背景色NullControlBackColor:', NULL, NULL, NULL, '空字段背景色NullControlBackColor:', '空字段背景色NullControlBackColor:', 100, '2019-04-22 09:45:15'),
-	(1005766, 102, 'SysfrmUserPassword', 'SysfrmUserPassword', NULL, NULL, NULL, 'SysfrmUserPassword', 'SysfrmUserPassword', 2, '2019-04-22 09:45:15'),
-	(1005767, 1005766, 'LabelTitle', '修改密码Change Password', NULL, NULL, NULL, '修改密码Change Password', '修改密码Change Password', 100, '2019-04-22 09:45:15'),
-	(1005768, 1005766, 'cmdCancel', 'Exit(&E)', NULL, NULL, NULL, 'Exit(&E)', 'Exit(&E)', 104, '2019-04-22 09:45:15'),
-	(1005769, 1005766, 'cmdOK', 'OK(&O)', NULL, NULL, NULL, 'OK(&O)', 'OK(&O)', 104, '2019-04-22 09:45:15'),
-	(1005770, 1005766, 'Label_OriginalPassword', '原密码Original password:', NULL, NULL, NULL, '原密码Original password:', '原密码Original password:', 100, '2019-04-22 09:45:15'),
-	(1005771, 1005766, 'Label_NewPassword', '新密码New Password:', NULL, NULL, NULL, '新密码New Password:', '新密码New Password:', 100, '2019-04-22 09:45:15'),
-	(1005772, 1005766, 'Label_ConfirmPassword', '确认密码Confirm password:', NULL, NULL, NULL, '确认密码Confirm password:', '确认密码Confirm password:', 100, '2019-04-22 09:45:15'),
-	(1005773, 102, 'f_Complete_Comfirm', 'f_Complete_Comfirm', NULL, NULL, NULL, 'f_Complete_Comfirm', 'f_Complete_Comfirm', 2, '2019-04-22 09:45:15'),
-	(1005774, 1005773, 'Label_fDeliveryDate', '交付时间Date:', NULL, NULL, NULL, '交付时间Date:', '交付时间Date:', 100, '2019-04-22 09:45:15'),
-	(1005775, 1005773, 'Label_Deliver', '交付人Deliverer:', NULL, NULL, NULL, '交付人Deliverer:', '交付人Deliverer:', 100, '2019-04-22 09:45:15'),
-	(1005776, 1005773, 'Label_fOrderID', '订单编号OrderID:', NULL, NULL, NULL, '订单编号OrderID:', '订单编号OrderID:', 100, '2019-04-22 09:45:15'),
-	(1005777, 1005773, 'CmdOK', '确定OK', NULL, NULL, NULL, '确定OK', '确定OK', 104, '2019-04-22 09:45:15'),
-	(1005778, 102, 'SysfrmUserLogin', 'SysfrmUserLogin', NULL, NULL, NULL, 'SysfrmUserLogin', 'SysfrmUserLogin', 2, '2019-04-22 09:45:15'),
-	(1005779, 1005778, 'LabelTitle', '用户登录Login', NULL, NULL, NULL, '用户登录Login', '用户登录Login', 100, '2019-04-22 09:45:15'),
-	(1005780, 1005778, 'cmdCancel', 'Exit(&E)', NULL, NULL, NULL, 'Exit(&E)', 'Exit(&E)', 104, '2019-04-22 09:45:15'),
-	(1005781, 1005778, 'cmdOK', 'OK(&O)', NULL, NULL, NULL, 'OK(&O)', 'OK(&O)', 104, '2019-04-22 09:45:15'),
-	(1005782, 1005778, 'Label_UerName', '用户名UserName:', NULL, NULL, NULL, '用户名UserName:', '用户名UserName:', 100, '2019-04-22 09:45:15'),
-	(1005783, 1005778, 'Label_Password', '密码Password:', NULL, NULL, NULL, '密码Password:', '密码Password:', 100, '2019-04-22 09:45:15'),
-	(1005784, 1005778, 'Label_changeUser', '更换用户ChangeUser', NULL, NULL, NULL, '更换用户ChangeUser', '更换用户ChangeUser', 100, '2019-04-22 09:45:15'),
-	(1005785, 102, 'SysfrmColorPicker', 'SysfrmColorPicker', NULL, NULL, NULL, 'SysfrmColorPicker', 'SysfrmColorPicker', 2, '2019-04-22 09:45:16'),
-	(1005786, 102, 'f_Customer_Edit', 'f_Customer_Edit', NULL, NULL, NULL, 'f_Customer_Edit', 'f_Customer_Edit', 2, '2019-04-22 09:45:16'),
-	(1005787, 1005786, 'Label_Title', 'Customer Infomation', NULL, NULL, NULL, 'Customer Infomation', 'Customer Infomation', 100, '2019-04-22 09:45:16'),
-	(1005788, 1005786, 'Label_CustomerID', '客户号CustomerID:', NULL, NULL, NULL, '客户号CustomerID:', '客户号CustomerID:', 100, '2019-04-22 09:45:16'),
-	(1005789, 1005786, 'Label_CustomerName', '客户名Cliente:', NULL, NULL, NULL, '客户名Cliente:', '客户名Cliente:', 100, '2019-04-22 09:45:16'),
-	(1005790, 1005786, 'Label_NUIT', '税号NUIT:', NULL, NULL, NULL, '税号NUIT:', '税号NUIT:', 100, '2019-04-22 09:45:16'),
-	(1005791, 1005786, 'Label_Contato', '联系人Contato:', NULL, NULL, NULL, '联系人Contato:', '联系人Contato:', 100, '2019-04-22 09:45:16'),
-	(1005792, 1005786, 'Label_Celular', '手机Celular:', NULL, NULL, NULL, '手机Celular:', '手机Celular:', 100, '2019-04-22 09:45:16'),
-	(1005793, 1005786, 'Label_Telefone', '电话Telefone:', NULL, NULL, NULL, '电话Telefone:', '电话Telefone:', 100, '2019-04-22 09:45:16'),
-	(1005794, 1005786, 'Label_Fax', '传真Fax:', NULL, NULL, NULL, '传真Fax:', '传真Fax:', 100, '2019-04-22 09:45:16'),
-	(1005795, 1005786, 'Label23', '地址Endereco:', NULL, NULL, NULL, '地址Endereco:', '地址Endereco:', 100, '2019-04-22 09:45:16'),
-	(1005796, 1005786, 'Label49', '电子邮件Email:', NULL, NULL, NULL, '电子邮件Email:', '电子邮件Email:', 100, '2019-04-22 09:45:16'),
-	(1005797, 1005786, 'Label51', '网站Web:', NULL, NULL, NULL, '网站Web:', '网站Web:', 100, '2019-04-22 09:45:16'),
-	(1005798, 1005786, 'Label_City', '城市City:', NULL, NULL, NULL, '城市City:', '城市City:', 100, '2019-04-22 09:45:16'),
-	(1005799, 1005786, 'CmdCancel', 'Cancel', NULL, NULL, NULL, 'Cancel', 'Cancel', 104, '2019-04-22 09:45:16'),
-	(1005800, 1005786, 'CmdSave', 'Save', NULL, NULL, NULL, 'Save', 'Save', 104, '2019-04-22 09:45:16'),
-	(1005801, 102, 'f_Order', 'f_Order', NULL, NULL, NULL, 'f_Order', 'f_Order', 2, '2019-04-22 09:45:16'),
-	(1005802, 1005801, 'CmdEdit', 'Edit', NULL, NULL, NULL, 'Edit', 'Edit', 104, '2019-04-22 09:45:16'),
-	(1005803, 1005801, 'CmdNew', 'New', NULL, NULL, NULL, 'New', 'New', 104, '2019-04-22 09:45:16'),
-	(1005804, 1005801, 'LabelTitle', 'Orders List', NULL, NULL, NULL, 'Orders List', 'Orders List', 100, '2019-04-22 09:45:16'),
-	(1005805, 1005801, 'CmdExportToExcel', 'ExportToExcel', NULL, NULL, NULL, 'ExportToExcel', 'ExportToExcel', 104, '2019-04-22 09:45:16'),
-	(1005806, 1005801, 'CmdBrowse', 'Browse', NULL, NULL, NULL, 'Browse', 'Browse', 104, '2019-04-22 09:45:16'),
-	(1005807, 1005801, 'CmdSubmit', 'Submit', NULL, NULL, NULL, 'Submit', 'Submit', 104, '2019-04-22 09:45:16'),
-	(1005808, 1005801, 'CmdRefresh', 'Refresh', NULL, NULL, NULL, 'Refresh', 'Refresh', 104, '2019-04-22 09:45:16'),
-	(1005809, 1005801, 'Label_Filter', 'Filter:', NULL, NULL, NULL, 'Filter:', 'Filter:', 100, '2019-04-22 09:45:16'),
-	(1005810, 1005801, 'Label_UnSubmit', 'UnSubmited', NULL, NULL, NULL, 'UnSubmited', 'UnSubmited', 100, '2019-04-22 09:45:16'),
-	(1005811, 1005801, 'Label_Submit', 'Submited', NULL, NULL, NULL, 'Submited', 'Submited', 100, '2019-04-22 09:45:16'),
-	(1005812, 1005801, 'CmdSearch', 'Search', NULL, NULL, NULL, 'Search', 'Search', 104, '2019-04-22 09:45:16'),
-	(1005813, 102, 'f_Quotation_Edit_O', 'f_Quotation_Edit_O', NULL, NULL, NULL, 'f_Quotation_Edit_O', 'f_Quotation_Edit_O', 2, '2019-04-22 09:45:16'),
-	(1005814, 1005813, 'Label_Title_En', 'Cotação', NULL, NULL, NULL, 'Cotação', 'Cotação', 100, '2019-04-22 09:45:16'),
-	(1005815, 1005813, 'Label_Title_chn', '报价单', NULL, NULL, NULL, '报价单', '报价单', 100, '2019-04-22 09:45:16'),
-	(1005816, 102, 'f_Receivables_Edit', 'f_Receivables_Edit', NULL, NULL, NULL, 'f_Receivables_Edit', 'f_Receivables_Edit', 2, '2019-04-22 09:45:16'),
-	(1005817, 1005816, 'HeaderTitle_Label', '收款记录Collection records', NULL, NULL, NULL, '收款记录Collection records', '收款记录Collection records', 100, '2019-04-22 09:45:16'),
-	(1005818, 1005816, 'Label_fCustomerName', '客户名称Cliente:', NULL, NULL, NULL, '客户名称Cliente:', '客户名称Cliente:', 100, '2019-04-22 09:45:16'),
-	(1005819, 1005816, 'Label_fCelular', '手机Celular:', NULL, NULL, NULL, '手机Celular:', '手机Celular:', 100, '2019-04-22 09:45:16'),
-	(1005820, 1005816, 'Label_fNUIT', '税号NUIT:', NULL, NULL, NULL, '税号NUIT:', '税号NUIT:', 100, '2019-04-22 09:45:16'),
-	(1005821, 1005816, 'Label_fCity', '城市City:', NULL, NULL, NULL, '城市City:', '城市City:', 100, '2019-04-22 09:45:16'),
-	(1005822, 1005816, 'Label_fOrderDate', '订单日期Data:', NULL, NULL, NULL, '订单日期Data:', '订单日期Data:', 100, '2019-04-22 09:45:16'),
-	(1005823, 1005816, 'Label_fAmountPayable', '应付金额Valor a Pagar:', NULL, NULL, NULL, '应付金额Valor a Pagar:', '应付金额Valor a Pagar:', 100, '2019-04-22 09:45:16'),
-	(1005824, 1005816, 'Label_fAmountPaid', '已付金额Amount Paid:', NULL, NULL, NULL, '已付金额Amount Paid:', '已付金额Amount Paid:', 100, '2019-04-22 09:45:16'),
-	(1005825, 1005816, 'Label_fReceiptDate', '收款日期Data de Pago', NULL, NULL, NULL, '收款日期Data de Pago', '收款日期Data de Pago', 100, '2019-04-22 09:45:16'),
-	(1005826, 1005816, 'Label_fAmountCollected', '金额Amount:', NULL, NULL, NULL, '金额Amount:', '金额Amount:', 100, '2019-04-22 09:45:16'),
-	(1005827, 1005816, 'Label_fNote', '备注Note:', NULL, NULL, NULL, '备注Note:', '备注Note:', 100, '2019-04-22 09:45:16'),
-	(1005828, 1005816, 'Label_PayeeID', '收款人Payee:', NULL, NULL, NULL, '收款人Payee:', '收款人Payee:', 100, '2019-04-22 09:45:16'),
-	(1005829, 1005816, 'Label_Arrears', '欠款金额Arrears:', NULL, NULL, NULL, '欠款金额Arrears:', '欠款金额Arrears:', 100, '2019-04-22 09:45:16'),
-	(1005830, 1005816, 'Label_fPaymentMethod', '收款方式Modo Pago:', NULL, NULL, NULL, '收款方式Modo Pago:', '收款方式Modo Pago:', 100, '2019-04-22 09:45:16'),
-	(1005831, 1005816, 'CmdOk', 'OK(&O)', NULL, NULL, NULL, 'OK(&O)', 'OK(&O)', 104, '2019-04-22 09:45:16'),
-	(1005832, 1005816, 'CmdClose', 'Cancel(&Q)', NULL, NULL, NULL, 'Cancel(&Q)', 'Cancel(&Q)', 104, '2019-04-22 09:45:16'),
-	(1005833, 102, 'SysfrmCalendar', 'SysfrmCalendar', NULL, NULL, NULL, 'SysfrmCalendar', 'SysfrmCalendar', 2, '2019-04-22 09:45:16'),
-	(1005834, 1005833, 'cmdCancel', '取消', NULL, NULL, NULL, '取消', '取消', 104, '2019-04-22 09:45:16'),
-	(1005835, 1005833, 'cmdCancel_Label', '×', NULL, NULL, NULL, '×', '×', 100, '2019-04-22 09:45:16'),
-	(1005836, 1005833, 'lblCol0', 'Mon', NULL, NULL, NULL, 'Mon', 'Mon', 100, '2019-04-22 09:45:16'),
-	(1005837, 1005833, 'lblCol1', 'Tues', NULL, NULL, NULL, 'Tues', 'Tues', 100, '2019-04-22 09:45:16'),
-	(1005838, 1005833, 'lblCol2', 'Wed', NULL, NULL, NULL, 'Wed', 'Wed', 100, '2019-04-22 09:45:16'),
-	(1005839, 1005833, 'lblCol3', 'Thur', NULL, NULL, NULL, 'Thur', 'Thur', 100, '2019-04-22 09:45:16'),
-	(1005840, 1005833, 'lblCol4', 'Fri', NULL, NULL, NULL, 'Fri', 'Fri', 100, '2019-04-22 09:45:16'),
-	(1005841, 1005833, 'lblCol5', 'Sat', NULL, NULL, NULL, 'Sat', 'Sat', 100, '2019-04-22 09:45:16'),
-	(1005842, 1005833, 'lblCol6', 'Sun', NULL, NULL, NULL, 'Sun', 'Sun', 100, '2019-04-22 09:45:16'),
-	(1005843, 1005833, 'lblDay42', '5', NULL, NULL, NULL, '5', '5', 100, '2019-04-22 09:45:16'),
-	(1005844, 1005833, 'lblDay1', '30', NULL, NULL, NULL, '30', '30', 100, '2019-04-22 09:45:16'),
-	(1005845, 1005833, 'lblDay2', '31', NULL, NULL, NULL, '31', '31', 100, '2019-04-22 09:45:16'),
-	(1005846, 1005833, 'lblDay3', '1', NULL, NULL, NULL, '1', '1', 100, '2019-04-22 09:45:16'),
-	(1005847, 1005833, 'lblDay4', '2', NULL, NULL, NULL, '2', '2', 100, '2019-04-22 09:45:16'),
-	(1005848, 1005833, 'lblDay5', '3', NULL, NULL, NULL, '3', '3', 100, '2019-04-22 09:45:16'),
-	(1005849, 1005833, 'lblDay6', '4', NULL, NULL, NULL, '4', '4', 100, '2019-04-22 09:45:16'),
-	(1005850, 1005833, 'lblDay7', '5', NULL, NULL, NULL, '5', '5', 100, '2019-04-22 09:45:16'),
-	(1005851, 1005833, 'lblDay8', '6', NULL, NULL, NULL, '6', '6', 100, '2019-04-22 09:45:16'),
-	(1005852, 1005833, 'lblDay9', '7', NULL, NULL, NULL, '7', '7', 100, '2019-04-22 09:45:16'),
-	(1005853, 1005833, 'lblDay10', '8', NULL, NULL, NULL, '8', '8', 100, '2019-04-22 09:45:16'),
-	(1005854, 1005833, 'lblDay11', '9', NULL, NULL, NULL, '9', '9', 100, '2019-04-22 09:45:16'),
-	(1005855, 1005833, 'lblDay12', '10', NULL, NULL, NULL, '10', '10', 100, '2019-04-22 09:45:16'),
-	(1005856, 1005833, 'lblDay13', '11', NULL, NULL, NULL, '11', '11', 100, '2019-04-22 09:45:16'),
-	(1005857, 1005833, 'lblDay14', '12', NULL, NULL, NULL, '12', '12', 100, '2019-04-22 09:45:16'),
-	(1005858, 1005833, 'lblDay15', '13', NULL, NULL, NULL, '13', '13', 100, '2019-04-22 09:45:16'),
-	(1005859, 1005833, 'lblDay16', '14', NULL, NULL, NULL, '14', '14', 100, '2019-04-22 09:45:16'),
-	(1005860, 1005833, 'lblDay17', '15', NULL, NULL, NULL, '15', '15', 100, '2019-04-22 09:45:16'),
-	(1005861, 1005833, 'lblDay18', '16', NULL, NULL, NULL, '16', '16', 100, '2019-04-22 09:45:16'),
-	(1005862, 1005833, 'lblDay19', '17', NULL, NULL, NULL, '17', '17', 100, '2019-04-22 09:45:16'),
-	(1005863, 1005833, 'lblDay20', '18', NULL, NULL, NULL, '18', '18', 100, '2019-04-22 09:45:16'),
-	(1005864, 1005833, 'lblDay21', '19', NULL, NULL, NULL, '19', '19', 100, '2019-04-22 09:45:16'),
-	(1005865, 1005833, 'lblDay22', '20', NULL, NULL, NULL, '20', '20', 100, '2019-04-22 09:45:16'),
-	(1005866, 1005833, 'lblDay23', '21', NULL, NULL, NULL, '21', '21', 100, '2019-04-22 09:45:16'),
-	(1005867, 1005833, 'lblDay24', '22', NULL, NULL, NULL, '22', '22', 100, '2019-04-22 09:45:16'),
-	(1005868, 1005833, 'lblDay25', '23', NULL, NULL, NULL, '23', '23', 100, '2019-04-22 09:45:16'),
-	(1005869, 1005833, 'lblDay26', '24', NULL, NULL, NULL, '24', '24', 100, '2019-04-22 09:45:16'),
-	(1005870, 1005833, 'lblDay27', '25', NULL, NULL, NULL, '25', '25', 100, '2019-04-22 09:45:16'),
-	(1005871, 1005833, 'lblDay28', '26', NULL, NULL, NULL, '26', '26', 100, '2019-04-22 09:45:16'),
-	(1005872, 1005833, 'lblDay29', '27', NULL, NULL, NULL, '27', '27', 100, '2019-04-22 09:45:16'),
-	(1005873, 1005833, 'lblDay30', '28', NULL, NULL, NULL, '28', '28', 100, '2019-04-22 09:45:16'),
-	(1005874, 1005833, 'lblDay31', '29', NULL, NULL, NULL, '29', '29', 100, '2019-04-22 09:45:16'),
-	(1005875, 1005833, 'lblDay32', '30', NULL, NULL, NULL, '30', '30', 100, '2019-04-22 09:45:16'),
-	(1005876, 1005833, 'lblDay33', '1', NULL, NULL, NULL, '1', '1', 100, '2019-04-22 09:45:16'),
-	(1005877, 1005833, 'lblDay34', '2', NULL, NULL, NULL, '2', '2', 100, '2019-04-22 09:45:16'),
-	(1005878, 1005833, 'lblDay35', '3', NULL, NULL, NULL, '3', '3', 100, '2019-04-22 09:45:16'),
-	(1005879, 1005833, 'lblDay36', '30', NULL, NULL, NULL, '30', '30', 100, '2019-04-22 09:45:16'),
-	(1005880, 1005833, 'lblDay37', '31', NULL, NULL, NULL, '31', '31', 100, '2019-04-22 09:45:16'),
-	(1005881, 1005833, 'lblDay38', '1', NULL, NULL, NULL, '1', '1', 100, '2019-04-22 09:45:16'),
-	(1005882, 1005833, 'lblDay39', '2', NULL, NULL, NULL, '2', '2', 100, '2019-04-22 09:45:16'),
-	(1005883, 1005833, 'lblDay40', '3', NULL, NULL, NULL, '3', '3', 100, '2019-04-22 09:45:16'),
-	(1005884, 1005833, 'lblDay41', '4', NULL, NULL, NULL, '4', '4', 100, '2019-04-22 09:45:16'),
-	(1005885, 1005833, 'cmdPreviousMonth_Label', '<', NULL, NULL, NULL, '<', '<', 100, '2019-04-22 09:45:16'),
-	(1005886, 1005833, 'cmdNextMonth_Label', '>', NULL, NULL, NULL, '>', '>', 100, '2019-04-22 09:45:16'),
-	(1005887, 1005833, 'cmdPreviousYear_Label', '<<', NULL, NULL, NULL, '<<', '<<', 100, '2019-04-22 09:45:16'),
-	(1005888, 1005833, 'cmdNextYear_Label', '>>', NULL, NULL, NULL, '>>', '>>', 100, '2019-04-22 09:45:16'),
-	(1005889, 1005833, 'lblTip', '提示', NULL, NULL, NULL, '提示', '提示', 100, '2019-04-22 09:45:16'),
-	(1005890, 1005833, 'cmdSelectToday', '今日', NULL, NULL, NULL, '今日', '今日', 104, '2019-04-22 09:45:16'),
-	(1005891, 1005833, 'cmdSelectToday_Label', 'Today', NULL, NULL, NULL, 'Today', 'Today', 100, '2019-04-22 09:45:16'),
-	(1005892, 102, 'SysfrmEnumeration', 'SysfrmEnumeration', NULL, NULL, NULL, 'SysfrmEnumeration', 'SysfrmEnumeration', 2, '2019-04-22 09:45:17'),
-	(1005893, 1005892, 'Label_Category', '类别Category:', NULL, NULL, NULL, '类别Category:', '类别Category:', 100, '2019-04-22 09:45:17'),
-	(1005894, 1005892, 'Label_Options', '选项Options:', NULL, NULL, NULL, '选项Options:', '选项Options:', 100, '2019-04-22 09:45:17'),
-	(1005895, 102, 'f_Customer_List', 'f_Customer_List', NULL, NULL, NULL, 'f_Customer_List', 'f_Customer_List', 2, '2019-04-22 09:45:17'),
-	(1005896, 1005895, 'Label_CustomerID', 'ID', NULL, NULL, NULL, 'ID', 'ID', 100, '2019-04-22 09:45:17'),
-	(1005897, 1005895, 'Label_CustomerName', '客户名称Cliente', NULL, NULL, NULL, '客户名称Cliente', '客户名称Cliente', 100, '2019-04-22 09:45:17'),
-	(1005898, 1005895, 'Label_NUIT', '税号NUIT', NULL, NULL, NULL, '税号NUIT', '税号NUIT', 100, '2019-04-22 09:45:17'),
-	(1005899, 1005895, 'Label_City', '城市City', NULL, NULL, NULL, '城市City', '城市City', 100, '2019-04-22 09:45:17'),
-	(1005900, 1005895, 'Label_Contato', '联系人Contato', NULL, NULL, NULL, '联系人Contato', '联系人Contato', 100, '2019-04-22 09:45:17'),
-	(1005901, 1005895, 'Label_Celular', '手机Celular', NULL, NULL, NULL, '手机Celular', '手机Celular', 100, '2019-04-22 09:45:17'),
-	(1005902, 1005895, 'Label_Telefone', '电话Telefone', NULL, NULL, NULL, '电话Telefone', '电话Telefone', 100, '2019-04-22 09:45:17'),
-	(1005903, 1005895, 'Label_Web', '主页Web', NULL, NULL, NULL, '主页Web', '主页Web', 100, '2019-04-22 09:45:17'),
-	(1005904, 1005895, 'Label_Endereco', '地址Endereco', NULL, NULL, NULL, '地址Endereco', '地址Endereco', 100, '2019-04-22 09:45:17'),
-	(1005905, 1005895, 'LabelFax', '传真Fax', NULL, NULL, NULL, '传真Fax', '传真Fax', 100, '2019-04-22 09:45:17'),
-	(1005906, 1005895, 'Label_Email', '电子邮件Email', NULL, NULL, NULL, '电子邮件Email', '电子邮件Email', 100, '2019-04-22 09:45:17'),
-	(1005907, 102, 'f_Order_Edit', 'f_Order_Edit', NULL, NULL, NULL, 'f_Order_Edit', 'f_Order_Edit', 2, '2019-04-22 09:45:17'),
-	(1005908, 1005907, 'Label_Title_En', ' NOTA DE ORDEM', NULL, NULL, NULL, ' NOTA DE ORDEM', ' NOTA DE ORDEM', 100, '2019-04-22 09:45:17'),
-	(1005909, 1005907, 'Label_Title3', '(ESTE DOCUMENTO É DO USO INTERNO)', NULL, NULL, NULL, '(ESTE DOCUMENTO É DO USO INTERNO)', '(ESTE DOCUMENTO É DO USO INTERNO)', 100, '2019-04-22 09:45:17'),
-	(1005910, 1005907, 'Label_Title_chn', '客户订单', NULL, NULL, NULL, '客户订单', '客户订单', 100, '2019-04-22 09:45:17'),
-	(1005911, 102, 'f_PaymentOrder_Edit', 'f_PaymentOrder_Edit', NULL, NULL, NULL, 'f_PaymentOrder_Edit', 'f_PaymentOrder_Edit', 2, '2019-04-22 09:45:17'),
-	(1005912, 1005911, 'Label_Title_En', 'NOTA DE PAGAMENTO', NULL, NULL, NULL, 'NOTA DE PAGAMENTO', 'NOTA DE PAGAMENTO', 100, '2019-04-22 09:45:17'),
-	(1005913, 1005911, 'Label_Title3', '(ESTE DOCUMENTO É DO USO INTERNO)', NULL, NULL, NULL, '(ESTE DOCUMENTO É DO USO INTERNO)', '(ESTE DOCUMENTO É DO USO INTERNO)', 100, '2019-04-22 09:45:17'),
-	(1005914, 1005911, 'Label_Title_chn', '付款书', NULL, NULL, NULL, '付款书', '付款书', 100, '2019-04-22 09:45:17'),
-	(1005915, 102, 'f_Order_List', 'f_Order_List', NULL, NULL, NULL, 'f_Order_List', 'f_Order_List', 2, '2019-04-22 09:45:17'),
-	(1005916, 1005915, 'Label_fOrderID', '订单号码OrderID', NULL, NULL, NULL, '订单号码OrderID', '订单号码OrderID', 100, '2019-04-22 09:45:17'),
-	(1005917, 1005915, 'Label_fOrderDate', '日期OrderDate', NULL, NULL, NULL, '日期OrderDate', '日期OrderDate', 100, '2019-04-22 09:45:17'),
-	(1005918, 1005915, 'Label_fCustomerID', '客户编号CustomerID', NULL, NULL, NULL, '客户编号CustomerID', '客户编号CustomerID', 100, '2019-04-22 09:45:17'),
-	(1005919, 1005915, 'Label_fCustomerName', '客户名Cliente', NULL, NULL, NULL, '客户名Cliente', '客户名Cliente', 100, '2019-04-22 09:45:17'),
-	(1005920, 1005915, 'Label_fCity', '城市City', NULL, NULL, NULL, '城市City', '城市City', 100, '2019-04-22 09:45:17'),
-	(1005921, 1005915, 'Label_fSubmited1', '提交Submited', NULL, NULL, NULL, '提交Submited', '提交Submited', 100, '2019-04-22 09:45:17'),
-	(1005922, 1005915, 'Label_fSubmit_Name', '提交人Submitter', NULL, NULL, NULL, '提交人Submitter', '提交人Submitter', 100, '2019-04-22 09:45:17'),
-	(1005923, 1005915, 'Label_fAmount', '金额SubTotal', NULL, NULL, NULL, '金额SubTotal', '金额SubTotal', 100, '2019-04-22 09:45:17'),
-	(1005924, 1005915, 'Label_fDesconto', '折扣Desconto', NULL, NULL, NULL, '折扣Desconto', '折扣Desconto', 100, '2019-04-22 09:45:17'),
-	(1005925, 1005915, 'Label_fTax', '税金IVA', NULL, NULL, NULL, '税金IVA', '税金IVA', 100, '2019-04-22 09:45:17'),
-	(1005926, 1005915, 'Label_fPayable', '应付金额Valor a Pagar', NULL, NULL, NULL, '应付金额Valor a Pagar', '应付金额Valor a Pagar', 100, '2019-04-22 09:45:17'),
-	(1005927, 1005915, 'Label_fContato', '联系人Contato', NULL, NULL, NULL, '联系人Contato', '联系人Contato', 100, '2019-04-22 09:45:17'),
-	(1005928, 1005915, 'Label_fCelular', '手机Celular', NULL, NULL, NULL, '手机Celular', '手机Celular', 100, '2019-04-22 09:45:17'),
-	(1005929, 1005915, 'Label_fSubmited', 'fSubmited', NULL, NULL, NULL, 'fSubmited', 'fSubmited', 100, '2019-04-22 09:45:17'),
-	(1005930, 1005915, 'Label_fRequiredDeliveryDate', '交货日期RDD', NULL, NULL, NULL, '交货日期RDD', '交货日期RDD', 100, '2019-04-22 09:45:17'),
-	(1005931, 102, 'f_PaymentOrder_List', 'f_PaymentOrder_List', NULL, NULL, NULL, 'f_PaymentOrder_List', 'f_PaymentOrder_List', 2, '2019-04-22 09:45:17'),
-	(1005932, 1005931, 'Label_fOrderID', '订单号码OrderID', NULL, NULL, NULL, '订单号码OrderID', '订单号码OrderID', 100, '2019-04-22 09:45:17'),
-	(1005933, 1005931, 'Label_fCustomerID', '客户编号CustomerID', NULL, NULL, NULL, '客户编号CustomerID', '客户编号CustomerID', 100, '2019-04-22 09:45:17'),
-	(1005934, 1005931, 'Label_fContato', '联系人Contato', NULL, NULL, NULL, '联系人Contato', '联系人Contato', 100, '2019-04-22 09:45:17'),
-	(1005935, 1005931, 'Label_fCelular', '手机Celular', NULL, NULL, NULL, '手机Celular', '手机Celular', 100, '2019-04-22 09:45:17'),
-	(1005936, 1005931, 'Label_fTelefone', '电话Telefone', NULL, NULL, NULL, '电话Telefone', '电话Telefone', 100, '2019-04-22 09:45:17'),
-	(1005937, 1005931, 'Label_fConfirmed', 'fConfirmed', NULL, NULL, NULL, 'fConfirmed', 'fConfirmed', 100, '2019-04-22 09:45:17'),
-	(1005938, 1005931, 'Label_fConfirmed1', '确认Confirmed', NULL, NULL, NULL, '确认Confirmed', '确认Confirmed', 100, '2019-04-22 09:45:17'),
-	(1005939, 1005931, 'Label_fAmount', '金额SubTotal', NULL, NULL, NULL, '金额SubTotal', '金额SubTotal', 100, '2019-04-22 09:45:17'),
-	(1005940, 1005931, 'Label_fDesconto', '折扣Desconto', NULL, NULL, NULL, '折扣Desconto', '折扣Desconto', 100, '2019-04-22 09:45:17'),
-	(1005941, 1005931, 'Label_fTax', '税金IVA', NULL, NULL, NULL, '税金IVA', '税金IVA', 100, '2019-04-22 09:45:17'),
-	(1005942, 1005931, 'Label_fPayable', '应付金额Valor a Pagar', NULL, NULL, NULL, '应付金额Valor a Pagar', '应付金额Valor a Pagar', 100, '2019-04-22 09:45:17'),
-	(1005943, 1005931, 'Label_fCustomerName', '客户名Cliente', NULL, NULL, NULL, '客户名Cliente', '客户名Cliente', 100, '2019-04-22 09:45:17'),
-	(1005944, 1005931, 'Label_fNUIT', '税号NUIT', NULL, NULL, NULL, '税号NUIT', '税号NUIT', 100, '2019-04-22 09:45:17'),
-	(1005945, 1005931, 'Label_fCity', '城市City', NULL, NULL, NULL, '城市City', '城市City', 100, '2019-04-22 09:45:17'),
-	(1005946, 1005931, 'Label_fEntry_Name', '录入Entry', NULL, NULL, NULL, '录入Entry', '录入Entry', 100, '2019-04-22 09:45:17'),
-	(1005947, 1005931, 'Label_fOrderDate', '日期OrderDate', NULL, NULL, NULL, '日期OrderDate', '日期OrderDate', 100, '2019-04-22 09:45:17'),
-	(1005948, 1005931, 'Label_fConfirm_Name', '确认人Confirm', NULL, NULL, NULL, '确认人Confirm', '确认人Confirm', 100, '2019-04-22 09:45:17'),
-	(1005949, 102, 'f_report_day_List', 'f_report_day_List', NULL, NULL, NULL, 'f_report_day_List', 'f_report_day_List', 2, '2019-04-22 09:45:18'),
-	(1005950, 1005949, 'Label_00', 'Day', NULL, NULL, NULL, 'Day', 'Day', 100, '2019-04-22 09:45:18'),
-	(1005951, 1005949, 'Label_01', '1', NULL, NULL, NULL, '1', '1', 100, '2019-04-22 09:45:18'),
-	(1005952, 1005949, 'Label_02', '2', NULL, NULL, NULL, '2', '2', 100, '2019-04-22 09:45:18'),
-	(1005953, 1005949, 'Label_03', '3', NULL, NULL, NULL, '3', '3', 100, '2019-04-22 09:45:18'),
-	(1005954, 1005949, 'Label_04', '4', NULL, NULL, NULL, '4', '4', 100, '2019-04-22 09:45:18'),
-	(1005955, 1005949, 'Label_05', '5', NULL, NULL, NULL, '5', '5', 100, '2019-04-22 09:45:18'),
-	(1005956, 1005949, 'Label_06', '6', NULL, NULL, NULL, '6', '6', 100, '2019-04-22 09:45:18'),
-	(1005957, 1005949, 'Label_07', '7', NULL, NULL, NULL, '7', '7', 100, '2019-04-22 09:45:18'),
-	(1005958, 1005949, 'Label_08', '8', NULL, NULL, NULL, '8', '8', 100, '2019-04-22 09:45:18'),
-	(1005959, 1005949, 'Label_09', '9', NULL, NULL, NULL, '9', '9', 100, '2019-04-22 09:45:18'),
-	(1005960, 1005949, 'Label_10', '10', NULL, NULL, NULL, '10', '10', 100, '2019-04-22 09:45:18'),
-	(1005961, 1005949, 'Label_11', '11', NULL, NULL, NULL, '11', '11', 100, '2019-04-22 09:45:18'),
-	(1005962, 1005949, 'Label_12', '12', NULL, NULL, NULL, '12', '12', 100, '2019-04-22 09:45:18'),
-	(1005963, 102, 'f_Receivables', 'f_Receivables', NULL, NULL, NULL, 'f_Receivables', 'f_Receivables', 2, '2019-04-22 09:45:18'),
-	(1005964, 1005963, 'CmdRecibido', 'Recibido', NULL, NULL, NULL, 'Recibido', 'Recibido', 104, '2019-04-22 09:45:18'),
-	(1005965, 1005963, 'Labe_Title', 'Receivables', NULL, NULL, NULL, 'Receivables', 'Receivables', 100, '2019-04-22 09:45:18'),
-	(1005966, 1005963, 'CmdExportToExcel', 'ExportToExcel', NULL, NULL, NULL, 'ExportToExcel', 'ExportToExcel', 104, '2019-04-22 09:45:18'),
-	(1005967, 1005963, 'CmdRefresh', 'Refresh', NULL, NULL, NULL, 'Refresh', 'Refresh', 104, '2019-04-22 09:45:18'),
-	(1005968, 1005963, 'CMdDailyRreport', 'DailyRreport', NULL, NULL, NULL, 'DailyRreport', 'DailyRreport', 104, '2019-04-22 09:45:18'),
-	(1005969, 102, 'f_Customer', 'f_Customer', NULL, NULL, NULL, 'f_Customer', 'f_Customer', 2, '2019-04-22 09:45:18'),
-	(1005970, 1005969, 'CmdEdit', 'Edit', NULL, NULL, NULL, 'Edit', 'Edit', 104, '2019-04-22 09:45:18'),
-	(1005971, 1005969, 'CmdNew', 'New', NULL, NULL, NULL, 'New', 'New', 104, '2019-04-22 09:45:18'),
-	(1005972, 1005969, 'LabelTitle', 'Customer List', NULL, NULL, NULL, 'Customer List', 'Customer List', 100, '2019-04-22 09:45:18'),
-	(1005973, 1005969, 'CmdRefresh', 'Refresh', NULL, NULL, NULL, 'Refresh', 'Refresh', 104, '2019-04-22 09:45:18'),
-	(1005974, 1005969, 'CmdSearch', 'Search', NULL, NULL, NULL, 'Search', 'Search', 104, '2019-04-22 09:45:18'),
-	(1005975, 1005969, 'CmdDel', 'Delete', NULL, NULL, NULL, 'Delete', 'Delete', 104, '2019-04-22 09:45:18'),
-	(1005976, 1005969, 'Label12', 'Find:', NULL, NULL, NULL, 'Find:', 'Find:', 100, '2019-04-22 09:45:18'),
-	(1005977, 102, 'f_PaymentOrder', 'f_PaymentOrder', NULL, NULL, NULL, 'f_PaymentOrder', 'f_PaymentOrder', 2, '2019-04-22 09:45:18'),
-	(1005978, 1005977, 'CmdEdit', 'Edit', NULL, NULL, NULL, 'Edit', 'Edit', 104, '2019-04-22 09:45:18'),
-	(1005979, 1005977, 'LabelTitle', 'Payment Orders List', NULL, NULL, NULL, 'Payment Orders List', 'Payment Orders List', 100, '2019-04-22 09:45:18'),
-	(1005980, 1005977, 'CmdBrowse', 'Browse', NULL, NULL, NULL, 'Browse', 'Browse', 104, '2019-04-22 09:45:18'),
-	(1005981, 1005977, 'Label_Filter', 'Filter:', NULL, NULL, NULL, 'Filter:', 'Filter:', 100, '2019-04-22 09:45:18'),
-	(1005982, 1005977, 'Label_Unconfirmed', 'Unconfirmed', NULL, NULL, NULL, 'Unconfirmed', 'Unconfirmed', 100, '2019-04-22 09:45:18'),
-	(1005983, 1005977, 'Label_Confirmed', 'Confirmed', NULL, NULL, NULL, 'Confirmed', 'Confirmed', 100, '2019-04-22 09:45:18'),
-	(1005984, 1005977, 'CmdSearch', 'Search', NULL, NULL, NULL, 'Search', 'Search', 104, '2019-04-22 09:45:18'),
-	(1005985, 1005977, 'CmdRefresh', 'Refresh', NULL, NULL, NULL, 'Refresh', 'Refresh', 104, '2019-04-22 09:45:18'),
-	(1005986, 1005977, 'CmdConfirm', 'Confirm', NULL, NULL, NULL, 'Confirm', 'Confirm', 104, '2019-04-22 09:45:18'),
-	(1005987, 1005977, 'CmdExportToExcel', 'ExportToExcel', NULL, NULL, NULL, 'ExportToExcel', 'ExportToExcel', 104, '2019-04-22 09:45:18'),
-	(1005988, 102, 'f_PrintingOrder_Edit', 'f_PrintingOrder_Edit', NULL, NULL, NULL, 'f_PrintingOrder_Edit', 'f_PrintingOrder_Edit', 2, '2019-04-22 09:45:18'),
-	(1005989, 1005988, 'Label_Title_En', ' NOTA DE ORDEM', NULL, NULL, NULL, ' NOTA DE ORDEM', ' NOTA DE ORDEM', 100, '2019-04-22 09:45:18'),
-	(1005990, 1005988, 'Label_title3', '(ESTE DOCUMENTO É DO USO INTERNO)', NULL, NULL, NULL, '(ESTE DOCUMENTO É DO USO INTERNO)', '(ESTE DOCUMENTO É DO USO INTERNO)', 100, '2019-04-22 09:45:18'),
-	(1005991, 1005988, 'Label_Title_chn', '客户订单', NULL, NULL, NULL, '客户订单', '客户订单', 100, '2019-04-22 09:45:18'),
-	(1005992, 102, 'f_Quotation_Edit_Prt', 'f_Quotation_Edit_Prt', NULL, NULL, NULL, 'f_Quotation_Edit_Prt', 'f_Quotation_Edit_Prt', 2, '2019-04-22 09:45:18'),
-	(1005993, 1005992, 'Label_Title_En', 'Cotação', NULL, NULL, NULL, 'Cotação', 'Cotação', 100, '2019-04-22 09:45:18'),
-	(1005994, 1005992, 'Label_Title_chn', '报价单', NULL, NULL, NULL, '报价单', '报价单', 100, '2019-04-22 09:45:18'),
-	(1005995, 102, 'f_Quotation_List_Prt', 'f_Quotation_List_Prt', NULL, NULL, NULL, 'f_Quotation_List_Prt', 'f_Quotation_List_Prt', 2, '2019-04-22 09:45:19'),
-	(1005996, 1005995, 'Label_fOrderID', 'fOrderID', NULL, NULL, NULL, 'fOrderID', 'fOrderID', 100, '2019-04-22 09:45:19'),
-	(1005997, 1005995, 'Label_fOrderDate', 'fOrderDate', NULL, NULL, NULL, 'fOrderDate', 'fOrderDate', 100, '2019-04-22 09:45:19'),
-	(1005998, 1005995, 'Label_fCustomerName', '客户名Cliente', NULL, NULL, NULL, '客户名Cliente', '客户名Cliente', 100, '2019-04-22 09:45:19'),
-	(1005999, 1005995, 'Label_fNUIT', '税号NUIT', NULL, NULL, NULL, '税号NUIT', '税号NUIT', 100, '2019-04-22 09:45:19'),
-	(1006000, 1005995, 'Label_fCity', '城市City', NULL, NULL, NULL, '城市City', '城市City', 100, '2019-04-22 09:45:19'),
-	(1006001, 1005995, 'Label_fConfirmed1', '确认Confirmed', NULL, NULL, NULL, '确认Confirmed', '确认Confirmed', 100, '2019-04-22 09:45:19'),
-	(1006002, 1005995, 'Label_fEntry_Name', '录入Entry', NULL, NULL, NULL, '录入Entry', '录入Entry', 100, '2019-04-22 09:45:19'),
-	(1006003, 1005995, 'Label_fConfirm_Name', 'fConfirm_Name', NULL, NULL, NULL, 'fConfirm_Name', 'fConfirm_Name', 100, '2019-04-22 09:45:19'),
-	(1006004, 1005995, 'Label_fAmount', '金额SubTotal', NULL, NULL, NULL, '金额SubTotal', '金额SubTotal', 100, '2019-04-22 09:45:19'),
-	(1006005, 1005995, 'Label_fTax', '税金IVA', NULL, NULL, NULL, '税金IVA', '税金IVA', 100, '2019-04-22 09:45:19'),
-	(1006006, 1005995, 'Label_fPayable', '应付金额Valor a Pagar', NULL, NULL, NULL, '应付金额Valor a Pagar', '应付金额Valor a Pagar', 100, '2019-04-22 09:45:19'),
-	(1006007, 1005995, 'Label_fDesconto', '折扣Desconto', NULL, NULL, NULL, '折扣Desconto', '折扣Desconto', 100, '2019-04-22 09:45:19'),
-	(1006008, 1005995, 'Label_fContato', '联系人Contato', NULL, NULL, NULL, '联系人Contato', '联系人Contato', 100, '2019-04-22 09:45:19'),
-	(1006009, 1005995, 'Label_fCelular', '手机Celular', NULL, NULL, NULL, '手机Celular', '手机Celular', 100, '2019-04-22 09:45:19'),
-	(1006010, 1005995, 'Label_fTelefone', 'fTelefone', NULL, NULL, NULL, 'fTelefone', 'fTelefone', 100, '2019-04-22 09:45:19'),
-	(1006011, 1005995, 'Label_fConfirmed', 'fConfirmed', NULL, NULL, NULL, 'fConfirmed', 'fConfirmed', 100, '2019-04-22 09:45:19'),
-	(1006012, 1005995, 'Label_fCustomerID', '客户编号CustomerID', NULL, NULL, NULL, '客户编号CustomerID', '客户编号CustomerID', 100, '2019-04-22 09:45:19'),
-	(1006013, 102, 'SysfrmProgressbar', 'SysfrmProgressbar', NULL, NULL, NULL, 'SysfrmProgressbar', 'SysfrmProgressbar', 2, '2019-04-22 09:45:19'),
-	(1006014, 1006013, 'Label_P', '33', NULL, NULL, NULL, '33', '33', 100, '2019-04-22 09:45:19'),
-	(1006015, 102, 'f_Adjustment_List', 'f_Adjustment_List', NULL, NULL, NULL, 'f_Adjustment_List', 'f_Adjustment_List', 2, '2019-04-22 09:45:19'),
-	(1006016, 1006015, 'Label_fOrderID', '订单号码OrderID', NULL, NULL, NULL, '订单号码OrderID', '订单号码OrderID', 100, '2019-04-22 09:45:19'),
-	(1006017, 1006015, 'Label_fOrderDate', '日期OrderDate', NULL, NULL, NULL, '日期OrderDate', '日期OrderDate', 100, '2019-04-22 09:45:19'),
-	(1006018, 1006015, 'Label_fCustomerID', '客户编号CustomerID', NULL, NULL, NULL, '客户编号CustomerID', '客户编号CustomerID', 100, '2019-04-22 09:45:19'),
-	(1006019, 1006015, 'Label_fCustomerName', '客户名Cliente', NULL, NULL, NULL, '客户名Cliente', '客户名Cliente', 100, '2019-04-22 09:45:19'),
-	(1006020, 1006015, 'Label_fCanceled1', 'fCanceled1', NULL, NULL, NULL, 'fCanceled1', 'fCanceled1', 100, '2019-04-22 09:45:19'),
-	(1006021, 1006015, 'Label_fCancel_Name', 'Cancel_User', NULL, NULL, NULL, 'Cancel_User', 'Cancel_User', 100, '2019-04-22 09:45:19'),
-	(1006022, 1006015, 'Label_fSubmited1', '提交Submited', NULL, NULL, NULL, '提交Submited', '提交Submited', 100, '2019-04-22 09:45:19'),
-	(1006023, 1006015, 'Label_fSubmit_Name', 'Submit_User', NULL, NULL, NULL, 'Submit_User', 'Submit_User', 100, '2019-04-22 09:45:19'),
-	(1006024, 1006015, 'Label_fConfirmed1', '确认Confirmed', NULL, NULL, NULL, '确认Confirmed', '确认Confirmed', 100, '2019-04-22 09:45:19'),
-	(1006025, 1006015, 'Label_fConfirm_Name', 'fConfirm_Name', NULL, NULL, NULL, 'fConfirm_Name', 'fConfirm_Name', 100, '2019-04-22 09:45:19'),
-	(1006026, 1006015, 'Label_fDelivered1', '交付Delivered', NULL, NULL, NULL, '交付Delivered', '交付Delivered', 100, '2019-04-22 09:45:19'),
-	(1006027, 1006015, 'Label_fDeliverer_Name', '交付人Deliverer_Name', NULL, NULL, NULL, '交付人Deliverer_Name', '交付人Deliverer_Name', 100, '2019-04-22 09:45:19'),
-	(1006028, 1006015, 'Label_fAmount', '金额SubTotal', NULL, NULL, NULL, '金额SubTotal', '金额SubTotal', 100, '2019-04-22 09:45:19'),
-	(1006029, 1006015, 'Label_fTax', '税金IVA', NULL, NULL, NULL, '税金IVA', '税金IVA', 100, '2019-04-22 09:45:19'),
-	(1006030, 1006015, 'Label_fPayable', '应付金额Valor a Pagar', NULL, NULL, NULL, '应付金额Valor a Pagar', '应付金额Valor a Pagar', 100, '2019-04-22 09:45:19'),
-	(1006031, 1006015, 'Label_fDesconto', '折扣Desconto', NULL, NULL, NULL, '折扣Desconto', '折扣Desconto', 100, '2019-04-22 09:45:19'),
-	(1006032, 1006015, 'Label_fCanceled', 'fCanceled', NULL, NULL, NULL, 'fCanceled', 'fCanceled', 100, '2019-04-22 09:45:19'),
-	(1006033, 102, 'f_PrintingOrder', 'f_PrintingOrder', NULL, NULL, NULL, 'f_PrintingOrder', 'f_PrintingOrder', 2, '2019-04-22 09:45:19'),
-	(1006034, 1006033, 'CmdEdit', 'Edit', NULL, NULL, NULL, 'Edit', 'Edit', 104, '2019-04-22 09:45:19'),
-	(1006035, 1006033, 'CmdNew', 'New', NULL, NULL, NULL, 'New', 'New', 104, '2019-04-22 09:45:19'),
-	(1006036, 1006033, 'LabelTitle', 'Printing Orders List', NULL, NULL, NULL, 'Printing Orders List', 'Printing Orders List', 100, '2019-04-22 09:45:19'),
-	(1006037, 1006033, 'CmdExportToExcel', 'ExportToExcel', NULL, NULL, NULL, 'ExportToExcel', 'ExportToExcel', 104, '2019-04-22 09:45:19'),
-	(1006038, 1006033, 'CmdBrowse', 'Browse', NULL, NULL, NULL, 'Browse', 'Browse', 104, '2019-04-22 09:45:19'),
-	(1006039, 1006033, 'CmdSubmit', 'Submit', NULL, NULL, NULL, 'Submit', 'Submit', 104, '2019-04-22 09:45:19'),
-	(1006040, 1006033, 'CmdRefresh', 'Refresh', NULL, NULL, NULL, 'Refresh', 'Refresh', 104, '2019-04-22 09:45:19'),
-	(1006041, 1006033, 'Label_Filter', 'Filter:', NULL, NULL, NULL, 'Filter:', 'Filter:', 100, '2019-04-22 09:45:19'),
-	(1006042, 1006033, 'Label_UnSubmit', 'UnSubmited', NULL, NULL, NULL, 'UnSubmited', 'UnSubmited', 100, '2019-04-22 09:45:19'),
-	(1006043, 1006033, 'Label_Submit', 'Submited', NULL, NULL, NULL, 'Submited', 'Submited', 100, '2019-04-22 09:45:19'),
-	(1006044, 1006033, 'CmdSearch', 'Search', NULL, NULL, NULL, 'Search', 'Search', 104, '2019-04-22 09:45:19'),
-	(1006045, 102, 'f_PrintingOrder_List', 'f_PrintingOrder_List', NULL, NULL, NULL, 'f_PrintingOrder_List', 'f_PrintingOrder_List', 2, '2019-04-22 09:45:19'),
-	(1006046, 1006045, 'Label_fOrderID', '订单号码OrderID', NULL, NULL, NULL, '订单号码OrderID', '订单号码OrderID', 100, '2019-04-22 09:45:19'),
-	(1006047, 1006045, 'Label_fCustomerID', '客户编号CustomerID', NULL, NULL, NULL, '客户编号CustomerID', '客户编号CustomerID', 100, '2019-04-22 09:45:19'),
-	(1006048, 1006045, 'Label_fOrderDate', '日期OrderDate', NULL, NULL, NULL, '日期OrderDate', '日期OrderDate', 100, '2019-04-22 09:45:19'),
-	(1006049, 1006045, 'Label_fEspecie', 'fEspecie', NULL, NULL, NULL, 'fEspecie', 'fEspecie', 100, '2019-04-22 09:45:19'),
-	(1006050, 1006045, 'Label_fRequiredDeliveryDate', 'fRequiredDeliveryDate', NULL, NULL, NULL, 'fRequiredDeliveryDate', 'fRequiredDeliveryDate', 100, '2019-04-22 09:45:19'),
-	(1006051, 1006045, 'Label_fAmount', '金额SubTotal', NULL, NULL, NULL, '金额SubTotal', '金额SubTotal', 100, '2019-04-22 09:45:19'),
-	(1006052, 1006045, 'Label_fTax', '税金IVA', NULL, NULL, NULL, '税金IVA', '税金IVA', 100, '2019-04-22 09:45:19'),
-	(1006053, 1006045, 'Label_fPayable', '应付金额Valor a Pagar', NULL, NULL, NULL, '应付金额Valor a Pagar', '应付金额Valor a Pagar', 100, '2019-04-22 09:45:19'),
-	(1006054, 1006045, 'Label_fDesconto', '折扣Desconto', NULL, NULL, NULL, '折扣Desconto', '折扣Desconto', 100, '2019-04-22 09:45:19'),
-	(1006055, 1006045, 'Label_fNumerBegin', 'fNumerBegin', NULL, NULL, NULL, 'fNumerBegin', 'fNumerBegin', 100, '2019-04-22 09:45:19'),
-	(1006056, 1006045, 'Label_fQuant', 'fQuant', NULL, NULL, NULL, 'fQuant', 'fQuant', 100, '2019-04-22 09:45:19'),
-	(1006057, 1006045, 'Label_fPagePerVolumn', 'fPagePerVolumn', NULL, NULL, NULL, 'fPagePerVolumn', 'fPagePerVolumn', 100, '2019-04-22 09:45:19'),
-	(1006058, 1006045, 'Label_fNumerEnd', 'fNumerEnd', NULL, NULL, NULL, 'fNumerEnd', 'fNumerEnd', 100, '2019-04-22 09:45:19'),
-	(1006059, 1006045, 'Label_fAvista', 'fAvista', NULL, NULL, NULL, 'fAvista', 'fAvista', 100, '2019-04-22 09:45:19'),
-	(1006060, 1006045, 'Label_fTamanho', 'fTamanho', NULL, NULL, NULL, 'fTamanho', 'fTamanho', 100, '2019-04-22 09:45:19'),
-	(1006061, 1006045, 'Label_fSucursal', 'fSucursal', NULL, NULL, NULL, 'fSucursal', 'fSucursal', 100, '2019-04-22 09:45:19'),
-	(1006062, 1006045, 'Label_fVendedor', 'fVendedor', NULL, NULL, NULL, 'fVendedor', 'fVendedor', 100, '2019-04-22 09:45:19'),
-	(1006063, 1006045, 'Label_fNrCopy', 'DTQ', NULL, NULL, NULL, 'DTQ', 'DTQ', 100, '2019-04-22 09:45:19'),
-	(1006064, 1006045, 'Label_fContato', '联系人Contato', NULL, NULL, NULL, '联系人Contato', '联系人Contato', 100, '2019-04-22 09:45:19'),
-	(1006065, 1006045, 'Label_fCelular', '手机Celular', NULL, NULL, NULL, '手机Celular', '手机Celular', 100, '2019-04-22 09:45:19'),
-	(1006066, 1006045, 'Label_fTelefone', 'fTelefone', NULL, NULL, NULL, 'fTelefone', 'fTelefone', 100, '2019-04-22 09:45:19'),
-	(1006067, 1006045, 'Label_fCustomerName', '客户名Cliente', NULL, NULL, NULL, '客户名Cliente', '客户名Cliente', 100, '2019-04-22 09:45:19'),
-	(1006068, 1006045, 'Label_fSubmited1', '提交Submited', NULL, NULL, NULL, '提交Submited', '提交Submited', 100, '2019-04-22 09:45:19'),
-	(1006069, 1006045, 'Label_fSubmited', 'fSubmited', NULL, NULL, NULL, 'fSubmited', 'fSubmited', 100, '2019-04-22 09:45:19'),
-	(1006070, 1006045, 'Label_fSubmit_Name', 'fSubmit_Name', NULL, NULL, NULL, 'fSubmit_Name', 'fSubmit_Name', 100, '2019-04-22 09:45:19'),
-	(1006071, 1006045, 'Label_fEntry_Name', '录入Entry', NULL, NULL, NULL, '录入Entry', '录入Entry', 100, '2019-04-22 09:45:19'),
-	(1006072, 102, 'f_Receivables_CustomerRecorder', 'f_Receivables_CustomerRecorder', NULL, NULL, NULL, 'f_Receivables_CustomerRecorder', 'f_Receivables_CustomerRecorder', 2, '2019-04-22 09:45:19'),
-	(1006073, 1006072, 'Label_fDate', 'fDate', NULL, NULL, NULL, 'fDate', 'fDate', 100, '2019-04-22 09:45:19'),
-	(1006074, 1006072, 'Label_fOrderID', 'fOrderID', NULL, NULL, NULL, 'fOrderID', 'fOrderID', 100, '2019-04-22 09:45:19'),
-	(1006075, 1006072, 'Label_fPayable', 'fPayable', NULL, NULL, NULL, 'fPayable', 'fPayable', 100, '2019-04-22 09:45:19'),
-	(1006076, 1006072, 'Label_fAmountCollected', 'fAmountCollected', NULL, NULL, NULL, 'fAmountCollected', 'fAmountCollected', 100, '2019-04-22 09:45:19'),
-	(1006077, 1006072, 'Label_Customer', 'Customer Name:', NULL, NULL, NULL, 'Customer Name:', 'Customer Name:', 100, '2019-04-22 09:45:19'),
-	(1006078, 102, 'SysfrmUsers_Edit', 'SysfrmUsers_Edit', NULL, NULL, NULL, 'SysfrmUsers_Edit', 'SysfrmUsers_Edit', 2, '2019-04-22 09:45:20'),
-	(1006079, 1006078, 'HeaderTitle_Label', '用户信息User Infomation', NULL, NULL, NULL, '用户信息User Infomation', '用户信息User Infomation', 100, '2019-04-22 09:45:20'),
-	(1006080, 1006078, 'Label_fUserID', '用户编号UserID: ', NULL, NULL, NULL, '用户编号UserID: ', '用户编号UserID: ', 100, '2019-04-22 09:45:20'),
-	(1006081, 1006078, 'Label_fUsername', '用户名UserName: ', NULL, NULL, NULL, '用户名UserName: ', '用户名UserName: ', 100, '2019-04-22 09:45:20'),
-	(1006082, 1006078, 'Label_fNickName', '昵称NickName: ', NULL, NULL, NULL, '昵称NickName: ', '昵称NickName: ', 100, '2019-04-22 09:45:20'),
-	(1006083, 1006078, 'Label_fPassword', '密码Password: ', NULL, NULL, NULL, '密码Password: ', '密码Password: ', 100, '2019-04-22 09:45:20'),
-	(1006084, 1006078, 'Label_fNote', '备注Note: ', NULL, NULL, NULL, '备注Note: ', '备注Note: ', 100, '2019-04-22 09:45:20'),
-	(1006085, 1006078, 'Label_fDepartment', '部门Department', NULL, NULL, NULL, '部门Department', '部门Department', 100, '2019-04-22 09:45:20'),
-	(1006086, 1006078, 'CmdOk', 'OK(&O)', NULL, NULL, NULL, 'OK(&O)', 'OK(&O)', 104, '2019-04-22 09:45:20'),
-	(1006087, 1006078, 'CmdCancel', 'Cancel(&Q)', NULL, NULL, NULL, 'Cancel(&Q)', 'Cancel(&Q)', 104, '2019-04-22 09:45:20'),
-	(1006088, 102, 'SysfrmUsers_List', 'SysfrmUsers_List', NULL, NULL, NULL, 'SysfrmUsers_List', 'SysfrmUsers_List', 2, '2019-04-22 09:45:20'),
-	(1006089, 1006088, 'Label_fUserID', '编号 ID', NULL, NULL, NULL, '编号 ID', '编号 ID', 100, '2019-04-22 09:45:20'),
-	(1006090, 1006088, 'Label_fUsername', '用户名Name', NULL, NULL, NULL, '用户名Name', '用户名Name', 100, '2019-04-22 09:45:20'),
-	(1006091, 1006088, 'Label_fNickname', '昵称Nickname', NULL, NULL, NULL, '昵称Nickname', '昵称Nickname', 100, '2019-04-22 09:45:20'),
-	(1006092, 1006088, 'Label_Notes', '备注Note ', NULL, NULL, NULL, '备注Note ', '备注Note ', 100, '2019-04-22 09:45:20'),
-	(1006093, 1006088, 'Label_fDepartment', '部门Department', NULL, NULL, NULL, '部门Department', '部门Department', 100, '2019-04-22 09:45:20'),
-	(1006094, 102, 'f_Complete_List', 'f_Complete_List', NULL, NULL, NULL, 'f_Complete_List', 'f_Complete_List', 2, '2019-04-22 09:45:20'),
-	(1006095, 1006094, 'Label_fOrderID', '订单号码OrderID', NULL, NULL, NULL, '订单号码OrderID', '订单号码OrderID', 100, '2019-04-22 09:45:20'),
-	(1006096, 1006094, 'Label_fOrderDate', '日期OrderDate', NULL, NULL, NULL, '日期OrderDate', '日期OrderDate', 100, '2019-04-22 09:45:20'),
-	(1006097, 1006094, 'Label_fCustomerName', '客户名Cliente', NULL, NULL, NULL, '客户名Cliente', '客户名Cliente', 100, '2019-04-22 09:45:20'),
-	(1006098, 1006094, 'Label_fDelivered1', 'fDelivered', NULL, NULL, NULL, 'fDelivered', 'fDelivered', 100, '2019-04-22 09:45:20'),
-	(1006099, 1006094, 'Label_fDeliverer_Name', 'fDeliverer', NULL, NULL, NULL, 'fDeliverer', 'fDeliverer', 100, '2019-04-22 09:45:20'),
-	(1006100, 1006094, 'Label_fDelivered', 'fDelivered', NULL, NULL, NULL, 'fDelivered', 'fDelivered', 100, '2019-04-22 09:45:20'),
-	(1006101, 1006094, 'Label_fCity', '城市City', NULL, NULL, NULL, '城市City', '城市City', 100, '2019-04-22 09:45:20'),
-	(1006102, 1006094, 'Label_fEndereco', 'fEndereco', NULL, NULL, NULL, 'fEndereco', 'fEndereco', 100, '2019-04-22 09:45:20'),
-	(1006103, 1006094, 'Label_fContato', '联系人Contato', NULL, NULL, NULL, '联系人Contato', '联系人Contato', 100, '2019-04-22 09:45:20'),
-	(1006104, 1006094, 'Label_fCelular', '手机Celular', NULL, NULL, NULL, '手机Celular', '手机Celular', 100, '2019-04-22 09:45:20'),
-	(1006105, 1006094, 'Label_fTelefone', 'fTelefone', NULL, NULL, NULL, 'fTelefone', 'fTelefone', 100, '2019-04-22 09:45:20'),
-	(1006106, 102, 'f_Receivables_CustomerArrearsList', 'f_Receivables_CustomerArrearsList', NULL, NULL, NULL, 'f_Receivables_CustomerArrearsList', 'f_Receivables_CustomerArrearsList', 2, '2019-04-22 09:45:20'),
-	(1006107, 1006106, 'Label_fYS', '应收合计TotalReceivables', NULL, NULL, NULL, '应收合计TotalReceivables', '应收合计TotalReceivables', 100, '2019-04-22 09:45:20'),
-	(1006108, 1006106, 'Label_fSK', '收款累计SumRec', NULL, NULL, NULL, '收款累计SumRec', '收款累计SumRec', 100, '2019-04-22 09:45:20'),
-	(1006109, 1006106, 'Label_fQK', '欠款Arrears', NULL, NULL, NULL, '欠款Arrears', '欠款Arrears', 100, '2019-04-22 09:45:20'),
-	(1006110, 1006106, 'Label_fCustomerID', '客户编号CustomerID', NULL, NULL, NULL, '客户编号CustomerID', '客户编号CustomerID', 100, '2019-04-22 09:45:20'),
-	(1006111, 1006106, 'Label_fCustomerName', '客户名Cliente', NULL, NULL, NULL, '客户名Cliente', '客户名Cliente', 100, '2019-04-22 09:45:20'),
-	(1006112, 1006106, 'Label_fLastfReceiptDate', '最后收款日LastfReceiptDate', NULL, NULL, NULL, '最后收款日LastfReceiptDate', '最后收款日LastfReceiptDate', 100, '2019-04-22 09:45:20'),
-	(1006113, 1006106, 'Label_fLastAmountCollected', '最后收款额LastAmountCollected', NULL, NULL, NULL, '最后收款额LastAmountCollected', '最后收款额LastAmountCollected', 100, '2019-04-22 09:45:20'),
-	(1006114, 1006106, 'Label_Customer', 'Customer Arrears:', NULL, NULL, NULL, 'Customer Arrears:', 'Customer Arrears:', 100, '2019-04-22 09:45:20'),
-	(1006115, 102, 'SysfrmEnumeration_List', 'SysfrmEnumeration_List', NULL, NULL, NULL, 'SysfrmEnumeration_List', 'SysfrmEnumeration_List', 2, '2019-04-22 09:45:20'),
-	(1006116, 1006115, 'Label_fTitle', '名称Title', NULL, NULL, NULL, '名称Title', '名称Title', 100, '2019-04-22 09:45:20'),
-	(1006117, 1006115, 'Label_fSpare1', '备用1Spare1', NULL, NULL, NULL, '备用1Spare1', '备用1Spare1', 100, '2019-04-22 09:45:20'),
-	(1006118, 1006115, 'Label_fSpare2', '备用2Spare2', NULL, NULL, NULL, '备用2Spare2', '备用2Spare2', 100, '2019-04-22 09:45:20'),
-	(1006119, 1006115, 'Label_fNote', '备注Note', NULL, NULL, NULL, '备注Note', '备注Note', 100, '2019-04-22 09:45:20'),
-	(1006120, 1006115, 'Label_fID', '编号ID', NULL, NULL, NULL, '编号ID', '编号ID', 100, '2019-04-22 09:45:20'),
-	(1006121, 1006115, 'Label_fTypeID', 'fTypeID', NULL, NULL, NULL, 'fTypeID', 'fTypeID', 100, '2019-04-22 09:45:20'),
-	(1006122, 102, 'f_PrintingOrder_Edit_Mob', 'f_PrintingOrder_Edit_Mob', NULL, NULL, NULL, 'f_PrintingOrder_Edit_Mob', 'f_PrintingOrder_Edit_Mob', 2, '2019-04-22 09:45:20'),
-	(1006123, 1006122, 'CmdSave', 'Save', NULL, NULL, NULL, 'Save', 'Save', 104, '2019-04-22 09:45:20'),
-	(1006124, 1006122, 'CmdExit', 'Exit', NULL, NULL, NULL, 'Exit', 'Exit', 104, '2019-04-22 09:45:20'),
-	(1006125, 1006122, 'CmdPrint', 'Print', NULL, NULL, NULL, 'Print', 'Print', 104, '2019-04-22 09:45:20'),
-	(1006126, 1006122, 'CmdPDF', 'PDF', NULL, NULL, NULL, 'PDF', 'PDF', 104, '2019-04-22 09:45:20'),
-	(1006127, 1006122, 'Label_fOrderID', 'Nº:', NULL, NULL, NULL, 'Nº:', 'Nº:', 100, '2019-04-22 09:45:20'),
-	(1006128, 1006122, 'Label_fOrderDate', '日期Date:', NULL, NULL, NULL, '日期Date:', '日期Date:', 100, '2019-04-22 09:45:20'),
-	(1006129, 1006122, 'Label_fBrandMateria', '材料Materia:', NULL, NULL, NULL, '材料Materia:', '材料Materia:', 100, '2019-04-22 09:45:20'),
-	(1006130, 1006122, 'Label_fQuant', '数量Quant:', NULL, NULL, NULL, '数量Quant:', '数量Quant:', 100, '2019-04-22 09:45:20'),
-	(1006131, 1006122, 'Label_fNUIT', '税号NUIT:', NULL, NULL, NULL, '税号NUIT:', '税号NUIT:', 100, '2019-04-22 09:45:20'),
-	(1006132, 1006122, 'Label_fCity', '城市City:', NULL, NULL, NULL, '城市City:', '城市City:', 100, '2019-04-22 09:45:20'),
-	(1006133, 1006122, 'Label_fContato', '联系人Contato:', NULL, NULL, NULL, '联系人Contato:', '联系人Contato:', 100, '2019-04-22 09:45:20'),
-	(1006134, 1006122, 'Label_fCelular', '手机Celular:', NULL, NULL, NULL, '手机Celular:', '手机Celular:', 100, '2019-04-22 09:45:20'),
-	(1006135, 1006122, 'Label_fTelefone', '电话Tel:', NULL, NULL, NULL, '电话Tel:', '电话Tel:', 100, '2019-04-22 09:45:20'),
-	(1006136, 1006122, 'Label_fEndereco', '地址Endereco:', NULL, NULL, NULL, '地址Endereco:', '地址Endereco:', 100, '2019-04-22 09:45:20'),
-	(1006137, 1006122, 'Label_fSucursal', 'Sucursal:', NULL, NULL, NULL, 'Sucursal:', 'Sucursal:', 100, '2019-04-22 09:45:20'),
-	(1006138, 1006122, 'Label_fNumerEnd', 'ATE', NULL, NULL, NULL, 'ATE', 'ATE', 100, '2019-04-22 09:45:20'),
-	(1006139, 1006122, 'Label_fPagePerVolumn', '每本页数 Page/Vol:', NULL, NULL, NULL, '每本页数 Page/Vol:', '每本页数 Page/Vol:', 100, '2019-04-22 09:45:20'),
-	(1006140, 1006122, 'Label_fLogo', 'Logo:', NULL, NULL, NULL, 'Logo:', 'Logo:', 100, '2019-04-22 09:45:20'),
-	(1006141, 1006122, 'Label_fNote', 'fNote:', NULL, NULL, NULL, 'fNote:', 'fNote:', 100, '2019-04-22 09:45:20'),
-	(1006142, 1006122, 'Label_fRequiredDeliveryDate', '交货日期Date:', NULL, NULL, NULL, '交货日期Date:', '交货日期Date:', 100, '2019-04-22 09:45:20'),
-	(1006143, 1006122, 'Label_fCustomerName', '客户名Cliente:', NULL, NULL, NULL, '客户名Cliente:', '客户名Cliente:', 100, '2019-04-22 09:45:20'),
-	(1006144, 1006122, 'Label_fAmount', '金额合计SubTotal:', NULL, NULL, NULL, '金额合计SubTotal:', '金额合计SubTotal:', 100, '2019-04-22 09:45:20'),
-	(1006145, 1006122, 'Label_fTax', '税金IVA:', NULL, NULL, NULL, '税金IVA:', '税金IVA:', 100, '2019-04-22 09:45:20'),
-	(1006146, 1006122, 'Label_fPayable', '应付金额Valor a Pagar:', NULL, NULL, NULL, '应付金额Valor a Pagar:', '应付金额Valor a Pagar:', 100, '2019-04-22 09:45:20'),
-	(1006147, 1006122, 'Label_fDesconto', '折扣Desconto:', NULL, NULL, NULL, '折扣Desconto:', '折扣Desconto:', 100, '2019-04-22 09:45:20'),
-	(1006148, 1006122, 'Label_fPrice', '单价Price:', NULL, NULL, NULL, '单价Price:', '单价Price:', 100, '2019-04-22 09:45:20'),
-	(1006149, 1006122, 'Label_fEspecie', '类别Especie:', NULL, NULL, NULL, '类别Especie:', '类别Especie:', 100, '2019-04-22 09:45:20'),
-	(1006150, 1006122, 'Label_fAvista', '每页序号Avista:', NULL, NULL, NULL, '每页序号Avista:', '每页序号Avista:', 100, '2019-04-22 09:45:20'),
-	(1006151, 1006122, 'Label_Tamanho', '尺寸Tamanho:', NULL, NULL, NULL, '尺寸Tamanho:', '尺寸Tamanho:', 100, '2019-04-22 09:45:20'),
-	(1006152, 1006122, 'Label_fNrCopy', '联数Nr.Copy:', NULL, NULL, NULL, '联数Nr.Copy:', '联数Nr.Copy:', 100, '2019-04-22 09:45:20'),
-	(1006153, 1006122, 'Label_fVendedor', '销售Vendedor:', NULL, NULL, NULL, '销售Vendedor:', '销售Vendedor:', 100, '2019-04-22 09:45:20'),
-	(1006154, 1006122, 'Label_fNumerBegin', '起始号码Numeracao:', NULL, NULL, NULL, '起始号码Numeracao:', '起始号码Numeracao:', 100, '2019-07-24 21:02:22'),
-	(1006155, 1006122, 'Label_fCanceled', 'Canceled', NULL, NULL, NULL, 'Canceled', 'Canceled', 100, '2019-04-22 09:45:20'),
-	(1006156, 102, 'f_Main_Backgroud', 'f_Main_Backgroud', NULL, NULL, NULL, 'f_Main_Backgroud', 'f_Main_Backgroud', 2, '2019-04-22 09:45:21'),
-	(1006157, 102, 'SysfrmLanguage_sub', 'SysfrmLanguage_sub', NULL, NULL, NULL, 'SysfrmLanguage_sub', 'SysfrmLanguage_sub', 2, '2019-04-22 09:45:21'),
-	(1006158, 1006157, 'Label_fID', '编号ID', NULL, NULL, NULL, '编号ID', '编号ID', 100, '2019-04-22 09:45:21'),
-	(1006159, 1006157, 'Label_fCaption', '标题(默认)Caption', NULL, NULL, NULL, '标题(默认)Caption', '标题(默认)Caption', 100, '2019-04-22 09:45:21'),
-	(1006160, 1006157, 'Label_fLanguage1', '语言1Language1', NULL, NULL, NULL, '语言1Language1', '语言1Language1', 100, '2019-04-22 09:45:21'),
-	(1006161, 1006157, 'Label_fLanguage2', '语言2Language2', NULL, NULL, NULL, '语言2Language2', '语言2Language2', 100, '2019-04-22 09:45:21'),
-	(1006162, 1006157, 'Label_fCtlType', '类型Type', NULL, NULL, NULL, '类型Type', '类型Type', 100, '2019-04-22 09:45:21'),
-	(1006163, 102, 'f_Receivables_CurrentDayRec', 'f_Receivables_CurrentDayRec', NULL, NULL, NULL, 'f_Receivables_CurrentDayRec', 'f_Receivables_CurrentDayRec', 2, '2019-04-22 09:45:21'),
-	(1006164, 1006163, 'Label_fID', '流水号ID', NULL, NULL, NULL, '流水号ID', '流水号ID', 100, '2019-04-22 09:45:21'),
-	(1006165, 1006163, 'Label_fCustomerID', '客户编号CustomerID', NULL, NULL, NULL, '客户编号CustomerID', '客户编号CustomerID', 100, '2019-04-22 09:45:21'),
-	(1006166, 1006163, 'Label_fCustomerName', '客户名Cliente', NULL, NULL, NULL, '客户名Cliente', '客户名Cliente', 100, '2019-04-22 09:45:21'),
-	(1006167, 1006163, 'Label_fReceiptDate', '收款日期ReceiptDate', NULL, NULL, NULL, '收款日期ReceiptDate', '收款日期ReceiptDate', 100, '2019-04-22 09:45:21'),
-	(1006168, 1006163, 'Label_fAmountCollected', '收款额AmountCollected', NULL, NULL, NULL, '收款额AmountCollected', '收款额AmountCollected', 100, '2019-04-22 09:45:21'),
-	(1006169, 1006163, 'Label_fPayee', '收款人fPayee', NULL, NULL, NULL, '收款人fPayee', '收款人fPayee', 100, '2019-04-22 09:45:21'),
-	(1006170, 102, 'f_Complete', 'f_Complete', NULL, NULL, NULL, 'f_Complete', 'f_Complete', 2, '2019-04-22 09:45:21'),
-	(1006171, 1006170, 'CmdComplete', 'Complete', NULL, NULL, NULL, 'Complete', 'Complete', 104, '2019-04-22 09:45:21'),
-	(1006172, 1006170, 'Label_Title', 'Complete List', NULL, NULL, NULL, 'Complete List', 'Complete List', 100, '2019-04-22 09:45:21'),
-	(1006173, 1006170, 'CmdExportToExcel', 'ExportToExcel', NULL, NULL, NULL, 'ExportToExcel', 'ExportToExcel', 104, '2019-04-22 09:45:21'),
-	(1006174, 1006170, 'CmdBrowse', 'Browse', NULL, NULL, NULL, 'Browse', 'Browse', 104, '2019-04-22 09:45:21'),
-	(1006175, 1006170, 'CmdRefresh', 'Refresh', NULL, NULL, NULL, 'Refresh', 'Refresh', 104, '2019-04-22 09:45:21'),
-	(1006176, 1006170, 'Label_Filter', 'Filter:', NULL, NULL, NULL, 'Filter:', 'Filter:', 100, '2019-04-22 09:45:21'),
-	(1006177, 1006170, 'Label_Unfinished', 'Unfinished', NULL, NULL, NULL, 'Unfinished', 'Unfinished', 100, '2019-04-22 09:45:21'),
-	(1006178, 1006170, 'Label_Completed', 'Completed', NULL, NULL, NULL, 'Completed', 'Completed', 100, '2019-04-22 09:45:21'),
-	(1006179, 1006170, 'CmdSearch', 'Search', NULL, NULL, NULL, 'Search', 'Search', 104, '2019-04-22 09:45:21'),
-	(1006180, 102, 'SysfrmLanguage', 'SysfrmLanguage', NULL, NULL, NULL, 'SysfrmLanguage', 'SysfrmLanguage', 2, '2019-04-22 09:45:21'),
-	(1006181, 1006180, 'Label_Category', '类别Category:', NULL, NULL, NULL, '类别Category:', '类别Category:', 100, '2019-04-22 09:45:21'),
-	(1006182, 1006180, 'Label24', '窗体或报表 Form or Report:', NULL, NULL, NULL, '窗体或报表 Form or Report:', '窗体或报表 Form or Report:', 100, '2019-04-22 09:45:21'),
-	(1006183, 102, 'SysfrmEnumeration_Type', 'SysfrmEnumeration_Type', NULL, NULL, NULL, 'SysfrmEnumeration_Type', 'SysfrmEnumeration_Type', 2, '2019-04-22 09:45:21'),
-	(1006184, 1006183, 'Label_fTypeName', '名称Title', NULL, NULL, NULL, '名称Title', '名称Title', 100, '2019-04-22 09:45:21'),
-	(1006185, 1006183, 'Label_fTypeID', '类别编号TypeID', NULL, NULL, NULL, '类别编号TypeID', '类别编号TypeID', 100, '2019-04-22 09:45:21'),
-	(1006186, 102, 'f_Order_Edit_Detail', 'f_Order_Edit_Detail', NULL, NULL, NULL, 'f_Order_Edit_Detail', 'f_Order_Edit_Detail', 2, '2019-04-22 09:45:21'),
-	(1006187, 1006186, 'Label_ID', 'ID', NULL, NULL, NULL, 'ID', 'ID', 100, '2019-04-22 09:45:21'),
-	(1006188, 1006186, 'Label_DingDanHaoMa', 'Nº', NULL, NULL, NULL, 'Nº', 'Nº', 100, '2019-04-22 09:45:21'),
-	(1006189, 1006186, 'Label_fQuant', '数量Qtd', NULL, NULL, NULL, '数量Qtd', '数量Qtd', 100, '2019-04-22 09:45:21'),
-	(1006190, 1006186, 'Label_fProductName', '名称Descrição', NULL, NULL, NULL, '名称Descrição', '名称Descrição', 100, '2019-04-22 09:45:21'),
-	(1006191, 1006186, 'Label_fLength', '长Larg.', NULL, NULL, NULL, '长Larg.', '长Larg.', 100, '2019-04-22 09:45:21'),
-	(1006192, 1006186, 'Label_Width', '宽Comp.', NULL, NULL, NULL, '宽Comp.', '宽Comp.', 100, '2019-04-22 09:45:21'),
-	(1006193, 1006186, 'Label_Price', '单价P. Unitario', NULL, NULL, NULL, '单价P. Unitario', '单价P. Unitario', 100, '2019-04-22 09:45:21'),
-	(1006194, 1006186, 'Label_fAmount', '金额Total', NULL, NULL, NULL, '金额Total', '金额Total', 100, '2019-04-22 09:45:21'),
-	(1006195, 102, 'f_Help', 'f_Help', NULL, NULL, NULL, 'f_Help', 'f_Help', 2, '2019-04-22 09:45:21'),
-	(1006196, 102, 'f_Quotation_O', 'f_Quotation_O', NULL, NULL, NULL, 'f_Quotation_O', 'f_Quotation_O', 2, '2019-04-22 09:45:21'),
-	(1006197, 1006196, 'CmdEdit', 'Edit', NULL, NULL, NULL, 'Edit', 'Edit', 104, '2019-04-22 09:45:21'),
-	(1006198, 1006196, 'CmdNew', 'New', NULL, NULL, NULL, 'New', 'New', 104, '2019-04-22 09:45:21'),
-	(1006199, 1006196, 'CmdExportToExcel', 'ExportToExcel', NULL, NULL, NULL, 'ExportToExcel', 'ExportToExcel', 104, '2019-04-22 09:45:21'),
-	(1006200, 1006196, 'CmdBrowse', 'Browse', NULL, NULL, NULL, 'Browse', 'Browse', 104, '2019-04-22 09:45:21'),
-	(1006201, 1006196, 'CmdOrder', 'Order', NULL, NULL, NULL, 'Order', 'Order', 104, '2019-04-22 09:45:21'),
-	(1006202, 1006196, 'CmdRefresh', 'Refresh', NULL, NULL, NULL, 'Refresh', 'Refresh', 104, '2019-04-22 09:45:21'),
-	(1006203, 1006196, 'Label_Filter', 'Filter:', NULL, NULL, NULL, 'Filter:', 'Filter:', 100, '2019-04-22 09:45:21'),
-	(1006204, 1006196, 'CmdSearch', 'Search', NULL, NULL, NULL, 'Search', 'Search', 104, '2019-04-22 09:45:21'),
-	(1006205, 1006196, 'LabelTitle', 'Quotaion List', NULL, NULL, NULL, 'Quotaion List', 'Quotaion List', 100, '2019-04-22 09:45:21'),
-	(1006206, 102, 'f_CustomerSelecter', 'f_CustomerSelecter', NULL, NULL, NULL, 'f_CustomerSelecter', 'f_CustomerSelecter', 2, '2019-04-22 09:45:21'),
-	(1006207, 1006206, 'Label_Text_Key', '关键字Key:', NULL, NULL, NULL, '关键字Key:', '关键字Key:', 100, '2019-04-22 09:45:21'),
-	(1006208, 1006206, 'CmdOK', 'OK', NULL, NULL, NULL, 'OK', 'OK', 104, '2019-04-22 09:45:21'),
-	(1006209, 102, 'f_Quotation_List_O', 'f_Quotation_List_O', NULL, NULL, NULL, 'f_Quotation_List_O', 'f_Quotation_List_O', 2, '2019-04-22 09:45:21'),
-	(1006210, 1006209, 'Label_fOrderID', 'fOrderID', NULL, NULL, NULL, 'fOrderID', 'fOrderID', 100, '2019-04-22 09:45:21'),
-	(1006211, 1006209, 'Label_fOrderDate', 'fOrderDate', NULL, NULL, NULL, 'fOrderDate', 'fOrderDate', 100, '2019-04-22 09:45:21'),
-	(1006212, 1006209, 'Label_fCustomerName', '客户名Cliente', NULL, NULL, NULL, '客户名Cliente', '客户名Cliente', 100, '2019-04-22 09:45:21'),
-	(1006213, 1006209, 'Label_fNUIT', '税号NUIT', NULL, NULL, NULL, '税号NUIT', '税号NUIT', 100, '2019-04-22 09:45:21'),
-	(1006214, 1006209, 'Label_fCity', '城市City', NULL, NULL, NULL, '城市City', '城市City', 100, '2019-04-22 09:45:21'),
-	(1006215, 1006209, 'Label_fConfirmed1', '确认Confirmed', NULL, NULL, NULL, '确认Confirmed', '确认Confirmed', 100, '2019-04-22 09:45:21'),
-	(1006216, 1006209, 'Label_fEntry_Name', '录入Entry', NULL, NULL, NULL, '录入Entry', '录入Entry', 100, '2019-04-22 09:45:21'),
-	(1006217, 1006209, 'Label_fConfirm_Name', 'fConfirm_Name', NULL, NULL, NULL, 'fConfirm_Name', 'fConfirm_Name', 100, '2019-04-22 09:45:21'),
-	(1006218, 1006209, 'Label_fAmount', '金额SubTotal', NULL, NULL, NULL, '金额SubTotal', '金额SubTotal', 100, '2019-04-22 09:45:21'),
-	(1006219, 1006209, 'Label_fTax', '税金IVA', NULL, NULL, NULL, '税金IVA', '税金IVA', 100, '2019-04-22 09:45:21'),
-	(1006220, 1006209, 'Label_fPayable', '应付金额Valor a Pagar', NULL, NULL, NULL, '应付金额Valor a Pagar', '应付金额Valor a Pagar', 100, '2019-04-22 09:45:21'),
-	(1006221, 1006209, 'Label_fDesconto', '折扣Desconto', NULL, NULL, NULL, '折扣Desconto', '折扣Desconto', 100, '2019-04-22 09:45:21'),
-	(1006222, 1006209, 'Label_fContato', '联系人Contato', NULL, NULL, NULL, '联系人Contato', '联系人Contato', 100, '2019-04-22 09:45:21'),
-	(1006223, 1006209, 'Label_fCelular', '手机Celular', NULL, NULL, NULL, '手机Celular', '手机Celular', 100, '2019-04-22 09:45:21'),
-	(1006224, 1006209, 'Label_fTelefone', 'fTelefone', NULL, NULL, NULL, 'fTelefone', 'fTelefone', 100, '2019-04-22 09:45:21'),
-	(1006225, 1006209, 'Label_fConfirmed', 'fConfirmed', NULL, NULL, NULL, 'fConfirmed', 'fConfirmed', 100, '2019-04-22 09:45:21'),
-	(1006226, 1006209, 'Label_fCustomerID', '客户编号CustomerID', NULL, NULL, NULL, '客户编号CustomerID', '客户编号CustomerID', 100, '2019-04-22 09:45:21'),
-	(1006227, 102, 'SysfrmEnumerationSelecter', 'SysfrmEnumerationSelecter', NULL, NULL, NULL, 'SysfrmEnumerationSelecter', 'SysfrmEnumerationSelecter', 2, '2019-04-22 09:45:21'),
-	(1006228, 1006227, 'Label_Text_Key', '关键字Key:', NULL, NULL, NULL, '关键字Key:', '关键字Key:', 100, '2019-04-22 09:45:21'),
-	(1006229, 1006227, 'CmdOK', 'OK', NULL, NULL, NULL, 'OK', 'OK', 104, '2019-04-22 09:45:21'),
-	(1006230, 102, 'SysfrmPrintSetup', 'SysfrmPrintSetup', NULL, NULL, NULL, 'SysfrmPrintSetup', 'SysfrmPrintSetup', 2, '2019-04-22 09:45:22'),
-	(1006231, 1006230, 'Label_Orientation', 'Orientation', NULL, NULL, NULL, 'Orientation', 'Orientation', 100, '2019-04-22 09:45:22'),
-	(1006232, 1006230, 'Label_Vertical', 'Vertical', NULL, NULL, NULL, 'Vertical', 'Vertical', 100, '2019-04-22 09:45:22'),
-	(1006233, 1006230, 'Label_Horizonta', 'Horizonta', NULL, NULL, NULL, 'Horizonta', 'Horizonta', 100, '2019-04-22 09:45:22'),
-	(1006234, 1006230, 'Label_Printer', 'Printer:', NULL, NULL, NULL, 'Printer:', 'Printer:', 100, '2019-04-22 09:45:22'),
-	(1006235, 1006230, 'Label_PaperSize', 'PaperSize:', NULL, NULL, NULL, 'PaperSize:', 'PaperSize:', 100, '2019-04-22 09:45:22'),
-	(1006236, 1006230, 'CmdOK', 'OK', NULL, NULL, NULL, 'OK', 'OK', 104, '2019-04-22 09:45:22'),
-	(1006237, 102, 'SysfrmUsers_sub_Right', 'SysfrmUsers_sub_Right', NULL, NULL, NULL, 'SysfrmUsers_sub_Right', 'SysfrmUsers_sub_Right', 2, '2019-04-22 09:45:22'),
-	(1006238, 1006237, 'LabelTitle', ' User:  Produção-SM', NULL, NULL, NULL, ' User:  Produção-SM', ' User:  Produção-SM', 100, '2019-04-22 09:45:22'),
-	(1006239, 1006237, 'CmdSaveRight', 'SaveRight', NULL, NULL, NULL, 'SaveRight', 'SaveRight', 104, '2019-04-22 09:45:22'),
-	(1006240, 102, 'f_Adjustment', 'f_Adjustment', NULL, NULL, NULL, 'f_Adjustment', 'f_Adjustment', 2, '2019-04-22 09:45:22'),
-	(1006241, 1006240, 'Label_Title', 'Order List Adjustment', NULL, NULL, NULL, 'Order List Adjustment', 'Order List Adjustment', 100, '2019-04-22 09:45:22'),
-	(1006242, 1006240, 'Label_Filter', 'Filter:', NULL, NULL, NULL, 'Filter:', 'Filter:', 100, '2019-04-22 09:45:22'),
-	(1006243, 1006240, 'Label_Normal', 'Normal', NULL, NULL, NULL, 'Normal', 'Normal', 100, '2019-04-22 09:45:22'),
-	(1006244, 1006240, 'Label_Cancelled', 'Cancelled', NULL, NULL, NULL, 'Cancelled', 'Cancelled', 100, '2019-04-22 09:45:22'),
-	(1006245, 1006240, 'CmdSearch', 'Search', NULL, NULL, NULL, 'Search', 'Search', 104, '2019-04-22 09:45:22'),
-	(1006246, 1006240, 'CmdAdjustment', 'Adjustment', NULL, NULL, NULL, 'Adjustment', 'Adjustment', 104, '2019-04-22 09:45:22'),
-	(1006247, 1006240, 'CmdRefresh', 'Refresh', NULL, NULL, NULL, 'Refresh', 'Refresh', 104, '2019-04-22 09:45:22'),
-	(1006248, 1006240, 'CmdBrowse', 'Browse', NULL, NULL, NULL, 'Browse', 'Browse', 104, '2019-04-22 09:45:22'),
-	(1006249, 1006240, 'CmdExportToExcel', 'ExportToExcel', NULL, NULL, NULL, 'ExportToExcel', 'ExportToExcel', 104, '2019-04-22 09:45:22'),
-	(1006250, 1006240, 'CmdCancel', 'Cancel', NULL, NULL, NULL, 'Cancel', 'Cancel', 104, '2019-04-22 09:45:22'),
-	(1006251, 102, 'SysWhereStringCreater', 'SysWhereStringCreater', NULL, NULL, NULL, 'SysWhereStringCreater', 'SysWhereStringCreater', 2, '2019-04-22 09:45:22'),
-	(1006252, 1006251, 'Label_BracketBegin', '(', NULL, NULL, NULL, '(', '(', 100, '2019-04-22 09:45:22'),
-	(1006253, 1006251, 'Label_FieldName', '字段名', NULL, NULL, NULL, '字段名', '字段名', 100, '2019-04-22 09:45:22'),
-	(1006254, 1006251, 'Label232', '#', NULL, NULL, NULL, '#', '#', 100, '2019-04-22 09:45:22'),
-	(1006255, 1006251, 'Label_LinkSymbol', '关系', NULL, NULL, NULL, '关系', '关系', 100, '2019-04-22 09:45:22'),
-	(1006256, 1006251, 'Label_Symbol', '运算', NULL, NULL, NULL, '运算', '运算', 100, '2019-04-22 09:45:22'),
-	(1006257, 1006251, 'Label_Value', '值', NULL, NULL, NULL, '值', '值', 100, '2019-04-22 09:45:22'),
-	(1006258, 1006251, 'Label_EndValue', '结束值', NULL, NULL, NULL, '结束值', '结束值', 100, '2019-04-22 09:45:22'),
-	(1006259, 1006251, 'Label_BracketEnd', ')', NULL, NULL, NULL, ')', ')', 100, '2019-04-22 09:45:22'),
-	(1006260, 1006251, 'Label49', ' Value1Enabled', NULL, NULL, NULL, ' Value1Enabled', ' Value1Enabled', 100, '2019-04-22 09:45:22'),
-	(1006261, 1006251, 'Label60', ' Value2Enabled', NULL, NULL, NULL, ' Value2Enabled', ' Value2Enabled', 100, '2019-04-22 09:45:22'),
-	(1006262, 1006251, 'Label_Expression', 'Expression', NULL, NULL, NULL, 'Expression', 'Expression', 100, '2019-04-22 09:45:22'),
-	(1006263, 1006251, 'CmdOK', 'OK(&O)', NULL, NULL, NULL, 'OK(&O)', 'OK(&O)', 104, '2019-04-22 09:45:22'),
-	(1006264, 102, 'f_Quotation_Prt', 'f_Quotation_Prt', NULL, NULL, NULL, 'f_Quotation_Prt', 'f_Quotation_Prt', 2, '2019-04-22 09:45:22'),
-	(1006265, 1006264, 'CmdEdit', 'Edit', NULL, NULL, NULL, 'Edit', 'Edit', 104, '2019-04-22 09:45:22'),
-	(1006266, 1006264, 'CmdNew', 'New', NULL, NULL, NULL, 'New', 'New', 104, '2019-04-22 09:45:22'),
-	(1006267, 1006264, 'CmdExportToExcel', 'ExportToExcel', NULL, NULL, NULL, 'ExportToExcel', 'ExportToExcel', 104, '2019-04-22 09:45:22'),
-	(1006268, 1006264, 'CmdBrowse', 'Browse', NULL, NULL, NULL, 'Browse', 'Browse', 104, '2019-04-22 09:45:22'),
-	(1006269, 1006264, 'CmdOrder', 'Order', NULL, NULL, NULL, 'Order', 'Order', 104, '2019-04-22 09:45:22'),
-	(1006270, 1006264, 'CmdRefresh', 'Refresh', NULL, NULL, NULL, 'Refresh', 'Refresh', 104, '2019-04-22 09:45:22'),
-	(1006271, 1006264, 'Label_Filter', 'Filter:', NULL, NULL, NULL, 'Filter:', 'Filter:', 100, '2019-04-22 09:45:22'),
-	(1006272, 1006264, 'CmdSearch', 'Search', NULL, NULL, NULL, 'Search', 'Search', 104, '2019-04-22 09:45:22'),
-	(1006273, 1006264, 'LabelTitle', 'Quotaion List', NULL, NULL, NULL, 'Quotaion List', 'Quotaion List', 100, '2019-04-22 09:45:22'),
-	(1006274, 102, 'SysConnectionor', 'SysConnectionor', NULL, NULL, NULL, 'SysConnectionor', 'SysConnectionor', 2, '2019-04-22 09:45:22'),
-	(1006275, 1006274, 'LabelTitle', 'Connector', NULL, NULL, NULL, 'Connector', 'Connector', 100, '2019-04-22 09:45:22'),
-	(1006276, 1006274, 'Label_Server', 'Server:', NULL, NULL, NULL, 'Server:', 'Server:', 100, '2019-04-22 09:45:22'),
-	(1006277, 1006274, 'Label_Drive', 'DriveDrive', NULL, NULL, NULL, 'DriveDrive', 'DriveDrive', 100, '2019-04-22 09:45:22'),
-	(1006278, 1006274, 'Label_Port', 'Port:', NULL, NULL, NULL, 'Port:', 'Port:', 100, '2019-04-22 09:45:22'),
-	(1006279, 1006274, 'Label_User', 'User:', NULL, NULL, NULL, 'User:', 'User:', 100, '2019-04-22 09:45:22'),
-	(1006280, 1006274, 'Label_Password', 'Password:', NULL, NULL, NULL, 'Password:', 'Password:', 100, '2019-04-22 09:45:22'),
-	(1006281, 1006274, 'Label_Database', 'Database:', NULL, NULL, NULL, 'Database:', 'Database:', 100, '2019-04-22 09:45:22'),
-	(1006282, 1006274, 'cmdOK', 'Ok(&O)', NULL, NULL, NULL, 'Ok(&O)', 'Ok(&O)', 104, '2019-04-22 09:45:22'),
-	(1006283, 1006274, 'cmdTest', 'Test(&T)', NULL, NULL, NULL, 'Test(&T)', 'Test(&T)', 104, '2019-04-22 09:45:22'),
-	(1006284, 102, 'f_report_day', 'f_report_day', NULL, NULL, NULL, 'f_report_day', 'f_report_day', 2, '2019-04-22 09:45:23'),
-	(1006285, 1006284, 'Label467', '年度Year:', NULL, NULL, NULL, '年度Year:', '年度Year:', 100, '2019-04-22 09:45:23'),
-	(1006286, 1006284, 'Label_Title', '  Annual   Rreport 年度报表', NULL, NULL, NULL, '  Annual   Rreport 年度报表', '  Annual   Rreport 年度报表', 100, '2019-04-22 09:45:23'),
-	(1006287, 1006284, 'CmdExportToExcel', 'ExportToExcel', NULL, NULL, NULL, 'ExportToExcel', 'ExportToExcel', 104, '2019-04-22 09:45:23'),
-	(1006288, 1006284, 'Label471', '基于BaseOn:', NULL, NULL, NULL, '基于BaseOn:', '基于BaseOn:', 100, '2019-04-22 09:45:23'),
-	(1006289, 1006284, 'CmdPrint', 'Print', NULL, NULL, NULL, 'Print', 'Print', 104, '2019-04-22 09:45:23'),
-	(1006290, 1006284, 'CmdPDF', 'PDF', NULL, NULL, NULL, 'PDF', 'PDF', 104, '2019-04-22 09:45:23'),
-	(1006291, 102, 'SysfrmUsers', 'SysfrmUsers', NULL, NULL, NULL, 'SysfrmUsers', 'SysfrmUsers', 2, '2019-04-22 09:45:23'),
-	(1006292, 1006291, 'CmdNew', 'New', NULL, NULL, NULL, 'New', 'New', 104, '2019-04-22 09:45:23'),
-	(1006293, 1006291, 'LabelTitle', 'Users List', NULL, NULL, NULL, 'Users List', 'Users List', 100, '2019-04-22 09:45:23'),
-	(1006294, 1006291, 'CmdDelete', 'Del', NULL, NULL, NULL, 'Del', 'Del', 104, '2019-04-22 09:45:23'),
-	(1006295, 1006291, 'CmdEdit', 'Edit', NULL, NULL, NULL, 'Edit', 'Edit', 104, '2019-04-22 09:45:23'),
-	(1006296, 1006291, 'CmdStart', 'Start Using', NULL, NULL, NULL, 'Start Using', 'Start Using', 104, '2019-04-22 09:45:23'),
-	(1006297, 1006291, 'CmdSaveRight', 'CmdSaveRight', NULL, NULL, NULL, 'CmdSaveRight', 'CmdSaveRight', 104, '2019-04-22 09:45:23'),
-	(1006298, 102, 'f_Main_TreeView', 'f_Main_TreeView', NULL, NULL, NULL, 'f_Main_TreeView', 'f_Main_TreeView', 2, '2019-04-22 09:45:23'),
-	(1006299, 1006298, 'LabelTitle', 'Orders Management', NULL, NULL, NULL, 'Orders Management', 'Orders Management', 100, '2019-04-22 09:45:23'),
-	(1006300, 1006298, 'LabelUserName', 'UserName', NULL, NULL, NULL, 'UserName', 'UserName', 100, '2019-04-22 09:45:23'),
-	(1006301, 1006298, 'LabelPassword', 'Password', NULL, NULL, NULL, 'Password', 'Password', 100, '2019-04-22 09:45:23'),
-	(1006302, 102, 'r_QuotationOrder', 'r_QuotationOrder', NULL, NULL, NULL, 'r_QuotationOrder', 'r_QuotationOrder', 3, '2019-04-22 09:45:23'),
-	(1006303, 1006302, 'LabelTitle1', 'Cotação', NULL, NULL, NULL, 'Cotação', 'Cotação', 100, '2019-04-22 09:45:23'),
-	(1006304, 1006302, 'Label_fQuant', '数量Qtd', NULL, NULL, NULL, '数量Qtd', '数量Qtd', 100, '2019-04-22 09:45:23'),
-	(1006305, 1006302, 'Label_fProductName', '名称Descrição', NULL, NULL, NULL, '名称Descrição', '名称Descrição', 100, '2019-04-22 09:45:23'),
-	(1006306, 1006302, 'Label_fLength', '长Larg.', NULL, NULL, NULL, '长Larg.', '长Larg.', 100, '2019-04-22 09:45:23'),
-	(1006307, 1006302, 'Label_fWidth', '宽Comp.', NULL, NULL, NULL, '宽Comp.', '宽Comp.', 100, '2019-04-22 09:45:23'),
-	(1006308, 1006302, 'Label_fPrice', '单价P. Unitario', NULL, NULL, NULL, '单价P. Unitario', '单价P. Unitario', 100, '2019-04-22 09:45:23'),
-	(1006309, 1006302, 'Label_fAmount', '金额Total', NULL, NULL, NULL, '金额Total', '金额Total', 100, '2019-04-22 09:45:23'),
-	(1006310, 1006302, 'Label_fOrderID', '单号Nº', NULL, NULL, NULL, '单号Nº', '单号Nº', 100, '2019-04-22 09:45:23'),
-	(1006311, 1006302, 'Label_fCity', '城市City:', NULL, NULL, NULL, '城市City:', '城市City:', 100, '2019-04-22 09:45:23'),
-	(1006312, 1006302, 'Label_fOrderDate', '订单日期Date:', NULL, NULL, NULL, '订单日期Date:', '订单日期Date:', 100, '2019-04-22 09:45:23'),
-	(1006313, 1006302, 'Label_DeliveryDate', '交货日期Delivery date:', NULL, NULL, NULL, '交货日期Delivery date:', '交货日期Delivery date:', 100, '2019-04-22 09:45:23'),
-	(1006314, 1006302, 'Label_fVendedor', '销售Vendedor:', NULL, NULL, NULL, '销售Vendedor:', '销售Vendedor:', 100, '2019-04-22 09:45:23'),
-	(1006315, 1006302, 'Label_fContato', '联系人Contato:', NULL, NULL, NULL, '联系人Contato:', '联系人Contato:', 100, '2019-04-22 09:45:23'),
-	(1006316, 1006302, 'Label_fCelular', '手机Celular:', NULL, NULL, NULL, '手机Celular:', '手机Celular:', 100, '2019-04-22 09:45:23'),
-	(1006317, 1006302, 'Label_fTelefone', '电话Tel:', NULL, NULL, NULL, '电话Tel:', '电话Tel:', 100, '2019-04-22 09:45:23'),
-	(1006318, 1006302, 'Label_fEndereco', '地址Endereco:', NULL, NULL, NULL, '地址Endereco:', '地址Endereco:', 100, '2019-04-22 09:45:23'),
-	(1006319, 1006302, 'Label_fSucursal', 'Sucursal:', NULL, NULL, NULL, 'Sucursal:', 'Sucursal:', 100, '2019-04-22 09:45:23'),
-	(1006320, 1006302, 'Label_fCustomerName', '客户Cliente:', NULL, NULL, NULL, '客户Cliente:', '客户Cliente:', 100, '2019-04-22 09:45:23'),
-	(1006321, 1006302, 'Label_fNUIT', '税号NUIT:', NULL, NULL, NULL, '税号NUIT:', '税号NUIT:', 100, '2019-04-22 09:45:23'),
-	(1006322, 1006302, 'Label74', 'Cotação', NULL, NULL, NULL, 'Cotação', 'Cotação', 100, '2019-04-22 09:45:23'),
-	(1006323, 1006302, 'Label75', '数量Qtd', NULL, NULL, NULL, '数量Qtd', '数量Qtd', 100, '2019-04-22 09:45:23'),
-	(1006324, 1006302, 'Label76', '名称Descrição', NULL, NULL, NULL, '名称Descrição', '名称Descrição', 100, '2019-04-22 09:45:23'),
-	(1006325, 1006302, 'Label77', '长Larg.', NULL, NULL, NULL, '长Larg.', '长Larg.', 100, '2019-04-22 09:45:23'),
-	(1006326, 1006302, 'Label78', '宽Comp.', NULL, NULL, NULL, '宽Comp.', '宽Comp.', 100, '2019-04-22 09:45:23'),
-	(1006327, 1006302, 'Label79', '单价P. Unitario', NULL, NULL, NULL, '单价P. Unitario', '单价P. Unitario', 100, '2019-04-22 09:45:23'),
-	(1006328, 1006302, 'Label80', '金额Total', NULL, NULL, NULL, '金额Total', '金额Total', 100, '2019-04-22 09:45:23'),
-	(1006329, 1006302, 'Label83', '订单号码Nº', NULL, NULL, NULL, '订单号码Nº', '订单号码Nº', 100, '2019-04-22 09:45:23'),
-	(1006330, 1006302, 'Label85', '订单日期Date:', NULL, NULL, NULL, '订单日期Date:', '订单日期Date:', 100, '2019-04-22 09:45:23'),
-	(1006331, 1006302, 'Label91', '交货日期Delivery date:', NULL, NULL, NULL, '交货日期Delivery date:', '交货日期Delivery date:', 100, '2019-04-22 09:45:23'),
-	(1006332, 1006302, 'Label_fDesconto', '折扣Desconto:', NULL, NULL, NULL, '折扣Desconto:', '折扣Desconto:', 100, '2019-04-22 09:45:23'),
-	(1006333, 1006302, 'Label_fPayable', '应付金额Valor a Pagar:', NULL, NULL, NULL, '应付金额Valor a Pagar:', '应付金额Valor a Pagar:', 100, '2019-04-22 09:45:23'),
-	(1006334, 1006302, 'Label_fTax', '税金IVA:', NULL, NULL, NULL, '税金IVA:', '税金IVA:', 100, '2019-04-22 09:45:23'),
-	(1006335, 1006302, 'Label_fAmountSum', '金额合计SubTotal:', NULL, NULL, NULL, '金额合计SubTotal:', '金额合计SubTotal:', 100, '2019-04-22 09:45:23'),
-	(1006336, 1006302, 'Label_Productor', '制作人 Productor:', NULL, NULL, NULL, '制作人 Productor:', '制作人 Productor:', 100, '2019-04-22 09:45:23'),
-	(1006337, 1006302, 'Label_Aprovar', '审核人 Aprovar:', NULL, NULL, NULL, '审核人 Aprovar:', '审核人 Aprovar:', 100, '2019-04-22 09:45:23'),
-	(1006338, 1006302, 'Label_Caixa', '会计Caixa:', NULL, NULL, NULL, '会计Caixa:', '会计Caixa:', 100, '2019-04-22 09:45:23'),
-	(1006339, 1006302, 'Label36', 'Note:Esta cotação é válida por 7 dias.', NULL, NULL, NULL, 'Note:Esta cotação é válida por 7 dias.', 'Note:Esta cotação é válida por 7 dias.', 100, '2019-04-22 09:45:23'),
-	(1006340, 1006302, 'LabelNote0', 'Esta ordem sera entregue em 10 dias de trabalho, se esta for urgente,e necessario pagar mais 20%. Para que nao afecte os trrabalhos diarios da vossa empresa,por favor, encomendem a vossa ordem  o mais rapido possivel.', NULL, NULL, NULL, 'Esta ordem sera entregue em 10 dias de trabalho, se esta for urgente,e necessario pagar mais 20%. Para que nao afecte os trrabalhos diarios da vossa empresa,por favor, encomendem a vossa ordem  o mais rapido possivel.', 'Esta ordem sera entregue em 10 dias de trabalho, se esta for urgente,e necessario pagar mais 20%. Para que nao afecte os trrabalhos diarios da vossa empresa,por favor, encomendem a vossa ordem  o mais rapido possivel.', 100, '2019-04-22 09:45:23'),
-	(1006341, 102, 'r_PrintingOrder', 'r_PrintingOrder', NULL, NULL, NULL, 'r_PrintingOrder', 'r_PrintingOrder', 3, '2019-04-22 09:45:24'),
-	(1006342, 1006341, 'LabelTitle1', 'NOTA DE PAGAMENTO', NULL, NULL, NULL, 'NOTA DE PAGAMENTO', 'NOTA DE PAGAMENTO', 100, '2019-04-22 09:45:24'),
-	(1006343, 1006341, 'Label_Title2_E', '(ESTE DOCUMENTO É DO USO INTERNO)', NULL, NULL, NULL, '(ESTE DOCUMENTO É DO USO INTERNO)', '(ESTE DOCUMENTO É DO USO INTERNO)', 100, '2019-04-22 09:45:24'),
-	(1006344, 1006341, 'Label_fOrderID', '订单号码Nº', NULL, NULL, NULL, '订单号码Nº', '订单号码Nº', 100, '2019-04-22 09:45:24'),
-	(1006345, 1006341, 'Label_fCity', '城市City:', NULL, NULL, NULL, '城市City:', '城市City:', 100, '2019-04-22 09:45:24'),
-	(1006346, 1006341, 'Label_fNUIT', '税号NUIT:', NULL, NULL, NULL, '税号NUIT:', '税号NUIT:', 100, '2019-04-22 09:45:24'),
-	(1006347, 1006341, 'Label_fCustomerName', '客户Cliente:', NULL, NULL, NULL, '客户Cliente:', '客户Cliente:', 100, '2019-04-22 09:45:24'),
-	(1006348, 1006341, 'Label_fOrderDate', '订单日期Date:', NULL, NULL, NULL, '订单日期Date:', '订单日期Date:', 100, '2019-04-22 09:45:24'),
-	(1006349, 1006341, 'Label_LianCi', 'CONT.  / PRDUCAO\r\r\n', NULL, NULL, NULL, 'CONT.  / PRDUCAO\r\r\n', 'CONT.  / PRDUCAO\r\r\n', 100, '2019-04-22 09:45:24'),
-	(1006350, 1006341, 'Label_DeliveryDate', '交货日期Delivery date:', NULL, NULL, NULL, '交货日期Delivery date:', '交货日期Delivery date:', 100, '2019-04-22 09:45:24'),
-	(1006351, 1006341, 'Label_fVendedor', '销售Vendedor:', NULL, NULL, NULL, '销售Vendedor:', '销售Vendedor:', 100, '2019-04-22 09:45:24'),
-	(1006352, 1006341, 'Label_fNumerEnd', 'ATE', NULL, NULL, NULL, 'ATE', 'ATE', 100, '2019-04-22 09:45:24'),
-	(1006353, 1006341, 'Label_fContato', '联系人Contato:', NULL, NULL, NULL, '联系人Contato:', '联系人Contato:', 100, '2019-04-22 09:45:24'),
-	(1006354, 1006341, 'Label_fEspecie', '类别Especie:', NULL, NULL, NULL, '类别Especie:', '类别Especie:', 100, '2019-04-22 09:45:24'),
-	(1006355, 1006341, 'Label_fAvista', '每页序号Avista:', NULL, NULL, NULL, '每页序号Avista:', '每页序号Avista:', 100, '2019-04-22 09:45:24'),
-	(1006356, 1006341, 'Label_Tamanho', '尺寸Tamanho:', NULL, NULL, NULL, '尺寸Tamanho:', '尺寸Tamanho:', 100, '2019-04-22 09:45:24'),
-	(1006357, 1006341, 'Label_fBrandMateria', '材料Materia:', NULL, NULL, NULL, '材料Materia:', '材料Materia:', 100, '2019-04-22 09:45:24'),
-	(1006358, 1006341, 'Label_fCelular', '手机Celular:', NULL, NULL, NULL, '手机Celular:', '手机Celular:', 100, '2019-04-22 09:45:24'),
-	(1006359, 1006341, 'Label_fNumerBegin', '起始号码Numeracao:', NULL, NULL, NULL, '起始号码Numeracao:', '起始号码Numeracao:', 100, '2019-07-24 21:02:22'),
-	(1006360, 1006341, 'Label_fNrCopy', '联数Nr.Copy:', NULL, NULL, NULL, '联数Nr.Copy:', '联数Nr.Copy:', 100, '2019-04-22 09:45:24'),
-	(1006361, 1006341, 'Label_fQuant', '数量Quant:', NULL, NULL, NULL, '数量Quant:', '数量Quant:', 100, '2019-04-22 09:45:24'),
-	(1006362, 1006341, 'Label_fTelefone', '电话Tel:', NULL, NULL, NULL, '电话Tel:', '电话Tel:', 100, '2019-04-22 09:45:24'),
-	(1006363, 1006341, 'Label_fPrice', '单价Price:', NULL, NULL, NULL, '单价Price:', '单价Price:', 100, '2019-04-22 09:45:24'),
-	(1006364, 1006341, 'Label_fPagePerVolumn', 'Page/Vol:', NULL, NULL, NULL, 'Page/Vol:', 'Page/Vol:', 100, '2019-04-22 09:45:24'),
-	(1006365, 1006341, 'Label_fEndereco', '地址Endereco:', NULL, NULL, NULL, '地址Endereco:', '地址Endereco:', 100, '2019-04-22 09:45:24'),
-	(1006366, 1006341, 'Label_fSucursal', 'Sucursal:', NULL, NULL, NULL, 'Sucursal:', 'Sucursal:', 100, '2019-04-22 09:45:24'),
-	(1006367, 1006341, 'Label_fLogo', 'Logo:', NULL, NULL, NULL, 'Logo:', 'Logo:', 100, '2019-04-22 09:45:24'),
-	(1006368, 1006341, 'Label_fNote', 'Note:', NULL, NULL, NULL, 'Note:', 'Note:', 100, '2019-04-22 09:45:24'),
-	(1006369, 1006341, 'LabelNote0', 'Esta ordem sera entregue em 10 dias de trabalho, se esta for urgente,e necessario pagar mais 20%. Para que nao afecte os trrabalhos diarios da vossa empresa,por favor, encomendem a vossa ordem  o mais rapido possivel.', NULL, NULL, NULL, 'Esta ordem sera entregue em 10 dias de trabalho, se esta for urgente,e necessario pagar mais 20%. Para que nao afecte os trrabalhos diarios da vossa empresa,por favor, encomendem a vossa ordem  o mais rapido possivel.', 'Esta ordem sera entregue em 10 dias de trabalho, se esta for urgente,e necessario pagar mais 20%. Para que nao afecte os trrabalhos diarios da vossa empresa,por favor, encomendem a vossa ordem  o mais rapido possivel.', 100, '2019-04-22 09:45:24'),
-	(1006370, 1006341, 'Label_fDesconto', '折扣Desconto:', NULL, NULL, NULL, '折扣Desconto:', '折扣Desconto:', 100, '2019-04-22 09:45:24'),
-	(1006371, 1006341, 'Label_fPayable', '应付金额Valor a Pagar:', NULL, NULL, NULL, '应付金额Valor a Pagar:', '应付金额Valor a Pagar:', 100, '2019-04-22 09:45:24'),
-	(1006372, 1006341, 'Label_fTax', '税金IVA:', NULL, NULL, NULL, '税金IVA:', '税金IVA:', 100, '2019-04-22 09:45:24'),
-	(1006373, 1006341, 'Label_fAmount', '金额合计SubTotal:', NULL, NULL, NULL, '金额合计SubTotal:', '金额合计SubTotal:', 100, '2019-04-22 09:45:24'),
-	(1006374, 1006341, 'Label_Productor', '制作人 Productor:', NULL, NULL, NULL, '制作人 Productor:', '制作人 Productor:', 100, '2019-04-22 09:45:24'),
-	(1006375, 1006341, 'Label_Aprovar', '审核人 Aprovar:', NULL, NULL, NULL, '审核人 Aprovar:', '审核人 Aprovar:', 100, '2019-04-22 09:45:24'),
-	(1006376, 1006341, 'Label_Caixa', '会计Caixa:', NULL, NULL, NULL, '会计Caixa:', '会计Caixa:', 100, '2019-04-22 09:45:24'),
-	(1006377, 102, 'r_report_day', 'r_report_day', NULL, NULL, NULL, 'r_report_day', 'r_report_day', 3, '2019-04-22 09:45:24'),
-	(1006378, 1006377, 'Label_Title', ' Annual   Rreport', NULL, NULL, NULL, ' Annual   Rreport', ' Annual   Rreport', 100, '2019-04-22 09:45:24'),
-	(1006379, 1006377, 'Label_Month', 'Day', NULL, NULL, NULL, 'Day', 'Day', 100, '2019-04-22 09:45:24'),
-	(1006380, 1006377, 'Label_01', '1', NULL, NULL, NULL, '1', '1', 100, '2019-04-22 09:45:24'),
-	(1006381, 1006377, 'Label_02', '2', NULL, NULL, NULL, '2', '2', 100, '2019-04-22 09:45:24'),
-	(1006382, 1006377, 'Label_03', '3', NULL, NULL, NULL, '3', '3', 100, '2019-04-22 09:45:24'),
-	(1006383, 1006377, 'Label_04', '4', NULL, NULL, NULL, '4', '4', 100, '2019-04-22 09:45:24'),
-	(1006384, 1006377, 'Label_05', '5', NULL, NULL, NULL, '5', '5', 100, '2019-04-22 09:45:24'),
-	(1006385, 1006377, 'Label_06', '6', NULL, NULL, NULL, '6', '6', 100, '2019-04-22 09:45:24'),
-	(1006386, 1006377, 'Label_07', '7', NULL, NULL, NULL, '7', '7', 100, '2019-04-22 09:45:24'),
-	(1006387, 1006377, 'Label_08', '8', NULL, NULL, NULL, '8', '8', 100, '2019-04-22 09:45:24'),
-	(1006388, 1006377, 'Label_09', '9', NULL, NULL, NULL, '9', '9', 100, '2019-04-22 09:45:24'),
-	(1006389, 1006377, 'Label_10', '10', NULL, NULL, NULL, '10', '10', 100, '2019-04-22 09:45:24'),
-	(1006390, 1006377, 'Label_11', '11', NULL, NULL, NULL, '11', '11', 100, '2019-04-22 09:45:24'),
-	(1006391, 1006377, 'Label_12', '12', NULL, NULL, NULL, '12', '12', 100, '2019-04-22 09:45:24'),
-	(1006392, 1006377, 'Label_BaseON', 'BaseON:', NULL, NULL, NULL, 'BaseON:', 'BaseON:', 100, '2019-04-22 09:45:24'),
-	(1006393, 102, 'r_RecibidoDailyRreport', 'r_RecibidoDailyRreport', NULL, NULL, NULL, 'r_RecibidoDailyRreport', 'r_RecibidoDailyRreport', 3, '2019-04-22 09:45:24'),
-	(1006394, 1006393, 'Label_fReceiptDate', '收款日Date', NULL, NULL, NULL, '收款日Date', '收款日Date', 100, '2019-04-22 09:45:24'),
-	(1006395, 1006393, 'Label_fAmountCollected', '收款额', NULL, NULL, NULL, '收款额', '收款额', 100, '2019-04-22 09:45:24'),
-	(1006396, 1006393, 'Label_fNote', 'Note', NULL, NULL, NULL, 'Note', 'Note', 100, '2019-04-22 09:45:24'),
-	(1006397, 1006393, 'Label_fCustomerName', '客户名Client', NULL, NULL, NULL, '客户名Client', '客户名Client', 100, '2019-04-22 09:45:24'),
-	(1006398, 1006393, 'Label_fPaymentMethod', 'M.P', NULL, NULL, NULL, 'M.P', 'M.P', 100, '2019-04-22 09:45:24'),
-	(1006399, 1006393, 'Label_YS', 'YS', NULL, NULL, NULL, 'YS', 'YS', 100, '2019-04-22 09:45:24'),
-	(1006400, 1006393, 'Label_SK', 'SK', NULL, NULL, NULL, 'SK', 'SK', 100, '2019-04-22 09:45:24'),
-	(1006401, 1006393, 'Label_QK', '欠款Arrears', NULL, NULL, NULL, '欠款Arrears', '欠款Arrears', 100, '2019-04-22 09:45:24'),
-	(1006402, 1006393, 'Label_Title', 'Recibido Daily Report', NULL, NULL, NULL, 'Recibido Daily Report', 'Recibido Daily Report', 100, '2019-04-22 09:45:24'),
-	(1006403, 102, 'r_Order', 'r_Order', NULL, NULL, NULL, 'r_Order', 'r_Order', 3, '2019-04-22 09:45:24'),
-	(1006404, 1006403, 'Label74', 'NOTA DE PAGAMENTO', NULL, NULL, NULL, 'NOTA DE PAGAMENTO', 'NOTA DE PAGAMENTO', 100, '2019-04-22 09:45:24'),
-	(1006405, 1006403, 'Label75', '数量Qtd', NULL, NULL, NULL, '数量Qtd', '数量Qtd', 100, '2019-04-22 09:45:24'),
-	(1006406, 1006403, 'Label76', '名称Descrição', NULL, NULL, NULL, '名称Descrição', '名称Descrição', 100, '2019-04-22 09:45:24'),
-	(1006407, 1006403, 'Label77', '长Larg.', NULL, NULL, NULL, '长Larg.', '长Larg.', 100, '2019-04-22 09:45:24'),
-	(1006408, 1006403, 'Label78', '宽Comp.', NULL, NULL, NULL, '宽Comp.', '宽Comp.', 100, '2019-04-22 09:45:24'),
-	(1006409, 1006403, 'Label79', '单价P. Unitario', NULL, NULL, NULL, '单价P. Unitario', '单价P. Unitario', 100, '2019-04-22 09:45:24'),
-	(1006410, 1006403, 'Label80', '金额Total', NULL, NULL, NULL, '金额Total', '金额Total', 100, '2019-04-22 09:45:24'),
-	(1006411, 1006403, 'Label83', '订单号码Nº', NULL, NULL, NULL, '订单号码Nº', '订单号码Nº', 100, '2019-04-22 09:45:24'),
-	(1006412, 1006403, 'Label85', '订单日期Date:', NULL, NULL, NULL, '订单日期Date:', '订单日期Date:', 100, '2019-04-22 09:45:24'),
-	(1006413, 1006403, 'Label91', '交货日期Delivery date:', NULL, NULL, NULL, '交货日期Delivery date:', '交货日期Delivery date:', 100, '2019-04-22 09:45:24'),
-	(1006414, 1006403, 'Label0', '(ESTE DOCUMENTO É DO USO INTERNO)', NULL, NULL, NULL, '(ESTE DOCUMENTO É DO USO INTERNO)', '(ESTE DOCUMENTO É DO USO INTERNO)', 100, '2019-04-22 09:45:24'),
-	(1006415, 1006403, 'LabelTitle1', 'NOTA DE PAGAMENTO', NULL, NULL, NULL, 'NOTA DE PAGAMENTO', 'NOTA DE PAGAMENTO', 100, '2019-04-22 09:45:24'),
-	(1006416, 1006403, 'Label_fQuant', '数量Qtd', NULL, NULL, NULL, '数量Qtd', '数量Qtd', 100, '2019-04-22 09:45:24'),
-	(1006417, 1006403, 'Label_fProductName', '名称Descrição', NULL, NULL, NULL, '名称Descrição', '名称Descrição', 100, '2019-04-22 09:45:24'),
-	(1006418, 1006403, 'Label_fLength', '长Larg.', NULL, NULL, NULL, '长Larg.', '长Larg.', 100, '2019-04-22 09:45:24'),
-	(1006419, 1006403, 'Label_fWidth', '宽Comp.', NULL, NULL, NULL, '宽Comp.', '宽Comp.', 100, '2019-04-22 09:45:24'),
-	(1006420, 1006403, 'Label_fPrice', '单价P. Unitario', NULL, NULL, NULL, '单价P. Unitario', '单价P. Unitario', 100, '2019-04-22 09:45:24'),
-	(1006421, 1006403, 'Label_fAmount', '金额Total', NULL, NULL, NULL, '金额Total', '金额Total', 100, '2019-04-22 09:45:24'),
-	(1006422, 1006403, 'Label_fOrderID', '订单号码Nº', NULL, NULL, NULL, '订单号码Nº', '订单号码Nº', 100, '2019-04-22 09:45:24'),
-	(1006423, 1006403, 'Label_fCity', '城市City:', NULL, NULL, NULL, '城市City:', '城市City:', 100, '2019-04-22 09:45:24'),
-	(1006424, 1006403, 'Label_fOrderDate', '订单日期Date:', NULL, NULL, NULL, '订单日期Date:', '订单日期Date:', 100, '2019-04-22 09:45:24'),
-	(1006425, 1006403, 'Label_DeliveryDate', '交货日期Delivery date:', NULL, NULL, NULL, '交货日期Delivery date:', '交货日期Delivery date:', 100, '2019-04-22 09:45:24'),
-	(1006426, 1006403, 'Label_fVendedor', '销售Vendedor:', NULL, NULL, NULL, '销售Vendedor:', '销售Vendedor:', 100, '2019-04-22 09:45:24'),
-	(1006427, 1006403, 'Label_fContato', '联系人Contato:', NULL, NULL, NULL, '联系人Contato:', '联系人Contato:', 100, '2019-04-22 09:45:24'),
-	(1006428, 1006403, 'Label_fCelular', '手机Celular:', NULL, NULL, NULL, '手机Celular:', '手机Celular:', 100, '2019-04-22 09:45:24'),
-	(1006429, 1006403, 'Label_fTelefone', '电话Tel:', NULL, NULL, NULL, '电话Tel:', '电话Tel:', 100, '2019-04-22 09:45:24'),
-	(1006430, 1006403, 'Label_fEndereco', '地址Endereco:', NULL, NULL, NULL, '地址Endereco:', '地址Endereco:', 100, '2019-04-22 09:45:24'),
-	(1006431, 1006403, 'Label_fSucursal', 'Sucursal:', NULL, NULL, NULL, 'Sucursal:', 'Sucursal:', 100, '2019-04-22 09:45:24'),
-	(1006432, 1006403, 'Label_fCustomerName', '客户Cliente:', NULL, NULL, NULL, '客户Cliente:', '客户Cliente:', 100, '2019-04-22 09:45:24'),
-	(1006433, 1006403, 'Label_fNUIT', '税号NUIT:', NULL, NULL, NULL, '税号NUIT:', '税号NUIT:', 100, '2019-04-22 09:45:24'),
-	(1006434, 1006403, 'Label_Title1_E', '(ESTE DOCUMENTO É DO USO INTERNO)', NULL, NULL, NULL, '(ESTE DOCUMENTO É DO USO INTERNO)', '(ESTE DOCUMENTO É DO USO INTERNO)', 100, '2019-04-22 09:45:24'),
-	(1006435, 1006403, 'Label_LianCi', 'CONT.  / PRDUCAO\r\r\n', NULL, NULL, NULL, 'CONT.  / PRDUCAO\r\r\n', 'CONT.  / PRDUCAO\r\r\n', 100, '2019-04-22 09:45:24'),
-	(1006436, 1006403, 'Label_fDesconto', '折扣Desconto:', NULL, NULL, NULL, '折扣Desconto:', '折扣Desconto:', 100, '2019-04-22 09:45:24'),
-	(1006437, 1006403, 'Label_fPayable', '应付金额Valor a Pagar:', NULL, NULL, NULL, '应付金额Valor a Pagar:', '应付金额Valor a Pagar:', 100, '2019-04-22 09:45:24'),
-	(1006438, 1006403, 'Label_fTax', '税金IVA:', NULL, NULL, NULL, '税金IVA:', '税金IVA:', 100, '2019-04-22 09:45:24'),
-	(1006439, 1006403, 'Label_fAmountSum', '金额合计SubTotal:', NULL, NULL, NULL, '金额合计SubTotal:', '金额合计SubTotal:', 100, '2019-04-22 09:45:24'),
-	(1006440, 1006403, 'Label_Productor', '制作人 Productor:', NULL, NULL, NULL, '制作人 Productor:', '制作人 Productor:', 100, '2019-04-22 09:45:24'),
-	(1006441, 1006403, 'Label_Aprovar', '审核人 Aprovar:', NULL, NULL, NULL, '审核人 Aprovar:', '审核人 Aprovar:', 100, '2019-04-22 09:45:24'),
-	(1006442, 1006403, 'Label_Caixa', '会计Caixa:', NULL, NULL, NULL, '会计Caixa:', '会计Caixa:', 100, '2019-04-22 09:45:24'),
-	(1006443, 1006403, 'Label36', 'Note:Esta cotação é válida por 7 dias.', NULL, NULL, NULL, 'Note:Esta cotação é válida por 7 dias.', 'Note:Esta cotação é válida por 7 dias.', 100, '2019-04-22 09:45:24'),
-	(1006444, 1006403, 'LabelNote0', 'Esta ordem sera entregue em 10 dias de trabalho, se esta for urgente,e necessario pagar mais 20%. Para que nao afecte os trrabalhos diarios da vossa empresa,por favor, encomendem a vossa ordem  o mais rapido possivel.', NULL, NULL, NULL, 'Esta ordem sera entregue em 10 dias de trabalho, se esta for urgente,e necessario pagar mais 20%. Para que nao afecte os trrabalhos diarios da vossa empresa,por favor, encomendem a vossa ordem  o mais rapido possivel.', 'Esta ordem sera entregue em 10 dias de trabalho, se esta for urgente,e necessario pagar mais 20%. Para que nao afecte os trrabalhos diarios da vossa empresa,por favor, encomendem a vossa ordem  o mais rapido possivel.', 100, '2019-04-22 09:45:24'),
-	(1006445, 102, 'r_QuotationPrinting', 'r_QuotationPrinting', NULL, NULL, NULL, 'r_QuotationPrinting', 'r_QuotationPrinting', 3, '2019-04-22 09:45:24'),
-	(1006446, 1006445, 'LabelTitle1', 'Cotação', NULL, NULL, NULL, 'Cotação', 'Cotação', 100, '2019-04-22 09:45:24'),
-	(1006447, 1006445, 'Label_fOrderID', '订单号码Nº', NULL, NULL, NULL, '订单号码Nº', '订单号码Nº', 100, '2019-04-22 09:45:24'),
-	(1006448, 1006445, 'Label_fCity', '城市City:', NULL, NULL, NULL, '城市City:', '城市City:', 100, '2019-04-22 09:45:24'),
-	(1006449, 1006445, 'Label_ShuiHao', '税号NUIT:', NULL, NULL, NULL, '税号NUIT:', '税号NUIT:', 100, '2019-04-22 09:45:24'),
-	(1006450, 1006445, 'Label_fCustomerName', '客户Cliente:', NULL, NULL, NULL, '客户Cliente:', '客户Cliente:', 100, '2019-04-22 09:45:24'),
-	(1006451, 1006445, 'Label_fOrderDate', '订单日期Date:', NULL, NULL, NULL, '订单日期Date:', '订单日期Date:', 100, '2019-04-22 09:45:24'),
-	(1006452, 1006445, 'Label_KeHuHao', '手机Celular:', NULL, NULL, NULL, '手机Celular:', '手机Celular:', 100, '2019-04-22 09:45:24'),
-	(1006453, 1006445, 'Label_LianCi', 'CONT.  / PRDUCAO\r\r\n', NULL, NULL, NULL, 'CONT.  / PRDUCAO\r\r\n', 'CONT.  / PRDUCAO\r\r\n', 100, '2019-04-22 09:45:24'),
-	(1006454, 1006445, 'Label_DeliveryDate', '交货日期Delivery date:', NULL, NULL, NULL, '交货日期Delivery date:', '交货日期Delivery date:', 100, '2019-04-22 09:45:24'),
-	(1006455, 1006445, 'Label_fVendedor1', '销售Vendedor:', NULL, NULL, NULL, '销售Vendedor:', '销售Vendedor:', 100, '2019-04-22 09:45:24'),
-	(1006456, 1006445, 'Label_fNumerEnd', 'ATE', NULL, NULL, NULL, 'ATE', 'ATE', 100, '2019-04-22 09:45:24'),
-	(1006457, 1006445, 'Label_fContato', '联系人Contato:', NULL, NULL, NULL, '联系人Contato:', '联系人Contato:', 100, '2019-04-22 09:45:24'),
-	(1006458, 1006445, 'Label_fEspecie', '类别Especie:', NULL, NULL, NULL, '类别Especie:', '类别Especie:', 100, '2019-04-22 09:45:24'),
-	(1006459, 1006445, 'Label_fAvista', '每页序号Avista:', NULL, NULL, NULL, '每页序号Avista:', '每页序号Avista:', 100, '2019-04-22 09:45:25'),
-	(1006460, 1006445, 'Label_Tamanho', '尺寸Tamanho:', NULL, NULL, NULL, '尺寸Tamanho:', '尺寸Tamanho:', 100, '2019-04-22 09:45:25'),
-	(1006461, 1006445, 'Label_fBrandMateria', '材料Materia:', NULL, NULL, NULL, '材料Materia:', '材料Materia:', 100, '2019-04-22 09:45:25'),
-	(1006462, 1006445, 'Label_DianHuaHaoMa1', '手机Celular:', NULL, NULL, NULL, '手机Celular:', '手机Celular:', 100, '2019-04-22 09:45:25'),
-	(1006463, 1006445, 'Label_fNumerBegin', '起始号码Numeracao:', NULL, NULL, NULL, '起始号码Numeracao:', '起始号码Numeracao:', 100, '2019-07-24 21:02:22'),
-	(1006464, 1006445, 'Label_fNrCopy', '联数Nr.Copy:', NULL, NULL, NULL, '联数Nr.Copy:', '联数Nr.Copy:', 100, '2019-04-22 09:45:25'),
-	(1006465, 1006445, 'Label_fQuant', '数量Quant:', NULL, NULL, NULL, '数量Quant:', '数量Quant:', 100, '2019-04-22 09:45:25'),
-	(1006466, 1006445, 'Label_fTelefone', '电话Tel:', NULL, NULL, NULL, '电话Tel:', '电话Tel:', 100, '2019-04-22 09:45:25'),
-	(1006467, 1006445, 'Label_fPrice', '单价Price:', NULL, NULL, NULL, '单价Price:', '单价Price:', 100, '2019-04-22 09:45:25'),
-	(1006468, 1006445, 'Label_fPagePerVolumn', 'Page/Vol:', NULL, NULL, NULL, 'Page/Vol:', 'Page/Vol:', 100, '2019-04-22 09:45:25'),
-	(1006469, 1006445, 'Label_fEndereco', '地址Endereco:', NULL, NULL, NULL, '地址Endereco:', '地址Endereco:', 100, '2019-04-22 09:45:25'),
-	(1006470, 1006445, 'Label_fSucursal', 'Sucursal:', NULL, NULL, NULL, 'Sucursal:', 'Sucursal:', 100, '2019-04-22 09:45:25'),
-	(1006471, 1006445, 'Label_fLogo', 'Logo:', NULL, NULL, NULL, 'Logo:', 'Logo:', 100, '2019-04-22 09:45:25'),
-	(1006472, 1006445, 'Label_fNote', 'Note:Esta cotação é válida por 7 dias.', NULL, NULL, NULL, 'Note:Esta cotação é válida por 7 dias.', 'Note:Esta cotação é válida por 7 dias.', 100, '2019-04-22 09:45:25'),
-	(1006473, 1006445, 'LabelNote0', 'Esta ordem sera entregue em 10 dias de trabalho, se esta for urgente,e necessario pagar mais 20%. Para que nao afecte os trrabalhos diarios da vossa empresa,por favor, encomendem a vossa ordem  o mais rapido possivel.', NULL, NULL, NULL, 'Esta ordem sera entregue em 10 dias de trabalho, se esta for urgente,e necessario pagar mais 20%. Para que nao afecte os trrabalhos diarios da vossa empresa,por favor, encomendem a vossa ordem  o mais rapido possivel.', 'Esta ordem sera entregue em 10 dias de trabalho, se esta for urgente,e necessario pagar mais 20%. Para que nao afecte os trrabalhos diarios da vossa empresa,por favor, encomendem a vossa ordem  o mais rapido possivel.', 100, '2019-04-22 09:45:25'),
-	(1006474, 1006445, 'Label_Productor', '制作人 Productor:', NULL, NULL, NULL, '制作人 Productor:', '制作人 Productor:', 100, '2019-04-22 09:45:25'),
-	(1006475, 1006445, 'Label_Aprovar', '审核人 Aprovar:', NULL, NULL, NULL, '审核人 Aprovar:', '审核人 Aprovar:', 100, '2019-04-22 09:45:25'),
-	(1006476, 1006445, 'Label_Caixa', '会计Caixa:', NULL, NULL, NULL, '会计Caixa:', '会计Caixa:', 100, '2019-04-22 09:45:25');
-/*!40000 ALTER TABLE `syslanguage` ENABLE KEYS */;
-
 -- 导出  表 myorder_python.sysnavigationmenus 结构
-DROP TABLE IF EXISTS `sysnavigationmenus`;
 CREATE TABLE IF NOT EXISTS `sysnavigationmenus` (
   `fNMID` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
   `fDispIndex` int(11) DEFAULT NULL COMMENT '显示顺序',
@@ -895,7 +58,7 @@ CREATE TABLE IF NOT EXISTS `sysnavigationmenus` (
   KEY `ParentID` (`fParentId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=186 DEFAULT CHARSET=utf8;
 
--- 正在导出表  myorder_python.sysnavigationmenus 的数据：~141 rows (大约)
+-- 正在导出表  myorder_python.sysnavigationmenus 的数据：~98 rows (大约)
 /*!40000 ALTER TABLE `sysnavigationmenus` DISABLE KEYS */;
 INSERT INTO `sysnavigationmenus` (`fNMID`, `fDispIndex`, `fParentId`, `fEnabled`, `fMenuText`, `fCommand`, `fObjectName`, `fFormMode`, `fArg`, `fIcon`, `fDefault`, `fNodeBackvolor`, `fNodeForeColor`, `fNodeFontBold`, `fExpanded`, `fDescription`, `fLevel`, `fIsCommandButton`, `TS`) VALUES
 	(1, 110, 0, b'1', 'Function', 0, '', 0, '', 'home', b'1', NULL, NULL, 0, 1, '', b'0', b'0', '2019-04-20 13:45:28'),
@@ -1014,24 +177,7 @@ INSERT INTO `sysnavigationmenus` (`fNMID`, `fDispIndex`, `fParentId`, `fEnabled`
 	(185, 16810, 168, b'1', 'Print', 0, 'CmdPrint', NULL, NULL, 'print.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-10-18 09:39:54');
 /*!40000 ALTER TABLE `sysnavigationmenus` ENABLE KEYS */;
 
--- 导出  表 myorder_python.syssql 结构
-DROP TABLE IF EXISTS `syssql`;
-CREATE TABLE IF NOT EXISTS `syssql` (
-  `ID` int(11) DEFAULT NULL,
-  `UseFor` varchar(50) DEFAULT NULL,
-  `Description` varchar(255) DEFAULT NULL,
-  `ObjectName` varchar(50) DEFAULT NULL,
-  `ControlName` varchar(50) DEFAULT NULL,
-  `MariaDB` text,
-  `MariaDB_NoPara` text
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- 正在导出表  myorder_python.syssql 的数据：~0 rows (大约)
-/*!40000 ALTER TABLE `syssql` DISABLE KEYS */;
-/*!40000 ALTER TABLE `syssql` ENABLE KEYS */;
-
 -- 导出  表 myorder_python.systabelautokeyroles 结构
-DROP TABLE IF EXISTS `systabelautokeyroles`;
 CREATE TABLE IF NOT EXISTS `systabelautokeyroles` (
   `fRoleID` tinyint(4) NOT NULL AUTO_INCREMENT COMMENT '编号',
   `fRoleName` varchar(50) NOT NULL COMMENT '名称',
@@ -1052,17 +198,16 @@ CREATE TABLE IF NOT EXISTS `systabelautokeyroles` (
 -- 正在导出表  myorder_python.systabelautokeyroles 的数据：~7 rows (大约)
 /*!40000 ALTER TABLE `systabelautokeyroles` DISABLE KEYS */;
 INSERT INTO `systabelautokeyroles` (`fRoleID`, `fRoleName`, `fTabelName`, `fFieldName`, `fHasDateTime`, `fPreFix`, `fCurrentValue`, `fLenght`, `fLastKey`, `fDateFormat`, `TS`) VALUES
-	(1, 'OrderID', 't_order', 'forderID', b'1', 'CP', 0000000165, 6, 'CP2019-1026000165', 'yyyy-mmdd', '2019-10-26 09:19:21'),
+	(1, 'OrderID', 't_order', 'forderID', b'1', 'CP', 0000000167, 6, 'CP2019-1027000167', 'yyyy-mmdd', '2019-10-27 10:13:22'),
 	(2, 'InkjetPrintingGuide_ID', 't_InkjetPrintingGuide', 'InkjetPrintingGuide_ID', b'1', 'PG', 0000000000, 6, '0', 'yyyy-mmdd', '2019-04-18 12:37:08'),
 	(3, 'Attachment', 't_InkjetPrintingGuide_Map', 'MapName', b'1', 'ATT', 0000000000, 10, '', 'yyyymmdd', '2019-04-18 12:37:08'),
 	(4, 'PrintingQuoteID', 't_quotation', 'fQuoteID', b'1', 'QP', 0000000002, 6, 'QP2019-1017000002', 'yyyy-mmdd', '2019-10-17 08:22:26'),
 	(5, 'PrintingOderID', 't_order', 'fOrderID', b'1', 'TP', 0000000020, 6, 'TP2019-1026000020', 'yyyy-mmdd', '2019-10-26 09:18:37'),
 	(6, 'OrderQuoteID', 't_Quotation', 'fQuoteID', b'1', 'QS', 0000000006, 6, 'QS2019-1011000006', 'yyyy-mmdd', '2019-10-11 20:06:58'),
-	(7, 'OuttboundOrderID', 't_product_outbound_order', 'fOrderID', b'1', 'PO', 0000000008, 6, 'PO2019-1026000008', 'yyyy-mmdd', '2019-10-26 09:56:50');
+	(7, 'OuttboundOrderID', 't_product_outbound_order', 'fOrderID', b'1', 'PO', 0000000011, 6, 'PO2019-1028000011', 'yyyy-mmdd', '2019-10-28 12:30:21');
 /*!40000 ALTER TABLE `systabelautokeyroles` ENABLE KEYS */;
 
 -- 导出  表 myorder_python.sysuserright 结构
-DROP TABLE IF EXISTS `sysuserright`;
 CREATE TABLE IF NOT EXISTS `sysuserright` (
   `fID` smallint(6) NOT NULL AUTO_INCREMENT COMMENT '编号',
   `fRightID` smallint(6) NOT NULL COMMENT '权限编号',
@@ -1073,7 +218,7 @@ CREATE TABLE IF NOT EXISTS `sysuserright` (
   UNIQUE KEY `UserID` (`fUserID`,`fRightID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=991 DEFAULT CHARSET=utf8;
 
--- 正在导出表  myorder_python.sysuserright 的数据：~499 rows (大约)
+-- 正在导出表  myorder_python.sysuserright 的数据：~893 rows (大约)
 /*!40000 ALTER TABLE `sysuserright` DISABLE KEYS */;
 INSERT INTO `sysuserright` (`fID`, `fRightID`, `fUserID`, `fHasRight`, `TS`) VALUES
 	(1, 1, 2, b'1', '2019-09-09 13:32:22'),
@@ -1774,7 +919,6 @@ INSERT INTO `sysuserright` (`fID`, `fRightID`, `fUserID`, `fHasRight`, `TS`) VAL
 /*!40000 ALTER TABLE `sysuserright` ENABLE KEYS */;
 
 -- 导出  表 myorder_python.sysusers 结构
-DROP TABLE IF EXISTS `sysusers`;
 CREATE TABLE IF NOT EXISTS `sysusers` (
   `fUserID` int(11) NOT NULL AUTO_INCREMENT,
   `fOnline` bit(1) NOT NULL DEFAULT b'0',
@@ -1808,7 +952,6 @@ INSERT INTO `sysusers` (`fUserID`, `fOnline`, `fEnabled`, `fDepartment`, `fUsern
 /*!40000 ALTER TABLE `sysusers` ENABLE KEYS */;
 
 -- 导出  表 myorder_python.t_customer 结构
-DROP TABLE IF EXISTS `t_customer`;
 CREATE TABLE IF NOT EXISTS `t_customer` (
   `fCustomerID` int(11) NOT NULL AUTO_INCREMENT,
   `fCustomerName` varchar(50) NOT NULL COMMENT '客户名',
@@ -1926,7 +1069,6 @@ INSERT INTO `t_customer` (`fCustomerID`, `fCustomerName`, `fNUIT`, `fCity`, `fCo
 /*!40000 ALTER TABLE `t_customer` ENABLE KEYS */;
 
 -- 导出  表 myorder_python.t_enumeration 结构
-DROP TABLE IF EXISTS `t_enumeration`;
 CREATE TABLE IF NOT EXISTS `t_enumeration` (
   `fItemID` int(11) NOT NULL AUTO_INCREMENT COMMENT '选项编号',
   `fTypeID` int(11) NOT NULL,
@@ -2040,7 +1182,6 @@ INSERT INTO `t_enumeration` (`fItemID`, `fTypeID`, `fTitle`, `fSpare1`, `fSpare2
 /*!40000 ALTER TABLE `t_enumeration` ENABLE KEYS */;
 
 -- 导出  表 myorder_python.t_enumeration_type 结构
-DROP TABLE IF EXISTS `t_enumeration_type`;
 CREATE TABLE IF NOT EXISTS `t_enumeration_type` (
   `fTypeID` int(11) NOT NULL AUTO_INCREMENT,
   `fTypeName` varchar(20) NOT NULL,
@@ -2066,7 +1207,6 @@ INSERT INTO `t_enumeration_type` (`fTypeID`, `fTypeName`, `fNote`, `TS`) VALUES
 /*!40000 ALTER TABLE `t_enumeration_type` ENABLE KEYS */;
 
 -- 导出  表 myorder_python.t_order 结构
-DROP TABLE IF EXISTS `t_order`;
 CREATE TABLE IF NOT EXISTS `t_order` (
   `fOrderID` char(20) NOT NULL COMMENT '订单号',
   `fPrice` decimal(10,2) DEFAULT NULL COMMENT '单价_印刷',
@@ -2114,7 +1254,7 @@ CREATE TABLE IF NOT EXISTS `t_order` (
   KEY `iOrderDate` (`fOrderDate`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- 正在导出表  myorder_python.t_order 的数据：~157 rows (大约)
+-- 正在导出表  myorder_python.t_order 的数据：~225 rows (大约)
 /*!40000 ALTER TABLE `t_order` DISABLE KEYS */;
 INSERT INTO `t_order` (`fOrderID`, `fPrice`, `fCustomerID`, `fOrderDate`, `fEspecieID`, `fRequiredDeliveryDate`, `fCategoryID`, `fBrandMateriaID`, `fAmount`, `fTax`, `fPayable`, `fDesconto`, `fColorID`, `fEntryID`, `fSubmited`, `fSubmitID`, `fReviewed`, `fReviewerID`, `fConfirmed`, `fConfirmID`, `fDelivered`, `fDelivererID`, `fCanceled`, `fCancelID`, `fDeliveryDate`, `fNumerBegin`, `fQuant`, `fPagePerVolumn`, `fNumerEnd`, `fAvistaID`, `fTamanhoID`, `fSucursal`, `fLogo`, `fVendedorID`, `fNrCopyID`, `fContato`, `fCelular`, `fTelefone`, `fNote`, `fDeliverViewed`, `TS`) VALUES
 	('222', NULL, 1, '2019-10-10', NULL, '2019-10-10', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, b'0', NULL, NULL, NULL, NULL, NULL, NULL, b'0', '2019-10-10 07:59:04'),
@@ -2283,6 +1423,8 @@ INSERT INTO `t_order` (`fOrderID`, `fPrice`, `fCustomerID`, `fOrderDate`, `fEspe
 	('CP2019-1010000163', NULL, 5, '2019-10-10', NULL, '2019-10-07', NULL, NULL, 4.00, 0.68, 4.68, NULL, NULL, 2, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, b'0', b'0', NULL, NULL, '12', '846666552', NULL, NULL, b'0', '2019-10-10 14:12:56'),
 	('CP2019-1024000164', NULL, 89, '2019-10-24', NULL, '2019-10-15', NULL, NULL, 60.00, 10.20, 70.20, NULL, NULL, 2, b'1', NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, b'0', b'0', NULL, NULL, 'lianxiren', '13900000', '9548', NULL, b'0', '2019-10-25 14:24:05'),
 	('CP2019-1026000165', NULL, 89, '2019-10-26', NULL, '2019-10-08', NULL, NULL, 1.00, 0.17, 1.17, 0.00, NULL, 2, b'1', NULL, b'0', NULL, b'1', 2, b'0', NULL, b'0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, b'0', b'0', 97, NULL, 'lianxiren3233', '13900000444', '1234', NULL, b'0', '2019-10-26 09:36:40'),
+	('CP2019-1026000166', NULL, 89, '2019-10-26', NULL, '2019-10-21', NULL, NULL, 2286.00, 388.62, 2674.62, 0.00, NULL, 2, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, b'0', 97, NULL, 'lianxiren', '13900000', '1234', NULL, b'0', '2019-10-26 10:50:53'),
+	('CP2019-1027000167', NULL, 89, '2019-10-27', NULL, '2019-10-07', NULL, NULL, 209.00, 35.53, 244.53, 0.00, NULL, 2, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, b'0', 97, NULL, 'lianxiren', '13900000', '1234', NULL, b'0', '2019-10-27 11:18:53'),
 	('jkfdskf', NULL, 3, '2019-10-10', NULL, '2019-10-09', NULL, NULL, 1.00, 0.17, 1.17, NULL, NULL, 2, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, b'0', b'0', NULL, NULL, '112321', '873066544', NULL, NULL, b'0', '2019-10-10 17:48:33'),
 	('PO2019-1010000001', NULL, 6, '2019-10-10', NULL, '2019-10-09', NULL, NULL, 1.00, 0.17, 1.17, NULL, NULL, 2, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, b'0', b'0', NULL, NULL, NULL, '842387981', NULL, NULL, b'0', '2019-10-10 14:15:57'),
 	('PO2019-1010000002', NULL, 3, '2019-10-10', NULL, '2019-10-09', NULL, NULL, 1.00, 0.17, 1.17, NULL, NULL, 2, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, b'0', b'0', NULL, NULL, '112321', '873066544', NULL, NULL, b'0', '2019-10-10 14:16:09'),
@@ -2308,7 +1450,6 @@ INSERT INTO `t_order` (`fOrderID`, `fPrice`, `fCustomerID`, `fOrderDate`, `fEspe
 /*!40000 ALTER TABLE `t_order` ENABLE KEYS */;
 
 -- 导出  表 myorder_python.t_order_detail 结构
-DROP TABLE IF EXISTS `t_order_detail`;
 CREATE TABLE IF NOT EXISTS `t_order_detail` (
   `fID` int(11) NOT NULL AUTO_INCREMENT,
   `fOrderID` char(20) DEFAULT NULL,
@@ -2320,9 +1461,9 @@ CREATE TABLE IF NOT EXISTS `t_order_detail` (
   `fAmount` decimal(11,2) NOT NULL,
   `TS` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`fID`)
-) ENGINE=InnoDB AUTO_INCREMENT=217 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=226 DEFAULT CHARSET=utf8;
 
--- 正在导出表  myorder_python.t_order_detail 的数据：~153 rows (大约)
+-- 正在导出表  myorder_python.t_order_detail 的数据：~277 rows (大约)
 /*!40000 ALTER TABLE `t_order_detail` DISABLE KEYS */;
 INSERT INTO `t_order_detail` (`fID`, `fOrderID`, `fQuant`, `fProductName`, `fLength`, `fWidth`, `fPrice`, `fAmount`, `TS`) VALUES
 	(2, 'CP2019-0909000001', 200, 'IMP Cartao de visita laminado F/V', 1.000, 1.000, 7.00, 1400.00, '2019-09-09 14:11:41'),
@@ -2530,11 +1671,18 @@ INSERT INTO `t_order_detail` (`fID`, `fOrderID`, `fQuant`, `fProductName`, `fLen
 	(207, 'CP2019-0928000159', 1, 'IMP/ DE BANNER PRETO C/ 4 ILHOSES', 1.406, 0.606, 400.00, 344.04, '2019-09-28 11:02:59'),
 	(214, 'CP2019-0930000160', 1, '1', 1.000, 1.000, 1.00, 1.00, '2019-09-30 12:22:03'),
 	(215, 'CP2019-1024000164', 1, '2', 3.000, 4.000, 5.00, 60.00, '2019-10-24 11:21:26'),
-	(216, 'CP2019-1026000165', 1, '1', 1.000, 1.000, 1.00, 1.00, '2019-10-26 09:19:21');
+	(216, 'CP2019-1026000165', 1, '1', 1.000, 1.000, 1.00, 1.00, '2019-10-26 09:19:21'),
+	(217, 'CP2019-1026000166', 1, '1', 1.000, 3.000, 4.00, 12.00, '2019-10-26 10:25:03'),
+	(218, 'CP2019-1026000166', 2, '2', 2.000, 2.000, 2.00, 16.00, '2019-10-26 10:25:03'),
+	(219, 'CP2019-1026000166', 3, '3', 3.000, 3.000, 3.00, 81.00, '2019-10-26 10:25:03'),
+	(220, 'CP2019-1026000166', 4, '4', 4.000, 4.000, 4.00, 256.00, '2019-10-26 10:25:03'),
+	(221, 'CP2019-1026000166', 5, '5', 5.000, 5.000, 5.00, 625.00, '2019-10-26 10:25:03'),
+	(223, 'CP2019-1027000167', 1, '1', 1.000, 1.000, 1.00, 1.00, '2019-10-27 10:13:22'),
+	(224, 'CP2019-1027000167', 2, '2', 2.000, 2.000, 2.00, 16.00, '2019-10-27 10:13:22'),
+	(225, 'CP2019-1027000167', 3, '4', 4.000, 4.000, 4.00, 192.00, '2019-10-27 10:13:22');
 /*!40000 ALTER TABLE `t_order_detail` ENABLE KEYS */;
 
 -- 导出  表 myorder_python.t_product_information 结构
-DROP TABLE IF EXISTS `t_product_information`;
 CREATE TABLE IF NOT EXISTS `t_product_information` (
   `fID` int(11) NOT NULL AUTO_INCREMENT,
   `fProductName` varchar(250) CHARACTER SET utf8 NOT NULL,
@@ -2664,7 +1812,6 @@ INSERT INTO `t_product_information` (`fID`, `fProductName`, `fSpesc`, `fWidth`, 
 /*!40000 ALTER TABLE `t_product_information` ENABLE KEYS */;
 
 -- 导出  表 myorder_python.t_product_outbound_order 结构
-DROP TABLE IF EXISTS `t_product_outbound_order`;
 CREATE TABLE IF NOT EXISTS `t_product_outbound_order` (
   `fOrderID` char(20) NOT NULL COMMENT '订单号',
   `fPrice` decimal(10,2) DEFAULT NULL COMMENT '单价',
@@ -2700,17 +1847,17 @@ CREATE TABLE IF NOT EXISTS `t_product_outbound_order` (
   KEY `iOrderDate` (`fOrderDate`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- 正在导出表  myorder_python.t_product_outbound_order 的数据：~3 rows (大约)
+-- 正在导出表  myorder_python.t_product_outbound_order 的数据：~5 rows (大约)
 /*!40000 ALTER TABLE `t_product_outbound_order` DISABLE KEYS */;
 INSERT INTO `t_product_outbound_order` (`fOrderID`, `fPrice`, `fCustomerID`, `fOrderDate`, `fRequiredDeliveryDate`, `fAmount`, `fTax`, `fPayable`, `fDesconto`, `fEntryID`, `fSubmited`, `fSubmitID`, `fReviewed`, `fReviewerID`, `fConfirmed`, `fConfirmID`, `fDelivered`, `fDelivererID`, `fCanceled`, `fCancelID`, `fDeliveryDate`, `fQuant`, `fSucursal`, `fVendedorID`, `fContato`, `fCelular`, `fTelefone`, `fNote`, `TS`) VALUES
 	('PO2019-1010000003', NULL, 3, '2019-10-10', '2019-10-08', 2.00, 0.34, 2.34, NULL, 2, b'1', NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, NULL, NULL, b'0', NULL, '1', '873066544', NULL, NULL, '2019-10-14 11:31:38'),
 	('PO2019-1014000004', NULL, 10, '2019-10-14', '2019-10-15', 4.00, 0.68, 4.68, NULL, 2, b'1', NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, NULL, NULL, b'0', NULL, '1231', '847320606', NULL, NULL, '2019-10-14 12:24:13'),
 	('PO2019-1018000007', NULL, 2, '2019-10-18', '2019-10-15', 72.00, 12.24, 84.24, NULL, 2, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, NULL, NULL, NULL, 97, '3', '845470047', NULL, NULL, '2019-10-18 09:23:57'),
-	('PO2019-1026000008', NULL, 89, '2019-10-26', '2019-10-15', 48.00, 8.16, 56.16, NULL, 2, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, NULL, NULL, NULL, NULL, 'lianxiren', '13900000', NULL, NULL, '2019-10-26 09:56:50');
+	('PO2019-1026000008', NULL, 89, '2019-10-26', '2019-10-15', 52.00, 8.84, 60.84, 0.00, 2, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, NULL, NULL, NULL, NULL, 'lianxiren', '13900000', NULL, NULL, '2019-10-26 10:22:12'),
+	('PO2019-1027000009', NULL, 89, '2019-10-27', '2019-10-22', 22.00, 3.74, 25.74, NULL, 2, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, b'0', NULL, NULL, NULL, NULL, NULL, 'lianxiren', '13900000', NULL, NULL, '2019-10-27 11:19:47');
 /*!40000 ALTER TABLE `t_product_outbound_order` ENABLE KEYS */;
 
 -- 导出  表 myorder_python.t_product_outbound_order_detail 结构
-DROP TABLE IF EXISTS `t_product_outbound_order_detail`;
 CREATE TABLE IF NOT EXISTS `t_product_outbound_order_detail` (
   `fID` int(11) NOT NULL AUTO_INCREMENT,
   `fOrderID` char(20) DEFAULT NULL,
@@ -2721,9 +1868,9 @@ CREATE TABLE IF NOT EXISTS `t_product_outbound_order_detail` (
   `fAmount` decimal(11,2) NOT NULL,
   `TS` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`fID`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8;
 
--- 正在导出表  myorder_python.t_product_outbound_order_detail 的数据：~12 rows (大约)
+-- 正在导出表  myorder_python.t_product_outbound_order_detail 的数据：~21 rows (大约)
 /*!40000 ALTER TABLE `t_product_outbound_order_detail` DISABLE KEYS */;
 INSERT INTO `t_product_outbound_order_detail` (`fID`, `fOrderID`, `fQuant`, `fProductID`, `fPrice`, `fNote`, `fAmount`, `TS`) VALUES
 	(1, 'CP2019-1010000161', 2, 6, 2.00, NULL, 4.00, '2019-10-10 14:12:37'),
@@ -2740,11 +1887,16 @@ INSERT INTO `t_product_outbound_order_detail` (`fID`, `fOrderID`, `fQuant`, `fPr
 	(12, 'PO2019-1018000007', 5, 2, 6.00, NULL, 30.00, '2019-10-18 09:23:57'),
 	(13, 'PO2019-1026000008', 4, 6, 4.00, NULL, 16.00, '2019-10-26 09:56:50'),
 	(14, 'PO2019-1026000008', 4, 7, 4.00, NULL, 16.00, '2019-10-26 09:56:50'),
-	(15, 'PO2019-1026000008', 4, 8, 4.00, NULL, 16.00, '2019-10-26 09:56:50');
+	(15, 'PO2019-1026000008', 4, 8, 4.00, NULL, 16.00, '2019-10-26 09:56:50'),
+	(16, 'PO2019-1026000008', 1, 10, 1.00, NULL, 1.00, '2019-10-26 10:22:12'),
+	(17, 'PO2019-1026000008', 1, 10, 1.00, NULL, 1.00, '2019-10-26 10:22:12'),
+	(18, 'PO2019-1026000008', 1, 10, 1.00, NULL, 1.00, '2019-10-26 10:22:12'),
+	(19, 'PO2019-1026000008', 1, 1, 1.00, NULL, 1.00, '2019-10-26 10:22:12'),
+	(20, 'PO2019-1027000009', 1, 6, 2.00, NULL, 2.00, '2019-10-27 11:19:47'),
+	(21, 'PO2019-1027000009', 4, 9, 5.00, NULL, 20.00, '2019-10-27 11:19:47');
 /*!40000 ALTER TABLE `t_product_outbound_order_detail` ENABLE KEYS */;
 
 -- 导出  表 myorder_python.t_product_warehousereceipt_order 结构
-DROP TABLE IF EXISTS `t_product_warehousereceipt_order`;
 CREATE TABLE IF NOT EXISTS `t_product_warehousereceipt_order` (
   `fOrderID` char(20) NOT NULL COMMENT '订单号',
   `fPrice` decimal(10,2) DEFAULT NULL COMMENT '单价',
@@ -2770,16 +1922,17 @@ CREATE TABLE IF NOT EXISTS `t_product_warehousereceipt_order` (
   KEY `iOrderDate` (`fOrderDate`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- 正在导出表  myorder_python.t_product_warehousereceipt_order 的数据：~3 rows (大约)
+-- 正在导出表  myorder_python.t_product_warehousereceipt_order 的数据：~5 rows (大约)
 /*!40000 ALTER TABLE `t_product_warehousereceipt_order` DISABLE KEYS */;
 INSERT INTO `t_product_warehousereceipt_order` (`fOrderID`, `fPrice`, `fSupplierID`, `fPurchaserID`, `fOrderDate`, `fWarehousingDate`, `fAmount`, `fTax`, `fPayable`, `fDesconto`, `fEntryID`, `fSubmited`, `fSubmitID`, `fCanceled`, `fCancelID`, `fContato`, `fCelular`, `fTelefone`, `fNote`, `TS`) VALUES
 	('234234', NULL, 3, 0, '2019-10-16', NULL, 000000001.00, 1.00, 1.00, 1.00, 2, b'1', NULL, b'0', NULL, NULL, NULL, NULL, NULL, '2019-10-16 10:08:15'),
 	('PO2019-1017000005', NULL, 3, 3, '2019-10-17', '2019-10-17', 000000008.00, 1.36, 9.36, NULL, 2, b'0', NULL, b'0', NULL, '234567', '1234567', '2345', NULL, '2019-10-17 22:42:43'),
-	('PO2019-1017000006', NULL, 3, 97, '2019-10-17', '2019-10-01', 000000009.00, 1.53, 10.53, NULL, 2, b'1', NULL, b'0', NULL, '22', '33', '333', NULL, '2019-10-18 08:19:03');
+	('PO2019-1017000006', NULL, 3, 97, '2019-10-17', '2019-10-01', 000000009.00, 1.53, 10.53, NULL, 2, b'1', NULL, b'0', NULL, '22', '33', '333', NULL, '2019-10-18 08:19:03'),
+	('PO2019-1028000010', NULL, 3, 97, '2019-10-28', '2019-10-16', 000000037.00, 6.29, 43.29, 0.00, 2, b'0', NULL, b'0', NULL, 'jjj', 'sj', '123456789', NULL, '2019-10-28 08:18:50'),
+	('PO2019-1028000011', NULL, 3, 97, '2019-10-28', '2019-10-30', 000000050.00, 8.50, 58.50, 0.00, 2, b'0', NULL, b'0', NULL, 'jjj', 'sj', NULL, NULL, '2019-10-28 12:30:59');
 /*!40000 ALTER TABLE `t_product_warehousereceipt_order` ENABLE KEYS */;
 
 -- 导出  表 myorder_python.t_product_warehousereceipt_order_detail 结构
-DROP TABLE IF EXISTS `t_product_warehousereceipt_order_detail`;
 CREATE TABLE IF NOT EXISTS `t_product_warehousereceipt_order_detail` (
   `fID` int(11) NOT NULL AUTO_INCREMENT,
   `fOrderID` char(20) DEFAULT NULL,
@@ -2790,19 +1943,22 @@ CREATE TABLE IF NOT EXISTS `t_product_warehousereceipt_order_detail` (
   `fAmount` decimal(11,2) NOT NULL,
   `TS` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`fID`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 
--- 正在导出表  myorder_python.t_product_warehousereceipt_order_detail 的数据：~4 rows (大约)
+-- 正在导出表  myorder_python.t_product_warehousereceipt_order_detail 的数据：~8 rows (大约)
 /*!40000 ALTER TABLE `t_product_warehousereceipt_order_detail` DISABLE KEYS */;
 INSERT INTO `t_product_warehousereceipt_order_detail` (`fID`, `fOrderID`, `fQuant`, `fProductID`, `fPrice`, `fNote`, `fAmount`, `TS`) VALUES
 	(1, '234234', 3, 5, 4.00, '5', 6.00, '2019-10-16 10:13:11'),
 	(2, 'PO2019-1017000005', 1, 6, 2.00, NULL, 2.00, '2019-10-17 22:42:43'),
 	(3, 'PO2019-1017000005', 2, 7, 3.00, NULL, 6.00, '2019-10-17 22:42:43'),
-	(4, 'PO2019-1017000006', 3, 6, 3.00, NULL, 9.00, '2019-10-17 22:50:59');
+	(4, 'PO2019-1017000006', 3, 6, 3.00, NULL, 9.00, '2019-10-17 22:50:59'),
+	(5, 'PO2019-1028000010', 3, 7, 4.00, NULL, 12.00, '2019-10-28 08:18:37'),
+	(6, 'PO2019-1028000010', 5, 7, 5.00, NULL, 25.00, '2019-10-28 08:18:37'),
+	(7, 'PO2019-1028000011', 4, 7, 5.00, NULL, 20.00, '2019-10-28 12:30:21'),
+	(8, 'PO2019-1028000011', 5, 7, 6.00, NULL, 30.00, '2019-10-28 16:49:12');
 /*!40000 ALTER TABLE `t_product_warehousereceipt_order_detail` ENABLE KEYS */;
 
 -- 导出  表 myorder_python.t_quotation 结构
-DROP TABLE IF EXISTS `t_quotation`;
 CREATE TABLE IF NOT EXISTS `t_quotation` (
   `fOrderID` char(20) NOT NULL COMMENT '订单号',
   `fPrice` decimal(10,0) DEFAULT NULL COMMENT '单价_印刷',
@@ -2858,7 +2014,6 @@ INSERT INTO `t_quotation` (`fOrderID`, `fPrice`, `fCustomerID`, `fOrderDate`, `f
 /*!40000 ALTER TABLE `t_quotation` ENABLE KEYS */;
 
 -- 导出  表 myorder_python.t_quotation_detail 结构
-DROP TABLE IF EXISTS `t_quotation_detail`;
 CREATE TABLE IF NOT EXISTS `t_quotation_detail` (
   `fID` int(11) NOT NULL AUTO_INCREMENT,
   `fOrderID` varchar(50) DEFAULT NULL,
@@ -2894,7 +2049,6 @@ INSERT INTO `t_quotation_detail` (`fID`, `fOrderID`, `fQuant`, `fProductName`, `
 /*!40000 ALTER TABLE `t_quotation_detail` ENABLE KEYS */;
 
 -- 导出  表 myorder_python.t_receivables 结构
-DROP TABLE IF EXISTS `t_receivables`;
 CREATE TABLE IF NOT EXISTS `t_receivables` (
   `fID` int(11) NOT NULL AUTO_INCREMENT,
   `fCustomerID` int(11) NOT NULL,
@@ -3083,7 +2237,6 @@ INSERT INTO `t_receivables` (`fID`, `fCustomerID`, `fPaymentMethodID`, `fReceipt
 /*!40000 ALTER TABLE `t_receivables` ENABLE KEYS */;
 
 -- 导出  表 myorder_python.t_supplier 结构
-DROP TABLE IF EXISTS `t_supplier`;
 CREATE TABLE IF NOT EXISTS `t_supplier` (
   `fSupplierID` int(11) NOT NULL AUTO_INCREMENT,
   `fSupplierName` varchar(50) NOT NULL COMMENT '客户名',
@@ -3108,11 +2261,10 @@ CREATE TABLE IF NOT EXISTS `t_supplier` (
 -- 正在导出表  myorder_python.t_supplier 的数据：~1 rows (大约)
 /*!40000 ALTER TABLE `t_supplier` DISABLE KEYS */;
 INSERT INTO `t_supplier` (`fSupplierID`, `fSupplierName`, `fNUIT`, `fCity`, `fContato`, `fAreaCode`, `fCelular`, `fTelefone`, `fEndereco`, `fEmail`, `fWeb`, `fFax`, `fNote`, `TS`, `fTaxRegCer`) VALUES
-	(3, 'test', ' ', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-10-16 10:07:38', NULL);
+	(3, 'test', ' nuit', 'bj', 'jjj', NULL, 'sj', NULL, 'ddddzz', '@', NULL, '1423', 'note', '2019-10-28 08:17:54', NULL);
 /*!40000 ALTER TABLE `t_supplier` ENABLE KEYS */;
 
 -- 导出  视图 myorder_python.v_enumeration 结构
-DROP VIEW IF EXISTS `v_enumeration`;
 -- 创建临时表以解决视图依赖性错误
 CREATE TABLE `v_enumeration` (
 	`fTypeID` INT(11) NOT NULL,
@@ -3125,7 +2277,6 @@ CREATE TABLE `v_enumeration` (
 ) ENGINE=MyISAM;
 
 -- 导出  视图 myorder_python.v_order 结构
-DROP VIEW IF EXISTS `v_order`;
 -- 创建临时表以解决视图依赖性错误
 CREATE TABLE `v_order` (
 	`fOrderID` CHAR(20) NOT NULL COMMENT '订单号' COLLATE 'utf8_general_ci',
@@ -3198,7 +2349,6 @@ CREATE TABLE `v_order` (
 ) ENGINE=MyISAM;
 
 -- 导出  视图 myorder_python.v_order_readonly 结构
-DROP VIEW IF EXISTS `v_order_readonly`;
 -- 创建临时表以解决视图依赖性错误
 CREATE TABLE `v_order_readonly` (
 	`fOrderID` CHAR(20) NOT NULL COMMENT '订单号' COLLATE 'utf8_general_ci',
@@ -3250,7 +2400,6 @@ CREATE TABLE `v_order_readonly` (
 ) ENGINE=MyISAM;
 
 -- 导出  视图 myorder_python.v_product_outbound_order 结构
-DROP VIEW IF EXISTS `v_product_outbound_order`;
 -- 创建临时表以解决视图依赖性错误
 CREATE TABLE `v_product_outbound_order` (
 	`fOrderID` CHAR(20) NOT NULL COMMENT '订单号' COLLATE 'utf8_general_ci',
@@ -3302,7 +2451,6 @@ CREATE TABLE `v_product_outbound_order` (
 ) ENGINE=MyISAM;
 
 -- 导出  视图 myorder_python.v_product_warehousereceipt_order 结构
-DROP VIEW IF EXISTS `v_product_warehousereceipt_order`;
 -- 创建临时表以解决视图依赖性错误
 CREATE TABLE `v_product_warehousereceipt_order` (
 	`fOrderID` CHAR(20) NOT NULL COMMENT '订单号' COLLATE 'utf8_general_ci',
@@ -3339,7 +2487,6 @@ CREATE TABLE `v_product_warehousereceipt_order` (
 ) ENGINE=MyISAM;
 
 -- 导出  视图 myorder_python.v_quotation 结构
-DROP VIEW IF EXISTS `v_quotation`;
 -- 创建临时表以解决视图依赖性错误
 CREATE TABLE `v_quotation` (
 	`fOrderID` CHAR(20) NOT NULL COMMENT '订单号' COLLATE 'utf8_general_ci',
@@ -3411,7 +2558,6 @@ CREATE TABLE `v_quotation` (
 ) ENGINE=MyISAM;
 
 -- 导出  视图 myorder_python.v_receivables 结构
-DROP VIEW IF EXISTS `v_receivables`;
 -- 创建临时表以解决视图依赖性错误
 CREATE TABLE `v_receivables` (
 	`fID` INT(11) NOT NULL,
@@ -3426,13 +2572,11 @@ CREATE TABLE `v_receivables` (
 ) ENGINE=MyISAM;
 
 -- 导出  视图 myorder_python.v_enumeration 结构
-DROP VIEW IF EXISTS `v_enumeration`;
 -- 移除临时表并创建最终视图结构
 DROP TABLE IF EXISTS `v_enumeration`;
 CREATE ALGORITHM=UNDEFINED DEFINER=`myorder`@`%` SQL SECURITY INVOKER VIEW `v_enumeration` AS select `t`.`fTypeID` AS `fTypeID`,`t`.`fTypeName` AS `fTypeName`,`e`.`fItemID` AS `fItemID`,`e`.`fTitle` AS `fTitle`,`e`.`fSpare1` AS `fSpare1`,`e`.`fSpare2` AS `fSpare2`,`e`.`fNote` AS `fNote` from (`t_enumeration_type` `t` left join `t_enumeration` `e` on((`t`.`fTypeID` = `e`.`fTypeID`))) ;
 
 -- 导出  视图 myorder_python.v_order 结构
-DROP VIEW IF EXISTS `v_order`;
 -- 移除临时表并创建最终视图结构
 DROP TABLE IF EXISTS `v_order`;
 CREATE ALGORITHM=UNDEFINED DEFINER=`myorder`@`%` SQL SECURITY INVOKER VIEW `v_order` AS SELECT `o`.`fOrderID` AS `fOrderID`, `o`.`fPrice` AS `fPrice`, `o`.`fCustomerID` AS `fCustomerID`, `o`.`fOrderDate` AS `fOrderDate`, `o`.`fEspecieID` AS `fEspecieID`
@@ -3497,13 +2641,11 @@ FROM `t_order` `o`
 	LEFT JOIN `t_enumeration` `e_fNrCopyID` ON `o`.`fNrCopyID` = `e_fNrCopyID`.`fItemID` ;
 
 -- 导出  视图 myorder_python.v_order_readonly 结构
-DROP VIEW IF EXISTS `v_order_readonly`;
 -- 移除临时表并创建最终视图结构
 DROP TABLE IF EXISTS `v_order_readonly`;
 CREATE ALGORITHM=UNDEFINED DEFINER=`myorder`@`%` SQL SECURITY INVOKER VIEW `v_order_readonly` AS select `t`.`fOrderID` AS `fOrderID`,`t`.`fPrice` AS `fPrice`,`t`.`fCustomerID` AS `fCustomerID`,`t`.`fOrderDate` AS `fOrderDate`,`t`.`fEspecieID` AS `fEspecieID`,`t`.`fRequiredDeliveryDate` AS `fRequiredDeliveryDate`,`t`.`fCategoryID` AS `fCategoryID`,`t`.`fBrandMateriaID` AS `fBrandMateriaID`,`t`.`fAmount` AS `fAmount`,`t`.`fTax` AS `fTax`,`t`.`fPayable` AS `fPayable`,`t`.`fDesconto` AS `fDesconto`,`t`.`fColorID` AS `fColorID`,`t`.`fEntryID` AS `fEntryID`,`t`.`fSubmited` AS `fSubmited`,`t`.`fSubmitID` AS `fSubmitID`,`t`.`fReviewed` AS `fReviewed`,`t`.`fReviewerID` AS `fReviewerID`,`t`.`fConfirmed` AS `fConfirmed`,`t`.`fConfirmID` AS `fConfirmID`,`t`.`fDelivered` AS `fDelivered`,`t`.`fDelivererID` AS `fDelivererID`,`t`.`fCanceled` AS `fCanceled`,`t`.`fCancelID` AS `fCancelID`,`t`.`fDeliveryDate` AS `fDeliveryDate`,`t`.`fNumerBegin` AS `fNumerBegin`,`t`.`fQuant` AS `fQuant`,`t`.`fPagePerVolumn` AS `fPagePerVolumn`,`t`.`fNumerEnd` AS `fNumerEnd`,`t`.`fAvistaID` AS `fAvistaID`,`t`.`fTamanhoID` AS `fTamanhoID`,`t`.`fSucursal` AS `fSucursal`,`t`.`fLogo` AS `fLogo`,`t`.`fVendedorID` AS `fVendedorID`,`t`.`fNrCopyID` AS `fNrCopyID`,`t`.`fContato` AS `fContato`,`t`.`fCelular` AS `fCelular`,`t`.`fTelefone` AS `fTelefone`,`t`.`fNote` AS `fNote`,`c`.`fCustomerName` AS `fCustomerName`,`c`.`fNUIT` AS `fNUIT`,`c`.`fCity` AS `fCity`,`c`.`fAreaCode` AS `fAreaCode`,`c`.`fEndereco` AS `fEndereco`,`c`.`fEmail` AS `fEmail`,`c`.`fWeb` AS `fWeb` from (`t_order` `t` left join `t_customer` `c` on((`t`.`fCustomerID` = `c`.`fCustomerID`))) ;
 
 -- 导出  视图 myorder_python.v_product_outbound_order 结构
-DROP VIEW IF EXISTS `v_product_outbound_order`;
 -- 移除临时表并创建最终视图结构
 DROP TABLE IF EXISTS `v_product_outbound_order`;
 CREATE ALGORITHM=UNDEFINED DEFINER=`myorder`@`%` SQL SECURITY INVOKER VIEW `v_product_outbound_order` AS SELECT `o`.`fOrderID` AS `fOrderID`,
@@ -3589,7 +2731,6 @@ LEFT JOIN `t_enumeration` `e_fVendedorID`
     ON `o`.`fVendedorID` = `e_fVendedorID`.`fItemID` ;
 
 -- 导出  视图 myorder_python.v_product_warehousereceipt_order 结构
-DROP VIEW IF EXISTS `v_product_warehousereceipt_order`;
 -- 移除临时表并创建最终视图结构
 DROP TABLE IF EXISTS `v_product_warehousereceipt_order`;
 CREATE ALGORITHM=UNDEFINED DEFINER=`myorder`@`%` SQL SECURITY INVOKER VIEW `v_product_warehousereceipt_order` AS SELECT `o`.`fOrderID` AS `fOrderID`,
@@ -3651,13 +2792,11 @@ LEFT JOIN `t_enumeration` `e_fPurchaserID`
     ON `o`.`fPurchaserID` = `e_fPurchaserID`.`fItemID` ;
 
 -- 导出  视图 myorder_python.v_quotation 结构
-DROP VIEW IF EXISTS `v_quotation`;
 -- 移除临时表并创建最终视图结构
 DROP TABLE IF EXISTS `v_quotation`;
 CREATE ALGORITHM=UNDEFINED DEFINER=`myorder`@`%` SQL SECURITY INVOKER VIEW `v_quotation` AS select `o`.`fOrderID` AS `fOrderID`,`o`.`fPrice` AS `fPrice`,`o`.`fCustomerID` AS `fCustomerID`,`o`.`fOrderDate` AS `fOrderDate`,`o`.`fEspecieID` AS `fEspecieID`,`o`.`fRequiredDeliveryDate` AS `fRequiredDeliveryDate`,`o`.`fCategoryID` AS `fCategoryID`,`o`.`fBrandMateriaID` AS `fBrandMateriaID`,`o`.`fAmount` AS `fAmount`,`o`.`fTax` AS `fTax`,`o`.`fPayable` AS `fPayable`,`o`.`fDesconto` AS `fDesconto`,`o`.`fColorID` AS `fColorID`,`o`.`fEntryID` AS `fEntryID`,(`o`.`fSubmited` + 0) AS `fSubmited`,`o`.`fSubmitID` AS `fSubmitID`,(`o`.`fReviewed` + 0) AS `fReviewed`,`o`.`fReviewerID` AS `fReviewerID`,(`o`.`fConfirmed` + 0) AS `fConfirmed`,`o`.`fConfirmID` AS `fConfirmID`,(`o`.`fDelivered` + 0) AS `fDelivered`,`o`.`fDelivererID` AS `fDelivererID`,(`o`.`fCanceled` + 0) AS `fCanceled`,(`o`.`fDeliverViewed` + 0) AS `fDeliverViewed`,`o`.`fCancelID` AS `fCancelID`,`o`.`fDeliveryDate` AS `fDeliveryDate`,`o`.`fNumerBegin` AS `fNumerBegin`,`o`.`fQuant` AS `fQuant`,`o`.`fPagePerVolumn` AS `fPagePerVolumn`,`o`.`fNumerEnd` AS `fNumerEnd`,`o`.`fAvistaID` AS `fAvistaID`,`o`.`fTamanhoID` AS `fTamanhoID`,(`o`.`fSucursal` + 0) AS `fSucursal`,(`o`.`fLogo` + 0) AS `fLogo`,`o`.`fVendedorID` AS `fVendedorID`,`o`.`fNrCopyID` AS `fNrCopyID`,`o`.`fContato` AS `fContato`,`o`.`fCelular` AS `fCelular`,`o`.`fTelefone` AS `fTelefone`,`o`.`fNote` AS `fNote`,(`o`.`fCreatedOrder` + 0) AS `fCreatedOrder`,`c`.`fCustomerName` AS `fCustomerName`,`c`.`fNUIT` AS `fNUIT`,`c`.`fCity` AS `fCity`,`c`.`fEndereco` AS `fEndereco`,(case `o`.`fSucursal` when 1 then 'SIM' else 'Non' end) AS `fSucursal1`,(case `o`.`fSubmited` when 1 then 'SIM' else '' end) AS `fSubmited1`,(case `o`.`fConfirmed` when 1 then 'SIM' else '' end) AS `fConfirmed1`,(case `o`.`fDelivered` when 1 then 'SIM' else '' end) AS `fDelivered1`,(case `o`.`fCanceled` when 1 then 'Canceled' else '' end) AS `fCanceled1`,(case `o`.`fDeliverViewed` when 1 then 'SIM' else '' end) AS `fDeliverViewed1`,(case `o`.`fLogo` when 1 then 'SIM' else 'Non' end) AS `fLogo1`,`u_Submited`.`fUsername` AS `fSubmit_Name`,`u_Entry`.`fUsername` AS `fEntry_Name`,`u_Reviewer`.`fUsername` AS `fReviewer_Name`,`u_Deliverer`.`fUsername` AS `fDeliverer_Name`,`u_Confirm`.`fUsername` AS `fConfirm_Name`,`u_Cancel`.`fUsername` AS `fCancel_Name`,`e_fEspecieID`.`fTitle` AS `fEspecie`,`e_fCategoryID`.`fTitle` AS `fCategory`,`e_fBrandMateriaID`.`fTitle` AS `fBrandMateria`,`e_fColorID`.`fTitle` AS `fColor`,`e_fAvistaID`.`fTitle` AS `fAvista`,`e_fTamanhoID`.`fTitle` AS `fTamanho`,`e_fVendedorID`.`fTitle` AS `fVendedor`,`e_fNrCopyID`.`fTitle` AS `fNrCopy` from (((((((((((((((`t_quotation` `o` left join `t_customer` `c` on((`o`.`fCustomerID` = `c`.`fCustomerID`))) left join `sysusers` `u_Submited` on((`o`.`fSubmitID` = `u_Submited`.`fUserID`))) left join `sysusers` `u_Entry` on((`o`.`fEntryID` = `u_Entry`.`fUserID`))) left join `sysusers` `u_Reviewer` on((`o`.`fReviewerID` = `u_Reviewer`.`fUserID`))) left join `sysusers` `u_Deliverer` on((`o`.`fDelivererID` = `u_Deliverer`.`fUserID`))) left join `sysusers` `u_Confirm` on((`o`.`fConfirmID` = `u_Confirm`.`fUserID`))) left join `sysusers` `u_Cancel` on((`o`.`fCancelID` = `u_Cancel`.`fUserID`))) left join `t_enumeration` `e_fEspecieID` on((`o`.`fEspecieID` = `e_fEspecieID`.`fItemID`))) left join `t_enumeration` `e_fCategoryID` on((`o`.`fCategoryID` = `e_fCategoryID`.`fItemID`))) left join `t_enumeration` `e_fBrandMateriaID` on((`o`.`fBrandMateriaID` = `e_fBrandMateriaID`.`fItemID`))) left join `t_enumeration` `e_fColorID` on((`o`.`fColorID` = `e_fColorID`.`fItemID`))) left join `t_enumeration` `e_fAvistaID` on((`o`.`fAvistaID` = `e_fAvistaID`.`fItemID`))) left join `t_enumeration` `e_fTamanhoID` on((`o`.`fTamanhoID` = `e_fTamanhoID`.`fItemID`))) left join `t_enumeration` `e_fVendedorID` on((`o`.`fVendedorID` = `e_fVendedorID`.`fItemID`))) left join `t_enumeration` `e_fNrCopyID` on((`o`.`fNrCopyID` = `e_fNrCopyID`.`fItemID`))) ;
 
 -- 导出  视图 myorder_python.v_receivables 结构
-DROP VIEW IF EXISTS `v_receivables`;
 -- 移除临时表并创建最终视图结构
 DROP TABLE IF EXISTS `v_receivables`;
 CREATE ALGORITHM=UNDEFINED DEFINER=`myorder`@`%` SQL SECURITY INVOKER VIEW `v_receivables` AS select `r`.`fID` AS `fID`,`r`.`fCustomerID` AS `fCustomerID`,`c`.`fCustomerName` AS `fCustomerName`,`r`.`fReceiptDate` AS `fReceiptDate`,`r`.`fAmountCollected` AS `fAmountCollected`,`r`.`fOrderID` AS `fOrderID`,`u`.`fUsername` AS `fPayee`,`skfs`.`fTitle` AS `fPaymentMethod`,`r`.`fNote` AS `fNote` from ((((`t_receivables` `r` left join `t_customer` `c` on((`r`.`fCustomerID` = `c`.`fCustomerID`))) left join `t_enumeration` `e` on((`r`.`fPaymentMethodID` = `e`.`fItemID`))) left join `sysusers` `u` on((`r`.`fPayeeID` = `u`.`fUserID`))) left join `t_enumeration` `skfs` on((`r`.`fPaymentMethodID` = `skfs`.`fItemID`))) ;

@@ -375,12 +375,11 @@ class Outbound_Order_Report(JPReport):
             , o.fTelefone, o.fAmount
             , o.fTax, o.fPayable, o.fDesconto
             , o.fVendedor,
-                    d.fQuant,
-                    d.fProductID,
-                    d.fPrice ,
-                    d.fAmount as fAmount_detail,
-                    if(isnull(o.fNote),
-                    ' ',o.fNote) AS fNote1
+            d.fQuant,
+            d.fProductID,
+            d.fPrice ,
+            d.fAmount as fAmount_detail,
+            if(isnull(o.fNote),' ',o.fNote) AS fNote1
             FROM v_product_outbound_order o
             RIGHT JOIN t_product_outbound_order_detail d
                 ON o.fOrderID = d.fOrderID

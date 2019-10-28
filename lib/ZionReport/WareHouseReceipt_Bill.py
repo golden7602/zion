@@ -98,7 +98,7 @@ class WarehouseReceipt_Bill(JPReport):
                        Font=self.font_YaHei_8,
                        AlignmentFlag=Qt.AlignCenter)
         RH.AddItemRect(3, (490, 75, 160, 20),
-                       "fPurchaserID",
+                       "fPurchaser",
                        Font=self.font_YaHei_8,
                        AlignmentFlag=Qt.AlignLeft | Qt.AlignVCenter,
                        FormatString=" {}")
@@ -356,13 +356,20 @@ class WarehouseReceipt_Bill(JPReport):
 
     def init_data(self, OrderID: str):
         SQL = f"""
-            SELECT o.*,
-                    d.fQuant,
-                    d.fProductID,
-                    d.fPrice ,
-                    d.fAmount ,
-                    if(isnull(o.fNote),
-                    ' ',o.fNote) AS fNote1
+            SELECT 
+                o.fOrderID, o.fOrderDate, o.fWarehousingDate
+                , o.fSupplierName, o.fNUIT
+                , o.fCity, o.fEndereco, o.fEmail
+                , o.fContato, o.fCelular
+                , o.fTelefone, o.fAmount
+                , o.fTax, o.fPayable, o.fDesconto
+                , o.fPurchaser
+                , d.fQuant,
+                d.fProductID,
+                d.fPrice ,
+                d.fAmount as fAmount_detail,
+                if(isnull(o.fNote),' ',o.fNote) AS fNote1
+
             FROM v_product_warehousereceipt_order o
             RIGHT JOIN t_product_warehousereceipt_order_detail d
                 ON o.fOrderID = d.fOrderID
