@@ -163,8 +163,8 @@ class JPFuncForm_OutboundOrder(JPFunctionForm):
                 GROUP BY  fProductID) AS q1 SET p.fCurrentQuantity=p.fCurrentQuantity-q1.sum_sl
             WHERE p.fID=q1.fProductID;
             """
-            sql1 = "select '{cu_id}';"
-            db.executeTransaction([sql0, sql1, sql1])
+            sql2 = "select '{cu_id}';"
+            db.executeTransaction([sql0, sql1, sql2])
             JPPub().broadcastMessage(tablename="t_product_outbound_order",
                                      PK=cu_id,
                                      action='Submit')
@@ -255,8 +255,7 @@ class EditForm_OutboundOrder(JPFormModelMainHasSub):
         self.ui.fRequiredDeliveryDate.FieldInfo.NotNull = True
         self.ui.fCustomerID.setFocus()
         self.ui.tableView.keyPressEvent = self.mykeyPressEvent
-        self.ui.tableView.selectionModel().currentChanged.connect(
-            self._tv_currentChanged)
+        self.ui.tableView.doubleClicked.connect(self.table_change)
         self.productInfo = self.__getProductInfo()
         self.subModel.getFullProductName = self.getFullProductName
         self._setEditFormButtonsIcon(self.ui)
@@ -289,13 +288,13 @@ class EditForm_OutboundOrder(JPFormModelMainHasSub):
     def onGetModelClass(self):
         return mySubMod
 
-    def _tv_currentChanged(self, index1, index2):
+    def table_change(self, index1):
         def fun(p_id, product_name, fCurrentQuantity):
             tab = self.subModel.TabelFieldInfo
             tab.setData([r, 2], p_id)
 
         r = index1.row()
-        if index1.column() == 2:
+        if index1.column() == 2 and not self.isReadOnlyMode:
             frm = ProductSelecter()
             frm.ProductSeledted.connect(fun)
             frm.exec_()
@@ -345,7 +344,7 @@ class EditForm_OutboundOrder(JPFormModelMainHasSub):
         return [1]
 
     def onGetReadOnlyColumns(self):
-        return [5]
+        return [2, 5]
 
     def onGetColumnWidths(self):
         return [25, 0, 500, 100, 100, 100]
@@ -358,7 +357,7 @@ class EditForm_OutboundOrder(JPFormModelMainHasSub):
                 ('fEntryID', u_lst, 1)]
 
     def onGetReadOnlyFields(self):
-        return ["fEntryID", 'fAmount', 'fPayable', 'fTax','fEmail']
+        return ["fEntryID", 'fAmount', 'fPayable', 'fTax', 'fEmail']
 
     def onGetDisableFields(self):
         return ['fOrderID', 'fCity', 'fNUIT', "fEntryID", 'fEndereco']
