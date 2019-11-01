@@ -12,12 +12,12 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
 
--- 导出 myorder_python 的数据库结构
-DROP DATABASE IF EXISTS `myorder_python`;
-CREATE DATABASE IF NOT EXISTS `myorder_python` /*!40100 DEFAULT CHARACTER SET utf8 */;
-USE `myorder_python`;
+-- 导出 cedar 的数据库结构
+DROP DATABASE IF EXISTS `cedar`;
+CREATE DATABASE IF NOT EXISTS `cedar` /*!40100 DEFAULT CHARACTER SET utf8 */;
+USE `cedar`;
 
--- 导出  表 myorder_python.sysconfig 结构
+-- 导出  表 cedar.sysconfig 结构
 DROP TABLE IF EXISTS `sysconfig`;
 CREATE TABLE IF NOT EXISTS `sysconfig` (
   `fID` int(11) NOT NULL AUTO_INCREMENT,
@@ -32,13 +32,13 @@ CREATE TABLE IF NOT EXISTS `sysconfig` (
   PRIMARY KEY (`fID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
--- 正在导出表  myorder_python.sysconfig 的数据：~1 rows (大约)
+-- 正在导出表  cedar.sysconfig 的数据：~1 rows (大约)
 /*!40000 ALTER TABLE `sysconfig` DISABLE KEYS */;
 INSERT INTO `sysconfig` (`fID`, `fName`, `fValueInt`, `fValueStr`, `fValueBool`, `fValueDate`, `fValueDateTime`, `TS`, `fValue`) VALUES
 	(3, 'configValue', NULL, NULL, NULL, NULL, NULL, '2019-09-17 16:33:31', 'gAN9cQAoWBIAAABOb3RlX1ByaW50aW5nT3JkZXJxAVjhAAAATm90ZToKRXN0YSBvcmRlbSBzZXJhIGVudHJlZ3VlIGVtIDEwIGRpYXMgZGUgdHJhYmFsaG8sIHNlIGVzdGEgZm9yIHVyZ2VudGUsZSBuZWNlc3NhcmlvIHBhZ2FyIG1haXMgMjQwJS4gUGFyYSBxdWUgbmFvIGFmZWN0ZSBvcyB0cnJhYmFsaG9zIGRpYXJpb3MgZGEgdm9zc2EgZW1wcmVzYSxwb3IgZmF2b3IsIGVuY29tZW5kZW0gYSB2b3NzYSBvcmRlbSAgbyBtYWlzIHJhcGlkbyBwb3NzaXZlbC4KcQJYDAAAAEJhbmtfQWNjb3VudHEDWHkAAABDb250YSBCYW5jYXJpYTogIE1PWkEgQkFOQ08KTm9tZSBkYSBDb250YTogQ09MT1BSTyBTSU5HUyAmIFBSSU5USU5HCk5vIGRhIENvbnRhOiAxNTQ2NjMxODEwMDAxCk5JQjogMDAzNDAwMDAxNTQ2NjMxODEwMTU5cQRYFQAAAE51bGxfcHJvbXB0X2JhY19jb2xvcnEFY1B5UXQ1LnNpcApfdW5waWNrbGVfdHlwZQpxBlgLAAAAUHlRdDUuUXRHdWlxB1gGAAAAUUNvbG9ycQgoS/9LAEsAS/90cQmHcQpScQtYDwAAAEF1dG9TaHJpbmtGb250c3EMiFgMAAAAQXV0b0VsbGlwc2lzcQ2JWB0AAABQcmludEhpZ2hsaWdodEJhY2tncm91bmRDb2xvcnEOaAZoB1gGAAAAUUNvbG9ycQ8oS8JLwkvCS/90cRCHcRFScRJYDwAAAEJpbGxDb3B5c19PcmRlcnETWCoAAABhdGVuZGltZW50bzsxO3Byb2R1Y2FvOzA7Y2xpZW50ZTsxO2NhaXhhOzFxFFgXAAAAQmlsbENvcHlzX1ByaW50aW5nT3JkZXJxFVgqAAAAYXRlbmRpbWVudG87MTtwcm9kdWNhbzswO2NsaWVudGU7MTtjYWl4YTsxcRZYFwAAAEJpbGxDb3B5c19PdXRib3VuZE9yZGVycRdYKgAAAGF0ZW5kaW1lbnRvOzE7cHJvZHVjYW87MDtjbGllbnRlOzE7Y2FpeGE7MXEYWBsAAABCaWxsQ29weXNfV2FyZWhvdXNlUnJlY2VpcHRxGVgqAAAAYXRlbmRpbWVudG87MTtwcm9kdWNhbzswO2NsaWVudGU7MTtjYWl4YTsxcRpYGQAAAEF1dG9SZWZyZXNoV2hlbkRhdGFDaGFuZ2VxG4hYGAAAAEJ1YmJsZVRpcHNXaGVuRGF0YUNoYW5nZXEciFgYAAAAQmlsbENvcHlzX1F1b3RhdGlvbk9yZGVycR1YDQAAAGF0ZW5kaW1lbnRvOzFxHlggAAAAQmlsbENvcHlzX1F1b3RhdGlvblByaW50aW5nT3JkZXJxH1gYAAAAYXRlbmRpbWVudG87MTtwcm9kdWNhbzswcSBYDQAAAFRheFJlZ0NlclBhdGhxIVgMAAAARTovWmlvbi96aW9ucSJ1Lg==');
 /*!40000 ALTER TABLE `sysconfig` ENABLE KEYS */;
 
--- 导出  表 myorder_python.sysnavigationmenus 结构
+-- 导出  表 cedar.sysnavigationmenus 结构
 DROP TABLE IF EXISTS `sysnavigationmenus`;
 CREATE TABLE IF NOT EXISTS `sysnavigationmenus` (
   `fNMID` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
@@ -64,7 +64,7 @@ CREATE TABLE IF NOT EXISTS `sysnavigationmenus` (
   KEY `ParentID` (`fParentId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=186 DEFAULT CHARSET=utf8;
 
--- 正在导出表  myorder_python.sysnavigationmenus 的数据：~62 rows (大约)
+-- 正在导出表  cedar.sysnavigationmenus 的数据：~98 rows (大约)
 /*!40000 ALTER TABLE `sysnavigationmenus` DISABLE KEYS */;
 INSERT INTO `sysnavigationmenus` (`fNMID`, `fDispIndex`, `fParentId`, `fEnabled`, `fMenuText`, `fCommand`, `fObjectName`, `fFormMode`, `fArg`, `fIcon`, `fDefault`, `fNodeBackvolor`, `fNodeForeColor`, `fNodeFontBold`, `fExpanded`, `fDescription`, `fLevel`, `fIsCommandButton`, `TS`) VALUES
 	(1, 110, 0, b'1', 'Function', 0, '', 0, '', 'home', b'1', NULL, NULL, 0, 1, '', b'0', b'0', '2019-04-20 13:45:28'),
@@ -183,7 +183,7 @@ INSERT INTO `sysnavigationmenus` (`fNMID`, `fDispIndex`, `fParentId`, `fEnabled`
 	(185, 16810, 168, b'1', 'Print', 0, 'CmdPrint', NULL, NULL, 'print.png', b'0', NULL, NULL, 0, 1, NULL, b'0', b'1', '2019-10-18 09:39:54');
 /*!40000 ALTER TABLE `sysnavigationmenus` ENABLE KEYS */;
 
--- 导出  表 myorder_python.systabelautokeyroles 结构
+-- 导出  表 cedar.systabelautokeyroles 结构
 DROP TABLE IF EXISTS `systabelautokeyroles`;
 CREATE TABLE IF NOT EXISTS `systabelautokeyroles` (
   `fRoleID` tinyint(4) NOT NULL AUTO_INCREMENT COMMENT '编号',
@@ -202,7 +202,7 @@ CREATE TABLE IF NOT EXISTS `systabelautokeyroles` (
   KEY `LastKey` (`fLastKey`)
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 
--- 正在导出表  myorder_python.systabelautokeyroles 的数据：~7 rows (大约)
+-- 正在导出表  cedar.systabelautokeyroles 的数据：~7 rows (大约)
 /*!40000 ALTER TABLE `systabelautokeyroles` DISABLE KEYS */;
 INSERT INTO `systabelautokeyroles` (`fRoleID`, `fRoleName`, `fTabelName`, `fFieldName`, `fHasDateTime`, `fPreFix`, `fCurrentValue`, `fLenght`, `fLastKey`, `fDateFormat`, `TS`) VALUES
 	(1, 'OrderID', 't_order', 'forderID', b'1', 'CP', 0000000000, 6, 'CP2019-1028000002', 'yyyy-mmdd', '2019-10-29 12:34:12'),
@@ -214,7 +214,7 @@ INSERT INTO `systabelautokeyroles` (`fRoleID`, `fRoleName`, `fTabelName`, `fFiel
 	(7, 'OuttboundOrderID', 't_product_outbound_order', 'fOrderID', b'1', 'PO', 0000000000, 6, 'PO2019-1029000003', 'yyyy-mmdd', '2019-10-29 12:34:12');
 /*!40000 ALTER TABLE `systabelautokeyroles` ENABLE KEYS */;
 
--- 导出  表 myorder_python.sysuserright 结构
+-- 导出  表 cedar.sysuserright 结构
 DROP TABLE IF EXISTS `sysuserright`;
 CREATE TABLE IF NOT EXISTS `sysuserright` (
   `fID` smallint(6) NOT NULL AUTO_INCREMENT COMMENT '编号',
@@ -226,11 +226,11 @@ CREATE TABLE IF NOT EXISTS `sysuserright` (
   UNIQUE KEY `UserID` (`fUserID`,`fRightID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- 正在导出表  myorder_python.sysuserright 的数据：~226 rows (大约)
+-- 正在导出表  cedar.sysuserright 的数据：~0 rows (大约)
 /*!40000 ALTER TABLE `sysuserright` DISABLE KEYS */;
 /*!40000 ALTER TABLE `sysuserright` ENABLE KEYS */;
 
--- 导出  表 myorder_python.sysusers 结构
+-- 导出  表 cedar.sysusers 结构
 DROP TABLE IF EXISTS `sysusers`;
 CREATE TABLE IF NOT EXISTS `sysusers` (
   `fUserID` int(11) NOT NULL AUTO_INCREMENT,
@@ -251,13 +251,13 @@ CREATE TABLE IF NOT EXISTS `sysusers` (
   KEY `RoleID` (`fRoleID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8;
 
--- 正在导出表  myorder_python.sysusers 的数据：~3 rows (大约)
+-- 正在导出表  cedar.sysusers 的数据：~1 rows (大约)
 /*!40000 ALTER TABLE `sysusers` DISABLE KEYS */;
 INSERT INTO `sysusers` (`fUserID`, `fOnline`, `fEnabled`, `fDepartment`, `fUsername`, `fNickname`, `fPassword`, `fRoleID`, `fLastLoginComputer`, `fLastLoginTime`, `fLoginID`, `fNotes`, `TS`) VALUES
 	(1, b'0', b'0', NULL, 'admin', '管理员', '51e599aaf7f3bf4feba2a0f9166cd709', 1, NULL, '2015-09-28 19:02:10', '{AF962165-3D2D-483B-A71B-D7D3F97502A4}', NULL, '2019-09-09 13:35:45');
 /*!40000 ALTER TABLE `sysusers` ENABLE KEYS */;
 
--- 导出  表 myorder_python.t_customer 结构
+-- 导出  表 cedar.t_customer 结构
 DROP TABLE IF EXISTS `t_customer`;
 CREATE TABLE IF NOT EXISTS `t_customer` (
   `fCustomerID` int(11) NOT NULL AUTO_INCREMENT,
@@ -280,11 +280,11 @@ CREATE TABLE IF NOT EXISTS `t_customer` (
   UNIQUE KEY `fNUIT` (`fNUIT`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- 正在导出表  myorder_python.t_customer 的数据：~1 rows (大约)
+-- 正在导出表  cedar.t_customer 的数据：~0 rows (大约)
 /*!40000 ALTER TABLE `t_customer` DISABLE KEYS */;
 /*!40000 ALTER TABLE `t_customer` ENABLE KEYS */;
 
--- 导出  表 myorder_python.t_enumeration 结构
+-- 导出  表 cedar.t_enumeration 结构
 DROP TABLE IF EXISTS `t_enumeration`;
 CREATE TABLE IF NOT EXISTS `t_enumeration` (
   `fItemID` int(11) NOT NULL AUTO_INCREMENT COMMENT '选项编号',
@@ -297,7 +297,7 @@ CREATE TABLE IF NOT EXISTS `t_enumeration` (
   PRIMARY KEY (`fItemID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=97 DEFAULT CHARSET=utf8;
 
--- 正在导出表  myorder_python.t_enumeration 的数据：~93 rows (大约)
+-- 正在导出表  cedar.t_enumeration 的数据：~93 rows (大约)
 /*!40000 ALTER TABLE `t_enumeration` DISABLE KEYS */;
 INSERT INTO `t_enumeration` (`fItemID`, `fTypeID`, `fTitle`, `fSpare1`, `fSpare2`, `fNote`, `TS`) VALUES
 	(3, 5, 'PVC001', '', '', NULL, '2019-04-05 08:22:05'),
@@ -395,7 +395,7 @@ INSERT INTO `t_enumeration` (`fItemID`, `fTypeID`, `fTitle`, `fSpare1`, `fSpare2
 	(96, 9, 'Outro', '0', NULL, NULL, '2019-05-05 17:00:37');
 /*!40000 ALTER TABLE `t_enumeration` ENABLE KEYS */;
 
--- 导出  表 myorder_python.t_enumeration_type 结构
+-- 导出  表 cedar.t_enumeration_type 结构
 DROP TABLE IF EXISTS `t_enumeration_type`;
 CREATE TABLE IF NOT EXISTS `t_enumeration_type` (
   `fTypeID` int(11) NOT NULL AUTO_INCREMENT,
@@ -406,7 +406,7 @@ CREATE TABLE IF NOT EXISTS `t_enumeration_type` (
   UNIQUE KEY `fTypeName` (`fTypeName`)
 ) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 
--- 正在导出表  myorder_python.t_enumeration_type 的数据：~10 rows (大约)
+-- 正在导出表  cedar.t_enumeration_type 的数据：~10 rows (大约)
 /*!40000 ALTER TABLE `t_enumeration_type` DISABLE KEYS */;
 INSERT INTO `t_enumeration_type` (`fTypeID`, `fTypeName`, `fNote`, `TS`) VALUES
 	(1, '城市City', NULL, '2019-04-05 08:29:16'),
@@ -421,7 +421,7 @@ INSERT INTO `t_enumeration_type` (`fTypeID`, `fTypeName`, `fNote`, `TS`) VALUES
 	(10, '销售Vendedor', NULL, '2019-04-05 23:56:19');
 /*!40000 ALTER TABLE `t_enumeration_type` ENABLE KEYS */;
 
--- 导出  表 myorder_python.t_order 结构
+-- 导出  表 cedar.t_order 结构
 DROP TABLE IF EXISTS `t_order`;
 CREATE TABLE IF NOT EXISTS `t_order` (
   `fOrderID` char(20) NOT NULL COMMENT '订单号',
@@ -470,11 +470,11 @@ CREATE TABLE IF NOT EXISTS `t_order` (
   KEY `iOrderDate` (`fOrderDate`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- 正在导出表  myorder_python.t_order 的数据：~2 rows (大约)
+-- 正在导出表  cedar.t_order 的数据：~0 rows (大约)
 /*!40000 ALTER TABLE `t_order` DISABLE KEYS */;
 /*!40000 ALTER TABLE `t_order` ENABLE KEYS */;
 
--- 导出  表 myorder_python.t_order_detail 结构
+-- 导出  表 cedar.t_order_detail 结构
 DROP TABLE IF EXISTS `t_order_detail`;
 CREATE TABLE IF NOT EXISTS `t_order_detail` (
   `fID` int(11) NOT NULL AUTO_INCREMENT,
@@ -489,29 +489,29 @@ CREATE TABLE IF NOT EXISTS `t_order_detail` (
   PRIMARY KEY (`fID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- 正在导出表  myorder_python.t_order_detail 的数据：~3 rows (大约)
+-- 正在导出表  cedar.t_order_detail 的数据：~0 rows (大约)
 /*!40000 ALTER TABLE `t_order_detail` DISABLE KEYS */;
 /*!40000 ALTER TABLE `t_order_detail` ENABLE KEYS */;
 
--- 导出  表 myorder_python.t_product_information 结构
+-- 导出  表 cedar.t_product_information 结构
 DROP TABLE IF EXISTS `t_product_information`;
 CREATE TABLE IF NOT EXISTS `t_product_information` (
   `fID` int(11) NOT NULL AUTO_INCREMENT,
-  `fProductName` varchar(250) CHARACTER SET utf8 NOT NULL,
-  `fSpesc` varchar(50) CHARACTER SET utf8 DEFAULT NULL,
-  `fWidth` varchar(20) CHARACTER SET utf8 DEFAULT NULL,
-  `fLength` varchar(20) CHARACTER SET utf8 DEFAULT NULL,
-  `fUint` varchar(10) CHARACTER SET utf8 DEFAULT NULL,
-  `fNote` varchar(250) CHARACTER SET utf8 DEFAULT NULL,
+  `fProductName` varchar(250) NOT NULL,
+  `fSpesc` varchar(50) DEFAULT NULL,
+  `fWidth` varchar(20) DEFAULT NULL,
+  `fLength` varchar(20) DEFAULT NULL,
+  `fUint` varchar(10) DEFAULT NULL,
+  `fNote` varchar(250) DEFAULT NULL,
   `fCurrentQuantity` decimal(13,3) NOT NULL DEFAULT '0.000',
   `fMinimumStock` decimal(13,3) NOT NULL DEFAULT '0.000',
   `fCancel` tinyint(4) NOT NULL DEFAULT '0',
   `TS` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `fProductPic` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `fProductPic` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`fID`)
-) ENGINE=InnoDB AUTO_INCREMENT=106 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=106 DEFAULT CHARSET=utf8;
 
--- 正在导出表  myorder_python.t_product_information 的数据：~105 rows (大约)
+-- 正在导出表  cedar.t_product_information 的数据：~105 rows (大约)
 /*!40000 ALTER TABLE `t_product_information` DISABLE KEYS */;
 INSERT INTO `t_product_information` (`fID`, `fProductName`, `fSpesc`, `fWidth`, `fLength`, `fUint`, `fNote`, `fCurrentQuantity`, `fMinimumStock`, `fCancel`, `TS`, `fProductPic`) VALUES
 	(1, 'CTP板 Chapa de CTP', '', '', '', '包', '', 80.000, 0.000, 0, '2019-10-28 17:38:03', NULL),
@@ -621,7 +621,7 @@ INSERT INTO `t_product_information` (`fID`, `fProductName`, `fSpesc`, `fWidth`, 
 	(105, '广告桌/架子', '', '', '', '', '\r\n', 0.000, 0.000, 0, '2019-10-28 17:38:03', NULL);
 /*!40000 ALTER TABLE `t_product_information` ENABLE KEYS */;
 
--- 导出  表 myorder_python.t_product_outbound_order 结构
+-- 导出  表 cedar.t_product_outbound_order 结构
 DROP TABLE IF EXISTS `t_product_outbound_order`;
 CREATE TABLE IF NOT EXISTS `t_product_outbound_order` (
   `fOrderID` char(20) NOT NULL COMMENT '订单号',
@@ -658,11 +658,11 @@ CREATE TABLE IF NOT EXISTS `t_product_outbound_order` (
   KEY `iOrderDate` (`fOrderDate`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- 正在导出表  myorder_python.t_product_outbound_order 的数据：~0 rows (大约)
+-- 正在导出表  cedar.t_product_outbound_order 的数据：~0 rows (大约)
 /*!40000 ALTER TABLE `t_product_outbound_order` DISABLE KEYS */;
 /*!40000 ALTER TABLE `t_product_outbound_order` ENABLE KEYS */;
 
--- 导出  表 myorder_python.t_product_outbound_order_detail 结构
+-- 导出  表 cedar.t_product_outbound_order_detail 结构
 DROP TABLE IF EXISTS `t_product_outbound_order_detail`;
 CREATE TABLE IF NOT EXISTS `t_product_outbound_order_detail` (
   `fID` int(11) NOT NULL AUTO_INCREMENT,
@@ -676,11 +676,11 @@ CREATE TABLE IF NOT EXISTS `t_product_outbound_order_detail` (
   PRIMARY KEY (`fID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- 正在导出表  myorder_python.t_product_outbound_order_detail 的数据：~0 rows (大约)
+-- 正在导出表  cedar.t_product_outbound_order_detail 的数据：~0 rows (大约)
 /*!40000 ALTER TABLE `t_product_outbound_order_detail` DISABLE KEYS */;
 /*!40000 ALTER TABLE `t_product_outbound_order_detail` ENABLE KEYS */;
 
--- 导出  表 myorder_python.t_product_warehousereceipt_order 结构
+-- 导出  表 cedar.t_product_warehousereceipt_order 结构
 DROP TABLE IF EXISTS `t_product_warehousereceipt_order`;
 CREATE TABLE IF NOT EXISTS `t_product_warehousereceipt_order` (
   `fOrderID` char(20) NOT NULL COMMENT '订单号',
@@ -707,11 +707,11 @@ CREATE TABLE IF NOT EXISTS `t_product_warehousereceipt_order` (
   KEY `iOrderDate` (`fOrderDate`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- 正在导出表  myorder_python.t_product_warehousereceipt_order 的数据：~1 rows (大约)
+-- 正在导出表  cedar.t_product_warehousereceipt_order 的数据：~0 rows (大约)
 /*!40000 ALTER TABLE `t_product_warehousereceipt_order` DISABLE KEYS */;
 /*!40000 ALTER TABLE `t_product_warehousereceipt_order` ENABLE KEYS */;
 
--- 导出  表 myorder_python.t_product_warehousereceipt_order_detail 结构
+-- 导出  表 cedar.t_product_warehousereceipt_order_detail 结构
 DROP TABLE IF EXISTS `t_product_warehousereceipt_order_detail`;
 CREATE TABLE IF NOT EXISTS `t_product_warehousereceipt_order_detail` (
   `fID` int(11) NOT NULL AUTO_INCREMENT,
@@ -725,11 +725,11 @@ CREATE TABLE IF NOT EXISTS `t_product_warehousereceipt_order_detail` (
   PRIMARY KEY (`fID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- 正在导出表  myorder_python.t_product_warehousereceipt_order_detail 的数据：~1 rows (大约)
+-- 正在导出表  cedar.t_product_warehousereceipt_order_detail 的数据：~0 rows (大约)
 /*!40000 ALTER TABLE `t_product_warehousereceipt_order_detail` DISABLE KEYS */;
 /*!40000 ALTER TABLE `t_product_warehousereceipt_order_detail` ENABLE KEYS */;
 
--- 导出  表 myorder_python.t_quotation 结构
+-- 导出  表 cedar.t_quotation 结构
 DROP TABLE IF EXISTS `t_quotation`;
 CREATE TABLE IF NOT EXISTS `t_quotation` (
   `fOrderID` char(20) NOT NULL COMMENT '订单号',
@@ -779,11 +779,11 @@ CREATE TABLE IF NOT EXISTS `t_quotation` (
   KEY `iOrderDate` (`fOrderDate`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- 正在导出表  myorder_python.t_quotation 的数据：~0 rows (大约)
+-- 正在导出表  cedar.t_quotation 的数据：~0 rows (大约)
 /*!40000 ALTER TABLE `t_quotation` DISABLE KEYS */;
 /*!40000 ALTER TABLE `t_quotation` ENABLE KEYS */;
 
--- 导出  表 myorder_python.t_quotation_detail 结构
+-- 导出  表 cedar.t_quotation_detail 结构
 DROP TABLE IF EXISTS `t_quotation_detail`;
 CREATE TABLE IF NOT EXISTS `t_quotation_detail` (
   `fID` int(11) NOT NULL AUTO_INCREMENT,
@@ -798,11 +798,11 @@ CREATE TABLE IF NOT EXISTS `t_quotation_detail` (
   PRIMARY KEY (`fID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- 正在导出表  myorder_python.t_quotation_detail 的数据：~0 rows (大约)
+-- 正在导出表  cedar.t_quotation_detail 的数据：~0 rows (大约)
 /*!40000 ALTER TABLE `t_quotation_detail` DISABLE KEYS */;
 /*!40000 ALTER TABLE `t_quotation_detail` ENABLE KEYS */;
 
--- 导出  表 myorder_python.t_receivables 结构
+-- 导出  表 cedar.t_receivables 结构
 DROP TABLE IF EXISTS `t_receivables`;
 CREATE TABLE IF NOT EXISTS `t_receivables` (
   `fID` int(11) NOT NULL AUTO_INCREMENT,
@@ -817,11 +817,11 @@ CREATE TABLE IF NOT EXISTS `t_receivables` (
   PRIMARY KEY (`fID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- 正在导出表  myorder_python.t_receivables 的数据：~0 rows (大约)
+-- 正在导出表  cedar.t_receivables 的数据：~0 rows (大约)
 /*!40000 ALTER TABLE `t_receivables` DISABLE KEYS */;
 /*!40000 ALTER TABLE `t_receivables` ENABLE KEYS */;
 
--- 导出  表 myorder_python.t_supplier 结构
+-- 导出  表 cedar.t_supplier 结构
 DROP TABLE IF EXISTS `t_supplier`;
 CREATE TABLE IF NOT EXISTS `t_supplier` (
   `fSupplierID` int(11) NOT NULL AUTO_INCREMENT,
@@ -844,335 +844,16 @@ CREATE TABLE IF NOT EXISTS `t_supplier` (
   UNIQUE KEY `fNUIT` (`fNUIT`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- 正在导出表  myorder_python.t_supplier 的数据：~1 rows (大约)
+-- 正在导出表  cedar.t_supplier 的数据：~0 rows (大约)
 /*!40000 ALTER TABLE `t_supplier` DISABLE KEYS */;
 /*!40000 ALTER TABLE `t_supplier` ENABLE KEYS */;
-
--- 导出  视图 myorder_python.v_enumeration 结构
 DROP VIEW IF EXISTS `v_enumeration`;
--- 创建临时表以解决视图依赖性错误
-CREATE TABLE `v_enumeration` (
-	`fTypeID` INT(11) NOT NULL,
-	`fTypeName` VARCHAR(20) NOT NULL COLLATE 'utf8_general_ci',
-	`fItemID` INT(11) NULL COMMENT '选项编号',
-	`fTitle` VARCHAR(50) NULL COLLATE 'utf8_general_ci',
-	`fSpare1` VARCHAR(50) NULL COMMENT '备用1' COLLATE 'utf8_general_ci',
-	`fSpare2` VARCHAR(50) NULL COMMENT '备用2' COLLATE 'utf8_general_ci',
-	`fNote` VARCHAR(255) NULL COLLATE 'utf8_general_ci'
-) ENGINE=MyISAM;
+CREATE  SQL SECURITY INVOKER VIEW `v_enumeration` AS select `t`.`fTypeID` AS `fTypeID`,`t`.`fTypeName` AS `fTypeName`,`e`.`fItemID` AS `fItemID`,`e`.`fTitle` AS `fTitle`,`e`.`fSpare1` AS `fSpare1`,`e`.`fSpare2` AS `fSpare2`,`e`.`fNote` AS `fNote` from (`t_enumeration_type` `t` left join `t_enumeration` `e` on((`t`.`fTypeID` = `e`.`fTypeID`))) ;
 
--- 导出  视图 myorder_python.v_order 结构
+-- 导出  视图 cedar.v_order 结构
 DROP VIEW IF EXISTS `v_order`;
--- 创建临时表以解决视图依赖性错误
-CREATE TABLE `v_order` (
-	`fOrderID` CHAR(20) NOT NULL COMMENT '订单号' COLLATE 'utf8_general_ci',
-	`fPrice` DECIMAL(10,2) NULL COMMENT '单价_印刷',
-	`fCustomerID` INT(11) NOT NULL COMMENT '客户编号',
-	`fOrderDate` DATE NOT NULL COMMENT '订单日期',
-	`fEspecieID` INT(11) NULL COMMENT '印刷分类',
-	`fRequiredDeliveryDate` DATE NULL COMMENT '客户要求交货日期',
-	`fCategoryID` INT(11) NULL COMMENT '类别',
-	`fBrandMateriaID` INT(11) NULL COMMENT '品牌材料',
-	`fAmount` DECIMAL(11,2) NULL COMMENT '金额',
-	`fTax` DECIMAL(11,2) NULL COMMENT '税金',
-	`fPayable` DECIMAL(11,2) NULL COMMENT '应付金额',
-	`fDesconto` DECIMAL(11,2) NULL COMMENT '折扣',
-	`fColorID` INT(11) NULL COMMENT '颜色',
-	`fEntryID` INT(11) NULL COMMENT '录入人',
-	`fSubmited` INT(2) UNSIGNED NOT NULL,
-	`fSubmitID` INT(11) NULL COMMENT '提交人',
-	`fReviewed` INT(2) UNSIGNED NOT NULL,
-	`fReviewerID` INT(11) NULL COMMENT '审核人',
-	`fConfirmed` INT(2) UNSIGNED NOT NULL,
-	`fConfirmID` INT(11) NULL COMMENT '确认人',
-	`fDelivered` INT(2) UNSIGNED NOT NULL,
-	`fDelivererID` INT(11) NULL COMMENT '交付人',
-	`fCanceled` INT(2) UNSIGNED NOT NULL,
-	`fDeliverViewed` INT(2) UNSIGNED NULL,
-	`fCancelID` INT(11) NULL COMMENT '作废人',
-	`fDeliveryDate` DATE NULL COMMENT '交付日期',
-	`fNumerBegin` INT(11) NULL COMMENT '起始编号',
-	`fQuant` INT(11) NULL COMMENT '数量',
-	`fPagePerVolumn` SMALLINT(6) NULL COMMENT '每本号数',
-	`fNumerEnd` INT(11) NULL COMMENT '结束编号',
-	`fAvistaID` INT(11) NULL COMMENT '每页单据数',
-	`fTamanhoID` INT(11) NULL COMMENT '尺寸',
-	`fSucursal` INT(2) UNSIGNED NULL,
-	`fLogo` INT(2) UNSIGNED NULL,
-	`fVendedorID` INT(11) NULL COMMENT '销售人员',
-	`fNrCopyID` INT(11) NULL COMMENT '联次',
-	`fContato` VARCHAR(20) NULL COMMENT '联系人' COLLATE 'utf8_general_ci',
-	`fCelular` VARCHAR(15) NULL COMMENT '手机' COLLATE 'utf8_general_ci',
-	`fTelefone` VARCHAR(15) NULL COMMENT '电话' COLLATE 'utf8_general_ci',
-	`fNote` VARCHAR(255) NULL COMMENT '备注' COLLATE 'utf8_general_ci',
-	`fTaxRegCer` VARCHAR(50) NULL COMMENT '税务登记证' COLLATE 'utf8_general_ci',
-	`fCustomerName` VARCHAR(50) NULL COMMENT '客户名' COLLATE 'utf8_general_ci',
-	`fNUIT` VARCHAR(25) NULL COMMENT '税号' COLLATE 'utf8_general_ci',
-	`fCity` VARCHAR(30) NULL COMMENT '所在地 Mordo' COLLATE 'utf8_general_ci',
-	`fEndereco` VARCHAR(50) NULL COMMENT '地址' COLLATE 'utf8_general_ci',
-	`fEmail` VARCHAR(50) NULL COMMENT '电子邮件' COLLATE 'utf8_general_ci',
-	`fSucursal1` VARCHAR(3) NULL COLLATE 'utf8mb4_general_ci',
-	`fSubmited1` VARCHAR(3) NOT NULL COLLATE 'utf8mb4_general_ci',
-	`fConfirmed1` VARCHAR(3) NOT NULL COLLATE 'utf8mb4_general_ci',
-	`fDelivered1` VARCHAR(3) NOT NULL COLLATE 'utf8mb4_general_ci',
-	`fCanceled1` VARCHAR(8) NOT NULL COLLATE 'utf8mb4_general_ci',
-	`fDeliverViewed1` VARCHAR(3) NULL COLLATE 'utf8mb4_general_ci',
-	`fLogo1` VARCHAR(3) NULL COLLATE 'utf8mb4_general_ci',
-	`fSubmit_Name` VARCHAR(20) NULL COLLATE 'utf8_general_ci',
-	`fEntry_Name` VARCHAR(20) NULL COLLATE 'utf8_general_ci',
-	`fReviewer_Name` VARCHAR(20) NULL COLLATE 'utf8_general_ci',
-	`fDeliverer_Name` VARCHAR(20) NULL COLLATE 'utf8_general_ci',
-	`fConfirm_Name` VARCHAR(20) NULL COLLATE 'utf8_general_ci',
-	`fCancel_Name` VARCHAR(20) NULL COLLATE 'utf8_general_ci',
-	`fEspecie` VARCHAR(50) NULL COLLATE 'utf8_general_ci',
-	`fCategory` VARCHAR(50) NULL COLLATE 'utf8_general_ci',
-	`fBrandMateria` VARCHAR(50) NULL COLLATE 'utf8_general_ci',
-	`fColor` VARCHAR(50) NULL COLLATE 'utf8_general_ci',
-	`fAvista` VARCHAR(50) NULL COLLATE 'utf8_general_ci',
-	`fTamanho` VARCHAR(50) NULL COLLATE 'utf8_general_ci',
-	`fVendedor` VARCHAR(50) NULL COLLATE 'utf8_general_ci',
-	`fNrCopy` VARCHAR(50) NULL COLLATE 'utf8_general_ci'
-) ENGINE=MyISAM;
 
--- 导出  视图 myorder_python.v_order_readonly 结构
-DROP VIEW IF EXISTS `v_order_readonly`;
--- 创建临时表以解决视图依赖性错误
-CREATE TABLE `v_order_readonly` (
-	`fOrderID` CHAR(20) NOT NULL COMMENT '订单号' COLLATE 'utf8_general_ci',
-	`fPrice` DECIMAL(10,2) NULL COMMENT '单价_印刷',
-	`fCustomerID` INT(11) NOT NULL COMMENT '客户编号',
-	`fOrderDate` DATE NOT NULL COMMENT '订单日期',
-	`fEspecieID` INT(11) NULL COMMENT '印刷分类',
-	`fRequiredDeliveryDate` DATE NULL COMMENT '客户要求交货日期',
-	`fCategoryID` INT(11) NULL COMMENT '类别',
-	`fBrandMateriaID` INT(11) NULL COMMENT '品牌材料',
-	`fAmount` DECIMAL(11,2) NULL COMMENT '金额',
-	`fTax` DECIMAL(11,2) NULL COMMENT '税金',
-	`fPayable` DECIMAL(11,2) NULL COMMENT '应付金额',
-	`fDesconto` DECIMAL(11,2) NULL COMMENT '折扣',
-	`fColorID` INT(11) NULL COMMENT '颜色',
-	`fEntryID` INT(11) NULL COMMENT '录入人',
-	`fSubmited` BIT(1) NOT NULL COMMENT '提交',
-	`fSubmitID` INT(11) NULL COMMENT '提交人',
-	`fReviewed` BIT(1) NOT NULL COMMENT '已审核',
-	`fReviewerID` INT(11) NULL COMMENT '审核人',
-	`fConfirmed` BIT(1) NOT NULL COMMENT '已确认',
-	`fConfirmID` INT(11) NULL COMMENT '确认人',
-	`fDelivered` BIT(1) NOT NULL COMMENT '已交付',
-	`fDelivererID` INT(11) NULL COMMENT '交付人',
-	`fCanceled` BIT(1) NOT NULL COMMENT '已作废',
-	`fCancelID` INT(11) NULL COMMENT '作废人',
-	`fDeliveryDate` DATE NULL COMMENT '交付日期',
-	`fNumerBegin` INT(11) NULL COMMENT '起始编号',
-	`fQuant` INT(11) NULL COMMENT '数量',
-	`fPagePerVolumn` SMALLINT(6) NULL COMMENT '每本号数',
-	`fNumerEnd` INT(11) NULL COMMENT '结束编号',
-	`fAvistaID` INT(11) NULL COMMENT '每页单据数',
-	`fTamanhoID` INT(11) NULL COMMENT '尺寸',
-	`fSucursal` BIT(1) NULL COMMENT 'Sucursal 分公司',
-	`fLogo` BIT(1) NULL COMMENT '标志',
-	`fVendedorID` INT(11) NULL COMMENT '销售人员',
-	`fNrCopyID` INT(11) NULL COMMENT '联次',
-	`fContato` VARCHAR(20) NULL COMMENT '联系人' COLLATE 'utf8_general_ci',
-	`fCelular` VARCHAR(15) NULL COMMENT '手机' COLLATE 'utf8_general_ci',
-	`fTelefone` VARCHAR(15) NULL COMMENT '电话' COLLATE 'utf8_general_ci',
-	`fNote` VARCHAR(255) NULL COMMENT '备注' COLLATE 'utf8_general_ci',
-	`fCustomerName` VARCHAR(50) NULL COMMENT '客户名' COLLATE 'utf8_general_ci',
-	`fNUIT` VARCHAR(25) NULL COMMENT '税号' COLLATE 'utf8_general_ci',
-	`fCity` VARCHAR(30) NULL COMMENT '所在地 Mordo' COLLATE 'utf8_general_ci',
-	`fAreaCode` VARCHAR(15) NULL COMMENT '区号' COLLATE 'utf8_general_ci',
-	`fEndereco` VARCHAR(50) NULL COMMENT '地址' COLLATE 'utf8_general_ci',
-	`fEmail` VARCHAR(50) NULL COMMENT '电子邮件' COLLATE 'utf8_general_ci',
-	`fWeb` VARCHAR(50) NULL COMMENT '主页' COLLATE 'utf8_general_ci'
-) ENGINE=MyISAM;
-
--- 导出  视图 myorder_python.v_product_outbound_order 结构
-DROP VIEW IF EXISTS `v_product_outbound_order`;
--- 创建临时表以解决视图依赖性错误
-CREATE TABLE `v_product_outbound_order` (
-	`fOrderID` CHAR(20) NOT NULL COMMENT '订单号' COLLATE 'utf8_general_ci',
-	`fPrice` DECIMAL(10,2) NULL COMMENT '单价',
-	`fCustomerID` INT(11) NOT NULL COMMENT '客户编号',
-	`fOrderDate` DATE NOT NULL COMMENT '订单日期',
-	`fRequiredDeliveryDate` DATE NULL COMMENT '客户要求交货日期',
-	`fAmount` DECIMAL(11,2) NULL COMMENT '金额',
-	`fTax` DECIMAL(11,2) NULL COMMENT '税金',
-	`fPayable` DECIMAL(11,2) NULL COMMENT '应付金额',
-	`fDesconto` DECIMAL(11,2) NULL COMMENT '折扣',
-	`fEntryID` INT(11) NULL COMMENT '录入人',
-	`fSubmited` INT(2) UNSIGNED NOT NULL,
-	`fSubmitID` INT(11) NULL COMMENT '提交人',
-	`fReviewed` INT(2) UNSIGNED NOT NULL,
-	`fReviewerID` INT(11) NULL COMMENT '审核人',
-	`fConfirmed` INT(2) UNSIGNED NOT NULL,
-	`fConfirmID` INT(11) NULL COMMENT '确认人',
-	`fDelivered` INT(2) UNSIGNED NOT NULL,
-	`fDelivererID` INT(11) NULL COMMENT '交付人',
-	`fCanceled` INT(2) UNSIGNED NOT NULL,
-	`fCancelID` INT(11) NULL COMMENT '作废人',
-	`fDeliveryDate` DATE NULL COMMENT '交付日期',
-	`fQuant` INT(11) NULL COMMENT '数量',
-	`fSucursal` INT(2) UNSIGNED NULL,
-	`fVendedorID` INT(11) NULL COMMENT '销售人员',
-	`fContato` VARCHAR(20) NULL COMMENT '联系人' COLLATE 'utf8_general_ci',
-	`fCelular` VARCHAR(15) NULL COMMENT '手机' COLLATE 'utf8_general_ci',
-	`fTelefone` VARCHAR(15) NULL COMMENT '电话' COLLATE 'utf8_general_ci',
-	`fNote` VARCHAR(255) NULL COMMENT '备注' COLLATE 'utf8_general_ci',
-	`fTaxRegCer` VARCHAR(50) NULL COMMENT '税务登记证' COLLATE 'utf8_general_ci',
-	`fCustomerName` VARCHAR(50) NULL COMMENT '客户名' COLLATE 'utf8_general_ci',
-	`fNUIT` VARCHAR(25) NULL COMMENT '税号' COLLATE 'utf8_general_ci',
-	`fCity` VARCHAR(30) NULL COMMENT '所在地 Mordo' COLLATE 'utf8_general_ci',
-	`fEndereco` VARCHAR(50) NULL COMMENT '地址' COLLATE 'utf8_general_ci',
-	`fEmail` VARCHAR(50) NULL COMMENT '电子邮件' COLLATE 'utf8_general_ci',
-	`fSucursal1` VARCHAR(3) NULL COLLATE 'utf8mb4_general_ci',
-	`fSubmited1` VARCHAR(3) NOT NULL COLLATE 'utf8mb4_general_ci',
-	`fConfirmed1` VARCHAR(3) NOT NULL COLLATE 'utf8mb4_general_ci',
-	`fDelivered1` VARCHAR(3) NOT NULL COLLATE 'utf8mb4_general_ci',
-	`fCanceled1` VARCHAR(8) NOT NULL COLLATE 'utf8mb4_general_ci',
-	`fSubmit_Name` VARCHAR(20) NULL COLLATE 'utf8_general_ci',
-	`fEntry_Name` VARCHAR(20) NULL COLLATE 'utf8_general_ci',
-	`fReviewer_Name` VARCHAR(20) NULL COLLATE 'utf8_general_ci',
-	`fDeliverer_Name` VARCHAR(20) NULL COLLATE 'utf8_general_ci',
-	`fConfirm_Name` VARCHAR(20) NULL COLLATE 'utf8_general_ci',
-	`fCancel_Name` VARCHAR(20) NULL COLLATE 'utf8_general_ci',
-	`fVendedor` VARCHAR(50) NULL COLLATE 'utf8_general_ci'
-) ENGINE=MyISAM;
-
--- 导出  视图 myorder_python.v_product_warehousereceipt_order 结构
-DROP VIEW IF EXISTS `v_product_warehousereceipt_order`;
--- 创建临时表以解决视图依赖性错误
-CREATE TABLE `v_product_warehousereceipt_order` (
-	`fOrderID` CHAR(20) NOT NULL COMMENT '订单号' COLLATE 'utf8_general_ci',
-	`fPrice` DECIMAL(10,2) NULL COMMENT '单价',
-	`fSupplierID` INT(11) NOT NULL COMMENT '客户编号',
-	`fOrderDate` DATE NOT NULL COMMENT '订单日期',
-	`fWarehousingDate` DATE NULL COMMENT '入库日期',
-	`fAmount` DECIMAL(11,2) UNSIGNED ZEROFILL NULL COMMENT '金额',
-	`fTax` DECIMAL(11,2) NULL COMMENT '税金',
-	`fPayable` DECIMAL(11,2) NULL COMMENT '应付金额',
-	`fDesconto` DECIMAL(11,2) NULL COMMENT '折扣',
-	`fEntryID` INT(11) NULL COMMENT '录入人',
-	`fSubmited` INT(2) UNSIGNED NOT NULL,
-	`fSubmitID` INT(11) NULL COMMENT '提交人',
-	`fCanceled` INT(2) UNSIGNED NOT NULL,
-	`fCancelID` INT(11) NULL COMMENT '作废人',
-	`fPurchaserID` INT(11) NOT NULL COMMENT '采购人员',
-	`fContato` VARCHAR(20) NULL COMMENT '联系人' COLLATE 'utf8_general_ci',
-	`fCelular` VARCHAR(15) NULL COMMENT '手机' COLLATE 'utf8_general_ci',
-	`fTelefone` VARCHAR(15) NULL COMMENT '电话' COLLATE 'utf8_general_ci',
-	`fNote` VARCHAR(255) NULL COMMENT '备注' COLLATE 'utf8_general_ci',
-	`fTaxRegCer` VARCHAR(50) NULL COMMENT '税务登记证' COLLATE 'utf8_general_ci',
-	`fSupplierName` VARCHAR(50) NULL COMMENT '客户名' COLLATE 'utf8_general_ci',
-	`fNUIT` VARCHAR(25) NULL COMMENT '税号' COLLATE 'utf8_general_ci',
-	`fCity` VARCHAR(30) NULL COMMENT '所在地 Mordo' COLLATE 'utf8_general_ci',
-	`fEndereco` VARCHAR(15) NULL COMMENT '地址' COLLATE 'utf8_general_ci',
-	`fEmail` VARCHAR(50) NULL COMMENT '电子邮件' COLLATE 'utf8_general_ci',
-	`fSubmited1` VARCHAR(3) NOT NULL COLLATE 'utf8mb4_general_ci',
-	`fCanceled1` VARCHAR(8) NOT NULL COLLATE 'utf8mb4_general_ci',
-	`fSubmit_Name` VARCHAR(20) NULL COLLATE 'utf8_general_ci',
-	`fEntry_Name` VARCHAR(20) NULL COLLATE 'utf8_general_ci',
-	`fCancel_Name` VARCHAR(20) NULL COLLATE 'utf8_general_ci',
-	`fPurchaser` VARCHAR(50) NULL COLLATE 'utf8_general_ci'
-) ENGINE=MyISAM;
-
--- 导出  视图 myorder_python.v_quotation 结构
-DROP VIEW IF EXISTS `v_quotation`;
--- 创建临时表以解决视图依赖性错误
-CREATE TABLE `v_quotation` (
-	`fOrderID` CHAR(20) NOT NULL COMMENT '订单号' COLLATE 'utf8_general_ci',
-	`fPrice` DECIMAL(10,0) NULL COMMENT '单价_印刷',
-	`fCustomerID` INT(11) NOT NULL COMMENT '客户编号',
-	`fOrderDate` DATE NOT NULL COMMENT '订单日期',
-	`fEspecieID` INT(11) NULL COMMENT '印刷分类',
-	`fRequiredDeliveryDate` DATE NULL COMMENT '客户要求交货日期',
-	`fCategoryID` INT(11) NULL COMMENT '类别',
-	`fBrandMateriaID` INT(11) NULL COMMENT '品牌材料',
-	`fAmount` DECIMAL(11,2) NULL COMMENT '金额',
-	`fTax` DECIMAL(11,2) NULL COMMENT '税金',
-	`fPayable` DECIMAL(11,2) NULL COMMENT '应付金额',
-	`fDesconto` DECIMAL(11,2) NULL COMMENT '折扣',
-	`fColorID` INT(11) NULL COMMENT '颜色',
-	`fEntryID` INT(11) NULL COMMENT '录入人',
-	`fSubmited` INT(2) UNSIGNED NOT NULL,
-	`fSubmitID` INT(11) NULL COMMENT '提交人',
-	`fReviewed` INT(2) UNSIGNED NOT NULL,
-	`fReviewerID` INT(11) NULL COMMENT '审核人',
-	`fConfirmed` INT(2) UNSIGNED NOT NULL,
-	`fConfirmID` INT(11) NULL COMMENT '确认人',
-	`fDelivered` INT(2) UNSIGNED NOT NULL,
-	`fDelivererID` INT(11) NULL COMMENT '交付人',
-	`fCanceled` INT(2) UNSIGNED NOT NULL,
-	`fDeliverViewed` INT(2) UNSIGNED NULL,
-	`fCancelID` INT(11) NULL COMMENT '作废人',
-	`fDeliveryDate` DATE NULL COMMENT '交付日期',
-	`fNumerBegin` INT(11) NULL COMMENT '起始编号',
-	`fQuant` INT(11) NULL COMMENT '数量',
-	`fPagePerVolumn` TINYINT(4) NULL COMMENT '每本号数',
-	`fNumerEnd` INT(11) NULL COMMENT '结束编号',
-	`fAvistaID` INT(11) NULL COMMENT '每页单据数',
-	`fTamanhoID` INT(11) NULL COMMENT '尺寸',
-	`fSucursal` INT(2) UNSIGNED NULL,
-	`fLogo` INT(2) UNSIGNED NULL,
-	`fVendedorID` INT(11) NULL COMMENT '销售人员',
-	`fNrCopyID` INT(11) NULL COMMENT '联次',
-	`fContato` VARCHAR(20) NULL COMMENT '联系人' COLLATE 'utf8_general_ci',
-	`fCelular` VARCHAR(15) NULL COMMENT '手机' COLLATE 'utf8_general_ci',
-	`fTelefone` VARCHAR(15) NULL COMMENT '电话' COLLATE 'utf8_general_ci',
-	`fNote` VARCHAR(255) NULL COMMENT '备注' COLLATE 'utf8_general_ci',
-	`fCreatedOrder` INT(2) UNSIGNED NULL,
-	`fCustomerName` VARCHAR(50) NULL COMMENT '客户名' COLLATE 'utf8_general_ci',
-	`fNUIT` VARCHAR(25) NULL COMMENT '税号' COLLATE 'utf8_general_ci',
-	`fCity` VARCHAR(30) NULL COMMENT '所在地 Mordo' COLLATE 'utf8_general_ci',
-	`fEndereco` VARCHAR(50) NULL COMMENT '地址' COLLATE 'utf8_general_ci',
-	`fSucursal1` VARCHAR(3) NULL COLLATE 'utf8mb4_general_ci',
-	`fSubmited1` VARCHAR(3) NOT NULL COLLATE 'utf8mb4_general_ci',
-	`fConfirmed1` VARCHAR(3) NOT NULL COLLATE 'utf8mb4_general_ci',
-	`fDelivered1` VARCHAR(3) NOT NULL COLLATE 'utf8mb4_general_ci',
-	`fCanceled1` VARCHAR(8) NOT NULL COLLATE 'utf8mb4_general_ci',
-	`fDeliverViewed1` VARCHAR(3) NULL COLLATE 'utf8mb4_general_ci',
-	`fLogo1` VARCHAR(3) NULL COLLATE 'utf8mb4_general_ci',
-	`fSubmit_Name` VARCHAR(20) NULL COLLATE 'utf8_general_ci',
-	`fEntry_Name` VARCHAR(20) NULL COLLATE 'utf8_general_ci',
-	`fReviewer_Name` VARCHAR(20) NULL COLLATE 'utf8_general_ci',
-	`fDeliverer_Name` VARCHAR(20) NULL COLLATE 'utf8_general_ci',
-	`fConfirm_Name` VARCHAR(20) NULL COLLATE 'utf8_general_ci',
-	`fCancel_Name` VARCHAR(20) NULL COLLATE 'utf8_general_ci',
-	`fEspecie` VARCHAR(50) NULL COLLATE 'utf8_general_ci',
-	`fCategory` VARCHAR(50) NULL COLLATE 'utf8_general_ci',
-	`fBrandMateria` VARCHAR(50) NULL COLLATE 'utf8_general_ci',
-	`fColor` VARCHAR(50) NULL COLLATE 'utf8_general_ci',
-	`fAvista` VARCHAR(50) NULL COLLATE 'utf8_general_ci',
-	`fTamanho` VARCHAR(50) NULL COLLATE 'utf8_general_ci',
-	`fVendedor` VARCHAR(50) NULL COLLATE 'utf8_general_ci',
-	`fNrCopy` VARCHAR(50) NULL COLLATE 'utf8_general_ci'
-) ENGINE=MyISAM;
-
--- 导出  视图 myorder_python.v_receivables 结构
-DROP VIEW IF EXISTS `v_receivables`;
--- 创建临时表以解决视图依赖性错误
-CREATE TABLE `v_receivables` (
-	`fID` INT(11) NOT NULL,
-	`fCustomerID` INT(11) NOT NULL,
-	`fCustomerName` VARCHAR(50) NULL COMMENT '客户名' COLLATE 'utf8_general_ci',
-	`fReceiptDate` DATE NOT NULL COMMENT '收款日期',
-	`fAmountCollected` DECIMAL(11,2) NOT NULL COMMENT '金额',
-	`fOrderID` CHAR(20) NULL COMMENT '对应单号' COLLATE 'utf8_general_ci',
-	`fPayee` VARCHAR(20) NULL COLLATE 'utf8_general_ci',
-	`fPaymentMethod` VARCHAR(50) NULL COLLATE 'utf8_general_ci',
-	`fNote` VARCHAR(255) NULL COMMENT '备注' COLLATE 'utf8_general_ci'
-) ENGINE=MyISAM;
-
--- 导出  视图 myorder_python.v_enumeration 结构
-DROP VIEW IF EXISTS `v_enumeration`;
--- 移除临时表并创建最终视图结构
-DROP TABLE IF EXISTS `v_enumeration`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`myorder`@`%` SQL SECURITY INVOKER VIEW `v_enumeration` AS select `t`.`fTypeID` AS `fTypeID`,`t`.`fTypeName` AS `fTypeName`,`e`.`fItemID` AS `fItemID`,`e`.`fTitle` AS `fTitle`,`e`.`fSpare1` AS `fSpare1`,`e`.`fSpare2` AS `fSpare2`,`e`.`fNote` AS `fNote` from (`t_enumeration_type` `t` left join `t_enumeration` `e` on((`t`.`fTypeID` = `e`.`fTypeID`))) ;
-
--- 导出  视图 myorder_python.v_order 结构
-DROP VIEW IF EXISTS `v_order`;
--- 移除临时表并创建最终视图结构
-DROP TABLE IF EXISTS `v_order`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`myorder`@`%` SQL SECURITY INVOKER VIEW `v_order` AS SELECT `o`.`fOrderID` AS `fOrderID`, `o`.`fPrice` AS `fPrice`, `o`.`fCustomerID` AS `fCustomerID`, `o`.`fOrderDate` AS `fOrderDate`, `o`.`fEspecieID` AS `fEspecieID`
+CREATE  SQL SECURITY INVOKER VIEW `v_order` AS SELECT `o`.`fOrderID` AS `fOrderID`, `o`.`fPrice` AS `fPrice`, `o`.`fCustomerID` AS `fCustomerID`, `o`.`fOrderDate` AS `fOrderDate`, `o`.`fEspecieID` AS `fEspecieID`
 	, `o`.`fRequiredDeliveryDate` AS `fRequiredDeliveryDate`, `o`.`fCategoryID` AS `fCategoryID`, `o`.`fBrandMateriaID` AS `fBrandMateriaID`, `o`.`fAmount` AS `fAmount`, `o`.`fTax` AS `fTax`
 	, `o`.`fPayable` AS `fPayable`, `o`.`fDesconto` AS `fDesconto`, `o`.`fColorID` AS `fColorID`, `o`.`fEntryID` AS `fEntryID`
 	, `o`.`fSubmited` + 0 AS `fSubmited`, `o`.`fSubmitID` AS `fSubmitID`
@@ -1233,17 +914,17 @@ FROM `t_order` `o`
 	LEFT JOIN `t_enumeration` `e_fVendedorID` ON `o`.`fVendedorID` = `e_fVendedorID`.`fItemID`
 	LEFT JOIN `t_enumeration` `e_fNrCopyID` ON `o`.`fNrCopyID` = `e_fNrCopyID`.`fItemID` ;
 
--- 导出  视图 myorder_python.v_order_readonly 结构
+-- 导出  视图 cedar.v_order_readonly 结构
 DROP VIEW IF EXISTS `v_order_readonly`;
 -- 移除临时表并创建最终视图结构
 DROP TABLE IF EXISTS `v_order_readonly`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`myorder`@`%` SQL SECURITY INVOKER VIEW `v_order_readonly` AS select `t`.`fOrderID` AS `fOrderID`,`t`.`fPrice` AS `fPrice`,`t`.`fCustomerID` AS `fCustomerID`,`t`.`fOrderDate` AS `fOrderDate`,`t`.`fEspecieID` AS `fEspecieID`,`t`.`fRequiredDeliveryDate` AS `fRequiredDeliveryDate`,`t`.`fCategoryID` AS `fCategoryID`,`t`.`fBrandMateriaID` AS `fBrandMateriaID`,`t`.`fAmount` AS `fAmount`,`t`.`fTax` AS `fTax`,`t`.`fPayable` AS `fPayable`,`t`.`fDesconto` AS `fDesconto`,`t`.`fColorID` AS `fColorID`,`t`.`fEntryID` AS `fEntryID`,`t`.`fSubmited` AS `fSubmited`,`t`.`fSubmitID` AS `fSubmitID`,`t`.`fReviewed` AS `fReviewed`,`t`.`fReviewerID` AS `fReviewerID`,`t`.`fConfirmed` AS `fConfirmed`,`t`.`fConfirmID` AS `fConfirmID`,`t`.`fDelivered` AS `fDelivered`,`t`.`fDelivererID` AS `fDelivererID`,`t`.`fCanceled` AS `fCanceled`,`t`.`fCancelID` AS `fCancelID`,`t`.`fDeliveryDate` AS `fDeliveryDate`,`t`.`fNumerBegin` AS `fNumerBegin`,`t`.`fQuant` AS `fQuant`,`t`.`fPagePerVolumn` AS `fPagePerVolumn`,`t`.`fNumerEnd` AS `fNumerEnd`,`t`.`fAvistaID` AS `fAvistaID`,`t`.`fTamanhoID` AS `fTamanhoID`,`t`.`fSucursal` AS `fSucursal`,`t`.`fLogo` AS `fLogo`,`t`.`fVendedorID` AS `fVendedorID`,`t`.`fNrCopyID` AS `fNrCopyID`,`t`.`fContato` AS `fContato`,`t`.`fCelular` AS `fCelular`,`t`.`fTelefone` AS `fTelefone`,`t`.`fNote` AS `fNote`,`c`.`fCustomerName` AS `fCustomerName`,`c`.`fNUIT` AS `fNUIT`,`c`.`fCity` AS `fCity`,`c`.`fAreaCode` AS `fAreaCode`,`c`.`fEndereco` AS `fEndereco`,`c`.`fEmail` AS `fEmail`,`c`.`fWeb` AS `fWeb` from (`t_order` `t` left join `t_customer` `c` on((`t`.`fCustomerID` = `c`.`fCustomerID`))) ;
+CREATE  SQL SECURITY INVOKER VIEW `v_order_readonly` AS select `t`.`fOrderID` AS `fOrderID`,`t`.`fPrice` AS `fPrice`,`t`.`fCustomerID` AS `fCustomerID`,`t`.`fOrderDate` AS `fOrderDate`,`t`.`fEspecieID` AS `fEspecieID`,`t`.`fRequiredDeliveryDate` AS `fRequiredDeliveryDate`,`t`.`fCategoryID` AS `fCategoryID`,`t`.`fBrandMateriaID` AS `fBrandMateriaID`,`t`.`fAmount` AS `fAmount`,`t`.`fTax` AS `fTax`,`t`.`fPayable` AS `fPayable`,`t`.`fDesconto` AS `fDesconto`,`t`.`fColorID` AS `fColorID`,`t`.`fEntryID` AS `fEntryID`,`t`.`fSubmited` AS `fSubmited`,`t`.`fSubmitID` AS `fSubmitID`,`t`.`fReviewed` AS `fReviewed`,`t`.`fReviewerID` AS `fReviewerID`,`t`.`fConfirmed` AS `fConfirmed`,`t`.`fConfirmID` AS `fConfirmID`,`t`.`fDelivered` AS `fDelivered`,`t`.`fDelivererID` AS `fDelivererID`,`t`.`fCanceled` AS `fCanceled`,`t`.`fCancelID` AS `fCancelID`,`t`.`fDeliveryDate` AS `fDeliveryDate`,`t`.`fNumerBegin` AS `fNumerBegin`,`t`.`fQuant` AS `fQuant`,`t`.`fPagePerVolumn` AS `fPagePerVolumn`,`t`.`fNumerEnd` AS `fNumerEnd`,`t`.`fAvistaID` AS `fAvistaID`,`t`.`fTamanhoID` AS `fTamanhoID`,`t`.`fSucursal` AS `fSucursal`,`t`.`fLogo` AS `fLogo`,`t`.`fVendedorID` AS `fVendedorID`,`t`.`fNrCopyID` AS `fNrCopyID`,`t`.`fContato` AS `fContato`,`t`.`fCelular` AS `fCelular`,`t`.`fTelefone` AS `fTelefone`,`t`.`fNote` AS `fNote`,`c`.`fCustomerName` AS `fCustomerName`,`c`.`fNUIT` AS `fNUIT`,`c`.`fCity` AS `fCity`,`c`.`fAreaCode` AS `fAreaCode`,`c`.`fEndereco` AS `fEndereco`,`c`.`fEmail` AS `fEmail`,`c`.`fWeb` AS `fWeb` from (`t_order` `t` left join `t_customer` `c` on((`t`.`fCustomerID` = `c`.`fCustomerID`))) ;
 
--- 导出  视图 myorder_python.v_product_outbound_order 结构
+-- 导出  视图 cedar.v_product_outbound_order 结构
 DROP VIEW IF EXISTS `v_product_outbound_order`;
 -- 移除临时表并创建最终视图结构
 DROP TABLE IF EXISTS `v_product_outbound_order`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`myorder`@`%` SQL SECURITY INVOKER VIEW `v_product_outbound_order` AS SELECT `o`.`fOrderID` AS `fOrderID`,
+CREATE  SQL SECURITY INVOKER VIEW `v_product_outbound_order` AS SELECT `o`.`fOrderID` AS `fOrderID`,
          `o`.`fPrice` AS `fPrice`,
          `o`.`fCustomerID` AS `fCustomerID`,
          `o`.`fOrderDate` AS `fOrderDate`,
@@ -1325,11 +1006,11 @@ LEFT JOIN `sysusers` `u_Cancel`
 LEFT JOIN `t_enumeration` `e_fVendedorID`
     ON `o`.`fVendedorID` = `e_fVendedorID`.`fItemID` ;
 
--- 导出  视图 myorder_python.v_product_warehousereceipt_order 结构
+-- 导出  视图 cedar.v_product_warehousereceipt_order 结构
 DROP VIEW IF EXISTS `v_product_warehousereceipt_order`;
 -- 移除临时表并创建最终视图结构
 DROP TABLE IF EXISTS `v_product_warehousereceipt_order`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`myorder`@`%` SQL SECURITY INVOKER VIEW `v_product_warehousereceipt_order` AS SELECT `o`.`fOrderID` AS `fOrderID`,
+CREATE  SQL SECURITY INVOKER VIEW `v_product_warehousereceipt_order` AS SELECT `o`.`fOrderID` AS `fOrderID`,
          `o`.`fPrice` AS `fPrice`,
          `o`.`fSupplierID` AS `fSupplierID`,
          `o`.`fOrderDate` AS `fOrderDate`,
@@ -1341,11 +1022,8 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`myorder`@`%` SQL SECURITY INVOKER VIEW `v_pr
          `o`.`fEntryID` AS `fEntryID` ,
          `o`.`fSubmited` + 0 AS `fSubmited`,
          `o`.`fSubmitID` AS `fSubmitID` ,
-
-
          `o`.`fCanceled` + 0 AS `fCanceled`,
          `o`.`fCancelID` AS `fCancelID`,
-
          `o`.`fPurchaserID` AS `fPurchaserID`,
          `o`.`fContato` AS `fContato`,
          `o`.`fCelular` AS `fCelular`,
@@ -1375,7 +1053,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`myorder`@`%` SQL SECURITY INVOKER VIEW `v_pr
 	 `u_Cancel`.`fUsername` AS `fCancel_Name`, 
 	 `e_fPurchaserID`.`fTitle` AS `fPurchaser`
 FROM `t_product_warehousereceipt_order` `o`
-LEFT JOIN `t_Supplier` `c`
+LEFT JOIN `t_supplier` `c`
     ON `o`.`fSupplierID` = `c`.`fSupplierID`
 LEFT JOIN `sysusers` `u_Submited`
     ON `o`.`fSubmitID` = `u_Submited`.`fUserID`
@@ -1387,17 +1065,17 @@ LEFT JOIN `sysusers` `u_Cancel`
 LEFT JOIN `t_enumeration` `e_fPurchaserID`
     ON `o`.`fPurchaserID` = `e_fPurchaserID`.`fItemID` ;
 
--- 导出  视图 myorder_python.v_quotation 结构
+-- 导出  视图 cedar.v_quotation 结构
 DROP VIEW IF EXISTS `v_quotation`;
 -- 移除临时表并创建最终视图结构
 DROP TABLE IF EXISTS `v_quotation`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`myorder`@`%` SQL SECURITY INVOKER VIEW `v_quotation` AS select `o`.`fOrderID` AS `fOrderID`,`o`.`fPrice` AS `fPrice`,`o`.`fCustomerID` AS `fCustomerID`,`o`.`fOrderDate` AS `fOrderDate`,`o`.`fEspecieID` AS `fEspecieID`,`o`.`fRequiredDeliveryDate` AS `fRequiredDeliveryDate`,`o`.`fCategoryID` AS `fCategoryID`,`o`.`fBrandMateriaID` AS `fBrandMateriaID`,`o`.`fAmount` AS `fAmount`,`o`.`fTax` AS `fTax`,`o`.`fPayable` AS `fPayable`,`o`.`fDesconto` AS `fDesconto`,`o`.`fColorID` AS `fColorID`,`o`.`fEntryID` AS `fEntryID`,(`o`.`fSubmited` + 0) AS `fSubmited`,`o`.`fSubmitID` AS `fSubmitID`,(`o`.`fReviewed` + 0) AS `fReviewed`,`o`.`fReviewerID` AS `fReviewerID`,(`o`.`fConfirmed` + 0) AS `fConfirmed`,`o`.`fConfirmID` AS `fConfirmID`,(`o`.`fDelivered` + 0) AS `fDelivered`,`o`.`fDelivererID` AS `fDelivererID`,(`o`.`fCanceled` + 0) AS `fCanceled`,(`o`.`fDeliverViewed` + 0) AS `fDeliverViewed`,`o`.`fCancelID` AS `fCancelID`,`o`.`fDeliveryDate` AS `fDeliveryDate`,`o`.`fNumerBegin` AS `fNumerBegin`,`o`.`fQuant` AS `fQuant`,`o`.`fPagePerVolumn` AS `fPagePerVolumn`,`o`.`fNumerEnd` AS `fNumerEnd`,`o`.`fAvistaID` AS `fAvistaID`,`o`.`fTamanhoID` AS `fTamanhoID`,(`o`.`fSucursal` + 0) AS `fSucursal`,(`o`.`fLogo` + 0) AS `fLogo`,`o`.`fVendedorID` AS `fVendedorID`,`o`.`fNrCopyID` AS `fNrCopyID`,`o`.`fContato` AS `fContato`,`o`.`fCelular` AS `fCelular`,`o`.`fTelefone` AS `fTelefone`,`o`.`fNote` AS `fNote`,(`o`.`fCreatedOrder` + 0) AS `fCreatedOrder`,`c`.`fCustomerName` AS `fCustomerName`,`c`.`fNUIT` AS `fNUIT`,`c`.`fCity` AS `fCity`,`c`.`fEndereco` AS `fEndereco`,(case `o`.`fSucursal` when 1 then 'SIM' else 'Non' end) AS `fSucursal1`,(case `o`.`fSubmited` when 1 then 'SIM' else '' end) AS `fSubmited1`,(case `o`.`fConfirmed` when 1 then 'SIM' else '' end) AS `fConfirmed1`,(case `o`.`fDelivered` when 1 then 'SIM' else '' end) AS `fDelivered1`,(case `o`.`fCanceled` when 1 then 'Canceled' else '' end) AS `fCanceled1`,(case `o`.`fDeliverViewed` when 1 then 'SIM' else '' end) AS `fDeliverViewed1`,(case `o`.`fLogo` when 1 then 'SIM' else 'Non' end) AS `fLogo1`,`u_Submited`.`fUsername` AS `fSubmit_Name`,`u_Entry`.`fUsername` AS `fEntry_Name`,`u_Reviewer`.`fUsername` AS `fReviewer_Name`,`u_Deliverer`.`fUsername` AS `fDeliverer_Name`,`u_Confirm`.`fUsername` AS `fConfirm_Name`,`u_Cancel`.`fUsername` AS `fCancel_Name`,`e_fEspecieID`.`fTitle` AS `fEspecie`,`e_fCategoryID`.`fTitle` AS `fCategory`,`e_fBrandMateriaID`.`fTitle` AS `fBrandMateria`,`e_fColorID`.`fTitle` AS `fColor`,`e_fAvistaID`.`fTitle` AS `fAvista`,`e_fTamanhoID`.`fTitle` AS `fTamanho`,`e_fVendedorID`.`fTitle` AS `fVendedor`,`e_fNrCopyID`.`fTitle` AS `fNrCopy` from (((((((((((((((`t_quotation` `o` left join `t_customer` `c` on((`o`.`fCustomerID` = `c`.`fCustomerID`))) left join `sysusers` `u_Submited` on((`o`.`fSubmitID` = `u_Submited`.`fUserID`))) left join `sysusers` `u_Entry` on((`o`.`fEntryID` = `u_Entry`.`fUserID`))) left join `sysusers` `u_Reviewer` on((`o`.`fReviewerID` = `u_Reviewer`.`fUserID`))) left join `sysusers` `u_Deliverer` on((`o`.`fDelivererID` = `u_Deliverer`.`fUserID`))) left join `sysusers` `u_Confirm` on((`o`.`fConfirmID` = `u_Confirm`.`fUserID`))) left join `sysusers` `u_Cancel` on((`o`.`fCancelID` = `u_Cancel`.`fUserID`))) left join `t_enumeration` `e_fEspecieID` on((`o`.`fEspecieID` = `e_fEspecieID`.`fItemID`))) left join `t_enumeration` `e_fCategoryID` on((`o`.`fCategoryID` = `e_fCategoryID`.`fItemID`))) left join `t_enumeration` `e_fBrandMateriaID` on((`o`.`fBrandMateriaID` = `e_fBrandMateriaID`.`fItemID`))) left join `t_enumeration` `e_fColorID` on((`o`.`fColorID` = `e_fColorID`.`fItemID`))) left join `t_enumeration` `e_fAvistaID` on((`o`.`fAvistaID` = `e_fAvistaID`.`fItemID`))) left join `t_enumeration` `e_fTamanhoID` on((`o`.`fTamanhoID` = `e_fTamanhoID`.`fItemID`))) left join `t_enumeration` `e_fVendedorID` on((`o`.`fVendedorID` = `e_fVendedorID`.`fItemID`))) left join `t_enumeration` `e_fNrCopyID` on((`o`.`fNrCopyID` = `e_fNrCopyID`.`fItemID`))) ;
+CREATE  SQL SECURITY INVOKER VIEW `v_quotation` AS select `o`.`fOrderID` AS `fOrderID`,`o`.`fPrice` AS `fPrice`,`o`.`fCustomerID` AS `fCustomerID`,`o`.`fOrderDate` AS `fOrderDate`,`o`.`fEspecieID` AS `fEspecieID`,`o`.`fRequiredDeliveryDate` AS `fRequiredDeliveryDate`,`o`.`fCategoryID` AS `fCategoryID`,`o`.`fBrandMateriaID` AS `fBrandMateriaID`,`o`.`fAmount` AS `fAmount`,`o`.`fTax` AS `fTax`,`o`.`fPayable` AS `fPayable`,`o`.`fDesconto` AS `fDesconto`,`o`.`fColorID` AS `fColorID`,`o`.`fEntryID` AS `fEntryID`,(`o`.`fSubmited` + 0) AS `fSubmited`,`o`.`fSubmitID` AS `fSubmitID`,(`o`.`fReviewed` + 0) AS `fReviewed`,`o`.`fReviewerID` AS `fReviewerID`,(`o`.`fConfirmed` + 0) AS `fConfirmed`,`o`.`fConfirmID` AS `fConfirmID`,(`o`.`fDelivered` + 0) AS `fDelivered`,`o`.`fDelivererID` AS `fDelivererID`,(`o`.`fCanceled` + 0) AS `fCanceled`,(`o`.`fDeliverViewed` + 0) AS `fDeliverViewed`,`o`.`fCancelID` AS `fCancelID`,`o`.`fDeliveryDate` AS `fDeliveryDate`,`o`.`fNumerBegin` AS `fNumerBegin`,`o`.`fQuant` AS `fQuant`,`o`.`fPagePerVolumn` AS `fPagePerVolumn`,`o`.`fNumerEnd` AS `fNumerEnd`,`o`.`fAvistaID` AS `fAvistaID`,`o`.`fTamanhoID` AS `fTamanhoID`,(`o`.`fSucursal` + 0) AS `fSucursal`,(`o`.`fLogo` + 0) AS `fLogo`,`o`.`fVendedorID` AS `fVendedorID`,`o`.`fNrCopyID` AS `fNrCopyID`,`o`.`fContato` AS `fContato`,`o`.`fCelular` AS `fCelular`,`o`.`fTelefone` AS `fTelefone`,`o`.`fNote` AS `fNote`,(`o`.`fCreatedOrder` + 0) AS `fCreatedOrder`,`c`.`fCustomerName` AS `fCustomerName`,`c`.`fNUIT` AS `fNUIT`,`c`.`fCity` AS `fCity`,`c`.`fEndereco` AS `fEndereco`,(case `o`.`fSucursal` when 1 then 'SIM' else 'Non' end) AS `fSucursal1`,(case `o`.`fSubmited` when 1 then 'SIM' else '' end) AS `fSubmited1`,(case `o`.`fConfirmed` when 1 then 'SIM' else '' end) AS `fConfirmed1`,(case `o`.`fDelivered` when 1 then 'SIM' else '' end) AS `fDelivered1`,(case `o`.`fCanceled` when 1 then 'Canceled' else '' end) AS `fCanceled1`,(case `o`.`fDeliverViewed` when 1 then 'SIM' else '' end) AS `fDeliverViewed1`,(case `o`.`fLogo` when 1 then 'SIM' else 'Non' end) AS `fLogo1`,`u_Submited`.`fUsername` AS `fSubmit_Name`,`u_Entry`.`fUsername` AS `fEntry_Name`,`u_Reviewer`.`fUsername` AS `fReviewer_Name`,`u_Deliverer`.`fUsername` AS `fDeliverer_Name`,`u_Confirm`.`fUsername` AS `fConfirm_Name`,`u_Cancel`.`fUsername` AS `fCancel_Name`,`e_fEspecieID`.`fTitle` AS `fEspecie`,`e_fCategoryID`.`fTitle` AS `fCategory`,`e_fBrandMateriaID`.`fTitle` AS `fBrandMateria`,`e_fColorID`.`fTitle` AS `fColor`,`e_fAvistaID`.`fTitle` AS `fAvista`,`e_fTamanhoID`.`fTitle` AS `fTamanho`,`e_fVendedorID`.`fTitle` AS `fVendedor`,`e_fNrCopyID`.`fTitle` AS `fNrCopy` from (((((((((((((((`t_quotation` `o` left join `t_customer` `c` on((`o`.`fCustomerID` = `c`.`fCustomerID`))) left join `sysusers` `u_Submited` on((`o`.`fSubmitID` = `u_Submited`.`fUserID`))) left join `sysusers` `u_Entry` on((`o`.`fEntryID` = `u_Entry`.`fUserID`))) left join `sysusers` `u_Reviewer` on((`o`.`fReviewerID` = `u_Reviewer`.`fUserID`))) left join `sysusers` `u_Deliverer` on((`o`.`fDelivererID` = `u_Deliverer`.`fUserID`))) left join `sysusers` `u_Confirm` on((`o`.`fConfirmID` = `u_Confirm`.`fUserID`))) left join `sysusers` `u_Cancel` on((`o`.`fCancelID` = `u_Cancel`.`fUserID`))) left join `t_enumeration` `e_fEspecieID` on((`o`.`fEspecieID` = `e_fEspecieID`.`fItemID`))) left join `t_enumeration` `e_fCategoryID` on((`o`.`fCategoryID` = `e_fCategoryID`.`fItemID`))) left join `t_enumeration` `e_fBrandMateriaID` on((`o`.`fBrandMateriaID` = `e_fBrandMateriaID`.`fItemID`))) left join `t_enumeration` `e_fColorID` on((`o`.`fColorID` = `e_fColorID`.`fItemID`))) left join `t_enumeration` `e_fAvistaID` on((`o`.`fAvistaID` = `e_fAvistaID`.`fItemID`))) left join `t_enumeration` `e_fTamanhoID` on((`o`.`fTamanhoID` = `e_fTamanhoID`.`fItemID`))) left join `t_enumeration` `e_fVendedorID` on((`o`.`fVendedorID` = `e_fVendedorID`.`fItemID`))) left join `t_enumeration` `e_fNrCopyID` on((`o`.`fNrCopyID` = `e_fNrCopyID`.`fItemID`))) ;
 
--- 导出  视图 myorder_python.v_receivables 结构
+-- 导出  视图 cedar.v_receivables 结构
 DROP VIEW IF EXISTS `v_receivables`;
 -- 移除临时表并创建最终视图结构
 DROP TABLE IF EXISTS `v_receivables`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`myorder`@`%` SQL SECURITY INVOKER VIEW `v_receivables` AS select `r`.`fID` AS `fID`,`r`.`fCustomerID` AS `fCustomerID`,`c`.`fCustomerName` AS `fCustomerName`,`r`.`fReceiptDate` AS `fReceiptDate`,`r`.`fAmountCollected` AS `fAmountCollected`,`r`.`fOrderID` AS `fOrderID`,`u`.`fUsername` AS `fPayee`,`skfs`.`fTitle` AS `fPaymentMethod`,`r`.`fNote` AS `fNote` from ((((`t_receivables` `r` left join `t_customer` `c` on((`r`.`fCustomerID` = `c`.`fCustomerID`))) left join `t_enumeration` `e` on((`r`.`fPaymentMethodID` = `e`.`fItemID`))) left join `sysusers` `u` on((`r`.`fPayeeID` = `u`.`fUserID`))) left join `t_enumeration` `skfs` on((`r`.`fPaymentMethodID` = `skfs`.`fItemID`))) ;
+CREATE  SQL SECURITY INVOKER VIEW `v_receivables` AS select `r`.`fID` AS `fID`,`r`.`fCustomerID` AS `fCustomerID`,`c`.`fCustomerName` AS `fCustomerName`,`r`.`fReceiptDate` AS `fReceiptDate`,`r`.`fAmountCollected` AS `fAmountCollected`,`r`.`fOrderID` AS `fOrderID`,`u`.`fUsername` AS `fPayee`,`skfs`.`fTitle` AS `fPaymentMethod`,`r`.`fNote` AS `fNote` from ((((`t_receivables` `r` left join `t_customer` `c` on((`r`.`fCustomerID` = `c`.`fCustomerID`))) left join `t_enumeration` `e` on((`r`.`fPaymentMethodID` = `e`.`fItemID`))) left join `sysusers` `u` on((`r`.`fPayeeID` = `u`.`fUserID`))) left join `t_enumeration` `skfs` on((`r`.`fPaymentMethodID` = `skfs`.`fItemID`))) ;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;

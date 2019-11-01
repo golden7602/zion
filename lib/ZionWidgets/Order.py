@@ -35,8 +35,8 @@ class OrderMod(JPTableViewModelReadOnly):
         tab = self.TabelFieldInfo
         curid = tab.getOnlyData((r, 0))  # DataRows[r].Datas[0]
 
-        if role == Qt.DisplayRole and r > 0 and c <= 14 and curid == tab.getOnlyData(
-            (r - 1, 0)):
+        if role == Qt.DisplayRole and r > 0 and c <= 14 and (
+                curid == tab.getOnlyData((r - 1, 0))):
             return ''
         elif c == 4:
             if role == Qt.DecorationRole:
@@ -264,7 +264,6 @@ class EditForm_Order(JPFormModelMainHasSub):
         self.ui.fCustomerID.setFocus()
         self.ui.tableView.keyPressEvent = self.mykeyPressEvent
 
-
     # 手动增加空行
     def mykeyPressEvent(self, KeyEvent):
         if (KeyEvent.modifiers() == Qt.AltModifier
@@ -290,7 +289,6 @@ class EditForm_Order(JPFormModelMainHasSub):
         self.ui.fEndereco.setText(dic['fEndereco'])
         self.ui.fEmail.setText(dic['fEmail'])
         self.ui.fTelefone.setText(dic['fTelefone'])
-
 
     def onGetColumnFormulas(self):
         fla = "JPRound(JPRound({2}) * JPRound({4},3) * "

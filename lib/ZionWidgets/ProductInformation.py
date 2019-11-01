@@ -217,6 +217,7 @@ class Form_ProductList(QWidget):
                     BETWEEN '{d1}'
                         AND '{d2}'
                         AND fProductID={pid}
+                        AND o.fSubmited=1
                 UNION all
                 SELECT o.fOrderDate,
                     o.fOrderID,
@@ -233,8 +234,9 @@ class Form_ProductList(QWidget):
                     BETWEEN '{d1}'
                         AND '{d2}' 
                         AND fProductID={pid}
+                        AND o.fSubmited=1
                 ) AS q
-            ORDER BY  Q.Ts DESC 
+            ORDER BY  q.Ts DESC 
         """
         self.dataInfo_detail = JPQueryFieldInfo(self.sql_detail)
         self.mod3 = JPTableViewModelReadOnly(self.ui.tableView_rec,
@@ -376,7 +378,7 @@ class Form_ProductList(QWidget):
             return
         del_txt = '确认要删除此产品？\n'
         del_txt = del_txt + 'Are you sure you want to delete this product?'
-        sql = f"DELETE FROM t_product_information WHERE fProductID = {pid}"
+        sql = f"DELETE FROM t_product_information WHERE fID = {pid}"
         if QMessageBox.question(self, '提示', del_txt,
                                 (QMessageBox.Yes | QMessageBox.No),
                                 QMessageBox.Yes) == QMessageBox.Yes:

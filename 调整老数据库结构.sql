@@ -347,7 +347,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`myorder`@`%` SQL SECURITY INVOKER VIEW `v_pr
 	 `u_Cancel`.`fUsername` AS `fCancel_Name`, 
 	 `e_fPurchaserID`.`fTitle` AS `fPurchaser`
 FROM `t_product_warehousereceipt_order` `o`
-LEFT JOIN `t_Supplier` `c`
+LEFT JOIN `t_supplier` `c`
     ON `o`.`fSupplierID` = `c`.`fSupplierID`
 LEFT JOIN `sysusers` `u_Submited`
     ON `o`.`fSubmitID` = `u_Submited`.`fUserID`

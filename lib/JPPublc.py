@@ -262,7 +262,7 @@ class JPPub(QObject):
 
     def INITSupplier(self):
         sql = '''select fSupplierName,fSupplierID,
-                fNUIT,fCity,fContato,fTaxRegCer from t_Supplier'''
+                fNUIT,fCity,fContato,fTaxRegCer from t_supplier'''
         self.__allSupplieList = self.db.getDataList(sql)
 
     def getEnumList(self, enum_type_id: int):

@@ -128,10 +128,8 @@ class FormReport_Rec_print(JPReport):
         sql_payable = f"""
             SELECT SUM(fPayable) AS sumPayable, 
                 COUNT(fOrderID) AS countOrderID
-            FROM t_order
-            WHERE (fOrderDate = STR_TO_DATE('{dateString}', '%Y-%m-%d')
-                AND fCanceled = 0
-                AND fConfirmed = 1)
+            FROM v_all_sales
+            WHERE (fOrderDate = STR_TO_DATE('{dateString}', '%Y-%m-%d'))
         """
         sql_SKFS = f"""
         select if(isnull(Q.fPaymentMethod),'Sum合计',Q.fPaymentMethod) as skfs,

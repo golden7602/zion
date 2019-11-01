@@ -39,8 +39,8 @@ class Form_Receivables(QWidget):
             from t_customer as c left join 
                 (select o.fCustomerID,
                     cast(sum(o.fPayable) as DECIMAL) as fYS 
-                    from t_order as o 
-                    where o.fCanceled=0 and o.fSubmited=1 and o.fConfirmed=1 group by o.fCustomerID) as YS
+                    from v_all_sales as o 
+                    group by o.fCustomerID) as YS
             on c.fCustomerID=YS.fCustomerID left join 
                 (select r.fCustomerID,
                     cast(sum(r.fAmountCollected) as DECIMAL) as fSK,
@@ -67,12 +67,9 @@ class Form_Receivables(QWidget):
                     null as fAmountCollected, 
                     o.ts 
                     from 
-                    t_order as o 
+                    v_all_sales as o 
                     where 
                     o.fCustomerID ={CustomerID} 
-                    and o.fCanceled = 0 
-                    and o.fSubmited = 1 
-                    and o.fConfirmed = 1 
                     union all 
                     select 
                     r.fReceiptDate as fDate, 
@@ -104,12 +101,9 @@ class Form_Receivables(QWidget):
                         null as fAmountCollected, 
                         o.ts 
                         from 
-                        t_order as o 
+                        v_all_sales as o 
                         where 
                         o.fCustomerID ={CustomerID} 
-                        and o.fCanceled = 0 
-                        and o.fSubmited = 1 
-                        and o.fConfirmed = 1 
                         union all 
                         select 
                         r.fReceiptDate as fDate, 
@@ -349,10 +343,8 @@ class RecibidoEdit(JPFormModelMain):
             FROM t_customer c
                 LEFT JOIN (
                     SELECT fCustomerID, SUM(fPayable) AS fAmountPayable
-                    FROM t_order
+                    FROM v_all_sales
                     WHERE fCustomerID = {CustomerID}
-                        AND fConfirmed = 1
-                        AND fCanceled = 0
                 ) Q0
                 ON c.fCustomerID = Q0.fCustomerID
                 LEFT JOIN (
@@ -414,4 +406,3 @@ class RecibidoEdit(JPFormModelMain):
         self.ui.butSave.setEnabled(False)
         self.ListForm.dateChanged(data)
         self.ListForm.currentCustomerChanged()
-

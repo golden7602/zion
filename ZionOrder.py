@@ -17,7 +17,7 @@ from PyQt5.QtCore import QMetaObject, Qt, QThread
 from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtWidgets import (QApplication, QHBoxLayout, QLabel, QMainWindow,
                              QProgressBar, QPushButton, QTreeWidgetItem,
-                             QWidget) 
+                             QWidget)
 
 from lib.JPDatabase.Database import JPDb, JPDbType
 from lib.JPFunction import readQss, setWidgetIconByName, seWindowsIcon
@@ -42,6 +42,7 @@ from lib.ZionWidgets.OutboundOrder import JPFuncForm_OutboundOrder
 from lib.ZionWidgets.WarehouseReceipt import JPFuncForm_WarehouseReceipt
 from lib.ZionWidgets.ProductInformation import Form_ProductList
 from lib.ZionWidgets.Supplier import Form_Supplier
+from lib.ZionWidgets.ProductInOutDetails import Form_product_in_out_detail
 from Ui.Ui_FormMain import Ui_MainWindow
 from lib.JPConfigInfo import ConfigInfo
 
@@ -216,7 +217,8 @@ class JPMainWindow(QMainWindow):
             152: JPFuncForm_OutboundOrder,
             160: JPFuncForm_WarehouseReceipt,
             168: Form_ProductList,
-            176: Form_Supplier
+            176: Form_Supplier,
+            186: Form_product_in_out_detail
         }
         if self.menu_id == 12:
             self.close()

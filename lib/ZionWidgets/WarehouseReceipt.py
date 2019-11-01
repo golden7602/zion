@@ -150,7 +150,7 @@ class JPFuncForm_WarehouseReceipt(JPFunctionForm):
             QMessageBox.warning(self, '提示', msg, QMessageBox.Ok,
                                 QMessageBox.Ok)
             return
-        msg = '提交后订单将不能修改！确定继续提交记录【{cu_id}】吗？\n'
+        msg = '提交后入库单将不能修改！确定继续提交记录【{cu_id}】吗？\n'
         msg = msg + 'The order "{cu_id}" will not be modified after submission. '
         msg = msg + 'Click OK to continue submitting?'
         msg = msg.replace("{cu_id}", str(cu_id))

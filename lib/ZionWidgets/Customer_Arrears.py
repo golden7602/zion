@@ -48,13 +48,10 @@ class Form_FormCustomer_Arrears(QWidget):
 
     def actionClick(self):
         sql = """
-            SELECT c.fCustomerID as `ID`, 
-                c.fCustomerName as `客户名称Cliente`, 
-                c.fNUIT as `税号NUIT`, 
-                c.fCity as `城市City`,
-                if(isnull(QDD.dd),null,QDD.dd)  AS 订单应付金额OrderPayable,
-                if(isnull(QSK.sk),null,QSK.sk)  AS Aeceivables收款, 
-                if(if(isnull(QDD.dd),0,QDD.dd)-if(isnull(QSK.sk),0,QSK.sk)=0,null,if(isnull(QDD.dd),0,QDD.dd)-if(isnull(QSK.sk),0,QSK.sk)) AS Arrears欠款
+            SELECT c.fCustomerID AS `ID`, c.fCustomerName AS `客户名称Cliente`, c.fNUIT AS `税号NUIT`, c.fCity AS `城市City`
+                , if(isnull(QDD.dd), NULL, QDD.dd) AS 订单应付金额OrderPayable
+                , if(isnull(QSK.sk), NULL, QSK.sk) AS Aeceivables收款
+                , if(if(isnull(QDD.dd), 0, QDD.dd) - if(isnull(QSK.sk), 0, QSK.sk) = 0, NULL, if(isnull(QDD.dd), 0, QDD.dd) - if(isnull(QSK.sk), 0, QSK.sk)) AS Arrears欠款
             FROM t_customer c
                 LEFT JOIN (
                     SELECT fCustomerID, SUM(fAmountCollected) AS sk
@@ -64,9 +61,7 @@ class Form_FormCustomer_Arrears(QWidget):
                 ON QSK.fCustomerID = c.fCustomerID
                 LEFT JOIN (
                     SELECT fCustomerID, SUM(fPayable) AS dd
-                    FROM t_order
-                    WHERE fCanceled = 0
-                        AND fConfirmed = 1
+                    FROM v_all_sales as Q_1
                     GROUP BY fCustomerID
                 ) QDD
                 ON QDD.fCustomerID = c.fCustomerID
@@ -111,9 +106,9 @@ class Form_FormCustomer_Arrears(QWidget):
                         fdesconto  AS 折扣Desconto, 
                         ftax       AS 税金IVA, 
                         fpayable   AS `应付金额Valor a Pagar` 
-                    FROM   t_order 
+                    FROM   v_all_sales 
                     WHERE  fcustomerid = {uid} 
-                        AND fconfirmed = 1 
+                        
                     UNION ALL 
                     SELECT ''             AS 订单号码OrderID, 
                         '合计Sum'    AS 日期OrderDate, 
@@ -123,9 +118,9 @@ class Form_FormCustomer_Arrears(QWidget):
                         Sum(fdesconto) AS 折扣Desconto, 
                         Sum(ftax)      AS 税金IVA, 
                         Sum(fpayable)  AS `应付金额Valor a Pagar` 
-                    FROM   t_order 
+                    FROM   v_all_sales 
                     WHERE  fcustomerid = {uid}
-                        AND fconfirmed = 1) AS Q1 
+                        ) AS Q1 
             ORDER  BY Q1.日期orderdate DESC 
         """
         tv = self.ui.tableView_order

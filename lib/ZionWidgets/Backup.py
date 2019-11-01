@@ -2,7 +2,7 @@ from os import getcwd, path as ospath
 from sys import path as jppath
 jppath.append(getcwd())
 
-from PyQt5.QtWidgets import QDialog, QFileDialog,QMessageBox
+from PyQt5.QtWidgets import QDialog, QFileDialog, QMessageBox
 from PyQt5.QtCore import Qt
 from Ui.Ui_FormBackup import Ui_Dialog
 from configparser import ConfigParser
@@ -43,19 +43,19 @@ class Form_Backup(QDialog):
             "Excel Files (*.sql)")
         if not fileName_choose:
             return
-        file_ = open(fileName_choose, 'w',encoding='utf-8')
+        file_ = open(fileName_choose, 'w', encoding='utf-8')
         # 取所有表名
         config = ConfigParser()
         config.read("config.ini", encoding="utf-8")
         dbn = dict(config._sections["database"])["database"]
         bases_sql = "SHOW TABLE STATUS FROM `{}`".format(dbn)
         tab = JPDb().getDict(bases_sql)
-        tns = [r['TABLE_NAME'] for r in tab if r['TABLE_COMMENT'] == '']
-        tns=[r for r in tns if not r in ['syssql','syslanguage']]
-        views = [r['TABLE_NAME'] for r in tab if r['TABLE_COMMENT'] == 'VIEW']
+        tns = [r['Name'] for r in tab if r['Engine']]
+        tns = [r for r in tns if not r in ['syssql', 'syslanguage']]
+        views = [r['Name'] for r in tab if r['Comment'] == 'VIEW']
         recs = 0
         for r in tab:
-            recs += r['TABLE_ROWS'] if r['TABLE_ROWS'] else 0
+            recs += r['Rows'] if r['Rows'] else 0
         self.ui.progressBar.setRange(0, recs)
         exp = CreateSQL_MySQL()
         exp.exportOneRecord.connect(self.refreshProgressBar)
@@ -64,7 +64,7 @@ class Form_Backup(QDialog):
             file_.write('\n')
             file_.write('DROP TABLE IF EXISTS `{}`;'.format(tn))
             file_.write('\n')
-            file_.write(self.__getCr(dbn, tn, False)+";")
+            file_.write(self.__getCr(dbn, tn, False) + ";")
             file_.write('\n')
             tempSQL = exp.getSql(tn)
             if tempSQL:
@@ -75,7 +75,7 @@ class Form_Backup(QDialog):
             file_.write('\n')
             file_.write('DROP View IF EXISTS `{}`;'.format(vn))
             file_.write('\n')
-            file_.write(self.__getCr(dbn, vn, True)+";")
+            file_.write(self.__getCr(dbn, vn, True) + ";")
             file_.write('\n')
         self.ui.progressBar.hide()
 
