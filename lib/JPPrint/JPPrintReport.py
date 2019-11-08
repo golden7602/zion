@@ -365,6 +365,7 @@ class _jpPrintSection(object):
         n_aligns = len(Aligns)
         msg = '标签数与宽度、对齐数不相等:\n'
         msg = msg + f'标签数为{n_texts};宽度数为{n_widths};对齐数为{n_aligns}'
+        msg = msg + '\n' + str(Texts)
         if not (n_texts > 0 and n_texts == n_widths and n_texts == n_aligns):
             raise JPPrintError(msg)
         leftSum = 0
@@ -387,6 +388,7 @@ class _jpPrintSection(object):
         n_aligns = len(Aligns)
         msg = '字段数与宽度、对齐数不相等:\n'
         msg = msg + f'字段数为{n_fields};宽度数为{n_widths};对齐数为{n_aligns}'
+        msg = msg + '\n' + str(FieldNames)
         if not (n_fields > 0 and n_fields == n_widths
                 and n_fields == n_aligns):
             raise JPPrintError(msg)

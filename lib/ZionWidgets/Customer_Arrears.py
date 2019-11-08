@@ -44,6 +44,20 @@ class Form_FormCustomer_Arrears(QWidget):
         action.triggered.connect(self.actionClick)
         self.ui.lineEdit.returnPressed.connect(self.actionClick)
         self.ui.lineEdit.setAttribute(Qt.WA_InputMethodEnabled, False)
+        self.mod_rec = None
+        self.mod_order = None
+        mainform.addOneButtonIcon(self.ui.CmdPrint_BillDetail, 'print.png')
+        mainform.addOneButtonIcon(self.ui.CmdExportExcel_BillDetail,
+                                  'exportToexcel.png')
+        mainform.addOneButtonIcon(self.ui.CmdPrint_RecDetail, 'print.png')
+        mainform.addOneButtonIcon(self.ui.CmdExportExcel_RecDetail,
+                                  'exportToexcel.png')
+
+        self.ui.CmdExportExcel_BillDetail.clicked.connect(
+            self.on_CmdExportExcel_BillDetail_clicked)
+        self.ui.CmdExportExcel_RecDetail.clicked.connect(
+            self.on_CmdExportExcel_RecDetail_clicked)
+
         self.actionClick()
 
     def actionClick(self):
@@ -159,10 +173,21 @@ class Form_FormCustomer_Arrears(QWidget):
         tv.setModel(self.mod_rec)
         tv.resizeColumnsToContents()
 
-
-
     @pyqtSlot()
     def on_CmdExportToExcel_clicked(self):
         exp = JPExpExcelFromTabelFieldInfo(self.mod.TabelFieldInfo,
                                            JPPub().MainForm)
         exp.run()
+
+
+    def on_CmdExportExcel_BillDetail_clicked(self):
+        if self.mod_order:
+            exp = JPExpExcelFromTabelFieldInfo(self.mod_order.TabelFieldInfo,
+                                               self.MainForm)
+            exp.run()
+
+    def on_CmdExportExcel_RecDetail_clicked(self):
+        if self.mod_rec:
+            exp = JPExpExcelFromTabelFieldInfo(self.mod_rec.TabelFieldInfo,
+                                               self.MainForm)
+            exp.run()

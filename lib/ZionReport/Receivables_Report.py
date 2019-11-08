@@ -276,7 +276,8 @@ class FormReport_Rec_print(JPReport):
         txt = [
             payable_tab.getDispText([0, 0]) + " ",
             JPGetDisplayText(len(payable_tab), str) + " ", ShouDangRiDingDan,
-            JPGetDisplayText(len(tongji_tab), str) + " ", v3 + " "
+            tongji_tab.getDispText([len(tongji_tab)-1,2]) +
+            " ", v3 + " "
         ]
         rpt.ReportFooter.AddPrintLables(120,
                                         title_height,
@@ -286,6 +287,7 @@ class FormReport_Rec_print(JPReport):
                                         Aligns=[al_r] * 5,
                                         Font=self.font_YaHei_8,
                                         FillColor=self.BackColor)
+
         # 页脚
         self.PageFooter.AddItemRect(4, (10, 0, 100, 20),
                                     '',

@@ -66,7 +66,7 @@ class JPFuncForm_WarehouseReceipt(JPFunctionForm):
                 AND (fSubmited={ch1} OR fSubmited={ch2})
                 AND fOrderDate{date}
                 ORDER BY  o.fOrderID DESC"""
-        sql_2 = sql_0 + """ORDER BY  o.fOrderID DESC"""
+        sql_2 = sql_0 + """ ORDER BY  o.fOrderID DESC"""
         self.backgroundWhenValueIsTrueFieldName = ['fSubmited']
         self.checkBox_1.setText('Submited')
         self.checkBox_2.setText('UnSubmited')

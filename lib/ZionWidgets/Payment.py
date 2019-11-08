@@ -34,34 +34,40 @@ class myJPTableViewModelReadOnly(JPTableViewModelReadOnly):
 class JPFuncForm_Payment(ZionFuncForm):
     def __init__(self, parent):
         super().__init__(parent)
-        sql_0 = """
+        sql0_part = """
             SELECT fOrderID AS 订单号码OrderID,
-                    fOrderDate AS 日期OrderDate,
-                    fCustomerName AS 客户名Cliente,
-                    fCity AS 城市City,
-                    fConfirmed1 AS 确认Confirmed,
-                    fConfirm_Name AS 确认人Confirm,
-                    fAmount AS 金额SubTotal,
-                    fRequiredDeliveryDate AS 交货日期RDD,
-                    fDesconto AS 折扣Desconto,
-                    fTax AS 税金IVA,
-                    fPayable AS `应付金额Valor a Pagar`,
-                    fContato AS 联系人Contato,
-                    fCelular AS 手机Celular,
-                    cast(fConfirmed AS SIGNED) AS fConfirmed
-            FROM v_order AS o
-        """
-        sql_1 = sql_0 + """
+                fOrderDate AS 日期OrderDate,
+                fCustomerName AS 客户名Cliente,
+                fCity AS 城市City,
+                fConfirmed1 AS 确认Confirmed,
+                fConfirm_Name AS 确认人Confirm,
+                fAmount AS 金额SubTotal,
+                fRequiredDeliveryDate AS 交货日期RDD,
+                fDesconto AS 折扣Desconto,
+                fTax AS 税金IVA,
+                fPayable AS `应付金额Valor a Pagar`,
+                fContato AS 联系人Contato,
+                fCelular AS 手机Celular,
+                cast(fConfirmed AS SIGNED) AS fConfirmed
+            """
+        sql_where1 = """
                 WHERE fCanceled=0
                         AND fSubmited=1
                         AND fOrderDate{date}
                         AND (fConfirmed={ch1}
                         OR fConfirmed={ch2})
-                ORDER BY  forderDate DESC,fOrderID DESC"""
-        sql_2 = sql_0 + """
-                WHERE fCanceled=0
-                        AND fSubmited=1
-                ORDER BY  forderDate DESC,fOrderID DESC"""
+                """
+        sql_1 = ('SELECT * from (' + sql0_part +
+                 'FROM v_product_outbound_order' + sql_where1 + ' UNION ALL' +
+                 sql0_part + 'FROM v_order' + sql_where1 +
+                 ') as Q ORDER BY 日期OrderDate DESC,订单号码OrderID DESC')
+        sql_where2 = """
+                WHERE fCanceled=0 AND fSubmited=1
+                """
+        sql_2 = ('SELECT * from (' + sql0_part +
+                 'FROM v_product_outbound_order' + sql_where2 + ' UNION ALL' +
+                 sql0_part + 'FROM v_order' + sql_where2 +
+                 ') AS Q ORDER BY 日期OrderDate DESC,订单号码OrderID DESC')
         self.backgroundWhenValueIsTrueFieldName = ['fConfirmed1']
         self.setListFormSQL(sql_1, sql_2)
         self.checkBox_1.setText('Confirmed')
@@ -80,17 +86,32 @@ class JPFuncForm_Payment(ZionFuncForm):
 
     @pyqtSlot()
     def on_CmdConfirm_clicked(self):
+        us = JPUser()
+        uid = us.currentUserID()
         cu_id = self.getCurrentSelectPKValue()
         if self.getCurrentColumnValue(13) == 1:
-            msg = '付款书已经确认，无法重复确认!\n'
+            msg = '单据已经确认，无法重复确认!\n'
             msg = msg + 'The payment has been confirmed and cannot be repeated.'
             QMessageBox.information(JPPub().MainForm, '提示', msg)
             return
-        sql = "update t_order set fConfirmed=1,fConfirmID={uid} where fOrderID='{pk}'"
+        sql0 = f"select '{cu_id}';"
+        sql1 = f"update t_order set fConfirmed=1,fConfirmID={uid} where fOrderID='{cu_id}'"
+        sql2 = f"update t_product_outbound_order set fConfirmed=1,fConfirmID={uid} where fOrderID='{cu_id}'"
+        sql3 = f"""
+            UPDATE t_product_information AS p,
+                (SELECT fProductID,
+                    sum(fQuant) AS sum_sl
+                FROM t_product_outbound_order_detail
+                WHERE fOrderID='{cu_id}'
+                GROUP BY  fProductID) AS q1 SET p.fCurrentQuantity=p.fCurrentQuantity-q1.sum_sl
+            WHERE p.fID=q1.fProductID;
+            """
+        if not cu_id:
+            return
+        else:
+            sql = [sql2, sql3, sql0] if cu_id[0:2] == 'PO' else [sql1, sql0]
         db = JPDb()
-        us = JPUser()
-        sql = sql.format(pk=cu_id, uid=us.currentUserID())
-        msg = "付款单【{pk}】确认后将不能修改。是否要确认此付款单？" + '\n'
+        msg = "单据【{pk}】确认后将不能修改。是否要确认此付款单？" + '\n'
         msg = msg + 'The bill [{pk}] of payment will not be amended after confirmation.'
         msg = msg + "  Do you want to confirm this payment form?"
         msg = msg.format(pk=cu_id)
@@ -98,9 +119,14 @@ class JPFuncForm_Payment(ZionFuncForm):
                                 QMessageBox.Yes | QMessageBox.No,
                                 QMessageBox.No) == QMessageBox.Yes:
             db.executeTransaction(sql)
-            JPPub().broadcastMessage(tablename="t_order",
-                                     action='confirmation',
-                                     PK=cu_id)
+            if cu_id[0:2] == 'PO':
+                JPPub().broadcastMessage(tablename="t_product_outbound_order",
+                                         PK=cu_id,
+                                         action='confirmation')
+            else:
+                JPPub().broadcastMessage(tablename="t_order",
+                                         action='confirmation',
+                                         PK=cu_id)
             self.refreshListForm()
 
     @pyqtSlot()

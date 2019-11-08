@@ -157,9 +157,13 @@ class FormReport_ProductInfo_Detail(JPReport):
         self.BackColor = JPPub().getConfigData(
         )['PrintHighlightBackgroundColor']
         self.title_detail = [
-            '序号ID', '日期OrderDate', '单据号码OrderID', '入库In', '出库Out'
+            '序号\nNO', '日期\nOrderDate', '单据号码\nOrderID', '客商\nMerchants',
+            '入库\nIn', '出库\nOut'
         ]
-        self.fns = ['fOrderDate', 'fOrderDate', 'fOrderID', 'ksmc', 'rk', 'ck']
+        self.fns = [
+            'fOrderDate', '日期Date', '单据号码OrderID', '客商Merchants', '入库In',
+            '出库Out'
+        ]
         self.logo = JPPub().MainForm.logoPixmap
         self.title = 'Warehouse in/out Details\n出入库明细表'
         self.beginDate = None
@@ -190,27 +194,27 @@ class FormReport_ProductInfo_Detail(JPReport):
         title_height = 20
         rpt.ReportHeader.AddPrintLables(0,
                                         72,
-                                        20,
+                                        40,
                                         Texts=self.title_detail,
-                                        Widths=[60, 100, 250, 120, 120],
+                                        Widths=[30, 70, 120, 310, 60, 60],
                                         Aligns=[al_c] * cols)
         rpt.Detail.addPrintRowCountItem(0,
                                         0,
-                                        60,
+                                        30,
                                         20,
                                         AlignmentFlag=al_c,
                                         Font=self.font_YaHei_8)
-        rpt.Detail.AddPrintFields(60,
+        rpt.Detail.AddPrintFields(30,
                                   0,
                                   20,
-                                  self.fns[1:3], [100, 250], [al_c] * 2,
+                                  self.fns[1:4], [70, 120, 310], [al_c] * 3,
                                   FormatString=' {}',
                                   Font=self.font_YaHei_8)
 
-        rpt.Detail.AddPrintFields(410,
+        rpt.Detail.AddPrintFields(530,
                                   0,
                                   20,
-                                  self.fns[4:], [120, 120], [al_r] * 2,
+                                  self.fns[4:], [60]*2, [al_r] * 2,
                                   FormatString='{} ',
                                   Font=self.font_YaHei_8)
 

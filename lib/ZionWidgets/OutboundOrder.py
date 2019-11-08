@@ -37,7 +37,11 @@ class OutboundOrderMod(JPTableViewModelReadOnly):
         curid = tab.getOnlyData((r, 0))  # DataRows[r].Datas[0]
 
         submited = tab.getOnlyData((r, 2))
-        if c == 2 and role == Qt.DecorationRole and submited:
+
+        if role == Qt.DisplayRole and r > 0 and c <= 9 and (
+                curid == tab.getOnlyData((r - 1, 0))):
+            return ''
+        elif c == 2 and role == Qt.DecorationRole and submited and curid != tab.getOnlyData((r - 1, 0)):
             return self.ok_icon
         elif c == 2 and role == Qt.DisplayRole and submited:
             return "Submited"
@@ -55,18 +59,26 @@ class JPFuncForm_OutboundOrder(JPFunctionForm):
                     fSubmited as 提交,
                     fCustomerName as 客户名Cliente,
                     fRequiredDeliveryDate as 交货日期RequiredDeliveryDate,
-                    fAmount as 金额SubTotal,
+                    o.fAmount as 总金额SubTotal,
                     fDesconto as 折扣Desconto,
                     fTax as 税金IVA,
                     fPayable as `应付金额Valor a Pagar`,
-                    o.fContato as 联系人Contato
-                from t_product_outbound_order as o left join t_customer as c on o.fCustomerID=c.fCustomerID"""
+                    o.fContato as 联系人Contato,
+                    Null as ``,
+                    p.fProductName AS '名称Descrição',
+                    t.fQuant AS '数量Qtd',
+                    t.fPrice AS '单价P. Unitario', 
+                    t.fAmount AS '金额Total'
+                from v_product_outbound_order as o 
+                    right join t_product_outbound_order_detail as t on o.fOrderID=t.fOrderID 
+					left Join t_product_information as p on t.fProductID=p.fID
+                """
         sql_1 = sql_0 + """
                 WHERE fOrderDate{date}
                 AND (fSubmited={ch1} OR fSubmited={ch2})
                 AND fOrderDate{date}
                 ORDER BY  o.fOrderID DESC"""
-        sql_2 = sql_0 + """ORDER BY  o.fOrderID DESC"""
+        sql_2 = sql_0 + """ ORDER BY  o.fOrderID DESC"""
         self.backgroundWhenValueIsTrueFieldName = ['fSubmited']
         self.checkBox_1.setText('Submited')
         self.checkBox_2.setText('UnSubmited')
@@ -154,17 +166,17 @@ class JPFuncForm_OutboundOrder(JPFunctionForm):
         if reply == QMessageBox.Yes:
             sql0 = f"""UPDATE t_product_outbound_order set fSubmited=1 
                 where fOrderID='{cu_id}';"""
-            sql1 = f"""
-            UPDATE t_product_information AS p,
-                (SELECT fProductID,
-                    sum(fQuant) AS sum_sl
-                FROM t_product_outbound_order_detail
-                WHERE fOrderID='{cu_id}'
-                GROUP BY  fProductID) AS q1 SET p.fCurrentQuantity=p.fCurrentQuantity-q1.sum_sl
-            WHERE p.fID=q1.fProductID;
-            """
+            # sql1 = f"""
+            # UPDATE t_product_information AS p,
+            #     (SELECT fProductID,
+            #         sum(fQuant) AS sum_sl
+            #     FROM t_product_outbound_order_detail
+            #     WHERE fOrderID='{cu_id}'
+            #     GROUP BY  fProductID) AS q1 SET p.fCurrentQuantity=p.fCurrentQuantity-q1.sum_sl
+            # WHERE p.fID=q1.fProductID;
+            # """
             sql2 = "select '{cu_id}';"
-            db.executeTransaction([sql0, sql1, sql2])
+            db.executeTransaction([sql0, sql2])
             JPPub().broadcastMessage(tablename="t_product_outbound_order",
                                      PK=cu_id,
                                      action='Submit')
