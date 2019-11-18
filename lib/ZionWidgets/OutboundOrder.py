@@ -166,15 +166,6 @@ class JPFuncForm_OutboundOrder(JPFunctionForm):
         if reply == QMessageBox.Yes:
             sql0 = f"""UPDATE t_product_outbound_order set fSubmited=1 
                 where fOrderID='{cu_id}';"""
-            # sql1 = f"""
-            # UPDATE t_product_information AS p,
-            #     (SELECT fProductID,
-            #         sum(fQuant) AS sum_sl
-            #     FROM t_product_outbound_order_detail
-            #     WHERE fOrderID='{cu_id}'
-            #     GROUP BY  fProductID) AS q1 SET p.fCurrentQuantity=p.fCurrentQuantity-q1.sum_sl
-            # WHERE p.fID=q1.fProductID;
-            # """
             sql2 = "select '{cu_id}';"
             db.executeTransaction([sql0, sql2])
             JPPub().broadcastMessage(tablename="t_product_outbound_order",

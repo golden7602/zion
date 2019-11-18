@@ -3,7 +3,7 @@ from os import getcwd
 from sys import path as jppath
 jppath.append(getcwd())
 
-from PyQt5.QtCore import pyqtSlot, Qt, QRect,QDate
+from PyQt5.QtCore import pyqtSlot, Qt, QRect, QDate
 from PyQt5.QtGui import QIcon, QIntValidator, QPixmap, QKeyEvent, QColor
 from PyQt5.QtWidgets import QAction, QLineEdit, QMessageBox
 
@@ -26,7 +26,7 @@ from PyQt5.QtPrintSupport import QPrinter
 class myJPTableViewModelReadOnly(JPTableViewModelReadOnly):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.ok_icon=JPPub().MainForm.getIcon('yes.ico')
+        self.ok_icon = JPPub().MainForm.getIcon('yes.ico')
 
     def data(self, index, role=Qt.DisplayRole):
         r = index.row()
@@ -34,13 +34,12 @@ class myJPTableViewModelReadOnly(JPTableViewModelReadOnly):
         tab = self.TabelFieldInfo
         if c == 4:
             if role == Qt.DecorationRole:
-                if tab.getOnlyData((r,c)):
+                if tab.getOnlyData((r, c)):
                     return self.ok_icon
             else:
                 return super().data(index, role=role)
         else:
             return super().data(index, role=role)
-
 
 
 class JPFuncForm_PrintingOrder(JPFunctionForm):
@@ -273,6 +272,7 @@ class EditForm_PrintingOrder(JPFormModelMain):
         self.ui.fVendedorID.FieldInfo.NotNull = True
         self.ui.fNrCopyID.FieldInfo.NotNull = True
         self.ui.fCustomerID.setFocus()
+        self.ui.fQuant.setIntValidator(-9999999999, 9999999999)
 
     def __onTaxKeyPress(self, KeyEvent: QKeyEvent):
         if (KeyEvent.modifiers() == Qt.AltModifier
@@ -315,9 +315,7 @@ class EditForm_PrintingOrder(JPFormModelMain):
 
     def onAfterSaveData(self, data):
         act = 'new' if self.isNewMode else 'edit'
-        JPPub().broadcastMessage(tablename="t_order",
-                                 PK=data,
-                                 action=act)
+        JPPub().broadcastMessage(tablename="t_order", PK=data, action=act)
         if self.isNewMode:
             self.ui.fOrderID.refreshValueNotRaiseEvent(data, True)
 
@@ -400,9 +398,8 @@ class EditForm_PrintingOrder(JPFormModelMain):
                 and fCanceled=0
             """
             sql = 'select fOrderID from t_order'
-            sql = sql + where.format(uid=obj_cus.Value(),
-                                     tid=obj_esp.Value(),
-                                     zt=0)
+            sql = sql + where.format(
+                uid=obj_cus.Value(), tid=obj_esp.Value(), zt=0)
             bc, result = db.executeTransaction(sql)
             if result:
                 txt = '选择的客户名(相同分公司类型)下有同类型但未确认的单据，不能增加新单据!\n'
@@ -414,9 +411,7 @@ class EditForm_PrintingOrder(JPFormModelMain):
             else:
 
                 num_sql = self.sql_base + where.format(
-                    uid=obj_cus.Value(),
-                    tid=obj_esp.Value(),
-                    zt=1)
+                    uid=obj_cus.Value(), tid=obj_esp.Value(), zt=1)
                 self.setNumberNeedControl(num_sql + orderSQL)
             return
 

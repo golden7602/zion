@@ -69,6 +69,9 @@ class _JPIntValidator(QValidator):
         if (vstr is None) or (vstr == ''):
             return QValidator.Acceptable, vstr, pos
         str0 = vstr.replace(',', '')
+        if self.min < 0 or self.max < 0:
+            if str0 == '-':
+                return QValidator.Acceptable, str0, pos
         mt = re.match(r"^-?[1-9]\d*$", str0, flags=(re.I))
         if mt:
             if self.min <= int(str0) <= self.max:
@@ -183,7 +186,7 @@ class _JPWidgetBase(QObject):
 
     def isNumeric(self):
         lst = (JPFieldType.Int, JPFieldType.Float)
-        return  self.__FieldInfo.TypeCode in lst
+        return self.__FieldInfo.TypeCode in lst
 
 
 class QLineEdit(QLineEdit_, _JPWidgetBase):
@@ -328,6 +331,9 @@ class QLineEdit(QLineEdit_, _JPWidgetBase):
             if self.Validator:
                 min = self.Validator.min
                 cur = None
+                if txt == '-' or txt == '-.':
+                    self.refreshValueNotRaiseEvent('', True)
+                    return
                 if isinstance(min, float):
                     cur = float(txt)
                 if isinstance(min, int):

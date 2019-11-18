@@ -372,7 +372,7 @@ class Order_report_Mob(JPReport):
             return False, title
         else:
             if obj.PrintObject in [
-                    "fPrice", "fAmountDetail", "fAmount", "fDesconto", "fTax",
+                    "fPrice", "fAmount_detail", "fAmount", "fDesconto", "fTax",
                     "fPayable"
             ]:
                 return False, ' ' if flag is False else None

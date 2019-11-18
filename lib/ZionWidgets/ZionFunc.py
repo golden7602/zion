@@ -5,6 +5,7 @@ jppath.append(getcwd())
 from lib.JPMvc.JPFuncForm import JPFunctionForm
 from lib.ZionWidgets.Order import EditForm_Order
 from lib.ZionWidgets.PrintingOrder import EditForm_PrintingOrder
+from lib.ZionWidgets.OutboundOrder import EditForm_OutboundOrder
 from PyQt5.QtCore import pyqtSlot, Qt, QModelIndex
 from lib.JPExcel.JPExportToExcel import JPExpExcelFromTabelFieldInfo
 from lib.JPDatabase.Query import JPQueryFieldInfo
@@ -40,6 +41,31 @@ class ZionFuncForm(JPFunctionForm):
             FROM t_order
             WHERE fOrderID = '{}'
             """
+        self.OP_m_sql = """
+                SELECT fOrderID as 订单号码OrderID
+                    , fOrderDate as 日期OrderDate
+                    , fVendedorID as 销售人员Vendedor
+                    , fRequiredDeliveryDate as 交货日期RequiredDeliveryDate
+                    , fCustomerID  as 客户名Cliente
+                    , fContato
+                    , fCelular
+                    , fTelefone
+                    , fAmount
+                    , fTax
+                    , fPayable
+                    , fDesconto
+                    , fNote
+                    ,fEntryID
+                FROM t_product_outbound_order
+                WHERE fOrderID = '{}'
+                """
+        self.OP_s_sql = """
+                SELECT fID, fOrderID, 
+                    fProductID AS '名称Descrição', fQuant AS '数量Qtd',
+                    fPrice AS '单价P. Unitario', fAmount AS '金额Total'
+                FROM t_product_outbound_order_detail
+                WHERE fOrderID = '{}'
+                """
         self.pub = JPPub()
         self.pub.UserSaveData.connect(self.UserSaveData)
 
@@ -53,10 +79,16 @@ class ZionFuncForm(JPFunctionForm):
             self.setEditFormSQL(self.CP_m_sql, self.CP_s_sql)
         elif cur_tp == 'TP':
             self.setEditFormSQL(self.TP_m_sql, None)
+        elif cur_tp == 'PO':
+            self.setEditFormSQL(self.OP_m_sql, self.OP_s_sql)
 
     def getEditForm(self, sql_main, edit_mode, sql_sub, PKValue):
         cur_tp = self.getCurrentSelectPKValue()[0:2]
-        mycls = {'CP': EditForm_Order, 'TP': EditForm_PrintingOrder}
+        mycls = {
+            'CP': EditForm_Order,
+            'TP': EditForm_PrintingOrder,
+            'PO': EditForm_OutboundOrder
+        }
         C = mycls[cur_tp]
         F = C(sql_main=sql_main,
               edit_mode=edit_mode,

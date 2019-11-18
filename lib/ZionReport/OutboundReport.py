@@ -404,7 +404,7 @@ class Outbound_Order_Report(JPReport):
                 CurrentPrintDataRow['fProductID'])
         else:
             if obj.PrintObject in [
-                    "fPrice", "fAmountDetail", "fAmount", "fDesconto", "fTax",
+                    "fPrice", "fAmount_detail", "fAmount", "fDesconto", "fTax",
                     "fPayable"
             ]:
                 return False, ' ' if flag is False else None
