@@ -133,13 +133,15 @@ class FormReport_Rec_print(JPReport):
         """
         sql_SKFS = f"""
         select if(isnull(Q.fPaymentMethod),'Sum合计',Q.fPaymentMethod) as skfs,
-            Q.今日收款,Q.今日收款笔数,Q.DIBOTO,Q.DIBOTO笔数,Q.小计Subtotal,Q.笔数小计Subcount
+            Q.今日收款,Q.今日收款笔数,Q.DIBOTO,Q.DIBOTO笔数,Q.Prepaid,Q.Prepaid笔数,Q.小计Subtotal,Q.笔数小计Subcount
             from (
             SELECT fPaymentMethod
-                , SUM(if(fOrderID = 'DIBOTO', NULL, fAmountCollected)) AS 今日收款
-                , COUNT(if(fOrderID = 'DIBOTO', NULL, fAmountCollected)) AS 今日收款笔数
+                , SUM(if(fOrderID = 'DIBOTO' or fOrderID = 'Prepaid', NULL, fAmountCollected)) AS 今日收款
+                , COUNT(if(fOrderID = 'DIBOTO' or fOrderID = 'Prepaid', NULL, fAmountCollected)) AS 今日收款笔数
                 , SUM(if(fOrderID = 'DIBOTO', fAmountCollected, NULL)) AS DIBOTO
                 , COUNT(if(fOrderID = 'DIBOTO', fAmountCollected, NULL)) AS DIBOTO笔数
+                , SUM(if(fOrderID = 'Prepaid', fAmountCollected, NULL)) AS Prepaid
+                , COUNT(if(fOrderID = 'Prepaid', fAmountCollected, NULL)) AS Prepaid笔数
                 , SUM(fAmountCollected) AS 小计Subtotal, COUNT(fAmountCollected) AS 笔数小计Subcount
             FROM v_receivables
             WHERE fReceiptDate=STR_TO_DATE('{dateString}', '%Y-%m-%d')
@@ -155,13 +157,13 @@ class FormReport_Rec_print(JPReport):
                                  Bolder=False,
                                  AlignmentFlag=al_c)
         title_height += 30
-        title = ['方式PM', "收当日订单Today's Order Rec", '收欠款DIBOTO', '小计SubTotle']
+        title = ['方式PM', "收当日订单Today's Order Rec", '收欠款DIBOTO','预付款Prepaid', '小计SubTotle']
         rpt.ReportFooter.AddPrintLables(0,
                                         title_height,
                                         25,
                                         title,
-                                        Widths=[120, 200, 200, 200],
-                                        Aligns=[al_c] * 4,
+                                        Widths=[120, 150, 150, 150, 150],
+                                        Aligns=[al_c] * 5,
                                         Font=self.font_YaHei_8)
         tongji_tab = JPQueryFieldInfo(sql_SKFS)
         title_height += 25
@@ -182,7 +184,7 @@ class FormReport_Rec_print(JPReport):
             rpt.ReportFooter.AddItem(1,
                                      120,
                                      title_height + r * 20,
-                                     150,
+                                     100,
                                      20,
                                      tongji_tab.getDispText([r, 1]),
                                      FormatString='{} ',
@@ -190,7 +192,7 @@ class FormReport_Rec_print(JPReport):
                                      Font=self.font_YaHei_8,
                                      FillColor=self.BackColor)
             rpt.ReportFooter.AddItem(1,
-                                     270,
+                                     220,
                                      title_height + r * 20,
                                      50,
                                      20,
@@ -200,9 +202,9 @@ class FormReport_Rec_print(JPReport):
                                      Font=self.font_YaHei_8,
                                      FillColor=self.BackColor)
             rpt.ReportFooter.AddItem(1,
-                                     320,
+                                     270,
                                      title_height + r * 20,
-                                     150,
+                                     100,
                                      20,
                                      tongji_tab.getDispText([r, 3]),
                                      FormatString='{} ',
@@ -210,7 +212,7 @@ class FormReport_Rec_print(JPReport):
                                      Font=self.font_YaHei_8,
                                      FillColor=self.BackColor)
             rpt.ReportFooter.AddItem(1,
-                                     470,
+                                     370,
                                      title_height + r * 20,
                                      50,
                                      20,
@@ -220,11 +222,31 @@ class FormReport_Rec_print(JPReport):
                                      Font=self.font_YaHei_8,
                                      FillColor=self.BackColor)
             rpt.ReportFooter.AddItem(1,
-                                     520,
+                                     420,
                                      title_height + r * 20,
-                                     150,
+                                     100,
                                      20,
                                      tongji_tab.getDispText([r, 5]),
+                                     FormatString='{} ',
+                                     AlignmentFlag=al_r,
+                                     Font=self.font_YaHei_8,
+                                     FillColor=self.BackColor)
+            rpt.ReportFooter.AddItem(1,
+                                     520,
+                                     title_height + r * 20,
+                                     50,
+                                     20,
+                                     tongji_tab.getDispText([r, 6]),
+                                     FormatString='{} ',
+                                     AlignmentFlag=al_r,
+                                     Font=self.font_YaHei_8,
+                                     FillColor=self.BackColor)
+            rpt.ReportFooter.AddItem(1,
+                                     570,
+                                     title_height + r * 20,
+                                     100,
+                                     20,
+                                     tongji_tab.getDispText([r, 7]),
                                      FormatString='{} ',
                                      AlignmentFlag=al_r,
                                      Font=self.font_YaHei_8,
@@ -234,7 +256,7 @@ class FormReport_Rec_print(JPReport):
                                      title_height + r * 20,
                                      50,
                                      20,
-                                     tongji_tab.getDispText([r, 6]),
+                                     tongji_tab.getDispText([r, 8]),
                                      FormatString='{} ',
                                      AlignmentFlag=al_r,
                                      Font=self.font_YaHei_8,

@@ -376,6 +376,8 @@ class RecibidoEdit(JPFormModelMain):
         sql_orderID = """
         select 'DIBOTO' as fOrderID
         union all 
+        select 'Prepaid' as fOrderID
+        union all 
         select fOrderID from t_order 
         where fCustomerID={CustomerID} 
             and fOrderDate=STR_TO_DATE('{dateString}', '%Y-%m-%d')
