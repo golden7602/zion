@@ -297,7 +297,7 @@ class RecibidoEdit(JPFormModelMain):
         self.ui.fOrderID.setEnabled(False)
         self.ui.fArrears.setEnabled(True)
         self.ui.fCustomerID.setFocus()
-
+        self.ui.fReceiptDate.setEnabled(False)
     @property
     def _currentDate(self):
         return self.ui.fReceiptDate.date()

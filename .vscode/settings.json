@@ -3,5 +3,6 @@
     "python.jediEnabled": true,
     "files.exclude": {
         "**/.pyc": true
-    }
+    },
+    "python.languageServer": "Jedi"
 }
